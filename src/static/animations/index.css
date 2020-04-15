@@ -1,0 +1,51 @@
+/* Etat initial, avant l'apparition ou il se trouve */
+.alert-enter {
+    opacity: 0;
+    transform: translateY(3cm);
+
+  }
+
+  /* Etat de transiont : ce qu'il devient apres l'etea initial */
+  .alert-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s transform 1s ease;
+  }
+
+  .alert-exit {
+    opacity: 1;
+  }
+
+  /* lorsqu'il sort de la scene */
+  .alert-exit-active {
+    opacity: 0;
+    transform: translateY(4cm);
+    transition: opacity 1s transform 1s ease;
+  }
+
+
+  /* deplied */
+  .page-enter {
+    opacity: 0;
+    transform: scale(0.9);
+
+  }
+
+  /* Etat de transiont : ce qu'il devient apres l'etea initial */
+  .page-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms transform 2000ms;
+  }
+
+  .page-exit {
+    opacity: 1;
+    transform: scale(1)
+  }
+
+  /* lorsqu'il sort de la scene */
+  .page-exit-active {
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 200ms transform 200ms;
+  }

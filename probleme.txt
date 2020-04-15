@@ -1,0 +1,8 @@
+probleme de deconnexion 2jours
+ajouter un path à l'initiation des cookies
+
+
+requete post cross origin ne marche pas
+- ajouter un header {content-type : "application/x-www-form-urlencoded" }
+
+probleme de cookies sur le serveur pour assurer les sessions des utilisateurs

@@ -1,0 +1,188 @@
+section .iconPrinc {
+  position: absolute;
+  top: auto;
+  left: -1.5cm;
+  z-index: 1000;
+  /* box-shadow:  -1px 1px 35px rgba(128, 127, 127, 0.158); */
+}
+#Connexion {
+  background-image: url("../images/fond.jpg");
+  background-size: cover;
+  background-blend-mode: screen;
+}
+#form_connexion {
+ background-color: rgba(212, 212, 212, 0.842);
+}
+
+section.image > h1 {
+  position: absolute;
+  bottom: 0;
+  font-size: 50px;
+}
+
+.Input input:focus,
+input:focus {
+  transition: all 0.6s ease;
+  background-color: rgb(240, 240, 240) !important;
+  border: 2px rgba(90, 90, 90, 0) solid !important;
+}
+
+.Input input {
+  border: 2px rgb(230, 230, 230) solid !important;
+  border-left: 2px transparent solid !important;
+}
+
+input {
+  border: 2px rgb(230, 230, 230) solid !important;
+}
+
+input.rond{
+  border-radius: 50px;
+}
+
+input.bordertrans {
+  border: 2px rgb(230, 230, 230) solid !important;
+}
+
+.Button button {
+  outline: none;
+}
+
+/* Information */
+
+.Information,
+.FormAddProfil,
+.FormAddUser {
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  background-color: rgba(58, 55, 55, 0.753);
+}
+
+/* Navbar */
+
+.Navbar {
+  overflow-x: hidden;
+}
+
+.Navbar .Navitem:hover .head {
+  cursor: pointer;
+  background-color: rgba(136, 136, 136, 0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+.Navitem ul > li:hover {
+  cursor: pointer;
+  color: rgb(0, 162, 255) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.actifLink {
+  font-weight: bold !important;
+  color: rgb(0, 158, 250) !important;
+}
+
+.actifItem {
+  font-weight: bold !important;
+  background-color: rgba(1, 115, 180, 0.801) !important;
+}
+
+.Navitem a:hover,
+a:focus {
+  text-decoration: none !important;
+  outline: none !important;
+  color: rgb(0, 162, 255) !important;
+}
+
+.Navitem a {
+  color: white;
+}
+
+/* Topbar */
+
+.Topbar .icon {
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.Topbar .icon:hover {
+  background-color: rgba(226, 226, 226, 0.774);
+}
+
+/* Chargement */
+
+/* .Chargement .bar{
+    width: 1cm;
+    animation: loading 2s infinite alternate-reverse ease;
+} */
+
+@keyframes loading {
+  from {
+    transform: translateX(200%);
+    width: +50%;
+  }
+  to {
+    transform: translateX(-40%);
+    width: -50%;
+  }
+}
+
+/* Verticalist */
+
+.Verticalist .item {
+  cursor: pointer;
+}
+
+.Verticalist .item:hover {
+  background-color: rgb(247, 247, 247) !important;
+  transition: all 0.5s ease;
+}
+
+.Verticalist input:focus {
+  transition: all 0.6s ease;
+  background-color: rgb(248, 248, 248) !important;
+}
+
+/* Listcheck */
+
+.Check .case div {
+  border: 2px rgb(230, 230, 230) solid !important;
+}
+
+.Check {
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.Check:hover .case div {
+  background-color: rgb(206, 206, 206) !important;
+  border-color: transparent !important;
+}
+
+.Check.checked .case div {
+  background-color: rgba(1, 138, 180, 0.726) !important;
+  border-color: transparent !important;
+}
+
+.Check.checked span {
+  font-weight: bold !important;
+  color: rgba(1, 138, 180, 0.726) !important;
+}
+.Check span {
+  font-size: 15px;
+}
+
+/* FormAddUSER */
+.FormAddUser .chooseApp div,
+.FormAddUser .chooseProfil div {
+  transition: all 0.6s ease;
+  border: 2px rgb(240, 240, 240) solid !important;
+  cursor: pointer;
+}
+
+.FormAddUser .chooseApp div:hover,
+.FormAddUser .chooseProfil div:hover {
+  background-color: rgb(240, 240, 240) !important;
+}

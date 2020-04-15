@@ -1,0 +1,21 @@
+body {
+  overflow: hidden;
+ 
+}
+::-webkit-scrollbar {
+  width: 3px;
+}
+/* ::-webkit-scrollbar-track {} */
+::-webkit-scrollbar-thumb {
+  background-color: #17a2b8;
+}
+.ombre {
+  box-shadow: 0.3px 0.3px 15px rgba(214, 214, 214, 0.192);
+}
+.page {
+  min-height: 100vh !important;
+}
+
+* {
+  transition: all 0.2s ease;
+}
