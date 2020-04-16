@@ -16,8 +16,13 @@ const Chargement = () => {
           }}
           className="col-12 p-5 d-flex bg-light justify-content-center align-items-center"
         >
-          <div className="col-4 p-5 text-dark d-flex justify-content-center">
-           <img src={logo} className="col-5" alt=""/>
+          <div className="col-4 p-5 text-dark d-flex flex-column align-items-center justify-content-center">
+           <img src={logo} className="col-5 logo" alt=""/>
+           <div>
+             <i className="m-1  text-secondary mdi-image-brightness-1"></i>
+             <i className="m-1  text-secondary mdi-image-brightness-1"></i>
+             <i className="m-1  text-secondary mdi-image-brightness-1"></i>
+           </div>
           </div>
         </div>
       </div>
