@@ -1,8 +1,8 @@
 import Axios from "axios";
 import React, { useState } from "react";
 import { Cookies } from "react-cookie";
+import logo from "../../static/images/wh_logo.png";
 //components
-import Clock from "../../components/Clock";
 
 const Connexion = () => {
   const cookies = new Cookies();
@@ -56,7 +56,7 @@ const Connexion = () => {
           <div className="col-3 white p-4" style={{ opacity: 0.92 }}>
             <div className="row">
               <div className="text-dark text-center col-12">
-                <i className=" mr-2 mdi-5x"></i>
+                <img src={logo} alt="" className="col-6" />
                 <h4 className="lead">WinHealth Connexion</h4>
                 <small className="text-secondary text-center col">
                   Veuillez vous authentifier
@@ -108,9 +108,7 @@ const Connexion = () => {
               </div>
             </div>
           </div>
-          <div style={{ position: "fixed", bottom: 0, right: 0, opacity: 0.9 }}>
-            <Clock position="fixed" />
-          </div>
+         
         </section>
       </div>
     </div>

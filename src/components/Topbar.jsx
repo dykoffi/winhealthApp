@@ -21,7 +21,7 @@ const Topbar = ({ toggleheure, toggleFullscreen, title }) => {
                             <i className="mdi-social-notifications-on mdi-2x"></i>
                         </div>
                         <div className="col-3 icon d-flex justify-content-center" onClick={() => { deconnexionUser() }}>
-                            <i className="mdi-action-exit-to-app mdi-2x"></i>
+                            <i className="mdi-action-lock red-textb mdi-2x"></i>
                         </div>
                     </div>
                 </div>
