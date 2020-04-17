@@ -9,14 +9,24 @@ import { disableModal } from "../../api/Profils/modal";
 import { thunkUpdateListProfil } from "../../api/Profils/list";
 import { connect } from "react-redux";
 import { header } from "../../constants/apiQuery";
+import Aucun from "../../../../components/Aucun";
 
-const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive, nomApp }) => {
+const FormAddProfil = ({
+  disableModal,
+  thunkUpdateListProfil,
+  appActive,
+  nomApp,
+}) => {
   moment.locale("fr");
   const [profil, setprofil] = useState("");
   const [list, setlist] = useState([]);
   const [checkedlist, setchecked] = useState([]);
 
+  const [loading, setloading] = useState(null);
+  const [aucun, setaucun] = useState(null);
+
   useEffect(() => {
+    setloading(true);
     Axios({
       url: `/admin/list/${appActive}/droits`,
       baseURL: header.url,
@@ -24,7 +34,8 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive, nomApp 
     })
       .then((res) => res.data.rows)
       .then((data) => {
-        setlist(data);
+        setloading(false);
+        data.length === 0 ? setaucun(true) : setlist(data);
       });
   }, [appActive]);
 
@@ -42,7 +53,9 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive, nomApp 
     <div className="row">
       <div className="FormAddProfil col-12 d-flex justify-content-center align-items-center">
         <div className="col-4 white p-3">
-          <h5 className="lead text-center">Ajouter un nouveau profil - {nomApp}</h5>
+          <h5 className="lead text-center">
+            Ajouter un nouveau profil - {nomApp}
+          </h5>
           <div className="p-3">
             <input
               value={profil}
@@ -65,7 +78,10 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive, nomApp 
                   scrollbarWidth: "none",
                 }}
               >
-                {list.length !== 0 ? (
+                {loading && <Loading text="Chargement des droits" />}
+                {aucun ? (
+                  <Aucun text={`aucun droit détecté pour ${nomApp}`} />
+                ) : (
                   list.map(({ labeldroit, codedroit }) => (
                     <Check
                       selected={checkedlist.includes(codedroit)}
@@ -76,8 +92,6 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive, nomApp 
                       }}
                     />
                   ))
-                ) : (
-                  <Loading text="Chargement des droits" />
                 )}
               </div>
             </div>
