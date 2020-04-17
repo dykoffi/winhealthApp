@@ -8,6 +8,7 @@ import DetailsProfil from "../containers/Profils/DetailsProfil";
 //redux
 import { enableModal } from "../api/Profils/modal";
 import { connect } from "react-redux";
+import StatsProfil from "../containers/Profils/StatsProfil";
 
 const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
   useEffect(() => {
@@ -18,6 +19,9 @@ const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
     <div className="Profils row">
       <div className="col-12">
         <div className="row d-flex justify-content-center">
+          <section className="col-3 d-flex flex-column">
+            <StatsProfil />
+          </section>
           <section id="profil_list" className="col-4 d-flex flex-column">
             <ListProfils />
             <div className="row">

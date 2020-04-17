@@ -44,7 +44,6 @@ const reducerApp = (state = initState, action) => {
 }
 
 export function thunklistApps() {
-    console.log('list app')
     return async (dispatch) => {
         Axios({
             url: `/admin/list/apps/`,
@@ -53,8 +52,6 @@ export function thunklistApps() {
         })
             .then((response) => response.data.rows)
             .then((data) => {
-                console.log(data);
-
                 dispatch(listApps(data))
             });
     }

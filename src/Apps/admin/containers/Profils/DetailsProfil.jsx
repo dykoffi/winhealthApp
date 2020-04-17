@@ -40,7 +40,7 @@ const DetailsProfil = ({ currentProfil }) => {
                 </thead>
                 <tbody>
                   {currentProfil.map(({ labeldroit, codedroit }, i) => (
-                    <tr className="row">
+                    <tr className="row" key={i}>
                       <td className="col-1">
                         <small>{i}</small>
                       </td>
