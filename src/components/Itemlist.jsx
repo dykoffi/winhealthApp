@@ -7,7 +7,7 @@ const Itemlist = ({ icon, title, details, click }) => {
         <i className={`mdi-${icon} mdi-2x text-secondary`}></i>
       </div>
       <div className="col-8 d-flex flex-column justify-content-center p-2">
-        <span className="text-secondary">{title}</span>
+        <small className="text-secondary">{title}</small>
         <small className="grey-text">{details}</small>
       </div>
       <div className="col-2 d-flex align-items-center">

@@ -84,7 +84,10 @@ input.rond {
 }
 
 input.bordertrans {
-  border: 2px rgb(230, 230, 230) solid !important;
+  border: 2px transparent solid !important;
+}
+input.bordertrans:focus {
+  background-color: white !important;
 }
 
 .Button button {
@@ -148,6 +151,7 @@ a:focus {
 .Topbar .icon {
   cursor: pointer;
   transition: all 0.4s ease;
+  font-size: 20px;
 }
 
 .Topbar .icon:hover {

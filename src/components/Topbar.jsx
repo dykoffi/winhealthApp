@@ -6,7 +6,7 @@ const Topbar = ({ toggleheure, toggleFullscreen, title, fullscreen }) => {
     <div className="col-12 p-1 Topbar">
       <div className="row">
         <div className="col-3 p-2 title ">
-          <h5 className="p-3">{title}</h5>
+          <span className="p-3">{title}</span>
         </div>
         <div className="col-2 offset-6 icons p-2">
           <div className="row text-secondary">
@@ -18,7 +18,7 @@ const Topbar = ({ toggleheure, toggleFullscreen, title, fullscreen }) => {
                 title={!fullscreen ? "Plein écran" : "Ecran reduit"}
                 className={`mdi-navigation-${
                   fullscreen ? "fullscreen-exit" : "fullscreen"
-                } mdi-2x`}
+                }`}
               ></i>
             </div>
             <div
@@ -26,13 +26,13 @@ const Topbar = ({ toggleheure, toggleFullscreen, title, fullscreen }) => {
               className="col-3 icon d-flex justify-content-center"
               onClick={() => toggleheure()}
             >
-              <i className="mdi-image-timer mdi-2x"></i>
+              <i className="mdi-image-timer"></i>
             </div>
             <div
               className="col-3 icon d-flex justify-content-center"
               title="Notifications"
             >
-              <i className="mdi-social-notifications-on mdi-2x"></i>
+              <i className="mdi-social-notifications-on"></i>
             </div>
             <div
               title="Déconnexion"
@@ -41,7 +41,7 @@ const Topbar = ({ toggleheure, toggleFullscreen, title, fullscreen }) => {
                 deconnexionUser();
               }}
             >
-              <i className="mdi-action-lock red-textb mdi-2x"></i>
+              <i className="mdi-action-lock red-textb"></i>
             </div>
           </div>
         </div>

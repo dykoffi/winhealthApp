@@ -26,7 +26,7 @@ const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
             <ListProfils />
             <div className="row">
               <button
-                className="btn btn-secondary rounded-0 col-12"
+                className="btn white text-info rounded-0 col-12"
                 onClick={() => enableModal()}
                 title={
                   appActive
@@ -35,7 +35,7 @@ const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
                 }
                 disabled={appActive === null}
               >
-                Ajouter un nouveau profil
+                <small>Ajouter un nouveau profil</small>
               </button>
             </div>
           </section>
