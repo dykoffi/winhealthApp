@@ -71,7 +71,7 @@ const Navbar = ({ user, fonctions }) => {
     }
 
     return (
-        <div className="row page bg-dark Navbar">
+        <div className="row page Navbar">
             <div className="col-12">
                 <NavHead user={user} />
                 {fonctions &&
