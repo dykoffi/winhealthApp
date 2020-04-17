@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import LoadingPoint from '../../../components/LoadingPoint'
 
 
 const Logs = ({ sendTitle }) => {
@@ -6,10 +7,9 @@ const Logs = ({ sendTitle }) => {
         sendTitle("Logs")
     })
     return (
-        <div className="Logs row p-5">
-            <div className="col-12">
-                <p>Creez , modifier, supprimez et attibuer des roles et des accèss à des utilisateurs</p>
-            </div>
+        <div className="Logs row p-5 text-center d-flex flex-column justify-content-center align-items-center">
+            <h6 className="lead">Page en consruction (47%)</h6>
+            <LoadingPoint />
         </div>
     )
 }
