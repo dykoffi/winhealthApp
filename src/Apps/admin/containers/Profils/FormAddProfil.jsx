@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Check } from "../../../../components/Listcheck";
+import LoadingPoint from "../../../../components/LoadingPoint";
 import { useEffect } from "react";
 import Axios from "axios";
 import Loading from "../../../../components/Loading";
@@ -19,6 +20,7 @@ const FormAddProfil = ({
 }) => {
   moment.locale("fr");
   const [profil, setprofil] = useState("");
+  const [loadAdd, setloadAdd] = useState(false);
   const [list, setlist] = useState([]);
   const [checkedlist, setchecked] = useState([]);
 
@@ -47,6 +49,10 @@ const FormAddProfil = ({
 
   function change({ target: { value } }) {
     setprofil(value);
+  }
+  function addProfil() {
+    setloadAdd(true)
+    thunkUpdateListProfil(appActive, profil, checkedlist);
   }
 
   return (
@@ -107,12 +113,15 @@ const FormAddProfil = ({
                   profil.trim().length === 0 || checkedlist.length === 0
                 }
                 className="btn btn-primary rounded-0"
-                onClick={() =>
-                  thunkUpdateListProfil(appActive, profil, checkedlist)
-                }
+                onClick={() => addProfil()}
               >
                 Valider la saisie
               </button>
+              {loadAdd && (
+                <div className="d-flex col-sm align-items-center justify-content-center">
+                  <LoadingPoint />
+                </div>
+              )}
             </div>
           </div>
         </div>
