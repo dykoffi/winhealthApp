@@ -9,7 +9,7 @@ import DetailsProfil from "../containers/Profils/DetailsProfil";
 import { enableModal } from "../api/Profils/modal";
 import { connect } from "react-redux";
 
-const Profils = ({ sendTitle, modalVisible, enableModal }) => {
+const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
   useEffect(() => {
     sendTitle("Profils");
   });
@@ -24,15 +24,18 @@ const Profils = ({ sendTitle, modalVisible, enableModal }) => {
               <button
                 className="btn btn-secondary rounded-0 col-12"
                 onClick={() => enableModal()}
+                title={
+                  appActive
+                    ? "ajouter un profil"
+                    : "Veuillez choisir d'abord un module"
+                }
+                disabled={appActive === null}
               >
                 Ajouter un nouveau profil
               </button>
             </div>
           </section>
-          <section
-            id="profil_details"
-            className="col-5"
-          >
+          <section id="profil_details" className="col-5">
             <DetailsProfil />
           </section>
         </div>
@@ -46,7 +49,10 @@ const mapStateToProp = (state) => {
   const {
     modalReducer: { visible: modalVisible },
   } = state;
-  return { modalVisible };
+  const {
+    appReducer: { appActive },
+  } = state;
+  return { modalVisible, appActive };
 };
 
 const ProfilsConnected = connect(mapStateToProp, { enableModal })(Profils);

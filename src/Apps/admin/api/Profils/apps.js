@@ -3,7 +3,8 @@ import { header } from "../../constants/apiQuery"
 
 const initState = {
     listApps: [],
-    appActive: null
+    appActive: null,
+    nomApp : null
 }
 
 
@@ -17,9 +18,10 @@ const listApps = (list) => ({
     listApps: list
 })
 
-export const activeApp = (app) => ({
+export const activeApp = (codeApp, nomApp) => ({
     type: APP_ACTIVE,
-    appActive: app
+    appActive: codeApp,
+    nomApp : nomApp
 })
 
 //le reducer
@@ -33,7 +35,8 @@ const reducerApp = (state = initState, action) => {
         case APP_ACTIVE:
             return {
                 ...state,
-                appActive: action.appActive
+                appActive: action.appActive,
+                nomApp : action.nomApp
             }
         default:
             return state;

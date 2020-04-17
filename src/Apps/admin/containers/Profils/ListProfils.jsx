@@ -45,7 +45,7 @@ const Verticalist = ({
               key={i}
               className={`col-sm m-1 ${appActive === codeapp && "active"}`}
               onClick={() => {
-                activeApp(codeapp);
+                activeApp(codeapp, nomapp);
               }}
             >
               <span>{nomapp}</span>

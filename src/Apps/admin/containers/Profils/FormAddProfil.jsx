@@ -10,7 +10,7 @@ import { thunkUpdateListProfil } from "../../api/Profils/list";
 import { connect } from "react-redux";
 import { header } from "../../constants/apiQuery";
 
-const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive }) => {
+const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive, nomApp }) => {
   moment.locale("fr");
   const [profil, setprofil] = useState("");
   const [list, setlist] = useState([]);
@@ -42,7 +42,7 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive }) => {
     <div className="row">
       <div className="FormAddProfil col-12 d-flex justify-content-center align-items-center">
         <div className="col-4 white p-3">
-          <h5 className="lead text-center">Ajouter un nouveau profil</h5>
+          <h5 className="lead text-center">Ajouter un nouveau profil - {nomApp}</h5>
           <div className="p-3">
             <input
               value={profil}
@@ -108,9 +108,9 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive }) => {
 };
 const mapPropToState = (state) => {
   const {
-    appReducer: { appActive },
+    appReducer: { appActive, nomApp },
   } = state;
-  return { appActive };
+  return { appActive, nomApp };
 };
 const FormAddProfilConnected = connect(mapPropToState, {
   disableModal,
