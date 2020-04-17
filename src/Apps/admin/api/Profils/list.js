@@ -117,7 +117,8 @@ export const thunkUpdateListProfil = (app, profil, checkedlist) => {
     return async (dispatch) => {
         Axios({
             method: "post",
-            url: `${header.url}/admin/add/${app}/profil`,
+            url: `/admin/add/${app}/profil`,
+            baseURL: header.url,
             data: {
                 labelProfil: profil,
                 dateProfil: moment().format("LLLL"),
@@ -129,7 +130,11 @@ export const thunkUpdateListProfil = (app, profil, checkedlist) => {
             },
         }).then(() => {
             dispatch(listProfilLoading())
-            Axios.get(`${header.url}/admin/list/${app}/profils`)
+            Axios({
+                url: `/admin/list/${app}/profils`,
+                baseURL: header.url,
+                method: 'GET'
+            })
                 .then((res) => res.data.rows)
                 .then((data) => {
                     data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))

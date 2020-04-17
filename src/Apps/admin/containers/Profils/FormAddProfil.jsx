@@ -8,6 +8,7 @@ import moment from "moment";
 import { disableModal } from "../../api/Profils/modal";
 import { thunkUpdateListProfil } from "../../api/Profils/list";
 import { connect } from "react-redux";
+import { header } from "../../constants/apiQuery";
 
 const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive }) => {
   moment.locale("fr");
@@ -16,7 +17,11 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive }) => {
   const [checkedlist, setchecked] = useState([]);
 
   useEffect(() => {
-    Axios.get(`http://localhost:8000/admin/list/${appActive}/droits`)
+    Axios({
+      url: `/admin/list/${appActive}/droits`,
+      baseURL: header.url,
+      method: "GET",
+    })
       .then((res) => res.data.rows)
       .then((data) => {
         setlist(data);
@@ -88,7 +93,9 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive }) => {
                   profil.trim().length === 0 || checkedlist.length === 0
                 }
                 className="btn btn-primary rounded-0"
-                onClick={() => thunkUpdateListProfil(appActive, profil, checkedlist)}
+                onClick={() =>
+                  thunkUpdateListProfil(appActive, profil, checkedlist)
+                }
               >
                 Valider la saisie
               </button>

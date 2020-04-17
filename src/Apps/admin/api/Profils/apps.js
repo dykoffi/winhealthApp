@@ -26,10 +26,8 @@ export const activeApp = (app) => ({
 const reducerApp = (state = initState, action) => {
     switch (action.type) {
         case LIST_APPS:
-            const { codeapp } = action.listApps[0]
             return {
                 ...state,
-                // appActive: state.appActive === null && codeapp,
                 listApps: action.listApps
             }
         case APP_ACTIVE:
