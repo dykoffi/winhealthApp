@@ -39,7 +39,7 @@ const Accueil = ({ sendTitle }) => {
           <div className="col-4 d-flex p-4">
             <Horizontalcard
               title="Logs"
-              details="Consulter les fichiers journaux générés par tous les utilisateurs du systeùe"
+              details="Consulter les fichiers journaux générés par tous les utilisateurs du système"
               icon="action-description"
               bgColor="orange"
               link="/admin/logs"

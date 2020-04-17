@@ -55,7 +55,7 @@ const Connexion = () => {
           id="form_connexion"
           className="form col-12 d-flex justify-content-center align-items-center"
         >
-          <div className="col-3 white p-4" style={{ opacity: 0.92 }}>
+          <div className="col-3 white p-4 rounded" style={{ opacity: 0.92 }}>
             <div className="row">
               <div className="text-dark text-center col-12">
                 <img src={logo} alt="" className="col-6" />
@@ -69,7 +69,7 @@ const Connexion = () => {
                   value={login}
                   onChange={changeLogin}
                   type="text"
-                  className="col-12 text-center p-2 mt-3"
+                  className="col-12 text-center p-2 mt-3 rond"
                   autoFocus
                   placeholder="Entrez votre identifiant"
                 />
@@ -77,7 +77,7 @@ const Connexion = () => {
                   value={pass}
                   onChange={changePass}
                   type="password"
-                  className="col-12 text-center p-2 mt-2"
+                  className="col-12 text-center p-2 mt-2 rond"
                   placeholder="Entrez votre password"
                 />
                 <br />
@@ -97,7 +97,7 @@ const Connexion = () => {
                   )}
                 </div>
                 <button
-                  className="btn btn-info rounded-0 col-12 mt-4"
+                  className="btn btn-info col-12 mt-4"
                   disabled={
                     login.trim().length === 0 || pass.trim().length === 0
                   }

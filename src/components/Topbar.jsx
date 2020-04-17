@@ -15,21 +15,27 @@ const Topbar = ({ toggleheure, toggleFullscreen, title, fullscreen }) => {
               onClick={() => toggleFullscreen()}
             >
               <i
+                title={!fullscreen ? "Plein écran" : "Ecran reduit"}
                 className={`mdi-navigation-${
                   fullscreen ? "fullscreen-exit" : "fullscreen"
                 } mdi-2x`}
               ></i>
             </div>
             <div
+              title="l'Heure"
               className="col-3 icon d-flex justify-content-center"
               onClick={() => toggleheure()}
             >
               <i className="mdi-image-timer mdi-2x"></i>
             </div>
-            <div className="col-3 icon d-flex justify-content-center">
+            <div
+              className="col-3 icon d-flex justify-content-center"
+              title="Notifications"
+            >
               <i className="mdi-social-notifications-on mdi-2x"></i>
             </div>
             <div
+              title="Déconnexion"
               className="col-3 icon d-flex justify-content-center"
               onClick={() => {
                 deconnexionUser();
