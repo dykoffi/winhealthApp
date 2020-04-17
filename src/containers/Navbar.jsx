@@ -3,15 +3,15 @@ import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 
 const NavHead = ({ user }) => {
-
+    const {nom, poste, prenoms, profil} = user
     return (
         <div className="row p-4 text-light">
             <div className="col-12 text-center ">
                 <i className={`mdi-social-person mdi-5x`}></i>
             </div>
             <div className="col-12 text-center">
-                <h6>{user.nom + " " + user.prenoms}</h6>
-                <small>{user.poste + "  -  " + user.profil}</small>
+                <h6>{nom + " " + prenoms}</h6>
+                <small>{poste + "  -  " + profil}</small>
             </div>
         </div>
     )

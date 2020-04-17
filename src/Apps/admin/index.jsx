@@ -17,6 +17,7 @@ const Admin = () => {
   const cookies = new Cookies();
   const [heure, showheure] = useState(true);
   const [title, setTitle] = useState("Accueil");
+  const [fullscreen, setfullscreen] = useState(false);
 
   function toggleheure() {
     return heure ? showheure(false) : showheure(true);
@@ -24,9 +25,11 @@ const Admin = () => {
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
+      setfullscreen(true);
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
+        setfullscreen(false);
       }
     }
   }
@@ -52,6 +55,7 @@ const Admin = () => {
             <Topbar
               title={title}
               toggleFullscreen={toggleFullscreen}
+              fullscreen={fullscreen}
               toggleheure={toggleheure}
             />
           </section>

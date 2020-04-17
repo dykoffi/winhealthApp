@@ -74,10 +74,10 @@ const reducerList = (state = initState, action) => {
 }
 
 //les functions thunk
-export function thunkListProfil() {
+export function thunkListProfil(codeApp) {
     return async (dispatch) => {
         dispatch(listProfilLoading())
-        Axios.get(`${header.url}/admin/list/profils`)
+        Axios.get(`${header.url}/admin/list/${codeApp}/profils`)
             .then((res) => res.data.rows)
             .then((data) => {
                 data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))
@@ -88,11 +88,11 @@ export function thunkListProfil() {
     }
 }
 
-export const thunkSearchListProfil = (mot) => {
+export const thunkSearchListProfil = (app, mot) => {
     return async (dispatch) => {
         dispatch(listProfilLoading())
         if (mot.trim().length === 0) {
-            Axios.get(`${header.url}/admin/list/profils`)
+            Axios.get(`${header.url}/admin/list/${app}/profils`)
                 .then((res) => res.data.rows)
                 .then((data) => {
                     data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))
@@ -101,7 +101,7 @@ export const thunkSearchListProfil = (mot) => {
                     console.log(err)
                 })
         } else {
-            Axios.get(`${header.url}/admin/search/profil/${mot}`)
+            Axios.get(`${header.url}/admin/search/${app}/profil/${mot}`)
                 .then((res) => res.data.rows)
                 .then((data) => {
                     data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))
@@ -113,11 +113,11 @@ export const thunkSearchListProfil = (mot) => {
     }
 }
 
-export const thunkUpdateListProfil = (profil, checkedlist) => {
+export const thunkUpdateListProfil = (app, profil, checkedlist) => {
     return async (dispatch) => {
         Axios({
             method: "post",
-            url: `${header.url}/admin/add/profil`,
+            url: `${header.url}/admin/add/${app}/profil`,
             data: {
                 labelProfil: profil,
                 dateProfil: moment().format("LLLL"),
@@ -129,7 +129,7 @@ export const thunkUpdateListProfil = (profil, checkedlist) => {
             },
         }).then(() => {
             dispatch(listProfilLoading())
-            Axios.get(`${header.url}/admin/list/profils`)
+            Axios.get(`${header.url}/admin/list/${app}/profils`)
                 .then((res) => res.data.rows)
                 .then((data) => {
                     data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))

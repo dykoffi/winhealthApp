@@ -9,19 +9,19 @@ import { disableModal } from "../../api/Profils/modal";
 import { thunkUpdateListProfil } from "../../api/Profils/list";
 import { connect } from "react-redux";
 
-const FormAddProfil = ({ disableModal, thunkUpdateListProfil }) => {
+const FormAddProfil = ({ disableModal, thunkUpdateListProfil, appActive }) => {
   moment.locale("fr");
   const [profil, setprofil] = useState("");
   const [list, setlist] = useState([]);
   const [checkedlist, setchecked] = useState([]);
 
   useEffect(() => {
-    Axios.get("http://localhost:8000/admin/list/droits")
+    Axios.get(`http://localhost:8000/admin/list/${appActive}/droits`)
       .then((res) => res.data.rows)
       .then((data) => {
         setlist(data);
       });
-  }, []);
+  }, [appActive]);
 
   function toogleCheck(code) {
     checkedlist.includes(code)
@@ -57,7 +57,7 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil }) => {
                 style={{
                   height: "50vh",
                   overflowY: "scroll",
-                  scrollbarWidth: "none"
+                  scrollbarWidth: "none",
                 }}
               >
                 {list.length !== 0 ? (
@@ -88,7 +88,7 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil }) => {
                   profil.trim().length === 0 || checkedlist.length === 0
                 }
                 className="btn btn-primary rounded-0"
-                onClick={() => thunkUpdateListProfil(profil, checkedlist)}
+                onClick={() => thunkUpdateListProfil(appActive, profil, checkedlist)}
               >
                 Valider la saisie
               </button>
@@ -99,8 +99,13 @@ const FormAddProfil = ({ disableModal, thunkUpdateListProfil }) => {
     </div>
   );
 };
-
-const FormAddProfilConnected = connect(null, {
+const mapPropToState = (state) => {
+  const {
+    appReducer: { appActive },
+  } = state;
+  return { appActive };
+};
+const FormAddProfilConnected = connect(mapPropToState, {
   disableModal,
   thunkUpdateListProfil,
 })(FormAddProfil);

@@ -2,8 +2,31 @@
   "name": "win_health",
   "version": "0.1.0",
   "private": true,
+  "description": "Altea Winhealth App SIH",
+  "author": {
+    "email": "koffiedy@gmail.com",
+    "name": "Edy Koffi",
+    "url": "https://www.linkedin.com/in/edy-koffi-948494192/"
+  },
+  "contributors": [
+    {
+      "name": "Wilfried Gbadje",
+      "url": "https://www.linkedin.com/in/wilfried-gbadje-27bb21a2/",
+      "email": "wilfried@altea-ci.com"
+    },
+    {
+      "name": "Abdoul N'Dongo",
+      "email": "abdoulaye@altea-ci.com"
+    },
+    {
+      "name": "Audrey Bogui",
+      "url": "https://www.linkedin.com/in/audrey-bogui-50873a121/",
+      "email": "audrey@altea-ci.com"
+    }
+  ],
   "engines": {
-    "node": "12.13.1"
+    "node": "12.13.1",
+    "npm": "6.14"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",

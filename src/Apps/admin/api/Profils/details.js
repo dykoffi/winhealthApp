@@ -14,6 +14,7 @@ const currentProfil = (profil) => ({
     currentProfil: [...profil]
 })
 
+//le reducer
 const reducerDetailsProfil = (state = initState, action) => {
     switch (action.type) {
         case CURRENT_PROFIL_SUCCESS:
@@ -30,7 +31,8 @@ const reducerDetailsProfil = (state = initState, action) => {
 export function thunkDetailsProfil(idProfil) {
     return async (dispatch) => {
         Axios({
-            url: `${header.url}/admin/details/profil/${idProfil}`,
+            url: `/admin/details/profil/${idProfil}`,
+            baseURL: header.url,
             method: "GET"
         })
             .then((response) => response.data.rows)

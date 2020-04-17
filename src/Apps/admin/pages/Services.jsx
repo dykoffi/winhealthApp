@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import LoadingPoint from '../../../components/LoadingPoint'
 
 
 const Services = ({sendTitle}) => {
@@ -6,8 +7,9 @@ const Services = ({sendTitle}) => {
         sendTitle("Services")
     })
     return (
-        <div className="Services row p-5">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae recusandae asperiores, voluptate illo et, hic exercitationem fuga tempore minima fugiat facilis a neque aperiam iste repudiandae maxime sunt, consequuntur aspernatur?</p>
+        <div className="Services row p-5 text-center d-flex flex-column justify-content-center align-items-center">
+            <h6 className="lead">Page en consruction (7%)</h6>
+            <LoadingPoint />
         </div>
     )
 }

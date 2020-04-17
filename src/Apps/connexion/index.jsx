@@ -2,7 +2,7 @@ import Axios from "axios";
 import React, { useState } from "react";
 import { Cookies } from "react-cookie";
 import logo from "../../static/images/wh_logo.png";
-import Chargement from '../../components/Chargement'
+import { header } from "../admin/constants/apiQuery";
 //components
 
 const Connexion = () => {
@@ -22,7 +22,8 @@ const Connexion = () => {
     seterror(false);
     setloading(true);
     Axios({
-      url: "http://localhost:8000/connexion/verify/user",
+      url: `/connexion/verify/user`,
+      baseURL : header.url,
       method: "post",
       data: {
         login: login,
@@ -37,7 +38,7 @@ const Connexion = () => {
         if (data) {
           //ajouter toujours les path comme options sinon ca ne marchera pas à long terme pour la deconnexion
           cookies.set("user", data, { expire: 0, path: "/" });
-          cookies.set("currentPage", data.app, { expire: 0, path: "/" });
+          cookies.set("currentPage", data.nomapp.toLowerCase(), { expire: 0, path: "/" });
           window.location = "/admin";
         } else {
           setloading(false);
@@ -49,7 +50,6 @@ const Connexion = () => {
 
   return (
     <div className="col-12" id="Connexion">
-      <Chargement />
       <div className="row page">
         <section
           id="form_connexion"

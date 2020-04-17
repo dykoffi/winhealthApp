@@ -1,18 +1,13 @@
 // TODO : Architecture et liste des pages utiisée dans l'application
-import { lazy } from 'react'
 
 //chargement des store de chaque application
 import profilsStore from '../api/Profils/store'
 
-//utilisation de l'import dynamique afin de charger les pages à la demande
-const Accueil = lazy(() => import('../pages/Accueil'))
-const Users = lazy(() => import('../pages/Users'))
-const Services = lazy(() => import('../pages/Services'))
-const Profils = lazy(() => import('../pages/Profils'))
-const Logs = lazy(() => import('../pages/Logs'))
-
-
-
+import Accueil from '../pages/Accueil'
+import Users from '../pages/Users'
+import Services from '../pages/Services'
+import Profils from '../pages/Profils'
+import Logs from '../pages/Logs'
 
 export const Pages = [
     {

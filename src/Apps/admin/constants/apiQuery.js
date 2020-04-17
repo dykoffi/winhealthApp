@@ -1,4 +1,4 @@
 export const header = {
     timeout : 1000,
-    url : 'http://localhost:8000'
+    url : 'https://apiwin.herokuapp.com'
 }

@@ -25,30 +25,34 @@ section.image > h1 {
 .Chargement .logo {
   animation: load 0.8s infinite alternate-reverse ease;
 }
-.Chargement div i {
-  font-size: smaller;
+
+/* LOAding point */
+
+.LoadingPoint i {
+  opacity: 0.2;
+  font-size: 11px;
 }
 
-.Chargement div i:first-child{
+.LoadingPoint i:first-child {
   animation: pointload 0.5s 0.5s infinite alternate-reverse ease;
 }
 
-.Chargement div i:nth-child(2){
+.LoadingPoint i:nth-child(2) {
   animation: pointload 0.5s 0.6s infinite alternate-reverse ease;
 }
 
-.Chargement div i:nth-child(3){
-  animation: pointload 0.5s .7s infinite alternate-reverse ease;
+.LoadingPoint i:nth-child(3) {
+  animation: pointload 0.5s 0.7s infinite alternate-reverse ease;
 }
 
 @keyframes pointload {
   to {
     opacity: 0.2;
-    transform : scale(0.9)
+    transform: scale(0.9);
   }
   from {
     opacity: 0.7;
-    transform : scale(1.1)
+    transform: scale(1.1);
   }
 }
 
@@ -97,7 +101,7 @@ input.bordertrans {
   top: 0;
   left: 0;
   z-index: 10001;
-  background-color: rgba(58, 55, 55, 0.753);
+  background-color: rgba(58, 55, 55, 0.61);
 }
 
 /* Navbar */
@@ -224,4 +228,17 @@ a:focus {
 .FormAddUser .chooseApp div:hover,
 .FormAddUser .chooseProfil div:hover {
   background-color: rgb(240, 240, 240) !important;
+}
+.Verticalist .chooseApp div {
+  cursor: pointer;
+  transition: all 0.6s ease;
+  border-bottom: 3px transparent solid;
+}
+
+.Verticalist .chooseApp .active {
+  border-bottom-color: rgba(1, 138, 180, 0.726) !important;
+}
+
+.Verticalist .chooseApp div:hover {
+  border-bottom-color: rgba(1, 138, 180, 0.363) !important;
 }

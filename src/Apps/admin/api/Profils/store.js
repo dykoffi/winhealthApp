@@ -3,6 +3,8 @@ import thunk from 'redux-thunk'
 import modalReducer from './modal'
 import listReducer from './list'
 import detailsReducer from './details'
-const rootReducers = combineReducers({ modalReducer, listReducer, detailsReducer })
+import appReducer from './apps'
+
+const rootReducers = combineReducers({ modalReducer, listReducer, detailsReducer, appReducer })
 
 export default createStore(rootReducers, applyMiddleware(thunk)) 

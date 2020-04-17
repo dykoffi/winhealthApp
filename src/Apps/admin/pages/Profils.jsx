@@ -31,7 +31,7 @@ const Profils = ({ sendTitle, modalVisible, enableModal }) => {
           </section>
           <section
             id="profil_details"
-            className="col-7"
+            className="col-5"
           >
             <DetailsProfil />
           </section>
