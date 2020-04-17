@@ -21,6 +21,7 @@ const FormAddProfil = ({
   moment.locale("fr");
   const [profil, setprofil] = useState("");
   const [loadAdd, setloadAdd] = useState(false);
+  const [profilExist, setprofilExist] = useState(false);
   const [list, setlist] = useState([]);
   const [checkedlist, setchecked] = useState([]);
 
@@ -48,10 +49,30 @@ const FormAddProfil = ({
   }
 
   function change({ target: { value } }) {
-    setprofil(value);
+    setprofil(value.toUpperCase());
+    verifyProfil(value.toUpperCase());
   }
+
+  function verifyProfil(profil) {
+    if (profil.trim().length) {
+      setloadAdd(true);
+      setprofilExist(false)
+      Axios({
+        url: `/admin/strictsearch/${appActive}/profil/${profil}`,
+        baseURL: header.url,
+        method: "GET",
+      })
+        .then((res) => res.data.rows)
+        .then((data) => {
+          console.log(data);
+          setloadAdd(false);
+          data.length === 0 ? setprofilExist(false) : setprofilExist(true);
+        });
+    }
+  }
+
   function addProfil() {
-    setloadAdd(true)
+    setloadAdd(true);
     thunkUpdateListProfil(appActive, profil, checkedlist);
   }
 
@@ -110,7 +131,7 @@ const FormAddProfil = ({
               </button>
               <button
                 disabled={
-                  profil.trim().length === 0 || checkedlist.length === 0
+                  profil.trim().length === 0 || checkedlist.length === 0 || profilExist
                 }
                 className="btn btn-primary rounded-0"
                 onClick={() => addProfil()}
@@ -120,6 +141,11 @@ const FormAddProfil = ({
               {loadAdd && (
                 <div className="d-flex col-sm align-items-center justify-content-center">
                   <LoadingPoint />
+                </div>
+              )}
+              {profilExist && (
+                <div className="d-flex col-sm align-items-center justify-content-center text-danger">
+                  <small>Ce profil existe deja dans {nomApp}</small>
                 </div>
               )}
             </div>
