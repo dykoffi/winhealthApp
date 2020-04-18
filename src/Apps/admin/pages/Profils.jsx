@@ -19,10 +19,7 @@ const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
     <div className="Profils row">
       <div className="col-12">
         <div className="row d-flex justify-content-center">
-          <section className="col-3 d-flex flex-column">
-            <StatsProfil />
-          </section>
-          <section id="profil_list" className="col-4 d-flex flex-column">
+          <section id="profil_list" className="col-3 d-flex flex-column">
             <ListProfils />
             <div className="row">
               <button
@@ -39,7 +36,10 @@ const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
               </button>
             </div>
           </section>
-          <section id="profil_details" className="col-5">
+          <section className="col-3 d-flex flex-column ml-3">
+            <StatsProfil />
+          </section>
+          <section id="profil_details" className="col-4">
             <DetailsProfil />
           </section>
         </div>

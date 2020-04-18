@@ -3,7 +3,6 @@ import { Check } from "../../../../components/Listcheck";
 import LoadingPoint from "../../../../components/LoadingPoint";
 import { useEffect } from "react";
 import Axios from "axios";
-import Loading from "../../../../components/Loading";
 import moment from "moment";
 
 import { disableModal } from "../../api/Profils/modal";
@@ -105,7 +104,7 @@ const FormAddProfil = ({
                   scrollbarWidth: "none",
                 }}
               >
-                {loading && <Loading text="Chargement des droits" />}
+                {loading &&  <LoadingPoint />}
                 {aucun ? (
                   <Aucun text={`aucun droit détecté pour ${nomApp}`} />
                 ) : (

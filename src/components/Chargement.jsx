@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../static/images/wh_logo.png";
+// import logo from "../static/images/wh_logo.png";
 import LoadingPoint from "./LoadingPoint";
 
 const Chargement = () => {
@@ -18,7 +18,7 @@ const Chargement = () => {
           className="col-12 p-5 d-flex bg-light justify-content-center align-items-center"
         >
           <div className="col-4 p-5 text-dark d-flex flex-column align-items-center justify-content-center">
-            <img src={logo} className="col-4 logo" alt="" />
+            {/* <img src={logo} className="col-4 logo" alt="" /> */}
             <LoadingPoint />
           </div>
         </div>

@@ -50,6 +50,26 @@ const Accueil = ({ sendTitle }) => {
               link="/admin/logs"
             />
           </div>
+          <div className="col-3 d-flex">
+            <Horizontalcard
+              title="Com"
+              details="Partagez des informations avec tous les utilisateurs actifs du sytème"
+              icon="hardware-headset-mic"
+              bgColor="white"
+              textColor="red-text"
+              link="/admin/logs"
+            />
+          </div>
+          <div className="col-3 d-flex">
+            <Horizontalcard
+              title="Settings"
+              details="Réglez et paramétrez tous les modules du système à votre guise"
+              icon="action-settings"
+              bgColor="white"
+              textColor="grey-text darken-4"
+              link="/admin/logs"
+            />
+          </div>
         </div>
       </div>
     </div>

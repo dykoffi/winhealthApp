@@ -8,10 +8,10 @@ const DetailsProfil = ({ currentProfil }) => {
         <>
           <div className="p-2 col-12">
             <div className="col-12 text-center">
-              <i className="mdi-action-verified-user mdi-5x text-success"></i>
+              <i className="mdi-action-verified-user mdi-3x text-info"></i>
             </div>
             <div className="col-12 text-center">
-              <h6>{currentProfil[0].labelprofil}</h6>
+              <small className="font-weight-bold">{currentProfil[0].labelprofil}</small> <br/>
               <small>{`crée  par ${currentProfil[0].auteurprofil} le ${currentProfil[0].dateprofil}`}</small>
             </div>
           </div>
@@ -60,8 +60,8 @@ const DetailsProfil = ({ currentProfil }) => {
       ) : (
         <div className="d-flex align-items-center justify-content-center grey-text lighten-3 col-12">
           <div className="row">
-            <i className="mdi-editor-format-align-left mdi-5x col-12 text-center"></i>
-            <span className="text-center col-12">Aucun profil selectionné</span>
+            <i className="mdi-editor-format-align-left mdi-3x col-12 text-center"></i>
+            <small className="text-center col-12">Aucun profil selectionné</small>
           </div>
         </div>
       )}

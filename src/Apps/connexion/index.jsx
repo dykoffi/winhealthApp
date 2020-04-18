@@ -58,8 +58,8 @@ const Connexion = () => {
           <div className="col-3 white p-4 rounded" style={{ opacity: 0.92 }}>
             <div className="row">
               <div className="text-dark text-center col-12">
-                <img src={logo} alt="" className="col-6" />
-                <h4 className="lead">WinHealth Connexion</h4>
+                <img src={logo} alt="" className="col-4" />
+                <h6 className="lead">WinHealth Connexion</h6>
                 <small className="text-secondary text-center col">
                   Veuillez vous authentifier
                 </small>

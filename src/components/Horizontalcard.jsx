@@ -11,7 +11,7 @@ const Horizontalcard = ({
   bgColor,
 }) => {
   return (
-    <div className="row white rounded Horizontalcard mt-3 ml-1">
+    <div className="row white ombre rounded Horizontalcard mt-3 ml-1">
       <div
         className={`col-4 d-flex align-items-center justify-content-center ${textColor} ${bgColor} flex-column`}
       >
