@@ -2,6 +2,7 @@
 
 //chargement des store de chaque application
 import profilsStore from '../api/Profils/store'
+import logsStore from '../api/Logs/store'
 
 import Accueil from '../pages/Accueil'
 import Users from '../pages/Users'
@@ -39,6 +40,8 @@ export const Pages = [
         title: "Logs",
         desc: "dashboard general de l'admin",
         path: "/admin/logs",
-        Component: Logs
+        Component: Logs,
+        store : logsStore
+
     }
 ]

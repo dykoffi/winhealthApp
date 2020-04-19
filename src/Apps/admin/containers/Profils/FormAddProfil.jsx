@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { Check } from "../../../../components/Listcheck";
 import LoadingPoint from "../../../../components/LoadingPoint";
 import { useEffect } from "react";
@@ -18,6 +19,7 @@ const FormAddProfil = ({
   nomApp,
 }) => {
   moment.locale("fr");
+ 
   const [profil, setprofil] = useState("");
   const [loadAdd, setloadAdd] = useState(false);
   const [profilExist, setprofilExist] = useState(false);
@@ -33,6 +35,7 @@ const FormAddProfil = ({
       url: `/admin/list/${appActive}/droits`,
       baseURL: header.url,
       method: "GET",
+      
     })
       .then((res) => res.data.rows)
       .then((data) => {
@@ -55,7 +58,7 @@ const FormAddProfil = ({
   function verifyProfil(profil) {
     if (profil.trim().length) {
       setloadAdd(true);
-      setprofilExist(false)
+      setprofilExist(false);
       Axios({
         url: `/admin/strictsearch/${appActive}/profil/${profil}`,
         baseURL: header.url,
@@ -104,7 +107,7 @@ const FormAddProfil = ({
                   scrollbarWidth: "none",
                 }}
               >
-                {loading &&  <LoadingPoint />}
+                {loading && <LoadingPoint />}
                 {aucun ? (
                   <Aucun text={`aucun droit détecté pour ${nomApp}`} />
                 ) : (
@@ -130,7 +133,9 @@ const FormAddProfil = ({
               </button>
               <button
                 disabled={
-                  profil.trim().length === 0 || checkedlist.length === 0 || profilExist
+                  profil.trim().length === 0 ||
+                  checkedlist.length === 0 ||
+                  profilExist
                 }
                 className="btn btn-primary rounded-0"
                 onClick={() => addProfil()}

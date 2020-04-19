@@ -251,7 +251,13 @@ a:focus {
 .Verticalist .chooseApp .active {
   border-bottom-color: rgba(1, 138, 180, 0.726) !important;
 }
-
+.Verticalist .chooseApp .active:hover {
+  border-bottom-color: rgba(1, 138, 180, 0.726) !important;
+}
 .Verticalist .chooseApp div:hover {
-  border-bottom-color: rgba(1, 138, 180, 0.363) !important;
+  border-bottom-color: rgba(1, 138, 180, 0.11) !important;
+}
+
+.logListApps small{
+  cursor: pointer;
 }

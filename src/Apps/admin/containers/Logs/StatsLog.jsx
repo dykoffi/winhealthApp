@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Statcard from "../../../../components/Statcard";
 
 const StatsLog = () => {
+  useEffect(()=>{
+    
+  })
   return (
     <div className="row">
       <div className="col-12">
@@ -16,7 +19,7 @@ const StatsLog = () => {
         <Statcard
           nombre={7}
           theme="white ombre rounded"
-          titre="Users(s)"
+          titre="User(s)"
           details="Le nombre d'utilisateur ayant générés des logs jusqu'à aujoud'hui."
         />
       </div>

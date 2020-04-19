@@ -114,11 +114,13 @@ export const thunkSearchListProfil = (app, mot) => {
 }
 
 export const thunkUpdateListProfil = (app, profil, checkedlist) => {
+    const { mail, codeapp } = cookies.get("user", { paht: "/" });
     return async (dispatch) => {
         Axios({
             method: "post",
             url: `/admin/add/${app}/profil`,
             baseURL: header.url,
+            params: { userMail: mail, app: codeapp },
             data: {
                 labelProfil: profil,
                 dateProfil: moment().format("LLLL"),

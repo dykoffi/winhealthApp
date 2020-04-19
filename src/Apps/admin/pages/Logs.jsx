@@ -13,11 +13,11 @@ const Logs = ({ sendTitle }) => {
       <section className="col-1" id="listapps">
         <ListApp />
       </section>
-      <section className="col-7 ml-2">
-        <ListLogs />
-      </section>
       <section className="col-3" id="statslogs">
         <StatsLog />
+      </section>
+      <section className="col-6 ml-2">
+        <ListLogs />
       </section>
     </div>
   );
