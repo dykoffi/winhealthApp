@@ -3,25 +3,19 @@ import React, { Suspense, useState } from "react";
 import { Provider } from "react-redux";
 import { Cookies } from "react-cookie";
 import { Route } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
 
 import { navMenu } from "./constants/liens";
 import { Pages } from "./constants/pages";
 import Navbar from "../../containers/Navbar";
 
-import Clock from "../../components/Clock";
 import Topbar from "../../components/Topbar";
 import Loading from "../../components/Loading";
 
 const Admin = () => {
   const cookies = new Cookies();
-  const [heure, showheure] = useState(true);
   const [title, setTitle] = useState("Accueil");
   const [fullscreen, setfullscreen] = useState(false);
 
-  function toggleheure() {
-    return heure ? showheure(false) : showheure(true);
-  }
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -56,7 +50,6 @@ const Admin = () => {
               title={title}
               toggleFullscreen={toggleFullscreen}
               fullscreen={fullscreen}
-              toggleheure={toggleheure}
             />
           </section>
           <Suspense fallback={() => <Loading text="chargement en cours" />}>
@@ -82,18 +75,6 @@ const Admin = () => {
               ))}
             </section>
           </Suspense>
-          <CSSTransition
-            in={heure}
-            timeout={300}
-            classNames="alert"
-            unmountOnExit
-          >
-            <div
-              style={{ position: "fixed", bottom: 0, right: 0, opacity: 0.9 }}
-            >
-              <Clock position="fixed" />
-            </div>
-          </CSSTransition>
         </section>
       </div>
     </div>

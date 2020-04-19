@@ -1,14 +1,31 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
+import moment from 'moment'
 import { deconnexionUser } from "../Apps/connexion/functions";
 
-const Topbar = ({ toggleheure, toggleFullscreen, title, fullscreen }) => {
+const Topbar = ({ toggleFullscreen, title, fullscreen }) => {
+  moment.locale('fr')
+  const [time, settime] = useState(moment().format('ddd. DD MMMM YYYY - HH : mm : ss'))
+
+  useEffect(() => {
+      const interval = setInterval(() => {
+          settime(moment().format('ddd. DD MMMM YYYY - HH : mm : ss'))
+      }, 1000);
+
+      return function unmount() {
+          clearInterval(interval)
+      }
+  }, [])
+
   return (
     <div className="col-12 p-1 Topbar">
       <div className="row">
         <div className="col-3 p-2 title ">
           <span className="p-3">{title}</span>
         </div>
-        <div className="col-2 offset-6 icons p-2">
+        <div className="col-6 d-flex justify-content-center align-items-center">
+          <small>{time}</small>
+        </div>
+        <div className="col-2 offset-1 icons p-2">
           <div className="row text-secondary">
             <div
               className="col-3 icon d-flex justify-content-center"
@@ -20,13 +37,6 @@ const Topbar = ({ toggleheure, toggleFullscreen, title, fullscreen }) => {
                   fullscreen ? "fullscreen-exit" : "fullscreen"
                 }`}
               ></i>
-            </div>
-            <div
-              title="l'Heure"
-              className="col-3 icon d-flex justify-content-center"
-              onClick={() => toggleheure()}
-            >
-              <i className="mdi-image-timer"></i>
             </div>
             <div
               className="col-3 icon d-flex justify-content-center"
