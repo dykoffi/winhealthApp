@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom'
 
 //STYLE ET ANIMATIONS
-import './static/animations/index.css'
 import './static/css/bootstrap.css'
 import './static/css/color.css'
 import './static/css/icones.css'

@@ -4,11 +4,11 @@ import { deconnexionUser } from "../Apps/connexion/functions";
 
 const Topbar = ({ toggleFullscreen, title, fullscreen }) => {
   moment.locale('fr')
-  const [time, settime] = useState(moment().format('ddd. DD MMMM YYYY - HH : mm : ss'))
+  const [time, settime] = useState(moment().format('ddd DD MMMM YYYY - HH : mm : ss'))
 
   useEffect(() => {
       const interval = setInterval(() => {
-          settime(moment().format('ddd. DD MMMM YYYY - HH : mm : ss'))
+          settime(moment().format('ddd DD MMMM YYYY - HH : mm : ss'))
       }, 1000);
 
       return function unmount() {
