@@ -19,7 +19,7 @@ const FormAddProfil = ({
   nomApp,
 }) => {
   moment.locale("fr");
- 
+
   const [profil, setprofil] = useState("");
   const [loadAdd, setloadAdd] = useState(false);
   const [profilExist, setprofilExist] = useState(false);
@@ -35,7 +35,6 @@ const FormAddProfil = ({
       url: `/admin/list/${appActive}/droits`,
       baseURL: header.url,
       method: "GET",
-      
     })
       .then((res) => res.data.rows)
       .then((data) => {
@@ -51,8 +50,8 @@ const FormAddProfil = ({
   }
 
   function change({ target: { value } }) {
-    setprofil(value.toUpperCase());
-    verifyProfil(value.toUpperCase());
+    setprofil(value);
+    verifyProfil(value);
   }
 
   function verifyProfil(profil) {
@@ -66,7 +65,6 @@ const FormAddProfil = ({
       })
         .then((res) => res.data.rows)
         .then((data) => {
-          console.log(data);
           setloadAdd(false);
           data.length === 0 ? setprofilExist(false) : setprofilExist(true);
         });
@@ -81,19 +79,19 @@ const FormAddProfil = ({
   return (
     <div className="row">
       <div className="FormAddProfil col-12 d-flex justify-content-center align-items-center">
-        <div className="col-4 white p-3">
-          <h5 className="lead text-center">
+        <div className="col-3 white p-3">
+          <h6 className="text-center">
             Ajouter un nouveau profil - {nomApp}
-          </h5>
-          <div className="p-3">
-            <input
-              value={profil}
-              onChange={change}
-              type="text"
-              className="col-12 p-2"
-              autoFocus
-              placeholder="entrez le nom du profil"
-            />
+          </h6>
+          <input
+            value={profil}
+            onChange={change}
+            type="text"
+            className="col-12 p-2"
+            autoFocus
+            placeholder="Entrez le nom du profil"
+          />
+          <div className="p-1">
             <small>{checkedlist.length} droit(s) selectionné(s)</small>
             <div className="row p-3">
               <div
@@ -129,7 +127,7 @@ const FormAddProfil = ({
                 className="btn btn-secondary rounded-0"
                 onClick={() => disableModal()}
               >
-                Annuler
+                <small>Annuler</small>
               </button>
               <button
                 disabled={
@@ -137,10 +135,10 @@ const FormAddProfil = ({
                   checkedlist.length === 0 ||
                   profilExist
                 }
-                className="btn btn-primary rounded-0"
+                className="btn btn-info rounded-0"
                 onClick={() => addProfil()}
               >
-                Valider la saisie
+                <small>Valider la saisie</small>
               </button>
               {loadAdd && (
                 <div className="d-flex col-sm align-items-center justify-content-center">
@@ -149,7 +147,7 @@ const FormAddProfil = ({
               )}
               {profilExist && (
                 <div className="d-flex col-sm align-items-center justify-content-center text-danger">
-                  <small>Ce profil existe deja dans {nomApp}</small>
+                  <small>Ce profil existe dejà dans {nomApp}</small>
                 </div>
               )}
             </div>
