@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Cookies } from "react-cookie";
 import logo from "../../static/images/wh_logo.png";
 import { header } from "../admin/constants/apiQuery";
+import LoadingPoint from "../../components/LoadingPoint";
 //components
 
 const Connexion = () => {
@@ -83,9 +84,7 @@ const Connexion = () => {
                 <br />
                 <div className="text-center">
                   {loading ? (
-                    <small className="grey-text text-center">
-                      Verification en cours ...
-                    </small>
+                   <LoadingPoint />
                   ) : error ? (
                     <small className="red-text text-center">
                       Données incorrectes, veuillez reessayer
