@@ -22,18 +22,18 @@ const StatsProfil = ({ listApps, listProfil }) => {
     <div className="row">
       <div className="col-12">
         <Statcard
-          nombre={listApps.length}
-          theme="bg-warning"
-          titre="App(s)"
-          details="Les appliations sont des modules complètement indépendants les uns des autres : GAP, DPI, PUI."
+          nombre={nbProfil}
+          theme="bg-info text-white rounded"
+          titre="Profil(s)"
+          details="L'ensemble de tous les profils de connexion créés dans tous les modules."
         />
       </div>
       <div className="col-12">
         <Statcard
-          nombre={nbProfil}
-          theme="bg-info text-white"
-          titre="Profil(s)"
-          details="L'ensemble de tous les profils de connexion créés dans tous les modules."
+          nombre={listApps.length}
+          theme="white warning-text ombre rounded"
+          titre="App(s)"
+          details="Les appliations sont des modules complètement indépendants les uns des autres : GAP, DPI, PUI."
         />
       </div>
     </div>

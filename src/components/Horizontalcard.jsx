@@ -15,8 +15,13 @@ const Horizontalcard = ({
       <div
         className={`col-4 d-flex align-items-center justify-content-center ${textColor} ${bgColor} flex-column`}
       >
-        <i className={`mdi-${icon} mdi-3x`}></i>
-        <br />
+        {icon && (
+          <>
+            <i className={`mdi-${icon} mdi-3x`}></i>
+            <br />
+          </>
+        )}
+
         <p style={{ fontSize: "14px", fontWeight: "bold" }}>{title}</p>
       </div>
       <div className="col p-4 d-flex align-items-stretch justify-content-around flex-column text-secondary">

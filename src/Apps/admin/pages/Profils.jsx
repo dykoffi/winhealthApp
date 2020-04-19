@@ -42,6 +42,7 @@ const Profils = ({ sendTitle, modalVisible, enableModal, appActive }) => {
           <section id="profil_details" className="col-4">
             <DetailsProfil />
           </section>
+        
         </div>
       </div>
       {modalVisible && <FormAddProfil />}

@@ -33,7 +33,10 @@ export function thunkDetailsProfil(idProfil) {
         Axios({
             url: `/admin/details/profil/${idProfil}`,
             baseURL: header.url,
-            method: "GET"
+            method: "GET",
+            params : {
+                user : ["edy","koffi"]
+            }
         })
             .then((response) => response.data.rows)
             .then((data) => {
