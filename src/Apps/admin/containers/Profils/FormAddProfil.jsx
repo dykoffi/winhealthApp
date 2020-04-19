@@ -80,9 +80,9 @@ const FormAddProfil = ({
     <div className="row">
       <div className="FormAddProfil col-12 d-flex justify-content-center align-items-center">
         <div className="col-3 white p-3">
-          <h6 className="text-center">
+          <small className="text-center">
             Ajouter un nouveau profil - {nomApp}
-          </h6>
+          </small>
           <input
             value={profil}
             onChange={change}
@@ -91,7 +91,7 @@ const FormAddProfil = ({
             autoFocus
             placeholder="Entrez le nom du profil"
           />
-          <div className="p-1">
+          <div>
             <small>{checkedlist.length} droit(s) selectionné(s)</small>
             <div className="row p-3">
               <div

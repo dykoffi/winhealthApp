@@ -16,7 +16,7 @@ const Logs = ({ sendTitle }) => {
       <section className="col-3" id="statslogs">
         <StatsLog />
       </section>
-      <section className="col-6 ml-2">
+      <section className="col-7 ml-2">
         <ListLogs />
       </section>
     </div>

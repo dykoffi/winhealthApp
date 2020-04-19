@@ -50,15 +50,24 @@ const ListLogs = ({
             height: "70vh",
             scrollbarWidth: "none",
           }}
-          className="col-12"
+          className="row"
         >
-          {listLogs.map(({ datelog, auteurlog, actionlog }, i) => (
-            <div className="row p-2 bg-light mt-1">
-              <small className="col-4">{datelog}</small>
-              <small className="col-4">{auteurlog}</small>
-              <small className="col-4">{actionlog}</small>
+          <div className="col-12">
+            <div className="row p-2 bg-light">
+              <small className="col-2">date</small>
+              <small className="col-2">heure</small>
+              <small className="col-5">Utilisateur</small>
+              <small className="col-3">Action</small>
             </div>
-          ))}
+            {listLogs.map(({ datelog, auteurlog, actionlog, heurelog }, i) => (
+              <div className="row p-2 border-bottom border-light">
+                <small className="col-2">{datelog}</small>
+                <small className="col-2">{heurelog}</small>
+                <small className="col-4">{auteurlog}</small>
+                <small className="col-4">{actionlog}</small>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
