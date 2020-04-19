@@ -129,25 +129,26 @@ input.bordertrans:focus {
 
 .Navitem ul > li:hover {
   cursor: pointer;
-  color: rgb(0, 162, 255) !important;
+  color: rgba(6, 181, 235, 0.726) !important;
   transition: all 0.2s ease-in-out;
 }
 
 .actifLink {
   font-weight: bold !important;
-  color: rgb(0, 158, 250) !important;
+  color: rgb(1, 196, 255) !important;
 }
 
 .actifItem {
+  background-image: linear-gradient(to right, rgba(1, 138, 180, 0.726), rgba(1, 138, 180, 0.205));
   font-weight: bold !important;
-  background-color: rgba(1, 115, 180, 0.801) !important;
+  /* background-color: rgba(1, 138, 180, 0.726) !important; */
 }
 
 .Navitem a:hover,
 a:focus {
   text-decoration: none !important;
   outline: none !important;
-  color: rgb(0, 162, 255) !important;
+  color: rgb(1, 196, 255) !important;
 }
 
 .Navitem a {

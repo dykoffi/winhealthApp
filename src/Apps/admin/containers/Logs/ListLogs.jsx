@@ -17,7 +17,7 @@ const ListLogs = ({
 }) => {
   useEffect(() => {
     thunkSetListList(currentApp, typeLogs);
-  }, [currentApp, typeLogs]);
+  }, [thunkSetListList, currentApp, typeLogs]);
 
   return (
     <div className="row white Verticalist">

@@ -50,7 +50,7 @@ const Accueil = ({ sendTitle }) => {
               link="/admin/logs"
             />
           </div>
-          <div className="col-3 d-flex">
+          {/* <div className="col-3 d-flex">
             <Horizontalcard
               title="Com"
               details="Partagez des informations avec tous les utilisateurs actifs du sytème"
@@ -69,7 +69,7 @@ const Accueil = ({ sendTitle }) => {
               textColor="grey-text darken-4"
               link="/admin/logs"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
