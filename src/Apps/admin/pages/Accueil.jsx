@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Horizontalcard from "../../../components/Horizontalcard";
+import Verticalcard from "../../../components/Verticalcard";
 
 const Accueil = ({ sendTitle }) => {
   useEffect(() => {
@@ -10,7 +10,7 @@ const Accueil = ({ sendTitle }) => {
       <div className="col-12">
         <div className="row">
           <div className="col-3 d-flex">
-            <Horizontalcard
+            <Verticalcard
               title="Utilisateurs"
               details="Creez, modifier, supprimer et attribuez des droits aux utilisateurs"
               icon="social-group"
@@ -21,7 +21,7 @@ const Accueil = ({ sendTitle }) => {
             />
           </div>
           <div className="col-3 d-flex">
-            <Horizontalcard
+            <Verticalcard
               title="Profil"
               details="Creez, modifier et supprimer des profils avec des droits intégrés"
               icon="action-verified-user"
@@ -31,7 +31,7 @@ const Accueil = ({ sendTitle }) => {
             />
           </div>
           <div className="col-3 d-flex">
-            <Horizontalcard
+            <Verticalcard
               title="Services"
               details="Creez et deployer des services à la volée et sans recharchement"
               icon="action-wallet-travel"
@@ -41,7 +41,7 @@ const Accueil = ({ sendTitle }) => {
             />
           </div>
           <div className="col-3 d-flex">
-            <Horizontalcard
+            <Verticalcard
               title="Logs"
               details="Consulter les fichiers journaux générés par tous les utilisateurs du système"
               icon="action-description"
@@ -51,7 +51,7 @@ const Accueil = ({ sendTitle }) => {
             />
           </div>
           {/* <div className="col-3 d-flex">
-            <Horizontalcard
+            <Verticalcard
               title="Com"
               details="Partagez des informations avec tous les utilisateurs actifs du sytème"
               icon="hardware-headset-mic"
@@ -61,7 +61,7 @@ const Accueil = ({ sendTitle }) => {
             />
           </div>
           <div className="col-3 d-flex">
-            <Horizontalcard
+            <Verticalcard
               title="Settings"
               details="Réglez et paramétrez tous les modules du système à votre guise"
               icon="action-settings"
