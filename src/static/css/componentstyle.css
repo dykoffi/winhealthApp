@@ -115,12 +115,6 @@ input.bordertrans:focus {
   /* background-position: -5cm 0; */
 }
 
-#navbar{
-  background-attachment: fixed;
-  background-image: url('../images/barfond.jpeg') !important;
-  background-size: contain;
-}
-
 .Navbar .Navitem:hover .head {
   cursor: pointer;
   background-color: rgba(136, 136, 136, 0.5);
