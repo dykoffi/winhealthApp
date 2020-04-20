@@ -56,8 +56,8 @@ const ListLogs = ({
             <div className="row p-2 bg-light">
               <small className="col-2">date</small>
               <small className="col-2">heure</small>
-              <small className="col-5">Utilisateur</small>
-              <small className="col-3">Action</small>
+              <small className="col-4">Utilisateur</small>
+              <small className="col-4">Action</small>
             </div>
             {listLogs.map(({ datelog, auteurlog, actionlog, heurelog }, i) => (
               <div className="row p-2 border-bottom border-light">

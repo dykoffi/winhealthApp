@@ -53,21 +53,19 @@ const Accueil = ({ sendTitle }) => {
          <div className="col-3 d-flex">
             <Verticalcard
               title="Com"
-              details="Partagez des informations avec tous les utilisateurs actifs du sytème"
+              details="Partagez des informations avec tous les utilisateurs actifs du sytème (fonctionalité indisponible)"
               icon="hardware-headset-mic"
               bgColor="white"
               textColor="red-text"
-              link="/admin/logs"
             />
           </div>
           <div className="col-3 d-flex">
             <Verticalcard
               title="Settings"
-              details="Réglez et paramétrez tous les modules du système à votre guise"
+              details="Réglez et paramétrez tous les modules du système à votre guise (fonctionalité indisponible)"
               icon="action-settings"
               bgColor="white"
               textColor="grey-text darken-4"
-              link="/admin/logs"
             />
           </div>
         </div>

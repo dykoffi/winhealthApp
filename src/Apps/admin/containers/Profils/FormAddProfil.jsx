@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Check } from "../../../../components/Listcheck";
+import Check from "../../../../components/Check";
 import LoadingPoint from "../../../../components/LoadingPoint";
 import { useEffect } from "react";
 import Axios from "axios";

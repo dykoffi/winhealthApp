@@ -13,17 +13,4 @@ export const Check = ({ text, click, selected }) => {
     )
 }
 
-
-const Listcheck = ({list, activeCheck}) => {
-    return (
-        <div className="Listcheck p-3">
-            {
-                list.map(({ text, value }) => (
-                    <Check text={text} key={value} click={()=>activeCheck(value) }/>
-                ))
-            }
-        </div>
-    )
-}
-
-export default Listcheck
+export default Check
