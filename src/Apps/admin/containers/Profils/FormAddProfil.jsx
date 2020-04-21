@@ -122,7 +122,7 @@ const FormAddProfil = ({
                 )}
               </div>
             </div>
-            <div className="row">
+            <div className="row pl-2">
               <button
                 className="btn btn-secondary rounded-0"
                 onClick={() => disableModal()}

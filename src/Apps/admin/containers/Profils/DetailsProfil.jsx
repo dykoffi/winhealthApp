@@ -1,8 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
 import LoadingPoint from "../../../../components/LoadingPoint";
+import Information from "../../../../containers/Information";
+import { thunkDeleteProfil, setModal } from "../../api/Profils/details";
 
-const DetailsProfil = ({ currentProfil, loadingProfil }) => {
+const DetailsProfil = ({
+  currentProfil,
+  loadingProfil,
+  modal,
+  setModal,
+  thunkDeleteProfil,
+}) => {
+
   return (
     <div className="row DetailsProfil">
       {currentProfil ? (
@@ -76,16 +85,36 @@ const DetailsProfil = ({ currentProfil, loadingProfil }) => {
           <LoadingPoint />
         </div>
       )}
+      {currentProfil && !loadingProfil && (
+        <div className="d-flex align-items-center justify-content-center col-12 text-info">
+          <small
+            onClick={() => setModal(true)}
+            style={{ cursor: "pointer" }}
+          >
+            Supprimer ce profil
+          </small>
+        </div>
+      )}
+      {modal && (
+        <Information
+          text={`la suppression de ce profil est dangereuse. Si des utilisateurs sont enregistrés avec ce profil, ils ne pourront plus se connecter apres cette suppression. Voulez vous continuer ?`}
+          close={() => setModal(false)}
+          titre="Information"
+          confirm={() => thunkDeleteProfil(currentProfil[0].idprofil)}
+        />
+      )}
     </div>
   );
 };
 
 const mapStateToProp = (state) => {
   const {
-    detailsReducer: { currentProfil, loadingProfil },
+    detailsReducer: { currentProfil, loadingProfil, modal },
   } = state;
-  return { currentProfil, loadingProfil };
+  return { currentProfil, loadingProfil, modal };
 };
 
-const DetailsProfilConnected = connect(mapStateToProp)(DetailsProfil);
+const DetailsProfilConnected = connect(mapStateToProp, { thunkDeleteProfil, setModal })(
+  DetailsProfil
+);
 export default DetailsProfilConnected;

@@ -12,7 +12,7 @@ const Accueil = ({ sendTitle }) => {
           <div className="col-3 d-flex">
             <Verticalcard
               title="Utilisateurs"
-              details="Creez, modifier, supprimer et attribuez des droits aux utilisateurs"
+              details="Creez, modifiez, supprimez et attribuez des droits aux utilisateurs"
               icon="social-group"
               bgColor="white"
               textColor="blue-text"
@@ -23,7 +23,7 @@ const Accueil = ({ sendTitle }) => {
           <div className="col-3 d-flex">
             <Verticalcard
               title="Profil"
-              details="Creez, modifier et supprimer des profils avec des droits intégrés"
+              details="Creez, modifiez et supprimez des profils avec des droits intégrés"
               icon="action-verified-user"
               bgColor="white"
               textColor="green-text"
@@ -33,7 +33,7 @@ const Accueil = ({ sendTitle }) => {
           <div className="col-3 d-flex">
             <Verticalcard
               title="Services"
-              details="Creez et deployer des services à la volée et sans recharchement"
+              details="Creez et deployer des services à la volée et sans rechargement"
               icon="action-wallet-travel"
               bgColor="white"
               textColor="purple-text"
@@ -43,7 +43,7 @@ const Accueil = ({ sendTitle }) => {
           <div className="col-3 d-flex">
             <Verticalcard
               title="Logs"
-              details="Consulter les fichiers journaux générés par tous les utilisateurs du système"
+              details="Consultez les fichiers journaux générés par tous les utilisateurs du système"
               icon="action-description"
               bgColor="white"
               textColor="orange-text"
@@ -53,7 +53,7 @@ const Accueil = ({ sendTitle }) => {
          <div className="col-3 d-flex">
             <Verticalcard
               title="Com"
-              details="Partagez des informations avec tous les utilisateurs actifs du sytème (fonctionalité indisponible)"
+              details="Partagez des informations avec tous les utilisateurs actifs du système (fonctionalité indisponible)"
               icon="hardware-headset-mic"
               bgColor="white"
               textColor="red-text"

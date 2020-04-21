@@ -6,5 +6,4 @@ const Error = ({ text }) => (
   </div>
 );
 
-
 export default Error
