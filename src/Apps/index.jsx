@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { Cookies } from 'react-cookie'
+
 //importation des differentes applications
 const Connexion = React.lazy(() => import('./connexion'))
 const Admin = React.lazy(() => import('./admin'))

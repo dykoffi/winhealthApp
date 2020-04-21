@@ -4,7 +4,6 @@ import { header } from "../../constants/apiQuery"
 const initialeState = {
     listApps: [],
     currentApp: null,
-
 }
 
 //les fonctions
