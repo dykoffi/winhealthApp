@@ -138,7 +138,7 @@ const FormAddProfil = ({
                 className="btn btn-info rounded-0"
                 onClick={() => addProfil()}
               >
-                <small>Valider la saisie</small>
+                <small>Valider</small>
               </button>
               {loadAdd && (
                 <div className="d-flex col-sm align-items-center justify-content-center">

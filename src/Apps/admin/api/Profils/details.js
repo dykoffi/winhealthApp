@@ -87,14 +87,14 @@ export function thunkDetailsProfil(idProfil) {
 }
 
 export function thunkDeleteProfil(idProfil) {
-    const { mail, codeapp } = cookies.get("user", { paht: "/" });
+    const { mailuser, codeapp } = cookies.get("user", { paht: "/" });
     return async (dispatch) => {
         dispatch(loadingProfil())
         Axios({
             url: `/admin/delete/${codeapp}/profil/${idProfil}`,
             baseURL: header.url,
             method: "GET",
-            params: { userMail: mail, app: codeapp },
+            params: { userMail: mailuser, app: codeapp },
         })
             .then(() => {
                 dispatch(deleteProfil(null))

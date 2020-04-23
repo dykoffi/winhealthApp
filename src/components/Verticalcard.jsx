@@ -18,13 +18,12 @@ const Verticalcard = ({
         {icon && (
           <>
             <i className={`mdi-${icon} mdi-2x`}></i>
-            <br />
           </>
         )}
 
         <p style={{ fontSize: "14px", fontWeight: "bold" }}>{title}</p>
       </div>
-      <div className="col-12 pl-3 pb-3 d-flex align-items-stretch justify-content-around flex-column text-secondary">
+      <div className="col-12 pl-3 pb-3 d-flex align-items-stretch justify-content-center flex-column text-secondary">
         <div>
           <small>{details}</small>
         </div>

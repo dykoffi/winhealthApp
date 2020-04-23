@@ -6,19 +6,19 @@ const MODIFICATION = 'MODIFICATION'
 const typeLogs = [
     {
         type: CONNEXION,
-        nom: CONNEXION.toLowerCase()
+        nom: "Connexion"
     },
     {
         type: CREATION,
-        nom: CREATION.toLowerCase()
+        nom: "Creation"
     },
     {
         type: SUPPRESSION,
-        nom: SUPPRESSION.toLowerCase()
+        nom: "Suppression"
     },
     {
         type: MODIFICATION,
-        nom: MODIFICATION.toLowerCase()
+        nom: "Modification"
     }
 ]
 

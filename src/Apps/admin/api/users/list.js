@@ -7,39 +7,39 @@ import { header } from "../../constants/apiQuery"
 
 const cookies = new Cookies()
 const initState = {
-    listProfil: [],
+    listUser: [],
     loading: false,
     aucun: false
 }
 
 //les foctions
-const LIST_PROFIL_LOADING = 'LIST_PROFIL_LOADING'
-const LIST_PROFIL_SUCCESS = 'LIST_PROFIL_SUCCESS'
-const LIST_PROFIL_VIDE = 'LIST_PROFIL_VIDE'
-//const LIST_PROFIL_ERROR = 'LIST_PROFIL_ERROR'
+const LIST_USER_LOADING = 'LIST_USER_LOADING'
+const LIST_USER_SUCCESS = 'LIST_USER_SUCCESS'
+const LIST_USER_VIDE = 'LIST_USER_VIDE'
+//const LIST_USER_ERROR = 'LIST_USER_ERROR'
 
 //les actions creators
 
-const listProfil = (list) => ({
-    type: LIST_PROFIL_SUCCESS,
-    text: 'lister tous les profils',
+const listUser = (list) => ({
+    type: LIST_USER_SUCCESS,
+    text: 'lister tous les users',
     loading: false,
     aucun: false,
     list: list
 })
 
-const listProfilVide = (list) => ({
-    type: LIST_PROFIL_VIDE,
-    text: 'lister tous les profils',
+const listUserVide = (list) => ({
+    type: LIST_USER_VIDE,
+    text: 'lister tous les users',
     list: list,
     aucun: true,
     loading: false,
 
 })
 
-const listProfilLoading = () => ({
-    type: LIST_PROFIL_LOADING,
-    text: 'lister tous les profils',
+const listUserLoading = () => ({
+    type: LIST_USER_LOADING,
+    text: 'lister tous les users',
     list: [],
     loading: true,
     aucun: false
@@ -47,26 +47,26 @@ const listProfilLoading = () => ({
 
 const reducerList = (state = initState, action) => {
     switch (action.type) {
-        case LIST_PROFIL_SUCCESS:
+        case LIST_USER_SUCCESS:
             return {
                 ...state,
                 loading: action.loading,
                 aucun: action.aucun,
-                listProfil: action.list
+                listUser: action.list
             }
-        case LIST_PROFIL_VIDE:
+        case LIST_USER_VIDE:
             return {
                 ...state,
-                listProfil: action.list,
+                listUser: action.list,
                 aucun: action.aucun,
                 loading: action.loading
             }
-        case LIST_PROFIL_LOADING:
+        case LIST_USER_LOADING:
             return {
                 ...state,
                 aucun: action.aucun,
                 loading: action.loading,
-                listProfil: action.list
+                listUser: action.list
             }
         default:
             return state
@@ -74,13 +74,13 @@ const reducerList = (state = initState, action) => {
 }
 
 //les functions thunk
-export function thunkListProfil(codeApp) {
+export function thunkListUser(codeApp) {
     return async (dispatch) => {
-        dispatch(listProfilLoading())
-        Axios.get(`${header.url}/admin/list/${codeApp}/profils`)
+        dispatch(listUserLoading())
+        Axios.get(`${header.url}/admin/list/${codeApp}/users`)
             .then((res) => res.data.rows)
             .then((data) => {
-                data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))
+                data.length !== 0 ? dispatch(listUser(data)) : dispatch(listUserVide(data))
             })
             .catch((err) => {
                 console.log(err)
@@ -88,23 +88,23 @@ export function thunkListProfil(codeApp) {
     }
 }
 
-export const thunkSearchListProfil = (app, mot) => {
+export const thunkSearchListUser = (app, mot) => {
     return async (dispatch) => {
-        dispatch(listProfilLoading())
+        dispatch(listUserLoading())
         if (mot.trim().length === 0) {
-            Axios.get(`${header.url}/admin/list/${app}/profils`)
+            Axios.get(`${header.url}/admin/list/${app}/users`)
                 .then((res) => res.data.rows)
                 .then((data) => {
-                    data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))
+                    data.length !== 0 ? dispatch(listUser(data)) : dispatch(listUserVide(data))
                 })
                 .catch((err) => {
                     console.log(err)
                 })
         } else {
-            Axios.get(`${header.url}/admin/search/${app}/profil/${mot}`)
+            Axios.get(`${header.url}/admin/search/${app}/user/${mot}`)
                 .then((res) => res.data.rows)
                 .then((data) => {
-                    data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))
+                    data.length !== 0 ? dispatch(listUser(data)) : dispatch(listUserVide(data))
                 })
                 .catch((err) => {
                     console.log(err)
@@ -113,33 +113,33 @@ export const thunkSearchListProfil = (app, mot) => {
     }
 }
 
-export const thunkUpdateListProfil = (app, profil, checkedlist) => {
-    const { mailuser, codeapp } = cookies.get("user", { paht: "/" });
+export const thunkUpdateListUser = (app, user, checkedlist) => {
+    const { mail, codeapp } = cookies.get("user", { paht: "/" });
     return async (dispatch) => {
         Axios({
             method: "post",
-            url: `/admin/add/${app}/profil`,
+            url: `/admin/add/${app}/user`,
             baseURL: header.url,
-            params: { userMail: mailuser, app: codeapp },
+            params: { userMail: mail, app: codeapp },
             data: {
-                labelProfil: profil,
-                dateProfil: moment().format("LLLL"),
-                auteurProfil: cookies.get('user', { path: '/' }).mail,
+                labelUser: user,
+                dateUser: moment().format("LLLL"),
+                auteurUser: cookies.get('user', { path: '/' }).mail,
                 droits: checkedlist,
             },
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         }).then(() => {
-            dispatch(listProfilLoading())
+            dispatch(listUserLoading())
             Axios({
-                url: `/admin/list/${app}/profils`,
+                url: `/admin/list/${app}/users`,
                 baseURL: header.url,
                 method: 'GET'
             })
                 .then((res) => res.data.rows)
                 .then((data) => {
-                    data.length !== 0 ? dispatch(listProfil(data)) : dispatch(listProfilVide(data))
+                    data.length !== 0 ? dispatch(listUser(data)) : dispatch(listUserVide(data))
                 }).then(() => {
                     dispatch(disableModal())
                 })

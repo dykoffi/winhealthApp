@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 // import store from "./api/Profils/store";
 import { Provider } from "react-redux";
 import { Cookies } from "react-cookie";
@@ -9,7 +9,6 @@ import { Pages } from "./constants/pages";
 import Navbar from "../../containers/Navbar";
 
 import Topbar from "../../components/Topbar";
-import Loading from "../../components/Loading";
 
 const Admin = () => {
   const cookies = new Cookies();
@@ -52,7 +51,6 @@ const Admin = () => {
               fullscreen={fullscreen}
             />
           </section>
-          <Suspense fallback={() => <Loading text="chargement en cours" />}>
             <section className="bg-light">
               {Pages.map(({ path, Component, store }, index) => (
                 <Route exact key={index} path={path}>
@@ -74,7 +72,6 @@ const Admin = () => {
                 </Route>
               ))}
             </section>
-          </Suspense>
         </section>
       </div>
     </div>

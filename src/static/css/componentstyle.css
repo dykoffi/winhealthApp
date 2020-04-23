@@ -120,7 +120,6 @@ input.bordertrans:focus {
   background-color: rgba(136, 136, 136, 0.5);
   transition: all 0.2s ease-in-out;
 }
-
 .Navitem ul > li:hover {
   cursor: pointer;
   color: rgba(6, 181, 235, 0.726) !important;
@@ -150,33 +149,13 @@ a:focus {
 }
 
 /* Topbar */
-
 .Topbar .icon {
   cursor: pointer;
   transition: all 0.4s ease;
   font-size: 20px;
 }
-
 .Topbar .icon:hover {
   background-color: rgba(226, 226, 226, 0.774);
-}
-
-/* Chargement */
-
-/* .Chargement .bar{
-    width: 1cm;
-    animation: loading 2s infinite alternate-reverse ease;
-} */
-
-@keyframes loading {
-  from {
-    transform: translateX(200%);
-    width: +50%;
-  }
-  to {
-    transform: translateX(-40%);
-    width: -50%;
-  }
 }
 
 /* Verticalist */
@@ -184,39 +163,31 @@ a:focus {
 .Verticalist .item {
   cursor: pointer;
 }
-
 .Verticalist .item:hover {
   background-color: rgb(247, 247, 247) !important;
   transition: all 0.5s ease;
 }
-
 .Verticalist input:focus {
   transition: all 0.6s ease;
   background-color: rgb(248, 248, 248) !important;
 }
-/* Horizontalcard */
 
 /* Listcheck */
-
 .Check .case div {
   border: 2px rgb(230, 230, 230) solid !important;
 }
-
 .Check {
   cursor: pointer;
   transition: all 0.4s ease;
 }
-
 .Check:hover .case div {
   background-color: rgb(206, 206, 206) !important;
   border-color: transparent !important;
 }
-
 .Check.checked .case div {
   background-color: rgba(1, 138, 180, 0.726) !important;
   border-color: transparent !important;
 }
-
 .Check.checked span {
   font-weight: bold !important;
   color: rgba(1, 138, 180, 0.726) !important;
@@ -232,7 +203,6 @@ a:focus {
   border: 2px rgb(240, 240, 240) solid !important;
   cursor: pointer;
 }
-
 .FormAddUser .chooseApp div:hover,
 .FormAddUser .chooseProfil div:hover {
   background-color: rgb(240, 240, 240) !important;
@@ -242,7 +212,6 @@ a:focus {
   transition: all 0.6s ease;
   border-bottom: 3px transparent solid;
 }
-
 .Verticalist .chooseApp .active {
   border-bottom-color: rgba(1, 138, 180, 0.726) !important;
 }

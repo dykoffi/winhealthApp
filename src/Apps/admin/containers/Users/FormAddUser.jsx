@@ -8,16 +8,16 @@ const FormAddUser = () => {
 
   useEffect(() => {
     Axios({
-      url : ``
-    })
+      url: ``,
+    });
   });
   return (
     <div className="row">
       <div className="col-12 FormAddUser d-flex justify-content-center align-items-center">
         <div className="row d-flex justify-content-center align-items-center">
-          <div className="col-7 white ">
+          <div className="col-5 white ">
             <div className="row d-flex justify-content-center">
-              <div className="col-5 p-5 text-left">
+              <div className="col-5 p-3 text-left">
                 <small>Informations de l'utilisateur</small>
                 <input
                   type="text"
@@ -45,24 +45,22 @@ const FormAddUser = () => {
                   placeholder="Pass"
                 />
               </div>
-              <div className="col-6 p-5 text-left">
-                <small>Choisissez votre application</small>
+              <div className="col-6 p-3 text-left">
+                <small>Choisir l'application</small>
                 <div className="row p-3 chooseApp">
-                  <div className="border m-1 text-center p-2 col-sm">
-                    <span>GAP</span>
-                  </div>
+                  <small>GAP</small>
                 </div>
                 <small>Selectionner un profil de connexion</small>
                 <div className="row p-3 chooseProfil">
-                  <div className="border m-1 text-center p-2 col-md">
-                    <span>Admin</span>
-                  </div>
+                  <small>Admin</small>
                 </div>
               </div>
-              <div className="col-12 d-flex justify-content-end pr-5 pb-5">
-                <button className="btn btn-secondary rounded-0">Annuler</button>
-                <button className="btn btn-success rounded-0">
-                  Valider la creation
+              <div className="col-12 d-flex justify-content-end pr-3 pb-3">
+                <button className="btn btn-secondary rounded-0">
+                  <small>Annuler</small>
+                </button>
+                <button className="btn btn-info rounded-0">
+                  <small>Valider</small>
                 </button>
               </div>
             </div>

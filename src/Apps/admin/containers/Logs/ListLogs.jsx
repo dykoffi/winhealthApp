@@ -44,6 +44,12 @@ const ListLogs = ({
             <Aucun text={`${listLogs.length} log(s)`} />
           )}
         </div>
+        <div className="row p-2 bg-light">
+          <small className="col-2">date</small>
+          <small className="col-2">heure</small>
+          <small className="col-4">Utilisateur</small>
+          <small className="col-4">Action</small>
+        </div>
         <div
           style={{
             overflowY: "scroll",
@@ -53,12 +59,6 @@ const ListLogs = ({
           className="row"
         >
           <div className="col-12">
-            <div className="row p-2 bg-light">
-              <small className="col-2">date</small>
-              <small className="col-2">heure</small>
-              <small className="col-4">Utilisateur</small>
-              <small className="col-4">Action</small>
-            </div>
             {listLogs.map(({ datelog, auteurlog, actionlog, heurelog }, i) => (
               <div className="row p-2 border-bottom border-light">
                 <small className="col-2">{datelog}</small>
