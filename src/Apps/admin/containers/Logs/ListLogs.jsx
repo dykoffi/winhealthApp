@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import LoadingPoint from "../../../../components/LoadingPoint";
@@ -6,6 +6,8 @@ import Aucun from "../../../../components/Aucun";
 import logsType from "../../constants/typeLogs";
 
 import { setTypeLogs, thunkSetListList } from "../../api/Logs/listLogs";
+import Axios from "axios";
+import { header } from "../../constants/apiQuery";
 
 const ListLogs = ({
   setTypeLogs,
@@ -15,6 +17,18 @@ const ListLogs = ({
   listLogs,
   currentApp,
 }) => {
+  const [allLogs, setallLogs] = useState([]);
+  useEffect(() => {
+    Axios({
+      url: `/admin/list/${currentApp}/logs`,
+      baseURL: header.url,
+      method: "GET",
+    })
+      .then((response) => response.data.rows)
+      .then((data) => {
+        setallLogs(data);
+      });
+  }, [currentApp]);
   useEffect(() => {
     thunkSetListList(currentApp, typeLogs);
   }, [thunkSetListList, currentApp, typeLogs]);
@@ -31,7 +45,9 @@ const ListLogs = ({
                 setTypeLogs(type);
               }}
             >
-              <small>{nom} </small>
+              <small>
+                {nom} ({allLogs.filter((x) => x.typelog === type).length})
+              </small>
             </div>
           ))}
         </div>
@@ -60,7 +76,7 @@ const ListLogs = ({
         >
           <div className="col-12">
             {listLogs.map(({ datelog, auteurlog, actionlog, heurelog }, i) => (
-              <div className="row p-2 border-bottom border-light">
+              <div key={i} className="row p-2 border-bottom border-light">
                 <small className="col-2">{datelog}</small>
                 <small className="col-2">{heurelog}</small>
                 <small className="col-4">{auteurlog}</small>

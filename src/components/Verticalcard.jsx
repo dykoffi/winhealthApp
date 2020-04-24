@@ -17,27 +17,31 @@ const Verticalcard = ({
       >
         {icon && (
           <>
-            <i className={`mdi-${icon} mdi-2x`}></i>
+            <i className={`mdi-${icon} mdi-3x`}></i>
           </>
         )}
-
-        <p style={{ fontSize: "14px", fontWeight: "bold" }}>{title}</p>
+        {link ? (
+          <Link to={link} style={{ fontSize: "12px" }}>
+            <p
+              className={`${textColor} ${bgColor}`}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              {title}
+            </p>
+          </Link>
+        ) : (
+          <p
+            className={`${textColor} ${bgColor}`}
+            style={{ fontSize: "14px", fontWeight: "bold" }}
+          >
+            {title}
+          </p>
+        )}
       </div>
       <div className="col-12 pl-3 pb-3 d-flex align-items-stretch justify-content-center flex-column text-secondary">
         <div>
           <small>{details}</small>
         </div>
-        {link && (
-          <div className="text-light d-flex mt-3 text-right justify-content-end">
-            <Link
-              to={link}
-              style={{ fontSize: "12px" }}
-              className={` ${textColor}`}
-            >
-              Explorer <i className="mdi-navigation-arrow-forward ml-2"></i>
-            </Link>
-          </div>
-        )}
       </div>
     </div>
   );

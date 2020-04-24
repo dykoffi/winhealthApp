@@ -123,13 +123,13 @@ const DetailsUser = ({
       {currentUser && !loadingUser && (
         <div className="d-flex align-items-center justify-content-center col-12 text-info">
           <small onClick={() => setModal(true)} style={{ cursor: "pointer" }}>
-            Supprimer ce profil
+            Supprimer cet utillisateur
           </small>
         </div>
       )}
       {modal && (
         <Information
-          text={`La suppression de cet Utilisateur est dangereuse. L'utilisateur ne pourrat plus se connecter apres cette suppression. Voulez vous continuer ?`}
+          text={`L'utilisateur '${currentUser[0].nomuser} ${currentUser[0].prenomsuser}'  ne pourrat plus se connecter apres cette suppression. Voulez vous continuer ?`}
           close={() => setModal(false)}
           titre="Information"
           confirm={() => thunkDeleteUser(currentUser[0].iduser)}

@@ -1,9 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { setActiveApp, thunkSetListApps } from "../../api/Logs/app";
 import LoadingPoint from "../../../../components/LoadingPoint";
+import Axios from "axios";
+import { header } from "../../constants/apiQuery";
 
 const ListApp = ({ listApps, currentApp, setActiveApp, thunkSetListApps }) => {
+  const [allLogs, setallLogs] = useState([]);
+  useEffect(() => {
+    Axios({
+      url: `/admin/listall/logs`,
+      baseURL: header.url,
+      method: "GET",
+    })
+      .then((response) => response.data.rows)
+      .then((data) => {
+        setallLogs(data);
+      });
+  }, []);
   useEffect(() => {
     thunkSetListApps();
   }, [thunkSetListApps]);
@@ -18,9 +32,11 @@ const ListApp = ({ listApps, currentApp, setActiveApp, thunkSetListApps }) => {
               onClick={() => {
                 setActiveApp(codeapp);
               }}
-              className={`font-weight-bold  ${currentApp === codeapp ?  "text-info" : "grey-text"}`}
+              className={`font-weight-bold  ${
+                currentApp === codeapp ? "text-info" : "grey-text"
+              }`}
             >
-              {nomapp}
+              {nomapp} ({allLogs.filter((x) => x.codeapp === codeapp).length})
             </small>
           </div>
         ))
