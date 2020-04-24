@@ -18,7 +18,7 @@ const StatsLog = ({ currentApp, typeLogs }) => {
         setnbLogs(data.length);
       });
 
-      Axios({
+    Axios({
       url: "/admin/list/logs/users",
       baseURL: header.url,
       method: "GET",
@@ -27,9 +27,7 @@ const StatsLog = ({ currentApp, typeLogs }) => {
       .then((data) => {
         setnbUsers(data.length);
       });
-
-
-  },[typeLogs]);
+  }, [typeLogs]);
   return (
     <div className="row">
       <div className="col-12">
