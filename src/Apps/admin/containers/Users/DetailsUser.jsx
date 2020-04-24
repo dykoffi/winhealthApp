@@ -2,32 +2,67 @@ import React from "react";
 import { connect } from "react-redux";
 import LoadingPoint from "../../../../components/LoadingPoint";
 import Information from "../../../../containers/Information";
-import { thunkDeleteProfil, setModal } from "../../api/Profils/details";
+import { thunkDeleteUser, setModal } from "../../api/Users/details";
 
-const DetailsProfil = ({
-  currentProfil,
-  loadingProfil,
+const DetailsUser = ({
+  currentUser,
+  loadingUser,
   modal,
   setModal,
-  thunkDeleteProfil,
+  thunkDeleteUser,
 }) => {
-
   return (
-    <div className="row DetailsProfil">
-      {currentProfil ? (
+    <div className="row DetailsUser">
+      {currentUser ? (
         <>
-          <div className="p-2 col-12">
-            <div className="col-12 text-center">
-              <i className="mdi-action-verified-user mdi-3x text-info"></i>
+          <div className="col-8 d-flex flex-column">
+            <div>
+              <small>Nom</small> :
+              <small className="font-weight-bold ml-2">
+                {currentUser[0].nomuser}
+              </small>
             </div>
-            <div className="col-12 text-center">
-              <small className="font-weight-bold">
-                {currentProfil[0].labelprofil}
-              </small>{" "}
-              <br />
-              <small>{`crée  par ${currentProfil[0].auteurprofil} le ${currentProfil[0].dateprofil}`}</small>
+            <div>
+              <small>Prenoms</small> :
+              <small className="font-weight-bold ml-2">
+                {currentUser[0].prenomsuser}
+              </small>
+            </div>
+            <div>
+              <small>Contact</small> :
+              <small className="font-weight-bold ml-2">
+                {currentUser[0].contactuser}
+              </small>
+            </div>
+            <div>
+              <small>Mail</small> :
+              <small className="font-weight-bold ml-2">
+                {currentUser[0].mailuser}
+              </small>
+            </div>
+            <div>
+              <small>Module</small> :
+              <small className="font-weight-bold ml-2">
+                {currentUser[0].nomapp}
+              </small>
+            </div>
+            <div>
+              <small>Poste</small> :
+              <small className="font-weight-bold ml-2">
+                {currentUser[0].posteuser}
+              </small>
+            </div>
+            <div>
+              <small>Profil</small> :
+              <small className="font-weight-bold ml-2">
+                {currentUser[0].labelprofil}
+              </small>
             </div>
           </div>
+          <div className="col-4 text-center d-flex align-items-center">
+            <i className="mdi-social-person mdi-5x text-info"></i>
+          </div>
+
           <div
             className="col-12"
             style={{
@@ -52,7 +87,7 @@ const DetailsProfil = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {currentProfil.map(({ labeldroit, codedroit }, i) => (
+                  {currentUser.map(({ labeldroit, codedroit }, i) => (
                     <tr className="row" key={i}>
                       <td className="col-1">
                         <small>{i}</small>
@@ -75,32 +110,29 @@ const DetailsProfil = ({
           <div className="row">
             <i className="mdi-editor-format-align-left mdi-3x col-12 text-center"></i>
             <small className="text-center col-12">
-              Aucun profil selectionné
+              Aucun Utilisateur selectionné
             </small>
           </div>
         </div>
       )}
-      {loadingProfil && (
+      {loadingUser && (
         <div className="d-flex align-items-center justify-content-center col-12">
           <LoadingPoint />
         </div>
       )}
-      {currentProfil && !loadingProfil && (
+      {currentUser && !loadingUser && (
         <div className="d-flex align-items-center justify-content-center col-12 text-info">
-          <small
-            onClick={() => setModal(true)}
-            style={{ cursor: "pointer" }}
-          >
+          <small onClick={() => setModal(true)} style={{ cursor: "pointer" }}>
             Supprimer ce profil
           </small>
         </div>
       )}
       {modal && (
         <Information
-          text={`la suppression de ce profil est dangereuse. Si des utilisateurs sont enregistrés avec ce profil, ils ne pourront plus se connecter apres cette suppression. Voulez vous continuer ?`}
+          text={`La suppression de cet Utilisateur est dangereuse. L'utilisateur ne pourrat plus se connecter apres cette suppression. Voulez vous continuer ?`}
           close={() => setModal(false)}
           titre="Information"
-          confirm={() => thunkDeleteProfil(currentProfil[0].idprofil)}
+          confirm={() => thunkDeleteUser(currentUser[0].iduser)}
         />
       )}
     </div>
@@ -109,12 +141,13 @@ const DetailsProfil = ({
 
 const mapStateToProp = (state) => {
   const {
-    detailsReducer: { currentProfil, loadingProfil, modal },
+    detailsReducer: { currentUser, loadingUser, modal },
   } = state;
-  return { currentProfil, loadingProfil, modal };
+  return { currentUser, loadingUser, modal };
 };
 
-const DetailsProfilConnected = connect(mapStateToProp, { thunkDeleteProfil, setModal })(
-  DetailsProfil
-);
-export default DetailsProfilConnected;
+const DetailsUserConnected = connect(mapStateToProp, {
+  thunkDeleteUser,
+  setModal,
+})(DetailsUser);
+export default DetailsUserConnected;

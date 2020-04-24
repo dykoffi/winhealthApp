@@ -1,6 +1,5 @@
 import Axios from "axios"
 import { Cookies } from 'react-cookie'
-import moment from 'moment'
 
 import { disableModal } from './modal'
 import { header } from "../../constants/apiQuery"
@@ -113,19 +112,23 @@ export const thunkSearchListUser = (app, mot) => {
     }
 }
 
-export const thunkUpdateListUser = (app, user, checkedlist) => {
-    const { mail, codeapp } = cookies.get("user", { paht: "/" });
+export const thunkUpdateListUser = (app, nomUser, prenomsUser, contactUser, mailUser, posteUser, profilUser, passUser) => {
+    const { mailuser, codeapp } = cookies.get("user", { paht: "/" });
     return async (dispatch) => {
         Axios({
             method: "post",
             url: `/admin/add/${app}/user`,
             baseURL: header.url,
-            params: { userMail: mail, app: codeapp },
+            params: { userMail: mailuser, app: codeapp },
             data: {
-                labelUser: user,
-                dateUser: moment().format("LLLL"),
-                auteurUser: cookies.get('user', { path: '/' }).mail,
-                droits: checkedlist,
+                nomUser: nomUser,
+                prenomsUser: prenomsUser,
+                contactUser: contactUser,
+                mailUser: mailUser,
+                posteUser: posteUser,
+                profilUser: profilUser,
+                passUser: passUser,
+                codeApp : app
             },
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",

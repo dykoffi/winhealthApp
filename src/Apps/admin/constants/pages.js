@@ -3,6 +3,7 @@
 //chargement des store de chaque application
 import profilsStore from '../api/Profils/store'
 import logsStore from '../api/Logs/store'
+import userStore from '../api/Users/store'
 
 import Accueil from '../pages/Accueil'
 import Users from '../pages/Users'
@@ -21,7 +22,9 @@ export const Pages = [
         title: "User",
         desc: "dashboard general de l'admin",
         path: "/admin/users",
-        Component: Users
+        Component: Users,
+        store : userStore
+
     },
     {
         title: "Services",

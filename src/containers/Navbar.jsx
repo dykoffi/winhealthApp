@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 
 const NavHead = ({ user }) => {
-    const {nomuser, posteuser, prenomsuser, profiluser} = user
+    const {nomuser, posteuser, prenomsuser, labelprofil} = user
     return (
         <div className="row p-4 text-light">
             <div className="col-12 text-center ">
@@ -11,7 +11,7 @@ const NavHead = ({ user }) => {
             </div>
             <div className="col-12 text-center">
                 <h6>{nomuser + " " + prenomsuser}</h6>
-                <small>{posteuser + "  -  " + profiluser}</small>
+                <small>{posteuser + "  -  " + labelprofil}</small>
             </div>
         </div>
     )

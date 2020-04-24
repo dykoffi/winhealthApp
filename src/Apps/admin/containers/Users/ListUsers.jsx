@@ -7,35 +7,35 @@ import Aucun from "../../../../components/Aucun";
 
 //redux
 import { connect } from "react-redux";
-import { thunkListProfil, thunkSearchListProfil } from "../../api/Profils/list";
-import { thunkDetailsProfil } from "../../api/Profils/details";
-import { thunklistApps, activeApp } from "../../api/Profils/apps";
+import { thunkListUser, thunkSearchListUser } from "../../api/Users/list";
+import { thunkDetailsUser } from "../../api/Users/details";
+import { thunklistApps, activeApp } from "../../api/Users/apps";
 
 const Verticalist = ({
-  thunkDetailsProfil,
-  thunkListProfil,
+  thunkDetailsUser,
+  thunkListUser,
   thunklistApps,
-  thunkSearchListProfil,
+  thunkSearchListUser,
   activeApp,
   appActive,
   listApps,
-  listProfil,
+  listUser,
   loading,
   aucun,
 }) => {
   useEffect(() => {
     thunklistApps();
-    thunkListProfil(appActive);
-  }, [thunklistApps,thunkListProfil,appActive]);
+    thunkListUser(appActive);
+  }, [thunklistApps,thunkListUser,appActive]);
 
   return (
     <div className="row white Verticalist ">
       <input
         onChange={(ev) => {
-          thunkSearchListProfil(appActive,ev.target.value);
+          thunkSearchListUser(appActive,ev.target.value);
         }}
         type="text"
-        placeholder="rechercher un profil"
+        placeholder="Rechercher un utilisateur"
         className="col-12 p-2 white bordertrans"
       />
       <div className="col-12">
@@ -55,9 +55,9 @@ const Verticalist = ({
       </div>
       <div className="col-12 text-center">
         {loading && <LoadingPoint />}
-        {aucun && <Aucun text="Aucun profil" />}
+        {aucun && <Aucun text="Aucun utilisateur" />}
         {!aucun && !loading && (
-          <Aucun text={`${listProfil.length} profil(s)`} />
+          <Aucun text={`${listUser.length} utilisateur(s)`} />
         )}
       </div>
       <div
@@ -68,13 +68,14 @@ const Verticalist = ({
           scrollbarWidth: "none",
         }}
       >
-        {listProfil.map(
-          ({ labelprofil, dateprofil, auteurprofil, idprofil }, i) => (
+        {listUser.map(
+          ({ nomuser, prenomsuser, mailuser, iduser }, i) => (
             <Itemlist
-              icon="action-verified-user"
-              title={labelprofil}
+              icon="social-person"
+              title={nomuser + ' ' + prenomsuser}
+              details={mailuser}
               key={i}
-              click={() => thunkDetailsProfil(idprofil)}
+              click={() => thunkDetailsUser(iduser)}
             />
           )
         )}
@@ -84,19 +85,19 @@ const Verticalist = ({
 };
 const mapStateToProp = (state) => {
   const {
-    listReducer: { listProfil, loading, aucun },
+    listReducer: { listUser, loading, aucun },
   } = state;
   const {
     appReducer: { listApps, appActive },
   } = state;
-  return { listProfil, loading, aucun, listApps, appActive };
+  return { listUser, loading, aucun, listApps, appActive };
 };
 
 const VerticalistConnected = connect(mapStateToProp, {
-  thunkListProfil,
+  thunkListUser,
   thunklistApps,
-  thunkSearchListProfil,
-  thunkDetailsProfil,
+  thunkSearchListUser,
+  thunkDetailsUser,
   activeApp,
 })(Verticalist);
 export default VerticalistConnected;

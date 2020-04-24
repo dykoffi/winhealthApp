@@ -124,7 +124,7 @@ export const thunkUpdateListProfil = (app, profil, checkedlist) => {
             data: {
                 labelProfil: profil,
                 dateProfil: moment().format("LLLL"),
-                auteurProfil: cookies.get('user', { path: '/' }).mail,
+                auteurProfil: mailuser,
                 droits: checkedlist,
             },
             headers: {
