@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Modal = ({ close, confirm, text, titre }) => {
   return (
@@ -20,6 +21,13 @@ const Modal = ({ close, confirm, text, titre }) => {
       </div>
     </div>
   );
+};
+
+Modal.prototype = {
+  titre: PropTypes.string.isRequired,
+  close: PropTypes.func.isRequired,
+  confirm: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default Modal;

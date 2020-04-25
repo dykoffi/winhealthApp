@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types"
 import Modal from "../components/Modal";
 
 const Information = ({ titre, close, confirm, text }) => {
@@ -12,5 +13,12 @@ const Information = ({ titre, close, confirm, text }) => {
     </div>
   );
 };
+
+Information.prototype = {
+  titre : PropTypes.string.isRequired,
+  close : PropTypes.func.isRequired,
+  confirm : PropTypes.func.isRequired,
+  text : PropTypes.string.isRequired
+}
 
 export default Information;

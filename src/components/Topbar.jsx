@@ -1,20 +1,23 @@
-import React,{useEffect, useState} from "react";
-import moment from 'moment'
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
 import { deconnexionUser } from "../Apps/connexion/functions";
 
 const Topbar = ({ toggleFullscreen, title, fullscreen }) => {
-  moment.locale('fr')
-  const [time, settime] = useState(moment().format('ddd DD MMMM YYYY - HH : mm : ss'))
+  moment.locale("fr");
+  const [time, settime] = useState(
+    moment().format("ddd DD MMMM YYYY - HH : mm : ss")
+  );
 
   useEffect(() => {
-      const interval = setInterval(() => {
-          settime(moment().format('ddd DD MMMM YYYY - HH : mm : ss'))
-      }, 1000);
+    const interval = setInterval(() => {
+      settime(moment().format("ddd DD MMMM YYYY - HH : mm : ss"));
+    }, 1000);
 
-      return function unmount() {
-          clearInterval(interval)
-      }
-  }, [])
+    return function unmount() {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <div className="col-12 p-1 Topbar">
@@ -59,4 +62,11 @@ const Topbar = ({ toggleFullscreen, title, fullscreen }) => {
     </div>
   );
 };
+
+Topbar.prototype = {
+  toggleFullscreen: PropTypes.func.isRequired,
+  fullscreen: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+};
+
 export default Topbar;
