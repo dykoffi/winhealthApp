@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import LoadingPoint from "../../../../components/LoadingPoint";
-import Aucun from "../../../../components/Aucun";
+import Text from "../../../../components/Text";
 import logsType from "../../constants/typeLogs";
 
 import { setTypeLogs, thunkSetListList } from "../../api/Logs/listLogs";
@@ -55,9 +55,9 @@ const ListLogs = ({
           {loading ? (
             <LoadingPoint />
           ) : listLogs.length === 0 ? (
-            <Aucun text={`Aucun log`} />
+            <Text text={`Aucun log`} />
           ) : (
-            <Aucun text={`${listLogs.length} log(s)`} />
+            <Text text={`${listLogs.length} log(s)`} />
           )}
         </div>
         <div className="row p-2 bg-light">

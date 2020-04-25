@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 //les composants
 import Itemlist from "../../../../components/Itemlist";
 import LoadingPoint from "../../../../components/LoadingPoint";
-import Aucun from "../../../../components/Aucun";
+import Text from "../../../../components/Text";
 
 //redux
 import { connect } from "react-redux";
@@ -55,9 +55,9 @@ const Verticalist = ({
       </div>
       <div className="col-12 text-center">
         {loading && <LoadingPoint />}
-        {aucun && <Aucun text="Aucun profil" />}
+        {aucun && <Text text="Aucun profil" />}
         {!aucun && !loading && (
-          <Aucun text={`${listProfil.length} profil(s)`} />
+          <Text text={`${listProfil.length} profil(s)`} />
         )}
       </div>
       <div

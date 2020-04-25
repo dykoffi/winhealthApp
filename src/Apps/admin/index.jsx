@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import store from "./api/Profils/store";
 import { Provider } from "react-redux";
 import { Cookies } from "react-cookie";
 import { Route } from "react-router-dom";

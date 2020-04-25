@@ -10,7 +10,7 @@ import { disableModal } from "../../api/Profils/modal";
 import { thunkUpdateListProfil } from "../../api/Profils/list";
 import { connect } from "react-redux";
 import { header } from "../../constants/apiQuery";
-import Aucun from "../../../../components/Aucun";
+import Text from "../../../../components/Text";
 
 const FormAddProfil = ({
   disableModal,
@@ -107,7 +107,7 @@ const FormAddProfil = ({
               >
                 {loading && <LoadingPoint />}
                 {aucun ? (
-                  <Aucun text={`aucun droit détecté pour ${nomApp}`} />
+                  <Text text={`aucun droit détecté pour ${nomApp}`} />
                 ) : (
                   list.map(({ labeldroit, codedroit }) => (
                     <Check

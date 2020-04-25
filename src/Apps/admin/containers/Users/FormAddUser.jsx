@@ -6,7 +6,7 @@ import password from "../../api/Users/getPassword";
 import { connect } from "react-redux";
 import { header } from "../../constants/apiQuery";
 import Check from "../../../../components/Check";
-import Aucun from "../../../../components/Aucun";
+import Text from "../../../../components/Text";
 import LoadingPoint from "../../../../components/LoadingPoint";
 
 const FormAddUser = ({
@@ -155,7 +155,7 @@ const FormAddUser = ({
                   >
                     {loading && <LoadingPoint />}
                     {aucun ? (
-                      <Aucun text={`aucun profil détecté pour ${nomApp}`} />
+                      <Text text={`aucun profil détecté pour ${nomApp}`} />
                     ) : (
                       profils.map(({ labelprofil, idprofil }, i) => (
                         <div
