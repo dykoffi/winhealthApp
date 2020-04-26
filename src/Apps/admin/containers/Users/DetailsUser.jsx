@@ -13,47 +13,47 @@ const DetailsUser = ({
 }) => {
   return (
     <div className="row DetailsUser">
-      {currentUser ? (
+      {currentUser && currentUser[0] ? (
         <>
           <div className="col-8 d-flex flex-column">
             <div>
-              <small>Nom</small> :
+              <small>Nom :</small>
               <small className="font-weight-bold ml-2">
                 {currentUser[0].nomuser}
               </small>
             </div>
             <div>
-              <small>Prenoms</small> :
+              <small>Prenoms :</small>
               <small className="font-weight-bold ml-2">
                 {currentUser[0].prenomsuser}
               </small>
             </div>
             <div>
-              <small>Contact</small> :
+              <small>Contact :</small>
               <small className="font-weight-bold ml-2">
                 {currentUser[0].contactuser}
               </small>
             </div>
             <div>
-              <small>Mail</small> :
+              <small>Mail :</small>
               <small className="font-weight-bold ml-2">
                 {currentUser[0].mailuser}
               </small>
             </div>
             <div>
-              <small>Module</small> :
+              <small>Module :</small>
               <small className="font-weight-bold ml-2">
                 {currentUser[0].nomapp}
               </small>
             </div>
             <div>
-              <small>Poste</small> :
+              <small>Poste :</small>
               <small className="font-weight-bold ml-2">
                 {currentUser[0].posteuser}
               </small>
             </div>
             <div>
-              <small>Profil</small> :
+              <small>Profil :</small>
               <small className="font-weight-bold ml-2">
                 {currentUser[0].labelprofil}
               </small>
@@ -120,14 +120,14 @@ const DetailsUser = ({
           <LoadingPoint />
         </div>
       )}
-      {currentUser && !loadingUser && (
+      {currentUser && currentUser[0] && !loadingUser && (
         <div className="d-flex align-items-center justify-content-center col-12 text-info">
           <small onClick={() => setModal(true)} style={{ cursor: "pointer" }}>
             Supprimer cet utillisateur
           </small>
         </div>
       )}
-      {modal && (
+      {modal && currentUser && (
         <Information
           text={`L'utilisateur '${currentUser[0].nomuser} ${currentUser[0].prenomsuser}'  ne pourrat plus se connecter apres cette suppression. Voulez vous continuer ?`}
           close={() => setModal(false)}

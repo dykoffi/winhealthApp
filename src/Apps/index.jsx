@@ -5,6 +5,7 @@ import { Cookies } from 'react-cookie'
 //importation des differentes applications
 const Connexion = React.lazy(() => import('./connexion'))
 const Admin = React.lazy(() => import('./admin'))
+const Gap = React.lazy(() => import('./gap'))
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
       {/* ces routes representent les differentes application */}
       <Route path='/connexion' component={Connexion} />
       <Route path='/admin' component={Admin} />
+      <Route path='/gap' component={Gap} />
     </div>
   )
 }

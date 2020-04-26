@@ -38,7 +38,7 @@ const Verticalcard = ({
           </p>
         )}
       </div>
-      <div className="col-12 pl-3 pb-3 d-flex align-items-stretch justify-content-center flex-column text-secondary">
+      <div className="col-12 pl-3 pb-3 text-secondary">
         <div>
           <small>{details}</small>
         </div>
