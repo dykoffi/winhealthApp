@@ -19,7 +19,7 @@ const App = lazy(() => import('./Apps'))
 
 ReactDOM.render(
     <CookiesProvider>
-        {/* les les cookies dans toues l'application */}
+        {/* distibuer les cookies dans toues l'application */}
         {/* lancer une animation en attendant le chargement du component */}
         <Suspense fallback={<Chargement />}>
             <Router>

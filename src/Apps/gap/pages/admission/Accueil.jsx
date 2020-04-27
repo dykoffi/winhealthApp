@@ -32,7 +32,7 @@ const Accueil = ({ sendTitle }) => {
           <div className="col-3 d-flex">
             <Verticalcard
               title="Statistiques"
-              details="Consulter les statistiques générées par toutes les fontions du GAP"
+              details="Consulter les statistiques générées par toutes les fontions de l'admission"
               icon="editor-insert-chart"
               bgColor="white"
               textColor="orange-text"

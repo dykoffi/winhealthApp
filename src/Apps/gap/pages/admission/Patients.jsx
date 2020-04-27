@@ -1,17 +1,22 @@
-import React, { useEffect } from 'react'
-import LoadingPoint from '../../../../components/LoadingPoint'
+import React, { useEffect } from "react";
 
+import DetailsPatient from "../../containers/admission/DetailsPatients";
+import ListPatient from "../../containers/admission/ListPatients";
 
-const Patients = ({sendTitle}) => {
-    useEffect(() => {
-        sendTitle("Patients")
-    })
-    return (
-        <div className="Patients row p-5 text-center d-flex flex-column justify-content-center align-items-center">
-            <h6 className="lead">Page en consruction (12%)</h6>
-            <LoadingPoint />
-        </div>
-    )
-}
+const Patients = ({ sendTitle }) => {
+  useEffect(() => {
+    sendTitle("Patients");
+  });
+  return (
+    <div className="Patients row p-3">
+      <section id="deatilsPatient" className="col-3">
+        <ListPatient />
+      </section>
+      <section id="listPatient" className="col-4">
+        <DetailsPatient />
+      </section>
+    </div>
+  );
+};
 
-export default Patients
+export default Patients;

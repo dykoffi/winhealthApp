@@ -24,7 +24,7 @@ const Verticalcard = ({
           <Link to={link} style={{ fontSize: "12px" }}>
             <p
               className={`${textColor} ${bgColor}`}
-              style={{ fontSize: "14px", fontWeight: "bold" }}
+              style={{ fontWeight: "bold" }}
             >
               {title}
             </p>
