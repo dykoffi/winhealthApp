@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import DetailsPatient from "../../containers/admission/DetailsPatients";
 import ListPatient from "../../containers/admission/ListPatients";
 
-const Patients = ({ sendTitle }) => {
-  useEffect(() => {
-    sendTitle("Patients");
-  });
+const Patients = () => {
+ 
   return (
     <div className="Patients row p-3">
       <section id="deatilsPatient" className="col-3">

@@ -1,0 +1,7 @@
+.onglet.actifOnglet {
+  border-bottom-width: 3px !important ;
+}
+
+.onglet {
+    border-bottom: 3px transparent solid;
+}

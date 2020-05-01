@@ -18,17 +18,6 @@ const ListPatient = () => {
           scrollbarWidth: "none",
         }}
       >
-        <div className="custom-control custom-checkbox">
-          <input
-            type="checkbox"
-            className="custom-control-input"
-            id="customCheck"
-            name="example1"
-          />
-          <label className="custom-control-label" for="customCheck">
-            Check this custom checkbox
-          </label>
-        </div>
         <Itemlist
           icon="social-person"
           title={"KOFFI Kouassi Edy"}
@@ -36,6 +25,11 @@ const ListPatient = () => {
           key={4}
           click={() => {}}
         />
+      </div>
+      <div className="col-12">
+        <button className="btn white text-info rounded-0 col-12">
+          <small>Ajouter un nouveau dossier</small>
+        </button>
       </div>
     </div>
   );

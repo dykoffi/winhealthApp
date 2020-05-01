@@ -78,7 +78,7 @@ const FormAddProfil = ({
 
   return (
     <div className="row">
-      <div className="FormAddProfil col-12 d-flex justify-content-center align-items-center">
+      <div className="FormAddProfil Modal col-12 d-flex justify-content-center align-items-center">
         <div className="col-3 white p-3">
           <small className="text-center">
             Ajouter un nouveau profil - {nomApp}
@@ -87,7 +87,7 @@ const FormAddProfil = ({
             value={profil}
             onChange={change}
             type="text"
-            className="col-12 p-2"
+            className="col-12 rounded p-1"
             autoFocus
             placeholder="Entrez le nom du profil"
           />

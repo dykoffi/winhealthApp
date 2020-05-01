@@ -1,17 +1,23 @@
-import React, { useEffect } from 'react'
-import LoadingPoint from '../../../../components/LoadingPoint'
+import React from "react";
+import DossiersPatient from "../../containers/admission/DossiersPatient";
 
-
-const Dossiers = ({sendTitle}) => {
-    useEffect(() => {
-        sendTitle("Dossiers patient")
-    })
-    return (
-        <div className="Dossiers row p-5 text-center d-flex flex-column justify-content-center align-items-center">
-            <h6 className="lead">Page en consruction (12%)</h6>
-            <LoadingPoint />
+const Dossiers = () => {
+  return (
+    <div className="Dossiers row p-3 text-center ">
+      <div className="col-12">
+        <div className="row d-flex  justify-content-center">
+          <input
+            type="text"
+            className="p-1 col-8 rounded"
+            placeholder="Rechercher un dossier patient"
+          />
         </div>
-    )
-}
+      </div>
+      <div className="col-12">
+          <DossiersPatient />
+      </div>
+    </div>
+  );
+};
 
-export default Dossiers
+export default Dossiers;

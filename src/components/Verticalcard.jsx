@@ -11,39 +11,38 @@ const Verticalcard = ({
   bgColor,
 }) => {
   return (
-    <div className="row white ombre rounded Verticalcard mt-3 ml-1">
-      <div
-        className={`col-12 d-flex align-items-center justify-content-center ${textColor} ${bgColor} flex-column`}
-      >
-        {icon && (
-          <>
-            <i className={`mdi-${icon} mdi-3x`}></i>
-          </>
-        )}
-        {link ? (
-          <Link to={link} style={{ fontSize: "12px" }}>
-            <p
-              className={`${textColor} ${bgColor}`}
-              style={{ fontWeight: "bold" }}
-            >
-              {title}
-            </p>
-          </Link>
-        ) : (
-          <p
-            className={`${textColor} ${bgColor}`}
-            style={{ fontSize: "14px", fontWeight: "bold" }}
+    <Link to={link}>
+      <div className="row Verticalcard mt-3" style={{ marginLeft: "0.05cm" }}>
+        <div
+          className={`col-12 d-flex align-items-center ${textColor} ${bgColor} flex-column`}
+        >
+          {icon && (
+            <i
+              style={{ fontSize: "13px" }}
+              className={`mdi-${icon} mdi-3x ${textColor} ${bgColor} `}
+            ></i>
+          )}
+
+          <small
+            className={`${textColor} ${bgColor} px-2`}
+            style={{ fontSize: "12px", zIndex: 10, fontWeight: "bold" }}
           >
             {title}
-          </p>
-        )}
-      </div>
-      <div className="col-12 pl-3 pb-3 text-secondary">
-        <div>
-          <small>{details}</small>
+          </small>
+        </div>
+        <div className="col-12 pl-3 pb-2 text-center text-secondary">
+          <div>
+            <small
+              style={{
+                fontSize: "12px",
+              }}
+            >
+              {details}
+            </small>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

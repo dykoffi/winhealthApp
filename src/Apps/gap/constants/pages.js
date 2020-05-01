@@ -1,36 +1,24 @@
 // TODO : Architecture et liste des pages utiisée dans l'application
+import Admission from '../pages/admission/_index'
+import Accueil from '../pages/Accueil'
 
 //chargement des store de chaque application
-import Accueil from '../pages/admission/Accueil'
-import Dossiers from '../pages/admission/Dossiers'
-import Patients from '../pages/admission/Patients'
-import Statistiques from '../pages/admission/Statistiques'
+import admissionStore from '../api/admission/store'
+
 
 
 export const Pages = [
     //admission patients
     {
-        title: "Accueil",
-        desc: "",
+        title: "Admission",
+        path: "/gap/admission",
+        Component: Admission,
+        store : admissionStore
+    },
+    {
+        title: "Acceuil",
         path: "/gap",
         Component: Accueil
     },
-    {
-        title: "Patients",
-        desc: "",
-        path: "/gap/admission/patients",
-        Component: Patients
-    },
-    {
-        title: "Dossiers",
-        desc: "",
-        path: "/gap/admission/dossiers",
-        Component: Dossiers
-    },
-    {
-        title: "Statistiques",
-        desc: "",
-        path: "/gap/admission/stats",
-        Component: Statistiques
-    }
+    
 ]

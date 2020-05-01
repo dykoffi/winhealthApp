@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 
 import { navMenu } from "./constants/liens";
 import { Pages } from "./constants/pages";
-import Navbar from "../../containers/Navbar";
+import Navbar from "../../containers/Sidebar/";
 
 import Topbar from "../../components/Topbar";
 
@@ -26,7 +26,7 @@ const Admin = () => {
     }
   }
   return (
-    <div className="col-12 page bg-light" id="admin">
+    <div className="col-12 page grey lighten-5" id="gap">
       <div className="row">
         <section className="col-2" id="navbar">
           <Navbar
@@ -39,18 +39,18 @@ const Admin = () => {
           id="principal"
           style={{
             height: "100vh",
-            overflowY: "scroll",
+            overflowY: "hidden",
             overflowX: "hidden",
           }}
         >
-          <section className="row" id="Topbar">
+           <section className="row grey lighten-4" id="Topbar">
             <Topbar
               title={title}
               toggleFullscreen={toggleFullscreen}
               fullscreen={fullscreen}
             />
-          </section>
-          <section className="bg-light">
+          </section> 
+          <section>
             {Pages.map(({ path, Component, store }, index) => (
               <Route exact key={index} path={path}>
                 {store ? (

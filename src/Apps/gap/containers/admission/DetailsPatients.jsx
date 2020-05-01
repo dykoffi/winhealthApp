@@ -1,13 +1,11 @@
-import React from 'react'
+import React from "react";
 
-const DetailsPatient = ()=>{
+const DetailsPatient = () => {
+  return (
+    <div className="DetailsPatient">
+     
+    </div>
+  );
+};
 
-
-    return (
-        <div className="DetailsPatient">
-
-        </div>
-    )
-}
-
-export default DetailsPatient
+export default DetailsPatient;

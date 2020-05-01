@@ -77,15 +77,15 @@ const FormAddUser = ({
   }, [appActive]);
   return (
     <div className="row">
-      <div className="col-12 FormAddUser d-flex justify-content-center align-items-center">
+      <div className="col-12 FormAddUser Modal d-flex justify-content-center align-items-center">
         <div className="row d-flex justify-content-center align-items-center">
-          <div className="col-5 white ">
+          <div className="col-5 white">
             <div className="row d-flex justify-content-center">
               <div className="col-5 p-3 text-left">
                 <small>Informations de l'utilisateur</small>
                 <input
                   type="text"
-                  className="col-12 mt-2 p-2"
+                  className="col-12 mt-2 p-1 rounded"
                   placeholder="Nom"
                   value={nom}
                   onChange={(ev) => {
@@ -94,7 +94,7 @@ const FormAddUser = ({
                 />
                 <input
                   type="text"
-                  className="col-12 mt-2 p-2"
+                  className="col-12 mt-2 p-1 rounded"
                   placeholder="Prenoms"
                   value={prenoms}
                   onChange={(ev) => {
@@ -103,7 +103,7 @@ const FormAddUser = ({
                 />
                 <input
                   type="text"
-                  className="col-12 mt-2 p-2"
+                  className="col-12 mt-2 p-1 rounded"
                   placeholder="Contact"
                   value={contact}
                   onChange={(ev) => {
@@ -112,7 +112,7 @@ const FormAddUser = ({
                 />
                 <input
                   type="text"
-                  className="col-12 mt-2 p-2"
+                  className="col-12 mt-2 p-1 rounded"
                   placeholder="Mail"
                   value={mail}
                   onChange={(ev) => {
@@ -121,7 +121,7 @@ const FormAddUser = ({
                 />
                 <input
                   type="text"
-                  className="col-12 mt-2 p-2"
+                  className="col-12 mt-2 p-1 rounded"
                   placeholder="Poste"
                   value={poste}
                   onChange={(ev) => {

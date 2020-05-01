@@ -9,7 +9,7 @@ const Accueil = ({ sendTitle }) => {
     <div className="Accueil row p-3">
       <div className="col-12">
         <div className="row">
-          <div className="col-3 d-flex">
+          <div className="col-2 d-flex">
             <Verticalcard
               title="Utilisateurs"
               details="Creer, modifier, supprimer et attribuer des droits aux utilisateurs"
@@ -17,10 +17,9 @@ const Accueil = ({ sendTitle }) => {
               bgColor="white"
               textColor="blue-text"
               link="/admin/users"
-
             />
           </div>
-          <div className="col-3 d-flex">
+          <div className="col-2 d-flex">
             <Verticalcard
               title="Profil"
               details="Creer, modifier et supprimer des profils avec des droits intégrés"
@@ -30,7 +29,7 @@ const Accueil = ({ sendTitle }) => {
               link="/admin/profils"
             />
           </div>
-          <div className="col-3 d-flex">
+          <div className="col-2 d-flex">
             <Verticalcard
               title="Services"
               details="Creer et deployer des services à la volée et sans rechargement"
@@ -40,7 +39,7 @@ const Accueil = ({ sendTitle }) => {
               link="/admin/services"
             />
           </div>
-          <div className="col-3 d-flex">
+          <div className="col-2 d-flex">
             <Verticalcard
               title="Logs"
               details="Consulter les fichiers journaux générés par tous les utilisateurs du système"
@@ -50,19 +49,19 @@ const Accueil = ({ sendTitle }) => {
               link="/admin/logs"
             />
           </div>
-         <div className="col-3 d-flex">
+          <div className="col-2 d-flex">
             <Verticalcard
               title="Com"
-              details="Partager des informations avec tous les utilisateurs actifs du système (fonctionalité indisponible)"
+              details="Partager des informations avec tous les utilisateurs du système (indisponible)"
               icon="hardware-headset-mic"
               bgColor="white"
               textColor="red-text"
             />
           </div>
-          <div className="col-3 d-flex">
+          <div className="col-2 d-flex">
             <Verticalcard
               title="Settings"
-              details="Régler et paramétrer tous les modules du système à votre guise (fonctionalité indisponible)"
+              details="Régler et paramétrer tous les modules du système (indisponible)"
               icon="action-settings"
               bgColor="white"
               textColor="grey-text darken-4"

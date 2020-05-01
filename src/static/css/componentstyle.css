@@ -98,8 +98,8 @@ input.bordertrans:focus {
 /* Information */
 
 .Information,
-.FormAddProfil,
-.FormAddUser {
+.Modal
+ {
   position: fixed;
   height: 100vh;
   top: 0;
@@ -133,7 +133,11 @@ input.bordertrans:focus {
 }
 
 .actifItem {
-  background-image: linear-gradient(to right, rgba(1, 138, 180, 0.726), rgba(1, 138, 180, 0.205));
+  background-image: linear-gradient(
+    to right,
+    rgba(1, 138, 180, 0.726),
+    rgba(1, 138, 180, 0.205)
+  );
   font-weight: bold !important;
   /* background-color: rgba(1, 138, 180, 0.726) !important; */
 }
@@ -212,7 +216,20 @@ a:focus {
   border-bottom-color: rgba(1, 138, 180, 0.11) !important;
 }
 
-.logListApps small{
+.logListApps small {
   cursor: pointer;
 }
 
+/* Verticalcard */
+ .Verticalcard {
+   border: 4px solid rgba(214, 214, 214, 0.356);
+   cursor: pointer;
+ }
+  .Verticalcard:hover {
+  border: 4px solid rgba(214, 214, 214, 0.966);
+  box-shadow: 0.3px 0.3px 15px rgba(214, 214, 214, 0.192);
+}
+
+a:hover{
+  text-decoration: none;
+}
