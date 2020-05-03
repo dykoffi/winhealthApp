@@ -22,7 +22,7 @@ const Topbar = ({ toggleFullscreen, title, fullscreen }) => {
   return (
     <div className="col-12 p-1 Topbar">
       <div className="row">
-        <div className="col-3 p-2 title ">
+        <div className="col-3 p-2">
           <span className="p-3">{title}</span>
         </div>
         <div className="col-6 d-flex justify-content-center align-items-center">

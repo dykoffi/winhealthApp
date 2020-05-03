@@ -14,8 +14,8 @@ const Onglet = ({ links, currentPage, setCurrentPage }) => {
           style={{
             cursor: "pointer",
           }}
-          className={`mx-3 text-center onglet pb-2 ${
-            currentPage === target ? "border-bottom border-info text-info actifOnglet" : "text-secondary"
+          className={`px-3 text-center onglet py-2 ${
+            currentPage === target ? "grey lighten-5 text-secondary actifOnglet" : "text-secondary"
           } `}
         >
           <i className={`mdi-${icon} mr-2`}></i>

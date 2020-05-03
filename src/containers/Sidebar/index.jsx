@@ -7,7 +7,7 @@ import "./sidebar.css";
 const SideHead = ({ user }) => {
   const { nomuser, posteuser, prenomsuser, labelprofil } = user;
   return (
-    <div className="row p-4 text-dark border-bottom">
+    <div className="row p-4 text-light Sidehead">
       <div className="col-12 text-center ">
         <i className={`mdi-social-person mdi-4x`}></i>
       </div>
@@ -27,8 +27,8 @@ SideHead.prototype = {
 
 export const SideItem = ({ icon, text, actif, active }) => (
   <div
-    className={`row Sideitem border-bottom px-2 py-1 ${
-      actif ? "text-info" : "text-secondary"
+    className={`row Sideitem px-2 py-1 ${
+      actif ? "text-info active" : "text-light"
     }`}
     onClick={() => active()}
   >
@@ -57,7 +57,7 @@ const ListItem = ({ children }) => (
 const Sidebar = ({ user, fonctions }) => {
   const [actif, setactif] = useState(0);
   return (
-    <div className="row page white shadow-sm">
+    <div className="row page Sidebar">
       <div className="col-12">
         <SideHead user={user} />
         {fonctions && (

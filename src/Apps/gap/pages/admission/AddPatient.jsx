@@ -1,4 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import {
+  TextFieldAutoComplete,
+  TextField,
+  Select,
+} from "../../../../components/InputCustom";
 
 const AddPatient = () => {
   return (
@@ -6,132 +12,114 @@ const AddPatient = () => {
       <h6 className="font-weight-bold font-italic text-secondary">
         Information personnelles du patient
       </h6>
-      <div className="col-12 p-3 grey-text text-darken-1">
-        <div className="row py-1">
-          <div className="col-3">
-            <span className="">Nom</span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-            placeholder=""
-          />
+      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
+        <div className="row py-2">
+          <TextField className="col-2 ml-1" label="Nom" />
+          <TextField className="col-3 ml-1" label="Prenoms" />
+          <TextField className="col-3 ml-1" label="Nom de jeune fille" />
         </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>
-              Prenoms <b className="red-text">*</b>
-            </span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-            placeholder=""
+        <div className="row py-2">
+          <Select
+            className="col-2 ml-1"
+            label="Sexe"
+            options={[
+              { value: "oui", label: "Oui" },
+              { value: "non", label: "Non" },
+            ]}
           />
-        </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>
-              Nom de jeune fille <b className="red-text">*</b>
-            </span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-          />
-        </div>
-
-        <div className="row py-1">
-          <div className="col-3">
-            <span>Sexe *</span>
-          </div>
-          <select
-            value={['Masculin','Feminin']}
-            className="px-2 custom-select text-secondary py-1 col-3 rounded bordertrans shadow-sm"
-            placeholder=""
-          />
-        </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>Date de naissance</span>
-          </div>
-          <input
+          <TextField
+            className="col-3 ml-1"
+            label="Date de naissance"
             type="date"
-            className="px-2 text-secondary py-1 col-3 rounded bordertrans shadow-sm"
-            placeholder=""
+          />
+          <TextField className="col-3 ml-1" label="Lieu de naissance" />
+        </div>
+        <div className="row py-2">
+          <TextField className="col-2 ml-1" label="Nationalité" />
+          <Select
+            className="col-3 ml-1"
+            label="Réligion"
+            options={[
+              { value: "chretien", label: "Chretien" },
+              { value: "musulman", label: "Musulman" },
+              { value: "boudiste", label: "Boudiste" },
+              { value: "animiste", label: "Animiste" },
+              { value: "autre", label: "Autre réligion" },
+              { value: "sans", label: "Sans réligion" },
+            ]}
+          />
+          <Select
+            className="col-3 ml-1"
+            label="Profession"
+            options={[
+              { value: "activité", label: "En activité" },
+              { value: "chomage", label: "Au chomage" },
+              { value: "retraite", label: "Retraité" },
+            ]}
           />
         </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>
-              Lieu de naissance <b className="red-text">*</b>
-            </span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-          />
+      </div>
+      <h6 className="font-weight-bold font-italic text-secondary">
+        Informations relatives aux parents
+      </h6>
+      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
+        <div className="row py-2">
+          <TextField className="col-2 ml-1" label="Nom du père" />
+          <TextField className="col-3 ml-1" label="Prenoms du père" />
+          <TextField className="col-3 ml-1" label="Contact du père" />
         </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>
-              Nationalité <b className="red-text">*</b>
-            </span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-          />
+        <div className="row py-2">
+          <TextField className="col-2 ml-1" label="Nom du mère" />
+          <TextField className="col-3 ml-1" label="Prenoms du mère" />
+          <TextField className="col-3 ml-1" label="Contact du mère" />
         </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>
-              Profession <b className="red-text">*</b>
-            </span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-          />
+      </div>
+      <h6 className="font-weight-bold font-italic text-secondary">
+        Informations relatives au tuteur
+      </h6>
+      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
+        <div className="row py-2">
+          <TextField className="col-2 ml-1" label="Nom du tuteur" />
+          <TextField className="col-3 ml-1" label="Prenoms du tuteur" />
+          <TextField className="col-3 ml-1" label="Contact du tuteur" />
         </div>
       </div>
       <h6 className="font-weight-bold font-italic text-secondary">
         Personne à contacter en cas de besoin
       </h6>
-      <div className="col-12 p-3 grey-text text-darken-1">
-        <div className="row py-1">
-          <div className="col-3">
-            <span>Nom</span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-            placeholder=""
+      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
+        <div className="row py-2">
+          <TextField className="col-2 ml-1" label="Nom" />
+          <TextField className="col-3 ml-1" label="Prenoms" />
+          <TextField className="col-3 ml-1" label="Contact" />
+          <TextField className="col-3 ml-1" label="Mail" />
+        </div>
+      </div>
+      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
+        <div className="row py-2">
+          <Select
+            className="col-2 ml-1"
+            label="Assuré(e) ?"
+            options={[
+              { value: "oui", label: "Oui" },
+              { value: "non", label: "Non" },
+            ]}
+          />
+          <Select
+            className="col-3 ml-1"
+            label="Nom de l'assurance"
+            options={[
+              { value: "nsia", label: "NSIA" },
+              { value: "sgbci", label: "SBGCI" },
+              { value: "alianz", label: "Alianz" },
+            ]}
           />
         </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>
-              Prenoms <b className="red-text">*</b>
-            </span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-            placeholder=""
-          />
-        </div>
-        <div className="row py-1">
-          <div className="col-3">
-            <span>
-              Nom de jeune fille <b className="red-text">*</b>
-            </span>
-          </div>
-          <input
-            type="text"
-            className="px-2 text-secondary py-1 col-3 rounded"
-          />
-        </div>
+      </div>
+      <div className="">
+        <Button variant="contained" className="bg-info text-white">
+          Envoyer le formulaire
+        </Button>
       </div>
     </div>
   );
