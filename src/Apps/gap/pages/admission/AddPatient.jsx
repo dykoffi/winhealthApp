@@ -1,12 +1,200 @@
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
-import {
-  TextFieldAutoComplete,
-  TextField,
-  Select,
-} from "../../../../components/InputCustom";
+import Snackbar from "@material-ui/core/Snackbar";
+import Slide from "@material-ui/core/Slide";
+import MuiAlert from "@material-ui/lab/Alert";
+import { TextField, Select } from "../../../../components/InputCustom";
+import Axios from "axios";
 
 const AddPatient = () => {
+  const [inputs, setinput] = useState({
+    ipp: "",
+    nom: "",
+    prenoms: "",
+    nomjeune: "",
+    sexe: "",
+    datenaissance: "",
+    lieunaissance: "",
+    nationalite: "",
+    habitation: "",
+    contact: "",
+    situation: "",
+    religion: "",
+    profession: "",
+    nompere: "",
+    prenomspere: "",
+    contactpere: "",
+    nommere: "",
+    prenomsmere: "",
+    contactmere: "",
+    nomtuteur: "",
+    prenomstuteur: "",
+    contacttuteur: "",
+    nompersonnesure: "",
+    prenomspersonnesure: "",
+    contactpersonnesure: "",
+    assure: "",
+    assurance: "",
+  });
+  const [alert, setalert] = useState({
+    show: false,
+    severity: "success",
+    message: "",
+    time: null,
+    style: "standart",
+  });
+  //patient
+  function setipp({ target: { value } }) {
+    setinput({ ...inputs, ipp: value });
+  }
+  function setnom({ target: { value } }) {
+    setinput({ ...inputs, nom: value });
+  }
+  function setprenoms({ target: { value } }) {
+    setinput({ ...inputs, prenoms: value });
+  }
+  function setnomjeune({ target: { value } }) {
+    setinput({ ...inputs, nomjeune: value });
+  }
+  function setsexe({ target: { value } }) {
+    setinput({ ...inputs, sexe: value });
+  }
+  function setdatenaissance({ target: { value } }) {
+    setinput({ ...inputs, datenaissance: value });
+  }
+  function setlieunaissance({ target: { value } }) {
+    setinput({ ...inputs, lieunaissance: value });
+  }
+  function setnationalite({ target: { value } }) {
+    setinput({ ...inputs, nationalite: value });
+  }
+  function sethabitation({ target: { value } }) {
+    setinput({ ...inputs, habitation: value });
+  }
+  function setcontact({ target: { value } }) {
+    setinput({ ...inputs, contact: value });
+  }
+  function setprofession({ target: { value } }) {
+    setinput({ ...inputs, profession: value });
+  }
+  function setreligion({ target: { value } }) {
+    setinput({ ...inputs, religion: value });
+  }
+  function setsituation({ target: { value } }) {
+    setinput({ ...inputs, situation: value });
+  }
+  //pere
+  function setnompere({ target: { value } }) {
+    setinput({ ...inputs, nompere: value });
+  }
+  function setprenomspere({ target: { value } }) {
+    setinput({ ...inputs, prenomspere: value });
+  }
+  function setcontactpere({ target: { value } }) {
+    setinput({ ...inputs, contactpere: value });
+  }
+  //mere
+  function setnommere({ target: { value } }) {
+    setinput({ ...inputs, nommere: value });
+  }
+  function setprenomsmere({ target: { value } }) {
+    setinput({ ...inputs, prenomsmere: value });
+  }
+  function setcontactmere({ target: { value } }) {
+    setinput({ ...inputs, contactmere: value });
+  }
+  //tuteur
+  function setnomtuteur({ target: { value } }) {
+    setinput({ ...inputs, nomtuteur: value });
+  }
+  function setprenomstuteur({ target: { value } }) {
+    setinput({ ...inputs, prenomstuteur: value });
+  }
+  function setcontacttuteur({ target: { value } }) {
+    setinput({ ...inputs, contacttuteur: value });
+  }
+
+  //personne sur
+  function setnompersonnesure({ target: { value } }) {
+    setinput({ ...inputs, nompersonnesure: value });
+  }
+  function setprenomspersonnesure({ target: { value } }) {
+    setinput({ ...inputs, prenomspersonnesure: value });
+  }
+  function setcontactpersonnesure({ target: { value } }) {
+    setinput({ ...inputs, contactpersonnesure: value });
+  }
+
+  //assurance
+  function setassure({ target: { value } }) {
+    setinput({ ...inputs, assure: value });
+  }
+  function setassurance({ target: { value } }) {
+    setinput({ ...inputs, assurance: value });
+  }
+  function verifyField() {
+    const {
+      nom,
+      prenoms,
+      ipp,
+      datenaissance,
+      habitation,
+      lieunaissance,
+      contactpersonnesure,
+      sexe,
+    } = inputs;
+    if (
+      nom.trim().length === 0 ||
+      prenoms.trim().length === 0 ||
+      ipp.trim().length === 0 ||
+      datenaissance.trim().length === 0 ||
+      lieunaissance.trim().length === 0 ||
+      habitation.trim().length === 0 ||
+      sexe.trim().length === 0 ||
+      contactpersonnesure.trim().length === 0
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  function send() {
+    if (verifyField()) {
+      setalert({
+        message: "Envoi en cours ...",
+        severity: "info",
+        show: true,
+        time: null,
+        style: "filled",
+      });
+      Axios({
+        url: "http://localhost:8000/gap/add/patient",
+        method: "POST",
+        data: inputs,
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+      }).then(({ data }) => {
+        console.log(data);
+        setalert({
+          message: data.message.label,
+          severity: data.message.type,
+          show: true,
+          time: 5000,
+          style: "filled",
+        });
+      });
+    } else {
+      setalert({
+        message: "Veuillez renseigner les champs obligatoires",
+        severity: "warning",
+        show: true,
+        time: 3500,
+        style: "filled",
+      });
+    }
+  }
+
   return (
     <div className="row p-3">
       <h6 className="font-weight-bold font-italic text-secondary">
@@ -14,29 +202,90 @@ const AddPatient = () => {
       </h6>
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
-          <TextField className="col-2 ml-1" label="Nom" />
-          <TextField className="col-3 ml-1" label="Prenoms" />
-          <TextField className="col-3 ml-1" label="Nom de jeune fille" />
-        </div>
-        <div className="row py-2">
-          <Select
-            className="col-2 ml-1"
-            label="Sexe"
-            options={[
-              { value: "oui", label: "Oui" },
-              { value: "non", label: "Non" },
-            ]}
+          <TextField
+            className="col-3 ml-1 required"
+            label="IPP du patient"
+            value={inputs.ipp}
+            onChange={setipp}
+          />
+          <TextField
+            className="col-2 ml-1 required"
+            label="Nom"
+            value={inputs.nom}
+            onChange={setnom}
+          />
+          <TextField
+            className="col-3 ml-1 required"
+            label="Prenoms"
+            value={inputs.prenoms}
+            onChange={setprenoms}
           />
           <TextField
             className="col-3 ml-1"
+            label="Nom de jeune fille"
+            value={inputs.nomjeune}
+            onChange={setnomjeune}
+          />
+        </div>
+        <div className="row py-2">
+          <Select
+            value={inputs.sexe}
+            onChange={setsexe}
+            className="col-3 ml-1"
+            label="Sexe"
+            options={[
+              { value: "masculin", label: "Masculin" },
+              { value: "feminin", label: "Feminin" },
+            ]}
+          />
+          <TextField
+            value={inputs.datenaissance}
+            onChange={setdatenaissance}
+            className="col-2 ml-1 required"
             label="Date de naissance"
             type="date"
           />
-          <TextField className="col-3 ml-1" label="Lieu de naissance" />
+          <TextField
+            className="col-3 ml-1"
+            label="Lieu de naissance required"
+            value={inputs.lieunaissance}
+            onChange={setlieunaissance}
+          />
+          <TextField
+            className="col-3 ml-1 required"
+            label="Nationalité"
+            value={inputs.nationalite}
+            onChange={setnationalite}
+          />
         </div>
         <div className="row py-2">
-          <TextField className="col-2 ml-1" label="Nationalité" />
+          <TextField
+            className="col-3 ml-1 required"
+            label="Lieu d'habitation"
+            value={inputs.habitation}
+            onChange={sethabitation}
+          />
+          <TextField
+            className="col-2 ml-1 required"
+            label="Contact"
+            value={inputs.contact}
+            onChange={setcontact}
+          />
           <Select
+            value={inputs.situation}
+            onChange={setsituation}
+            className="col-3 ml-1"
+            label="Situation matrimoniale"
+            options={[
+              { value: "marie", label: "Marié" },
+              { value: "divorce", label: "Divorcé" },
+              { value: "concubinage", label: "Concubinage" },
+              { value: "veuf", label: "Veuf (ve)" },
+            ]}
+          />
+          <Select
+            value={inputs.religion}
+            onChange={setreligion}
             className="col-3 ml-1"
             label="Réligion"
             options={[
@@ -48,7 +297,11 @@ const AddPatient = () => {
               { value: "sans", label: "Sans réligion" },
             ]}
           />
+        </div>
+        <div className="row py-2">
           <Select
+            value={inputs.profession}
+            onChange={setprofession}
             className="col-3 ml-1"
             label="Profession"
             options={[
@@ -64,14 +317,44 @@ const AddPatient = () => {
       </h6>
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
-          <TextField className="col-2 ml-1" label="Nom du père" />
-          <TextField className="col-3 ml-1" label="Prenoms du père" />
-          <TextField className="col-3 ml-1" label="Contact du père" />
+          <TextField
+            className="col-2 ml-1"
+            label="Nom du père"
+            value={inputs.nompere}
+            onChange={setnompere}
+          />
+          <TextField
+            value={inputs.prenomspere}
+            onChange={setprenomspere}
+            className="col-3 ml-1"
+            label="Prenoms du père"
+          />
+          <TextField
+            value={inputs.contactpere}
+            onChange={setcontactpere}
+            className="col-3 ml-1"
+            label="Contact du père"
+          />
         </div>
         <div className="row py-2">
-          <TextField className="col-2 ml-1" label="Nom du mère" />
-          <TextField className="col-3 ml-1" label="Prenoms du mère" />
-          <TextField className="col-3 ml-1" label="Contact du mère" />
+          <TextField
+            className="col-2 ml-1"
+            label="Nom de la mère"
+            value={inputs.nommere}
+            onChange={setnommere}
+          />
+          <TextField
+            value={inputs.prenomsmere}
+            onChange={setprenomsmere}
+            className="col-3 ml-1"
+            label="Prenoms de la mère"
+          />
+          <TextField
+            value={inputs.contactmere}
+            onChange={setcontactmere}
+            className="col-3 ml-1"
+            label="Contact de la mère"
+          />
         </div>
       </div>
       <h6 className="font-weight-bold font-italic text-secondary">
@@ -79,9 +362,24 @@ const AddPatient = () => {
       </h6>
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
-          <TextField className="col-2 ml-1" label="Nom du tuteur" />
-          <TextField className="col-3 ml-1" label="Prenoms du tuteur" />
-          <TextField className="col-3 ml-1" label="Contact du tuteur" />
+          <TextField
+            className="col-2 ml-1"
+            label="Nom du tuteur"
+            value={inputs.nomtuteur}
+            onChange={setnomtuteur}
+          />
+          <TextField
+            value={inputs.prenomstuteur}
+            onChange={setprenomstuteur}
+            className="col-3 ml-1"
+            label="Prenoms du tuteur"
+          />
+          <TextField
+            value={inputs.contacttuteur}
+            onChange={setcontacttuteur}
+            className="col-3 ml-1"
+            label="Contact du tuteur"
+          />
         </div>
       </div>
       <h6 className="font-weight-bold font-italic text-secondary">
@@ -89,15 +387,34 @@ const AddPatient = () => {
       </h6>
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
-          <TextField className="col-2 ml-1" label="Nom" />
-          <TextField className="col-3 ml-1" label="Prenoms" />
-          <TextField className="col-3 ml-1" label="Contact" />
-          <TextField className="col-3 ml-1" label="Mail" />
+          <TextField
+            className="col-2 ml-1"
+            label="Nom"
+            value={inputs.nompersonnesure}
+            onChange={setnompersonnesure}
+          />
+          <TextField
+            value={inputs.prenomspersonnesure}
+            onChange={setprenomspersonnesure}
+            className="col-3 ml-1"
+            label="Prenoms"
+          />
+          <TextField
+            value={inputs.contactpersonnesure}
+            onChange={setcontactpersonnesure}
+            className="col-3 ml-1 required"
+            label="Contact"
+          />
         </div>
       </div>
+      <h6 className="font-weight-bold font-italic text-secondary">
+        Informations relatives à l'assurance
+      </h6>
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
           <Select
+            value={inputs.assure}
+            onChange={setassure}
             className="col-2 ml-1"
             label="Assuré(e) ?"
             options={[
@@ -105,21 +422,51 @@ const AddPatient = () => {
               { value: "non", label: "Non" },
             ]}
           />
-          <Select
-            className="col-3 ml-1"
-            label="Nom de l'assurance"
-            options={[
-              { value: "nsia", label: "NSIA" },
-              { value: "sgbci", label: "SBGCI" },
-              { value: "alianz", label: "Alianz" },
-            ]}
-          />
+          {inputs.assure === "oui" && (
+            <Select
+              value={inputs.assurance}
+              onChange={setassurance}
+              className="col-3 ml-1"
+              label="Nom de l'assurance"
+              options={[
+                { value: "nsia", label: "NSIA" },
+                { value: "sgbci", label: "SBGCI" },
+                { value: "alianz", label: "Alianz" },
+              ]}
+            />
+          )}
         </div>
       </div>
       <div className="">
-        <Button variant="contained" className="bg-info text-white">
+        <Button
+          onClick={() => {
+            send();
+          }}
+          variant="contained"
+          className="bg-info text-white"
+        >
           Envoyer le formulaire
         </Button>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          // TransitionComponent={<Slide direction="right" />}
+          autoHideDuration={alert.time}
+          onClose={() => {
+            setalert({ ...alert, show: false });
+          }}
+          open={alert.show}
+        >
+          <MuiAlert
+            elevation={6}
+            variant={alert.style}
+            severity={alert.severity}
+          >
+            {alert.message}
+          </MuiAlert>
+        </Snackbar>
       </div>
     </div>
   );

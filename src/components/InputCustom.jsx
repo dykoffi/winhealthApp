@@ -7,7 +7,7 @@ export const TextField = ({
   className,
   placeholder,
   name,
-  value,
+  value = "",
   onChange,
 }) => (
   <div className={className}>
@@ -43,14 +43,17 @@ export const Select = ({
     <select
       name={name}
       value={value}
-      className="col-12 p-n1"
+      className="col-12 p-n1 SelectCustom"
       placeholder={placeholder}
       onChange={(ev) => {
         onChange(ev);
       }}
     >
-      {options.map(({ value, label }) => (
-        <option value={value}>{label}</option>
+      <option value=""></option>
+      {options.map(({ value, label }, i) => (
+        <option key={i} value={value}>
+          {label}
+        </option>
       ))}
     </select>
   </div>
@@ -60,7 +63,7 @@ export const TextFieldAutoComplete = ({
   type = "text",
   label,
   className,
-  value,
+  value = "",
   placeholder,
   name,
   idList,
@@ -80,8 +83,8 @@ export const TextFieldAutoComplete = ({
       className="p-1 shadow-sm col-12 InputCustom"
     />
     <datalist id={idList}>
-      {list.map((value) => (
-        <option value={value} />
+      {list.map((value, i) => (
+        <option key={i} value={value} />
       ))}
     </datalist>
   </div>
