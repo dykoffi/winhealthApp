@@ -43,13 +43,13 @@ export const Select = ({
     <select
       name={name}
       value={value}
-      className="col-12 p-n1 SelectCustom"
+      className="col-12 p-n1 SelectCustom custom-select"
       placeholder={placeholder}
       onChange={(ev) => {
         onChange(ev);
       }}
     >
-      <option value=""></option>
+      <option selected>Selectionner</option>
       {options.map(({ value, label }, i) => (
         <option key={i} value={value}>
           {label}

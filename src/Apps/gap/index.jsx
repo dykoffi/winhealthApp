@@ -9,7 +9,7 @@ import Navbar from "../../containers/Sidebar/";
 
 import Topbar from "../../components/Topbar";
 
-const Admin = () => {
+const Gap = () => {
   const cookies = new Cookies();
   const [title, setTitle] = useState("Accueil");
   const [fullscreen, setfullscreen] = useState(false);
@@ -77,4 +77,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default Gap;

@@ -1,23 +1,36 @@
 import React from "react";
 import DossiersPatient from "../../containers/admission/DossiersPatient";
+import DetailsPatient from "../../containers/admission/DetailsPatient";
+import { connect } from "react-redux";
 
-const Dossiers = () => {
+const Dossiers = ({ currentPatient }) => {
   return (
-    <div className="Dossiers row p-3 text-center ">
-      <div className="col-12">
-        <div className="row d-flex  justify-content-center">
-          <input
-            type="text"
-            className="p-1 col-8 rounded"
-            placeholder="Rechercher un dossier patient"
-          />
+    <div className="Dossiers row p-3">
+      {currentPatient.iddossier ? (
+        <>
+          <section className="col-3">
+            <DetailsPatient />
+          </section>
+          <section className="col-9">
+            <DossiersPatient />
+          </section>
+        </>
+      ) : (
+        <div className="col-12 text-secondary text-center">
+          <h3 className="text-center lead">Aucun patient selectionné</h3>
+          <span>Rendez vous dans liste des patients et selectionnez un patient</span>
         </div>
-      </div>
-      <div className="col-12">
-          <DossiersPatient />
-      </div>
+      )}
     </div>
   );
 };
+const mapStateToProps = (state) => {
+  const {
+    detailsPatientReducer: { currentPatient },
+  } = state;
+  return { currentPatient };
+};
 
-export default Dossiers;
+const DossiersConnected = connect(mapStateToProps)(Dossiers);
+
+export default DossiersConnected;

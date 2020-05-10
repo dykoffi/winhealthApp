@@ -12,7 +12,7 @@ const Verticalcard = ({
 }) => {
   return (
     <Link to={link}>
-      <div className="row Verticalcard mt-3" style={{ marginLeft: "0.05cm" }}>
+      <div className="row Verticalcard white mt-3" style={{ marginLeft: "0.05cm" }}>
         <div
           className={`col-12 d-flex align-items-center ${textColor} ${bgColor} flex-column`}
         >

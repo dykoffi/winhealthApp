@@ -1,4 +1,3 @@
-import Statistiques from './Statistiques'
 import Dossiers from './Dossiers'
 import Patients from './Patients'
 import AddPatient from './AddPatient'
@@ -6,7 +5,6 @@ import AddPatient from './AddPatient'
 const Pages = [
     { id:"listPatient", Component: Patients },
     { id:"addPatient", Component: AddPatient },
-    { id:"dossiersPatient", Component: Dossiers },
-    { id:"statsPatient", Component: Statistiques }
+    { id:"dossiersPatient", Component: Dossiers }
 ]
 export default Pages

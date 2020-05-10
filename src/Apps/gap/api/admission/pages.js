@@ -1,7 +1,7 @@
-
+import Onglets from '../../pages/admission/_onglets'
 
 const initState = {
-    currentPage: null,
+    currentPage: Onglets[0].target || null,
 }
 
 //actions

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
-import Slide from "@material-ui/core/Slide";
 import MuiAlert from "@material-ui/lab/Alert";
 import { TextField, Select } from "../../../../components/InputCustom";
 import Axios from "axios";
 
-const AddPatient = () => {
+import { thunkDetailsPatient } from "../../api/admission/detailsPatient";
+import { connect } from "react-redux";
+
+const AddPatient = ({ thunkDetailsPatient }) => {
   const [inputs, setinput] = useState({
     ipp: "",
     nom: "",
@@ -128,6 +129,7 @@ const AddPatient = () => {
   //assurance
   function setassure({ target: { value } }) {
     setinput({ ...inputs, assure: value });
+    if (value === "non" || value === "") setinput({ ...inputs, assurance: "" });
   }
   function setassurance({ target: { value } }) {
     setinput({ ...inputs, assurance: value });
@@ -174,15 +176,18 @@ const AddPatient = () => {
         headers: {
           "content-type": "application/x-www-form-urlencoded",
         },
-      }).then(({ data }) => {
-        console.log(data);
+      }).then(({ data: { message, rows } }) => {
         setalert({
-          message: data.message.label,
-          severity: data.message.type,
+          message: message.label,
+          severity: message.type,
           show: true,
           time: 5000,
           style: "filled",
         });
+        setTimeout(() => {
+
+          thunkDetailsPatient(rows[0].iddossier);
+        }, 1000);
       });
     } else {
       setalert({
@@ -231,7 +236,7 @@ const AddPatient = () => {
           <Select
             value={inputs.sexe}
             onChange={setsexe}
-            className="col-3 ml-1"
+            className="col-3 ml-1 required"
             label="Sexe"
             options={[
               { value: "masculin", label: "Masculin" },
@@ -246,8 +251,8 @@ const AddPatient = () => {
             type="date"
           />
           <TextField
-            className="col-3 ml-1"
-            label="Lieu de naissance required"
+            className="col-3 ml-1 required"
+            label="Lieu de naissance"
             value={inputs.lieunaissance}
             onChange={setlieunaissance}
           />
@@ -266,7 +271,7 @@ const AddPatient = () => {
             onChange={sethabitation}
           />
           <TextField
-            className="col-2 ml-1 required"
+            className="col-2 ml-1"
             label="Contact"
             value={inputs.contact}
             onChange={setcontact}
@@ -438,15 +443,14 @@ const AddPatient = () => {
         </div>
       </div>
       <div className="">
-        <Button
+        <button
           onClick={() => {
             send();
           }}
-          variant="contained"
-          className="bg-info text-white"
+          className="btn btn-info text-white"
         >
           Envoyer le formulaire
-        </Button>
+        </button>
         <Snackbar
           anchorOrigin={{
             vertical: "bottom",
@@ -472,4 +476,5 @@ const AddPatient = () => {
   );
 };
 
-export default AddPatient;
+const AddPatientConnected = connect(null, { thunkDetailsPatient })(AddPatient);
+export default AddPatientConnected;
