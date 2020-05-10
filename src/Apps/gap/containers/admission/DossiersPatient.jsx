@@ -78,7 +78,7 @@ const DossiersPatient = ({
       >
         Ajouter sejour
       </button>
-      {/* <Facture /> */}
+     <Facture />
 
       {/* <div className="col-12"><b>3 sejours</b></div> */}
       <div className="col-12 mt-4">

@@ -11,27 +11,30 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
-Font.register({ family: "Rond", src: "http://localhost:3000/fonts/f1.otf" });
-Font.register({ family: "Regular", src: "http://localhost:3000/font.ttf" });
+Font.register({
+  family: "Rond",
+  src: "http://192.168.43.84:3000/fonts/f1.otf",
+});
+Font.register({ family: "Regular", src: "http://192.168.43.84:3000/font.ttf" });
 Font.register({
   family: "Roboto-Black",
-  src: "http://localhost:3000/fonts/Roboto-Black.ttf",
+  src: "http://192.168.43.84:3000/fonts/Roboto-Black.ttf",
 });
 Font.register({
   family: "Roboto-Bold",
-  src: "http://localhost:3000/fonts/Roboto-Bold.ttf",
+  src: "http://192.168.43.84:3000/fonts/Roboto-Bold.ttf",
 });
 Font.register({
   family: "Roboto-Thin",
-  src: "http://localhost:3000/fonts/Roboto-Thin.ttf",
+  src: "http://192.168.43.84:3000/fonts/Roboto-Thin.ttf",
 });
 Font.register({
   family: "Roboto-Light",
-  src: "http://localhost:3000/fonts/Roboto-Light.ttf",
+  src: "http://192.168.43.84:3000/fonts/Roboto-Light.ttf",
 });
 Font.register({
   family: "Roboto-Regular",
-  src: "http://localhost:3000/fonts/Roboto-Regular.ttf",
+  src: "http://192.168.43.84:3000/fonts/Roboto-Regular.ttf",
 });
 
 const DocHead = () => (
@@ -51,7 +54,7 @@ const DocHead = () => (
       <Text
         style={{
           fontSize: 16,
-          fontFamily: "Rond",
+          fontFamily: "Roboto-Bold",
         }}
       >
         POLYCLINIQUE ALTEA
@@ -89,7 +92,7 @@ const DocFoot = ({ url }) => (
     </View>
     <View
       style={{
-        flex: 'auto',
+        flex: "auto",
         fontSize: 9,
         paddingLeft: 15,
         color: "grey",
@@ -191,16 +194,16 @@ const Facture = ({ patient, etablissement, url }) => {
               <Text style={styles.title}>SEJOUR DU 30 MARS 2015</Text>
               <View style={styles.content}>
                 <View style={styles.l}>
-                  <Text style={styles.g}>ENTRÉ(E) LE </Text>
-                  <Text>15 juin 2015 à 16h05</Text>
+                  <Text style={styles.g}>ENTRÉ(E) À </Text>
+                  <Text>16h05</Text>
                 </View>
                 <View style={styles.l}>
-                  <Text style={styles.g}>SORTI(E) LE </Text>
-                  <Text>15 juin 2015 à 16h30</Text>
+                  <Text style={styles.g}>SORTI(E) À </Text>
+                  <Text>16h30</Text>
                 </View>
                 <View style={styles.l}>
                   <Text style={styles.g}>MOTIF </Text>
-                  <Text>COnsultation</Text>
+                  <Text>Soins</Text>
                 </View>
               </View>
               <Text
@@ -208,12 +211,60 @@ const Facture = ({ patient, etablissement, url }) => {
                   ...styles.title,
                   backgroundColor: "white",
                   textAlign: "center",
-                  borderLeft: 'none'
+                  borderLeft: "none",
+                  marginBottom: 10,
                 }}
               >
                 FACTURE N° 2055632 DU 25 MAI
               </Text>
-              <View></View>
+              <View
+                style={{ display: "flex", flex: 1, flexDirection: "column" }}
+              >
+                <View style={{ ...styles.content, flex: 1 }}>
+                  <View style={styles.l}>
+                    <Text style={styles.g}>Consultation Gyneco </Text>
+                    <Text>15 700 FCFA</Text>
+                  </View>
+                  <View style={styles.l}>
+                    <Text style={styles.g}>Pansement complet </Text>
+                    <Text>7500 FCFA</Text>
+                  </View>
+                  <View style={styles.l}>
+                    <Text style={styles.g}>Lavage d'oreilles </Text>
+                    <Text>12 000 FCFA</Text>
+                  </View>
+                  <View style={styles.l}>
+                    <Text style={styles.g}>Injection de vitamines </Text>
+                    <Text>4 000 FCFA</Text>
+                  </View>
+                  <View style={styles.l}>
+                    <Text style={styles.g}>Scanner cranien </Text>
+                    <Text>42 000 FCFA</Text>
+                  </View>
+                  <View style={styles.l}>
+                    <Text style={styles.g}>Operation frontale </Text>
+                    <Text>122 000 FCFA</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    ...styles.l,
+                    fontSize: 17,
+                    marginBottom: 25,
+                    backgroundColor: "#fafafa",
+                    padding: 15,
+                  }}
+                >
+                  <Text style={styles.g}>TOTAL </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Roboto-Bold",
+                    }}
+                  >
+                    422 000 FCFA
+                  </Text>
+                </View>
+              </View>
             </View>
             <DocFoot url={url} />
           </Page>
