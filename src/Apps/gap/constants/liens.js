@@ -13,7 +13,7 @@ export const navMenu = [
     {
         title: 'Caisse',
         icon: 'editor-attach-money',
-        path: "/gap/admission/addPatient"
+        path: "/gap/caisse"
 
     },
     {

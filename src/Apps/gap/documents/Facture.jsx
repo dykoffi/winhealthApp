@@ -7,37 +7,28 @@ import {
   View,
   Document,
   PDFDownloadLink,
+  BlobProvider,
   Image,
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
 Font.register({
   family: "Rond",
-  src: "http://192.168.43.84:3000/fonts/f1.otf",
+  src: "http://localhost:3000/fonts/f1.otf",
 });
-Font.register({ family: "Regular", src: "http://192.168.43.84:3000/font.ttf" });
-Font.register({
-  family: "Roboto-Black",
-  src: "http://192.168.43.84:3000/fonts/Roboto-Black.ttf",
-});
+Font.register({ family: "Regular", src: "http://localhost:3000/font.ttf" });
+
 Font.register({
   family: "Roboto-Bold",
-  src: "http://192.168.43.84:3000/fonts/Roboto-Bold.ttf",
-});
-Font.register({
-  family: "Roboto-Thin",
-  src: "http://192.168.43.84:3000/fonts/Roboto-Thin.ttf",
-});
-Font.register({
-  family: "Roboto-Light",
-  src: "http://192.168.43.84:3000/fonts/Roboto-Light.ttf",
-});
-Font.register({
-  family: "Roboto-Regular",
-  src: "http://192.168.43.84:3000/fonts/Roboto-Regular.ttf",
+  src: "http://localhost:3000/fonts/Roboto-Bold.ttf",
 });
 
-const DocHead = () => (
+Font.register({
+  family: "Roboto-Light",
+  src: "http://localhost:3000/fonts/Roboto-Light.ttf",
+});
+
+const DocHead = ({ etablissement }) => (
   <View
     style={{
       flex: "auto",
@@ -103,8 +94,7 @@ const DocFoot = ({ url }) => (
       }}
     >
       <Text>Fait à Abidjan le 25 juin 2019</Text>
-      <Text>Tel : 21 58 96 35 / 58 96 32 15</Text>
-      <Text>Fax : 21 58 62 57</Text>
+      <Text>par Audrey Bogui</Text>
       <Text>Email : info@altea-ci.com</Text>
       <Text>Site web : www.altea.ci</Text>
     </View>
@@ -237,14 +227,6 @@ const Facture = ({ patient, etablissement, url }) => {
                     <Text style={styles.g}>Injection de vitamines </Text>
                     <Text>4 000 FCFA</Text>
                   </View>
-                  <View style={styles.l}>
-                    <Text style={styles.g}>Scanner cranien </Text>
-                    <Text>42 000 FCFA</Text>
-                  </View>
-                  <View style={styles.l}>
-                    <Text style={styles.g}>Operation frontale </Text>
-                    <Text>122 000 FCFA</Text>
-                  </View>
                 </View>
                 <View
                   style={{
@@ -256,8 +238,7 @@ const Facture = ({ patient, etablissement, url }) => {
                   }}
                 >
                   <Text style={styles.g}>TOTAL </Text>
-                  <Text
-                    style={{
+                  <Text       style={{
                       fontFamily: "Roboto-Bold",
                     }}
                   >

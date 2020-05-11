@@ -5,7 +5,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Folder from "../../../../components/Folder";
-import { TextField, Select } from "../../../../components/InputCustom";
+import {
+  TextField,
+  Select,
+  TextFieldAutoComplete,
+} from "../../../../components/InputCustom";
 import Facture from "../../documents/Facture";
 import {
   thunkListSejour,
@@ -13,6 +17,7 @@ import {
   thunkDetailsSejour,
 } from "../../api/admission/sejour";
 import { connect } from "react-redux";
+import Axios from "axios";
 
 const DossiersPatient = ({
   thunkListSejour,
@@ -25,6 +30,7 @@ const DossiersPatient = ({
   moment.locales("fr");
   const [open, setOpen] = useState(false);
   const [inputs, setinput] = useState({});
+  const [listActes, setListActe] = useState([]);
 
   function setdebutDate({ target: { value } }) {
     setinput({ ...inputs, debutDate: value });
@@ -61,10 +67,21 @@ const DossiersPatient = ({
   function sendDTata() {
     thunkAddSejour(inputs, currentPatient.iddossier);
   }
+  useEffect(() => {
+    Axios({
+      url: "http://localhost:8000/gap/list/actes",
+    }).then(({ data: { rows } }) => {
+      const actes = [];
+      rows.forEach(({ codeacte, libelleacte }) => {
+        actes.push({ value: codeacte, label: libelleacte });
+      });
+      setListActe(actes);
+    });
+  }, []);
 
-  useEffect(()=>{
-    thunkListSejour(currentPatient.iddossier)
-  },[currentPatient.iddossier])
+  useEffect(() => {
+    thunkListSejour(currentPatient.iddossier);
+  }, [currentPatient.iddossier]);
   return (
     <div className="DossiersPatient row">
       <input
@@ -78,7 +95,7 @@ const DossiersPatient = ({
       >
         Ajouter sejour
       </button>
-     <Facture />
+      {/* <Facture /> */}
 
       {/* <div className="col-12"><b>3 sejours</b></div> */}
       <div className="col-12 mt-4">
@@ -100,10 +117,10 @@ const DossiersPatient = ({
                       : `${datedebutsejour} au  ${datefinsejour}`
                   }
                 >
-                  <span>de {heuredebutsejour} à {heurefinsejour}</span>
                   <span>
-                    {statussejour} pour {typesejour}
+                    de {heuredebutsejour} à {heurefinsejour}{" "}
                   </span>
+                  <span>{typesejour}</span>
                 </Folder>
               </div>
             )
@@ -115,82 +132,110 @@ const DossiersPatient = ({
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           fullWidth={true}
-          maxWidth="sm"
-          // className="col-4"
+          maxWidth="xs"
         >
           <DialogTitle id="alert-dialog-title">
             {"Ajouter un nouveau sejour"}
           </DialogTitle>
           <DialogContent>
-            <div className="row my-3">
-              <TextField
-                value={inputs.debutDate}
-                onChange={setdebutDate}
-                type="date"
-                className="col-7"
-                label="Date de debut"
-              />
-              <TextField
-                value={inputs.DebutHeure}
-                onChange={setDebutHeure}
-                type="time"
-                className="col-5"
-                label="Heure de debut"
-              />
-            </div>
-            <div className="row my-3">
-              <TextField
-                value={inputs.finDate}
-                onChange={setfinDate}
-                type="date"
-                className="col-7"
-                label="Date de fin"
-              />
-              <TextField
-                value={inputs.finHeure}
-                onChange={setfinHeure}
-                type="time"
-                className="col-5"
-                label="Heure de fin"
-              />
-            </div>
-
-            <div className="row my-3">
-              <Select
-                value={inputs.type}
-                onChange={settype}
-                label="Type de sejour"
-                className="col"
-                options={[
-                  { value: "CS", label: "Consultation" },
-                  { value: "S", label: "Soins" },
-                  { value: "Hospit", label: "Hospitalisation" },
-                ]}
-              />
-              <Select
-                value={inputs.specialite}
-                onChange={setspecialite}
-                label="Specialité"
-                className="col"
-                options={[
-                  { value: "C", label: "Generaliste" },
-                  { value: "CS", label: "Specialiste" },
-                  { value: "CD", label: "Dentiste" },
-                  { value: "CNPSY", label: "psychiatre" },
-                  { value: "CSF", label: "Gynecologie" },
-                ]}
-              />
-              <Select
-                value={inputs.medecin}
-                onChange={setmedecin}
-                label="Medecin"
-                className="col"
-                options={[
-                  { value: 1, label: "Dr Audrey Zaki" },
-                  { value: 2, label: "Dr Edy KOFFI" },
-                  { value: 3, label: "Dr Wilfried GBADJE" },
-                ]}
-              />
+            <div className="row">
+              <div className="col-12">
+                <div className="row my-3">
+                  <TextField
+                    value={inputs.debutDate}
+                    onChange={setdebutDate}
+                    type="date"
+                    className="col-7"
+                    label="Date de debut"
+                  />
+                  <TextField
+                    value={inputs.DebutHeure}
+                    onChange={setDebutHeure}
+                    type="time"
+                    className="col-5"
+                    label="Heure de debut"
+                  />
+                </div>
+                <div className="row my-3">
+                  <TextField
+                    value={inputs.finDate}
+                    onChange={setfinDate}
+                    type="date"
+                    className="col-7"
+                    min={inputs.debutDate}
+                    label="Date de fin"
+                  />
+                  <TextField
+                    value={inputs.finHeure}
+                    onChange={setfinHeure}
+                    type="time"
+                    className="col-5"
+                    label="Heure de fin"
+                  />
+                </div>
+                <div className="row my-3">
+                  <Select
+                    value={inputs.type}
+                    onChange={settype}
+                    label="Type de sejour"
+                    className="col-12"
+                    options={[
+                      { value: "Consultation", label: "Consultation" },
+                      { value: "Soins", label: "Soins" },
+                      { value: "Hospitalisation", label: "Hospitalisation" },
+                    ]}
+                  />
+                  <Select
+                    value={inputs.specialite}
+                    onChange={setspecialite}
+                    label="Specialité"
+                    className="col-12"
+                    options={[...listActes]}
+                  />
+                  <Select
+                    value={inputs.medecin}
+                    onChange={setmedecin}
+                    label="Medecin"
+                    className="col-12"
+                    options={[
+                      { value: 1, label: "Dr KOFFI EDy" },
+                      { value: 2, label: "Dr Audrey Zaki" },
+                      { value: 3, label: "Dr Abdoul N'DONGO" },
+                    ]}
+                  />
+                  {/* <TextFieldAutoComplete
+                    value={inputs.specialite}
+                    onChange={setspecialite}
+                    className="col-12 my-2"
+                    label="liste des actes"
+                    idList="listactes"
+                    id="actes"
+                    list={[
+                      "consultation externe",
+                      "auto medication",
+                      "chirurgie",
+                    ]}
+                  />
+                  <button
+                    className="btn btn-outline-primary offset-5 col-2"
+                    onClick={() => {
+                      setListActe([...listActes, inputs.specialite])
+                      // setinput({...inputs, specialite:""})
+                    }}
+                  >
+                    +
+                  </button> */}
+                </div>
+              </div>
+              {/* <div className="col-6">
+                <div className="col-12">
+                  {listActes.map((acte, i) => (
+                    <div key={i}>
+                      <small>{acte} {i}</small>
+                    </div>
+                  ))}
+                </div>
+              </div> */}
             </div>
           </DialogContent>
           <DialogActions>

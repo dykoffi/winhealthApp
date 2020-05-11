@@ -7,6 +7,8 @@ export const TextField = ({
   className,
   placeholder,
   name,
+  min,
+  max,
   value = "",
   onChange,
 }) => (
@@ -34,6 +36,7 @@ export const Select = ({
   value,
   onChange,
   options,
+  multiple,
 }) => (
   <div className={className}>
     <label>
@@ -41,6 +44,7 @@ export const Select = ({
     </label>
     <br />
     <select
+      multiple={multiple}
       name={name}
       value={value}
       className="col-12 p-n1 SelectCustom custom-select"
@@ -63,19 +67,20 @@ export const TextFieldAutoComplete = ({
   type = "text",
   label,
   className,
-  value = "",
+  value,
   placeholder,
-  name,
   idList,
   list,
+  id,
 }) => (
   <div className={className}>
-    <label>
+    <label for={id}>
       <small>{label}</small>
     </label>
     <br />
     <input
-      name={name}
+      id={id}
+      name={id}
       list={idList}
       type={type}
       value={value}
