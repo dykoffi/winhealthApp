@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 const DetailsPatient = ({ currentPatient }) => {
   return (
-    <div className="DetailsPatient">
+    <div className="DetailsPatient text-secondary">
       <h5 className="">Informations du patient</h5>
       <small>
         Nom et prenoms :{" "}
@@ -75,7 +75,7 @@ const DetailsPatient = ({ currentPatient }) => {
 
 const mapStateToProps = (state) => {
   const {
-    detailsPatientReducer: { currentPatient },
+    patientsReducer: { currentPatient },
   } = state;
   return { currentPatient };
 };

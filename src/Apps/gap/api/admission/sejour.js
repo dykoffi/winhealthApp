@@ -1,4 +1,5 @@
 import Axios from "axios"
+import { header } from "../../constants/apiQuery"
 
 const initState = {
     listSejour: [],
@@ -78,7 +79,7 @@ export function thunkListSejour(patient) {
     return async (dispatch) => {
         dispatch(setLoadingSejour())
         Axios({
-            url: `http://192.168.43.84:8000/gap/list/sejours/${patient}`
+            url: `${header.url}/gap/list/sejours/${patient}`
         })
             .then(({ data: { rows } }) => {
                 dispatch(setListSejour(rows))
@@ -91,7 +92,7 @@ export function thunkAddSejour(data,patient) {
         dispatch(setLoadingSejour())
         Axios({
             method: "POST",
-            url: `http://192.168.43.84:8000/gap/add/sejour/${patient}`,
+            url: `${header.url}/gap/add/sejour/${patient}`,
             data: data,
             headers: {
                 "content-type": "application/x-www-form-urlencoded",
@@ -99,7 +100,7 @@ export function thunkAddSejour(data,patient) {
         })
             .then(() => {
                 Axios({
-                    url: `http://192.168.43.84:8000/gap/list/sejours/${patient}`
+                    url: `${header.url}/gap/list/sejours/${patient}`
                 })
                     .then(({ data: { rows } }) => {
                         dispatch(setListSejour(rows))
@@ -113,7 +114,7 @@ export function thunkDetailsSejour(idSejour) {
     return async (dispatch) => {
         dispatch(setLoadingSejour())
         Axios({
-            url: `http://192.168.43.84:8000/gap/details/sejour/${idSejour}`
+            url: `${header.url}/gap/details/sejour/${idSejour}`
         })
             .then(({ data: { rows } }) => {
                 setDetailsSejour(rows[0])

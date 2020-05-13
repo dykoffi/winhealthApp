@@ -1,9 +1,9 @@
 import React from "react";
-import DossiersPatient from "../../containers/soins/DossiersPatient";
+import ConstantesPatient from "../../containers/soins/ConstantesPatient";
 import DetailsPatient from "../../containers/soins/DetailsPatient";
 import { connect } from "react-redux";
 
-const Dossiers = ({ currentPatient }) => {
+const Constantes = ({ currentPatient }) => {
   return (
     <div className="Constantes row p-3">
       {currentPatient.iddossier ? (
@@ -12,13 +12,13 @@ const Dossiers = ({ currentPatient }) => {
             <DetailsPatient />
           </section>
           <section className="col-9">
-            <DossiersPatient />
+            <ConstantesPatient /> 
           </section>
         </>
       ) : (
         <div className="col-12 text-secondary text-center">
           <h3 className="text-center lead">Aucun patient selectionné</h3>
-          <span>Rendez vous dans liste des patients et selectionnez un patient</span>
+          <span>Rendez vous dans file d'attente des patients et selectionnez un patient</span>
         </div>
       )}
     </div>
@@ -26,11 +26,11 @@ const Dossiers = ({ currentPatient }) => {
 };
 const mapStateToProps = (state) => {
   const {
-    detailsPatientReducer: { currentPatient },
+    patientsReducer: { currentPatient },
   } = state;
   return { currentPatient };
 };
 
-const DossiersConnected = connect(mapStateToProps)(Dossiers);
+const ConstantesConnected = connect(mapStateToProps)(Constantes);
 
-export default DossiersConnected;
+export default ConstantesConnected;

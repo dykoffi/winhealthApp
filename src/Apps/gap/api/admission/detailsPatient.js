@@ -1,5 +1,6 @@
 import Axios from "axios"
 import { setCurrentPage } from './pages'
+import { header } from "../../constants/apiQuery"
 
 const initState = {
     currentPatient: {},
@@ -67,7 +68,7 @@ export function thunkDetailsPatient(idPatient) {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: `http://192.168.43.84:8000/gap/details/patient/${idPatient}`
+            url: `${header.url}/gap/details/patient/${idPatient}`
         })
             .then(({ data: { rows } }) => {
                dispatch(setCurrentPatient(rows[0]))
@@ -80,7 +81,7 @@ export function thunkDossierPatient(idPatient) {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: `http://192.168.43.84:8000/gap/dossiers/patient/${idPatient}`
+            url: `${header.url}/gap/dossiers/patient/${idPatient}`
         })
             .then(({ data: { rows } }) => {
                 setDossiersPatient(rows)

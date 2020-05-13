@@ -1,4 +1,5 @@
 import Axios from "axios"
+import { header, socket } from "../../constants/apiQuery"
 
 const initState = {
     listFactures: [],
@@ -54,7 +55,7 @@ export function thunkListFactures() {
     return async (dispatch) => {
         return async (dispatch) => {
             Axios({
-                url: `http://localhost:8000/gap/list/factures`
+                url: `${header.url}/gap/list/factures`
             }).then(({ data: { rows } }) => {
                 dispatch(setListFacturesAttentes(rows))
             })
@@ -62,11 +63,12 @@ export function thunkListFactures() {
     }
 }
 
-export function thunkEncaisserFactures(idsejour) {
+export function thunkEncaisserFactures(idsejour,patient) {
     return async (dispatch) => {
         Axios({
-            url: `http://localhost:8000/gap/encaisser/facture/${idsejour}`
+            url: `${header.url}/gap/encaisser/facture/${idsejour}`
         }).then(({ data: { rows } }) => {
+            socket.emit("facture_encaisser",{sejour:idsejour,patient:patient})
             dispatch(thunkListFacturesAttentes())
         })
     }
@@ -75,7 +77,7 @@ export function thunkEncaisserFactures(idsejour) {
 export function thunkAnnulerFactures(idsejour) {
     return async (dispatch) => {
         Axios({
-            url: `http://localhost:8000/gap/annuler/facture/${idsejour}`
+            url: `${header.url}/gap/annuler/facture/${idsejour}`
         }).then(({ data: { rows } }) => {
             dispatch(thunkListFacturesAttentes())
         })
@@ -85,7 +87,7 @@ export function thunkAnnulerFactures(idsejour) {
 export function thunkListFacturesAttentes() {
     return async (dispatch) => {
         Axios({
-            url: `http://localhost:8000/gap/list/factures_attentes`
+            url: `${header.url}/gap/list/factures_attentes`
         }).then(({ data: { rows } }) => {
             dispatch(setListFacturesAttentes(rows))
         })

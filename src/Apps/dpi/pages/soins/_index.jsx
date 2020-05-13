@@ -1,18 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Listonglets from "./_onglets";
 import Listpages from "./_pages";
 import Onglet from "../../../../containers/onglets/index";
 import { connect } from "react-redux";
 
+import Notif from "../../../../components/Notification";
+
 //import des action creators
-import { setCurrentPage } from "../../api/admission/pages";
-const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
+import { setCurrentPage, setNotification } from "../../api/soins/pages";
+import { thunkDetailsPatient } from "../../api/soins/patients";
+import { socket } from "../../constants/apiQuery";
+import { Snackbar } from "@material-ui/core";
+const Soins = ({
+  sendTitle,
+  currentPage,
+  setCurrentPage,
+  notification,
+  setNotification,
+  thunkDetailsPatient
+}) => {
+  const [data,setdata]=useState({})
   useEffect(() => {
-    sendTitle("Admission");
-  });
+    sendTitle("DPI Soins");
+    socket.on("facture_encaisser", ({sejour,patient}) => {
+      alert(sejour + " " + patient)
+      setdata({sejour,patient})
+      setNotification(true);
+    });
+  }, []);
 
   return (
-    <div className="Admission row">
+    <div className="Soins row">
       <section className="col-12 pt-3 px-3 grey lighten-4 ombre-bottom">
         <Onglet
           links={Listonglets}
@@ -33,18 +51,41 @@ const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
             id === currentPage && <Component key={index} />
         )}
       </section>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={notification}
+        className="col-2"
+      >
+        <Notif
+          title="Nouveau patient"
+          valid={() => {
+            thunkDetailsPatient(data.patient,data.sejour);
+            setNotification(false);
+          }}
+          cancel={() => setNotification(false)}
+        >
+          <small>Koffi Edy</small>
+          <br />
+          <small>Consultation</small>
+        </Notif>
+      </Snackbar>
     </div>
   );
 };
 
 const mapStatToProp = (state) => {
   const {
-    pageReducer: { currentPage },
+    pageReducer: { currentPage, notification },
   } = state;
-  return { currentPage };
+  return { currentPage, notification };
 };
 
-const AdmissionConnected = connect(mapStatToProp, { setCurrentPage })(
-  Admission
-);
-export default AdmissionConnected;
+const SoinsConnected = connect(mapStatToProp, {
+  setCurrentPage,
+  setNotification,
+  thunkDetailsPatient
+})(Soins);
+export default SoinsConnected;

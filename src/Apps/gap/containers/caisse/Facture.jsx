@@ -30,7 +30,7 @@ const Facture = ({ facture, encaisser, annuler }) => {
             </button>
             <button
               className="btn btn-sm btn-primary mx-1"
-              onClick={() => encaisser(facture.idsejour)}
+              onClick={() => encaisser(facture.idsejour, facture.iddossier)}
             >
               Encaisser
             </button>

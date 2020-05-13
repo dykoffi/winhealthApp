@@ -4,7 +4,7 @@ import Caisse from '../pages/medical/_index'
 import Accueil from '../pages/Accueil'
 
 //chargement des store de chaque application
-import soinsStore from '../api/admission/store'
+import soinsStore from '../api/soins/store'
 import medicalStore from '../api/caisse/store'
 
 

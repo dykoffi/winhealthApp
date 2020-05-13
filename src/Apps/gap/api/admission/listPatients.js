@@ -1,4 +1,5 @@
 import Axios from "axios"
+import { header } from "../../constants/apiQuery"
 
 const initState = {
     listPatients: [],
@@ -46,7 +47,7 @@ export function thunkListPatient() {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: "http://192.168.43.84:8000/gap/list/patients"
+            url: `${header.url}/gap/list/patients`
         }).then(({ data: { rows } }) => {
             console.log(rows)
             dispatch(setListPatients(rows))
@@ -59,14 +60,14 @@ export function thunkSearchPatient(info) {
         dispatch(setLoading())
         if (info.trim().length === 0) {
             Axios({
-                url: "http://192.168.43.84:8000/gap/list/patients"
+                url: `${header.url}/gap/list/patients`
             }).then(({ data: { rows } }) => {
                 console.log(rows)
                 dispatch(setListPatients(rows))
             })
         } else {
             Axios({
-                url: `http://192.168.43.84:8000/gap/search/patients/${info}`
+                url: `${header.url}/gap/search/patients/${info}`
             }).then(({ data: { rows } }) => {
                 dispatch(setListPatients(rows))
             })

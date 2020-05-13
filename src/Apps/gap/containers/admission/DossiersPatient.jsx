@@ -5,12 +5,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Folder from "../../../../components/Folder";
+import { header } from "../../constants/apiQuery"
+
 import {
   TextField,
   Select,
-  TextFieldAutoComplete,
 } from "../../../../components/InputCustom";
-import Facture from "../../documents/Facture";
 import {
   thunkListSejour,
   thunkAddSejour,
@@ -69,7 +69,7 @@ const DossiersPatient = ({
   }
   useEffect(() => {
     Axios({
-      url: "http://localhost:8000/gap/list/actes",
+      url: `${header.url}/gap/list/actes`,
     }).then(({ data: { rows } }) => {
       const actes = [];
       rows.forEach(({ codeacte, libelleacte }) => {

@@ -2,22 +2,21 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import {
-  thunkListPatient,
+  thunkListAttentePatients,
   thunkSearchPatient,
 } from "../../api/soins/patients";
 
-import {
-  thunkDetailsPatient
-} from "../../api/soins/detailsPatient";
+import { thunkDetailsPatient } from "../../api/soins/patients";
+import { socket } from "../../constants/apiQuery";
 
 const TableListPatient = ({
-  thunkListPatient,
+  thunkListAttentePatients,
   thunkSearchPatient,
-  listPatients,
-  thunkDetailsPatient
+  listAttentePatients,
+  thunkDetailsPatient,
 }) => {
   const [columns] = useState([
-    "N°",
+    "Ordre",
     "IPP",
     "nom",
     "prenoms",
@@ -27,6 +26,7 @@ const TableListPatient = ({
     "lieu de naissance",
     "nationalité",
     "contact",
+    "motif",
   ]);
 
   // const [search, setsearch] = useState()
@@ -36,17 +36,25 @@ const TableListPatient = ({
     thunkSearchPatient(value.trim());
   }
   useEffect(() => {
-    thunkListPatient();
+    thunkListAttentePatients();
+    socket.on("facture_encaisser", () => {
+      thunkListAttentePatients();
+    });
   }, []);
+
+  // useEffect(() => {
+  //   const son = new Audio("../../../../static/son.mp3");
+  //   son.play();
+  // }, []);
 
   return (
     <div className="row">
       <div className="col-12">
         <div className="row border-bottom py-2">
           <div className="col-6">
-            <h6>{listPatients.length} patient(s)</h6>
+            <small>{listAttentePatients.length} patient(s)</small>
           </div>
-          <div className="col-4 offset-2">
+          <div className="col-3 offset-3">
             <input
               value={value}
               type="text"
@@ -69,7 +77,7 @@ const TableListPatient = ({
             </thead>
 
             <tbody>
-              {listPatients.map(
+              {listAttentePatients.map(
                 (
                   {
                     iddossier,
@@ -82,6 +90,8 @@ const TableListPatient = ({
                     lieunaissancepatient,
                     nationalitepatient,
                     contactpatient,
+                    typesejour,
+                    idsejour,
                   },
                   i
                 ) => (
@@ -89,7 +99,7 @@ const TableListPatient = ({
                     key={i}
                     className="white ombre"
                     style={{ cursor: "pointer" }}
-                    onClick={() => thunkDetailsPatient(iddossier)}
+                    onClick={() => thunkDetailsPatient(iddossier, idsejour)}
                   >
                     <td>
                       <small>{i + 1}</small>
@@ -121,13 +131,8 @@ const TableListPatient = ({
                     <td>
                       <small>{contactpatient}</small>
                     </td>
-                    <td className="text-center">
-                      {/* <IconButton aria-label="delete">
-                        <DeleteIcon style={{fontSize : "15px"}} />
-                      </IconButton> */}
-                      <i className="mdi-action-delete mx-2"></i>
-                      <i className="mdi-editor-mode-edit mx-2"></i>
-                      <i className="mdi-editor-format-align-left mx-2"></i>
+                    <td>
+                      <small>{typesejour}</small>
                     </td>
                   </tr>
                 )
@@ -142,13 +147,13 @@ const TableListPatient = ({
 
 const mapStateToProp = (state) => {
   const {
-    listPatientsReducer: { listPatients },
+    patientsReducer: { listAttentePatients },
   } = state;
-  return { listPatients };
+  return { listAttentePatients };
 };
 
 const TableListPatientConnected = connect(mapStateToProp, {
-  thunkListPatient,
+  thunkListAttentePatients,
   thunkSearchPatient,
   thunkDetailsPatient,
 })(TableListPatient);

@@ -4,6 +4,7 @@ import Verticalcard from "../../../components/Verticalcard";
 const Accueil = ({ sendTitle }) => {
   useEffect(() => {
     sendTitle("Admission Accueil");
+
   });
   return (
     <div className="Accueil row p-3">

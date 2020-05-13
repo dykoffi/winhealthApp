@@ -1,26 +1,34 @@
 import Axios from "axios"
 import { setCurrentPage } from './pages'
+import { header } from '../../constants/apiQuery'
 
 const initState = {
-    listPatients: [],
+    listAttentePatients: [],
     loading: null,
     currentPatient: {},
-    dossiersPatient: [],
+    currentSejour: null
 }
 
 //les actions
 const SET_CURRENT_PATIENT = "SET_CURRENT_PATIENT"
 const SET_LIST_PATIENTS = "SET_LIST_PATIENTS"
+const SET_CURRENT_SEJOUR = "SET_CURRENT_SEJOUR"
 const LOADING = "LAODING"
 
 //definition des actions creators
 const setListPatients = (list) => (
     {
         type: SET_LIST_PATIENTS,
-        listPatients: list,
+        listAttentePatients: list,
         loading: false
     }
 )
+
+const setCurrentSejour = (data) => ({
+    type: SET_CURRENT_SEJOUR,
+    currentSejour: data,
+    loadingConstantes: false
+})
 
 const setLoading = () => ({
     type: LOADING,
@@ -43,10 +51,15 @@ const PatientsReducer = (state = initState, action) => {
         case SET_LIST_PATIENTS:
             return {
                 ...state,
-                listPatients: action.listPatients,
+                listAttentePatients: action.listAttentePatients,
                 loading: action.loading
             }
-
+        case SET_CURRENT_SEJOUR:
+            return {
+                ...state,
+                currentSejour: action.currentSejour,
+                loadingConstantes: action.loadingConstantes
+            }
         case LOADING:
             return {
                 ...state,
@@ -57,12 +70,11 @@ const PatientsReducer = (state = initState, action) => {
     }
 }
 
-export function thunkListPatient() {
-
+export function thunkListAttentePatients() {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: "http://192.168.43.84:8000/gap/list/patients"
+            url: `${header.url}/dpi/list/file_attente`
         }).then(({ data: { rows } }) => {
             console.log(rows)
             dispatch(setListPatients(rows))
@@ -74,15 +86,10 @@ export function thunkSearchPatient(info) {
     return async (dispatch) => {
         dispatch(setLoading())
         if (info.trim().length === 0) {
-            Axios({
-                url: "http://192.168.43.84:8000/gap/list/patients"
-            }).then(({ data: { rows } }) => {
-                console.log(rows)
-                dispatch(setListPatients(rows))
-            })
+            dispatch(thunkListAttentePatients())
         } else {
             Axios({
-                url: `http://192.168.43.84:8000/gap/search/patients/${info}`
+                url: `${header.url}/gap/search/patients/${info}`
             }).then(({ data: { rows } }) => {
                 dispatch(setListPatients(rows))
             })
@@ -90,15 +97,16 @@ export function thunkSearchPatient(info) {
     }
 }
 
-export function thunkDetailsPatient(idPatient) {
+export function thunkDetailsPatient(idPatient, idSejour) {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: `http://192.168.43.84:8000/gap/details/patient/${idPatient}`
+            url: `${header.url}/gap/details/patient/${idPatient}`
         })
             .then(({ data: { rows } }) => {
                 dispatch(setCurrentPatient(rows[0]))
-                dispatch(setCurrentPage("dossiersPatient"))
+                dispatch(setCurrentSejour(idSejour))
+                dispatch(setCurrentPage("constantePatient"))
             })
     }
 }

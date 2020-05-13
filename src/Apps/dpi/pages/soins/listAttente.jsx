@@ -31,7 +31,7 @@ const Patients = ({ loading }) => {
 
 const mapStateToProp = (state) => {
   const {
-    listPatientsReducer: { loading },
+    patientsReducer: { loading },
   } = state;
   return { loading };
 };
