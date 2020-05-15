@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { header } from "../../constants/apiQuery"
+import { header, socket } from "../../constants/apiQuery"
 
 const initState = {
     listSejour: [],
@@ -64,6 +64,8 @@ const sejourReducer = (state = initState, action) => {
                 loadingSejour: action.loadingSejour
             }
         case SET_CURRENT_SEJOUR:
+            console.log("current sejour")
+            console.log(state)
             return {
                 ...state,
                 currentSejour: action.currentSejour,
@@ -87,7 +89,7 @@ export function thunkListSejour(patient) {
     }
 }
 
-export function thunkAddSejour(data,patient) {
+export function thunkAddSejour(data, patient) {
     return async (dispatch) => {
         dispatch(setLoadingSejour())
         Axios({
@@ -99,12 +101,9 @@ export function thunkAddSejour(data,patient) {
             }
         })
             .then(() => {
-                Axios({
-                    url: `${header.url}/gap/list/sejours/${patient}`
-                })
-                    .then(({ data: { rows } }) => {
-                        dispatch(setListSejour(rows))
-                    })
+                socket.emit("facture_nouvelle")
+                dispatch(thunkListSejour(patient))
+                dispatch(thunkCurrentFacture(patient))
             })
 
     }
@@ -117,7 +116,19 @@ export function thunkDetailsSejour(idSejour) {
             url: `${header.url}/gap/details/sejour/${idSejour}`
         })
             .then(({ data: { rows } }) => {
-                setDetailsSejour(rows[0])
+              rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
+            })
+    }
+}
+
+export function thunkCurrentFacture(patient) {
+    return async (dispatch) => {
+        dispatch(setLoadingSejour())
+        Axios({
+            url: `${header.url}/gap/imprimer/facture/${patient}`
+        })
+            .then(({ data: { rows } }) => {
+                rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
             })
     }
 }

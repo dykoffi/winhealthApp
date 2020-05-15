@@ -17,14 +17,13 @@ const Soins = ({
   setCurrentPage,
   notification,
   setNotification,
-  thunkDetailsPatient
+  thunkDetailsPatient,
 }) => {
-  const [data,setdata]=useState({})
+  const [data, setdata] = useState({});
   useEffect(() => {
     sendTitle("DPI Soins");
-    socket.on("facture_encaisser", ({sejour,patient}) => {
-      alert(sejour + " " + patient)
-      setdata({sejour,patient})
+    socket.on("facture_encaisser", ({ sejour, patient }) => {
+      setdata({ sejour, patient });
       setNotification(true);
     });
   }, []);
@@ -62,14 +61,12 @@ const Soins = ({
         <Notif
           title="Nouveau patient"
           valid={() => {
-            thunkDetailsPatient(data.patient,data.sejour);
+            thunkDetailsPatient(data.patient, data.sejour);
             setNotification(false);
           }}
           cancel={() => setNotification(false)}
         >
-          <small>Koffi Edy</small>
           <br />
-          <small>Consultation</small>
         </Notif>
       </Snackbar>
     </div>
@@ -86,6 +83,6 @@ const mapStatToProp = (state) => {
 const SoinsConnected = connect(mapStatToProp, {
   setCurrentPage,
   setNotification,
-  thunkDetailsPatient
+  thunkDetailsPatient,
 })(Soins);
 export default SoinsConnected;

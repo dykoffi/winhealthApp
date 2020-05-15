@@ -6,6 +6,7 @@ import {
   thunkEncaisserFactures,
   thunkAnnulerFactures,
 } from "../../api/caisse/factures";
+import { socket } from "../../constants/apiQuery";
 
 const AttenteFacture = ({
   listFacturesAttentes,
@@ -15,6 +16,9 @@ const AttenteFacture = ({
 }) => {
   useEffect(() => {
     thunkListFacturesAttentes();
+    socket.on("facture_nouvelle", () => {
+      thunkListFacturesAttentes();
+    });
   }, []);
   return (
     <div className="AttenteFacture row p-3">
@@ -26,7 +30,11 @@ const AttenteFacture = ({
         <>
           {listFacturesAttentes.map((facture, i) => (
             <div className="col-2" key={i}>
-              <Facture facture={facture} annuler={thunkAnnulerFactures} encaisser={thunkEncaisserFactures} />
+              <Facture
+                facture={facture}
+                annuler={thunkAnnulerFactures}
+                encaisser={thunkEncaisserFactures}
+              />
             </div>
           ))}
         </>

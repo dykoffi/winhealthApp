@@ -6,6 +6,7 @@ import Axios from "axios";
 
 import { thunkDetailsPatient } from "../../api/admission/detailsPatient";
 import { connect } from "react-redux";
+import { header } from "../../constants/apiQuery";
 
 const AddPatient = ({ thunkDetailsPatient }) => {
   const [inputs, setinput] = useState({
@@ -170,7 +171,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
         style: "filled",
       });
       Axios({
-        url: "http://localhost:8000/gap/add/patient",
+        url: `${header.url}/gap/add/patient`,
         method: "POST",
         data: inputs,
         headers: {
@@ -447,7 +448,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           onClick={() => {
             send();
           }}
-          className="btn btn-info text-white"
+          className="btn btn-primary btn-sm"
         >
           Envoyer le formulaire
         </button>

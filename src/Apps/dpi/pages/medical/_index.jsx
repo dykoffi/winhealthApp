@@ -1,18 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Listonglets from "./_onglets";
 import Listpages from "./_pages";
 import Onglet from "../../../../containers/onglets/index";
 import { connect } from "react-redux";
 
+import Notif from "../../../../components/Notification";
+
 //import des action creators
-import { setCurrentPage } from "../../api/caisse/pages";
-const Caisse = ({ sendTitle, currentPage, setCurrentPage }) => {
+import { setCurrentPage, setNotification } from "../../api/medical/pages";
+import { thunkDetailsPatient } from "../../api/medical/patients";
+import { socket } from "../../constants/apiQuery";
+import { Snackbar } from "@material-ui/core";
+const Soins = ({
+  sendTitle,
+  currentPage,
+  setCurrentPage,
+  notification,
+  setNotification,
+  thunkDetailsPatient,
+}) => {
+  const [data, setdata] = useState({});
   useEffect(() => {
-    sendTitle("Caisse");
-  });
+    sendTitle("DPI Medical");
+    socket.on("nouveau_patient", ({ sejour, patient }) => {
+      setdata({ sejour, patient });
+      setNotification(true);
+    });
+  }, []);
 
   return (
-    <div className="Caisse row">
+    <div className="Soins row">
       <section className="col-12 pt-3 px-3 grey lighten-4 ombre-bottom">
         <Onglet
           links={Listonglets}
@@ -33,18 +50,39 @@ const Caisse = ({ sendTitle, currentPage, setCurrentPage }) => {
             id === currentPage && <Component key={index} />
         )}
       </section>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={notification}
+        className="col-2"
+      >
+        <Notif
+          title="Nouveau patient"
+          valid={() => {
+            thunkDetailsPatient(data.patient, data.sejour);
+            setNotification(false);
+          }}
+          cancel={() => setNotification(false)}
+        >
+        <p></p>
+        </Notif>
+      </Snackbar>
     </div>
   );
 };
 
 const mapStatToProp = (state) => {
   const {
-    pageReducer: { currentPage },
+    pageReducer: { currentPage, notification },
   } = state;
-  return { currentPage };
+  return { currentPage, notification };
 };
 
-const CaisseConnected = connect(mapStatToProp, { setCurrentPage })(
-  Caisse
-);
-export default CaisseConnected;
+const SoinsConnected = connect(mapStatToProp, {
+  setCurrentPage,
+  setNotification,
+  thunkDetailsPatient,
+})(Soins);
+export default SoinsConnected;

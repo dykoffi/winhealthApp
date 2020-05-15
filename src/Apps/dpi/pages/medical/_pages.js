@@ -1,8 +1,12 @@
-import ListFacture from './ListFacture'
-import AttenteFacture from './AttenteFacture'
+import Consultations from './Consultations'
+import Antecedants from './Antecedants'
+import Constantes from './Constantes'
+import listAttente from './listAttente'
 
 const Pages = [
-    { id:"listFacture", Component: ListFacture },
-    { id:"attenteFacture", Component: AttenteFacture },
+    { id:"listAttente", Component: listAttente },
+    { id:"constantePatient", Component: Constantes },
+    { id:"antecedantPatient", Component: Antecedants },
+    { id:"consultationPatient", Component: Consultations },
 ]
 export default Pages

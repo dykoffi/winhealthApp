@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { header, socket } from "../../constants/apiQuery"
+import { header } from "../../constants/apiQuery"
 import { Cookies } from 'react-cookie'
 // import store from './store'
 const cookies = new Cookies()
@@ -78,7 +78,7 @@ export function thunkSetCurrentConstante(patient) {
         Axios({
             url: `${header.url}/dpi/list/last_constante/${patient}`
         }).then(({ data: { rows } }) => {
-            rows[0] ? dispatch(setCurrentConstante(rows[0])) : dispatch(setCurrentConstante(null))
+           rows[0] ? dispatch(setCurrentConstante(rows[0])) : dispatch(setCurrentConstante(null))
         })
     }
 }
@@ -97,7 +97,6 @@ export function thunkAddConstantes(sejour, inputs, patient) {
         }).then(({ data: { rows } }) => {
             dispatch(thunkListConstantes(patient))
             dispatch(thunkSetCurrentConstante(patient))
-            socket.emit("constantes_add", { sejour, patient })
         })
     }
 }

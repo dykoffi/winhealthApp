@@ -16,10 +16,10 @@ export const navMenu = [
         path: "/gap/caisse"
 
     },
-    {
-        title: 'Parametres',
-        icon: 'action-settings',
-        path: "/gap/admission/addPatient"
+    // {
+    //     title: 'Parametres',
+    //     icon: 'action-settings',
+    //     path: "/gap/admission/addPatient"
 
-    }
+    // }
 ]

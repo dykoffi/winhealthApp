@@ -1,46 +1,17 @@
 import React, { useEffect } from "react";
-import Verticalcard from "../../../components/Verticalcard";
 
 const Accueil = ({ sendTitle }) => {
   useEffect(() => {
-    sendTitle("Admission Accueil");
-
+    sendTitle("GAP Accueil");
   });
   return (
     <div className="Accueil row p-3">
-      <div className="col-12">
-        <div className="row">
-          <div className="col-2">
-            <Verticalcard
-              title="Patient"
-              details="Creer, modifier, supprimer des patients"
-              icon="social-person-add"
-              bgColor="white"
-              textColor="blue-text"
-              link="/gap/admission/patients"
-            />
-          </div>
-          <div className="col-2">
-            <Verticalcard
-              title="Dossiers Patients"
-              details="Creer, modifier et supprimer des profils avec des droits intégrés"
-              icon="file-folder-shared"
-              bgColor="white"
-              textColor="green-text"
-              link="/gap/admission/dossiers"
-            />
-          </div>
-          <div className="col-2">
-            <Verticalcard
-              title="Statistiques"
-              details="Consulter les statistiques générées par toutes les fontions de l'admission"
-              icon="editor-insert-chart"
-              bgColor="white"
-              textColor="orange-text"
-              link="/gap/admission/stats"
-            />
-          </div>
-        </div>
+      <div className="col-12 text-center text-secondary">
+        <h2>Bienvenue sur Win GAP</h2>
+        <p>
+          votre interface qui vous permettra de gérer toutes les données
+          administratives liées au patient
+        </p>
       </div>
     </div>
   );

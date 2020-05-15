@@ -74,7 +74,7 @@ export function thunkListAttentePatients() {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: `${header.url}/dpi/list/soins/file_attente`
+            url: `${header.url}/dpi/list/consultations/file_attente`
         }).then(({ data: { rows } }) => {
             console.log(rows)
             dispatch(setListPatients(rows))

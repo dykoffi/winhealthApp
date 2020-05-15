@@ -13,19 +13,19 @@ const SET_LIST_FACTURES = "SET_LIST_FACTURES"
 const SET_LIST_FACTURES_ATTENTES = "SET_LIST_FACTURES_ATTENTES"
 const SET_CURRENT_FACTURE = "SET_CURRENT_FACTURE"
 
-const setListFacture = (data) => ({
-    type: SET_LIST_FACTURES,
-    listFactures: data
-})
+// const setListFacture = (data) => ({
+//     type: SET_LIST_FACTURES,
+//     listFactures: data
+// })
+// const setCurrentFacture = () => ({
+//     type: SET_CURRENT_FACTURE,
+// })
 
 const setListFacturesAttentes = (data) => ({
     type: SET_LIST_FACTURES_ATTENTES,
     listFacturesAttentes: data
 })
 
-const setCurrentFacture = () => ({
-    type: SET_CURRENT_FACTURE,
-})
 
 //le reducer
 

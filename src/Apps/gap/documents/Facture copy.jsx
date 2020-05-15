@@ -11,18 +11,17 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
-import { header } from "../../gap/constants/apiQuery";
 
-Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
+Font.register({ family: "Regular", src: "http://localhost:3000/font.ttf" });
 
 Font.register({
   family: "Roboto-Bold",
-  src: `${header.local}/fonts/Roboto-Bold.ttf`,
+  src: "http://localhost:3000/fonts/Roboto-Bold.ttf",
 });
 
 Font.register({
   family: "Roboto-Light",
-  src: `${header.local}/fonts/Roboto-Light.ttf`,
+  src: "http://localhost:3000/fonts/Roboto-Light.ttf",
 });
 
 const DocHead = ({ etablissement }) => (
@@ -104,9 +103,9 @@ const DownloadLink = ({
   prenomspatient,
   datenaissancepatient,
   ipppatient,
-  lieunaissancepatient,
+  lieunaissance,
   habitationpatient,
-  code,
+  uri,
   //facture
   numerofacture,
   datefacture,
@@ -133,7 +132,7 @@ const DownloadLink = ({
   return (
     <div>
       <QR
-        value={code}
+        value="edy koffi"
         id="img"
         fgColor="#696969"
         includeMargin={true}
@@ -143,34 +142,38 @@ const DownloadLink = ({
         <PDFDownloadLink
           document={
             <Facture
-              url={url}
-              nompatient={nompatient}
-              prenomspatient={prenomspatient}
-              datenaissancepatient={datenaissancepatient}
-              ipppatient={ipppatient}
-              lieunaissancepatient={lieunaissancepatient}
-              habitationpatient={habitationpatient}
-              numerofacture={numerofacture}
-              datefacture={datefacture}
-              heurefacture={heurefacture}
-              auteurfacture={auteurfacture}
-              datedebutsejour={datedebutsejour}
-              datefinsejour={datefinsejour}
-              heuredebutsejour={heuredebutsejour}
-              heurefinsejour={heurefinsejour}
-              typesejour={typesejour}
-              libelleacte={libelleacte}
-              prixacte={prixacte}
+              //patient
+              nompatient="nompatient"
+              prenomspatient="prenomspatient"
+              datenaissancepatient="datenaissancepatient"
+              ipppatient="ipppatient"
+              lieunaissance="lieunaissance"
+              habitationpatient="habitationpatient"
+              uri={uri}
+              //facture
+              numerofacture="numerofacture"
+              datefacture="datefacture"
+              heurefacture="heurefacture"
+              auteurfacture="auteurfacture"
+              //sejour
+              datedebutsejour="datedebutsejour"
+              datefinsejour="datefinsejour"
+              heuredebutsejour="heuredebutsejour"
+              heurefinsejour="heurefinsejour"
+              typesejour="typesejour"
+              //acte
+              libelleacte="libelleacte"
+              prixacte="prixacte"
             />
           }
           fileName="somename.pdf"
         >
           {({ blob, url, loading, error }) =>
             loading ? (
-              <small>Chargement de facture ...</small>
+              "Loading document..."
             ) : (
               <a href={url} className="btn btn-sm btn-danger" target="blank">
-                imprimer la facture
+                imprimer le document
               </a>
             )
           }
@@ -186,7 +189,7 @@ const Facture = ({
   prenomspatient,
   datenaissancepatient,
   ipppatient,
-  lieunaissancepatient,
+  lieunaissance,
   habitationpatient,
   url,
   //facture
@@ -240,7 +243,7 @@ const Facture = ({
                 <View style={styles.l}>
                   <Text style={styles.g}>NAISSANCE </Text>
                   <Text>
-                    {datenaissancepatient} à {lieunaissancepatient}
+                    {datenaissancepatient} à {lieunaissance}
                   </Text>
                 </View>
                 <View style={styles.l}>
@@ -250,12 +253,12 @@ const Facture = ({
               </View>
 
               <Text style={styles.title}>
-                SEJOUR DU 
+                SEJOUR DU
                 {datedebutsejour === datefinsejour ? (
-                  <> {datedebutsejour}</>
+                  <>{datedebutsejour}</>
                 ) : (
                   <>
-                     {datedebutsejour} AU {datefinsejour}
+                    {datedebutsejour} AU {datefinsejour}
                   </>
                 )}
               </Text>

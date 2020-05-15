@@ -3,12 +3,27 @@ import Listonglets from "./_onglets";
 import Listpages from "./_pages";
 import Onglet from "../../../../containers/onglets/index";
 import { connect } from "react-redux";
+import Notif from "../../../../components/Notification";
 
 //import des action creators
-import { setCurrentPage } from "../../api/caisse/pages";
-const Caisse = ({ sendTitle, currentPage, setCurrentPage }) => {
+import { setCurrentPage, setNotification } from "../../api/caisse/pages";
+import { socket } from "../../constants/apiQuery";
+import { Snackbar } from "@material-ui/core";
+
+const Caisse = ({
+  sendTitle,
+  currentPage,
+  setCurrentPage,
+  setNotification,
+  notification,
+}) => {
   useEffect(() => {
     sendTitle("Caisse");
+    const son = new Audio("../../../../static/son.mp3");
+    socket.on("facture_nouvelle", () => {
+      son.play();
+      setNotification(true);
+    });
   });
 
   return (
@@ -33,18 +48,31 @@ const Caisse = ({ sendTitle, currentPage, setCurrentPage }) => {
             id === currentPage && <Component key={index} />
         )}
       </section>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={notification}
+        className="col-2"
+      >
+        <Notif title="Nouvelle facture" cancel={() => setNotification(false)}>
+          <br />
+        </Notif>
+      </Snackbar>
     </div>
   );
 };
 
 const mapStatToProp = (state) => {
   const {
-    pageReducer: { currentPage },
+    pageReducer: { currentPage, notification },
   } = state;
-  return { currentPage };
+  return { currentPage, notification };
 };
 
-const CaisseConnected = connect(mapStatToProp, { setCurrentPage })(
-  Caisse
-);
+const CaisseConnected = connect(mapStatToProp, {
+  setCurrentPage,
+  setNotification,
+})(Caisse);
 export default CaisseConnected;

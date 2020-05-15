@@ -11,14 +11,14 @@ const Dossiers = ({ currentPatient }) => {
           <section className="col-3">
             <DetailsPatient />
           </section>
-          <section className="col-9">
+          <section className="col-8 offset-1">
             <DossiersPatient />
           </section>
         </>
       ) : (
         <div className="col-12 text-secondary text-center">
           <h3 className="text-center lead">Aucun patient selectionné</h3>
-          <span>Rendez vous dans liste des patients et selectionnez un patient</span>
+          <small>Rendez vous dans liste des patients et selectionnez un patient</small>
         </div>
       )}
     </div>

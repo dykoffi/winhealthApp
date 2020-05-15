@@ -5,7 +5,7 @@ import Accueil from '../pages/Accueil'
 
 //chargement des store de chaque application
 import soinsStore from '../api/soins/store'
-import medicalStore from '../api/caisse/store'
+import medicalStore from '../api/medical/store'
 
 
 

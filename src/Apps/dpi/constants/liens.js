@@ -16,10 +16,10 @@ export const navMenu = [
         path: "/dpi/medical"
 
     },
-    {
-        title: 'Parametres',
-        icon: 'action-settings',
-        path: "/dpi/admission/addPatient"
+    // {
+    //     title: 'Parametres',
+    //     icon: 'action-settings',
+    //     path: "/dpi/admission/addPatient"
 
-    }
+    // }
 ]
