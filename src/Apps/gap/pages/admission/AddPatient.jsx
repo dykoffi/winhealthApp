@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import Input from "@material-ui/core/TextField";
 import { TextField, Select } from "../../../../components/InputCustom";
 import Axios from "axios";
 
@@ -186,7 +187,6 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           style: "filled",
         });
         setTimeout(() => {
-
           thunkDetailsPatient(rows[0].iddossier);
         }, 1000);
       });
@@ -206,28 +206,37 @@ const AddPatient = ({ thunkDetailsPatient }) => {
       <h6 className="font-weight-bold font-italic text-secondary">
         Information personnelles du patient
       </h6>
-      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
+      <div className="col-12 mb-4 grey-text text-darken-1">
         <div className="row py-2">
-          <TextField
-            className="col-3 ml-1 required"
-            label="IPP du patient"
+          <Input
+            label="Size"
+            id="filled-size-small"
+            variant="outlined"
+            size="small"
+            margin="dense"
             value={inputs.ipp}
             onChange={setipp}
           />
+          {/* <TextField
+            className="col-2 required"
+            label="IPP du patient"
+            value={inputs.ipp}
+            onChange={setipp}
+          /> */}
           <TextField
-            className="col-2 ml-1 required"
+            className="col-2 required"
             label="Nom"
             value={inputs.nom}
             onChange={setnom}
           />
           <TextField
-            className="col-3 ml-1 required"
+            className="col-2 required"
             label="Prenoms"
             value={inputs.prenoms}
             onChange={setprenoms}
           />
           <TextField
-            className="col-3 ml-1"
+            className="col-2"
             label="Nom de jeune fille"
             value={inputs.nomjeune}
             onChange={setnomjeune}
@@ -237,28 +246,28 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <Select
             value={inputs.sexe}
             onChange={setsexe}
-            className="col-3 ml-1 required"
+            className="col-2 required"
             label="Sexe"
             options={[
-              { value: "masculin", label: "Masculin" },
-              { value: "feminin", label: "Feminin" },
+              { value: "M", label: "M" },
+              { value: "F", label: "F" },
             ]}
           />
           <TextField
             value={inputs.datenaissance}
             onChange={setdatenaissance}
-            className="col-2 ml-1 required"
+            className="col-2 required"
             label="Date de naissance"
             type="date"
           />
           <TextField
-            className="col-3 ml-1 required"
+            className="col-2 required"
             label="Lieu de naissance"
             value={inputs.lieunaissance}
             onChange={setlieunaissance}
           />
           <TextField
-            className="col-3 ml-1 required"
+            className="col-2 required"
             label="Nationalité"
             value={inputs.nationalite}
             onChange={setnationalite}
@@ -266,13 +275,13 @@ const AddPatient = ({ thunkDetailsPatient }) => {
         </div>
         <div className="row py-2">
           <TextField
-            className="col-3 ml-1 required"
+            className="col-2 required"
             label="Lieu d'habitation"
             value={inputs.habitation}
             onChange={sethabitation}
           />
           <TextField
-            className="col-2 ml-1"
+            className="col-2"
             label="Contact"
             value={inputs.contact}
             onChange={setcontact}
@@ -280,7 +289,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <Select
             value={inputs.situation}
             onChange={setsituation}
-            className="col-3 ml-1"
+            className="col-2"
             label="Situation matrimoniale"
             options={[
               { value: "marie", label: "Marié" },
@@ -292,7 +301,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <Select
             value={inputs.religion}
             onChange={setreligion}
-            className="col-3 ml-1"
+            className="col-2"
             label="Réligion"
             options={[
               { value: "chretien", label: "Chretien" },
@@ -308,7 +317,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <Select
             value={inputs.profession}
             onChange={setprofession}
-            className="col-3 ml-1"
+            className="col-2"
             label="Profession"
             options={[
               { value: "activité", label: "En activité" },
@@ -324,7 +333,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
           <TextField
-            className="col-2 ml-1"
+            className="col-2"
             label="Nom du père"
             value={inputs.nompere}
             onChange={setnompere}
@@ -332,19 +341,19 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <TextField
             value={inputs.prenomspere}
             onChange={setprenomspere}
-            className="col-3 ml-1"
+            className="col-2"
             label="Prenoms du père"
           />
           <TextField
             value={inputs.contactpere}
             onChange={setcontactpere}
-            className="col-3 ml-1"
+            className="col-2"
             label="Contact du père"
           />
         </div>
         <div className="row py-2">
           <TextField
-            className="col-2 ml-1"
+            className="col-2"
             label="Nom de la mère"
             value={inputs.nommere}
             onChange={setnommere}
@@ -352,13 +361,13 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <TextField
             value={inputs.prenomsmere}
             onChange={setprenomsmere}
-            className="col-3 ml-1"
+            className="col-2"
             label="Prenoms de la mère"
           />
           <TextField
             value={inputs.contactmere}
             onChange={setcontactmere}
-            className="col-3 ml-1"
+            className="col-2"
             label="Contact de la mère"
           />
         </div>
@@ -369,7 +378,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
           <TextField
-            className="col-2 ml-1"
+            className="col-2"
             label="Nom du tuteur"
             value={inputs.nomtuteur}
             onChange={setnomtuteur}
@@ -377,13 +386,13 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <TextField
             value={inputs.prenomstuteur}
             onChange={setprenomstuteur}
-            className="col-3 ml-1"
+            className="col-2"
             label="Prenoms du tuteur"
           />
           <TextField
             value={inputs.contacttuteur}
             onChange={setcontacttuteur}
-            className="col-3 ml-1"
+            className="col-2"
             label="Contact du tuteur"
           />
         </div>
@@ -394,7 +403,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
       <div className="col-12 px-5 mb-4 grey-text text-darken-1">
         <div className="row py-2">
           <TextField
-            className="col-2 ml-1"
+            className="col-2"
             label="Nom"
             value={inputs.nompersonnesure}
             onChange={setnompersonnesure}
@@ -402,13 +411,13 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <TextField
             value={inputs.prenomspersonnesure}
             onChange={setprenomspersonnesure}
-            className="col-3 ml-1"
+            className="col-2"
             label="Prenoms"
           />
           <TextField
             value={inputs.contactpersonnesure}
             onChange={setcontactpersonnesure}
-            className="col-3 ml-1 required"
+            className="col-2 required"
             label="Contact"
           />
         </div>
@@ -421,7 +430,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           <Select
             value={inputs.assure}
             onChange={setassure}
-            className="col-2 ml-1"
+            className="col-2"
             label="Assuré(e) ?"
             options={[
               { value: "oui", label: "Oui" },
@@ -432,7 +441,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             <Select
               value={inputs.assurance}
               onChange={setassurance}
-              className="col-3 ml-1"
+              className="col-2"
               label="Nom de l'assurance"
               options={[
                 { value: "nsia", label: "NSIA" },

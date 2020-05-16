@@ -6,27 +6,25 @@ import {
   thunkSearchPatient,
 } from "../../api/admission/listPatients";
 
-import {
-  thunkDetailsPatient
-} from "../../api/admission/detailsPatient";
+import { thunkDetailsPatient } from "../../api/admission/detailsPatient";
 
 const TableListPatient = ({
   thunkListPatient,
   thunkSearchPatient,
   listPatients,
-  thunkDetailsPatient
+  thunkDetailsPatient,
 }) => {
   const [columns] = useState([
     "N°",
     "IPP",
-    "nom",
-    "prenoms",
-    "sexe",
-    "domicile",
-    "date de naissance",
-    "lieu de naissance",
-    "nationalité",
-    "contact",
+    "Nom",
+    "Prenoms",
+    "Sexe",
+    "Domicile",
+    "Date de naissance",
+    "Lieu de naissance",
+    "Nationalité",
+    "Contact",
   ]);
 
   // const [search, setsearch] = useState()
@@ -42,23 +40,30 @@ const TableListPatient = ({
   return (
     <div className="row">
       <div className="col-12">
-        <div className="row border-bottom py-2">
-          <div className="col-6">
+        <div className="row mb-2">
+          <input
+            value={value}
+            type="text"
+            className="col-2"
+            placeholder="rechercher un patient"
+            onChange={(ev) => researching(ev)}
+            style={{fontSize:'13px'}}
+            autoFocus
+          />
+          <div className="col text-right">
             <small>{listPatients.length} patient(s)</small>
-          </div>
-          <div className="col-3 offset-3">
-            <input
-              value={value}
-              type="text"
-              className="col-12"
-              placeholder="rechercher un patient"
-              onChange={(ev) => researching(ev)}
-            />
           </div>
         </div>
         <div className="table-head row">
-          <table className="table table-borderless table-active table-sm col-12 table-hover">
-            <thead>
+          <table className="table grey lighten-5 table-sm col-12 table-hover">
+            <thead
+              style={{
+                borderBottomColor: "#97bf0f !important",
+                borderBottomStyle:'solid',
+                borderBottomWidth : '2px',
+                fontSize:'14px'
+              }}
+            >
               <tr>
                 {columns.map((col, i) => (
                   <th key={i}>
@@ -68,7 +73,7 @@ const TableListPatient = ({
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="white">
               {listPatients.map(
                 (
                   {
@@ -87,7 +92,6 @@ const TableListPatient = ({
                 ) => (
                   <tr
                     key={i}
-                    className="white ombre"
                     style={{ cursor: "pointer" }}
                     onClick={() => thunkDetailsPatient(iddossier)}
                   >
@@ -120,14 +124,6 @@ const TableListPatient = ({
                     </td>
                     <td>
                       <small>{contactpatient}</small>
-                    </td>
-                    <td className="text-center">
-                      {/* <IconButton aria-label="delete">
-                        <DeleteIcon style={{fontSize : "15px"}} />
-                      </IconButton> */}
-                      <i className="mdi-action-delete mx-2"></i>
-                      <i className="mdi-editor-mode-edit mx-2"></i>
-                      <i className="mdi-editor-format-align-left mx-2"></i>
                     </td>
                   </tr>
                 )

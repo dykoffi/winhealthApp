@@ -13,7 +13,7 @@ const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
 
   return (
     <div className="Admission row">
-      <section className="col-12 pt-3 px-3 grey lighten-4 ombre-bottom">
+      <section className="col-12 px-3 grey lighten-4">
         <Onglet
           links={Listonglets}
           currentPage={currentPage}
@@ -21,7 +21,7 @@ const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
         />
       </section>
       <section
-        className="col-12 p-3"
+        className="col-12 p-3 white"
         style={{
           height: "83vh",
           overflowY: "scroll",

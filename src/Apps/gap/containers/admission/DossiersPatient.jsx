@@ -82,7 +82,7 @@ const DossiersPatient = ({
 
   useEffect(() => {
     thunkListSejour(currentPatient.iddossier);
-    thunkCurrentFacture(currentPatient.iddossier);
+    // thunkCurrentFacture(currentPatient.iddossier);
   }, [currentPatient.iddossier]);
 
   const [columns] = useState([
@@ -100,7 +100,7 @@ const DossiersPatient = ({
         <div className="col-12 p-3 white shadow-sm text-secondary mb-2">
           <div className="row">
             <div className="col-2">
-              <i className="mdi-communication-business mdi-5x"></i>
+              <i className="mdi-file-folder mdi-5x"></i>
             </div>
             <div className="col-7">
               <div className="row">

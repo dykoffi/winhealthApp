@@ -28,28 +28,38 @@ const Gap = () => {
   return (
     <div className="col-12 page grey lighten-5" id="gap">
       <div className="row">
-        <section className="col-2" id="navbar">
+        <section
+          id="navbar"
+          style={{
+            flex: "none",
+          }}
+        >
           <Navbar
             user={cookies.get("user", { path: "/" })}
             fonctions={navMenu}
           />
         </section>
         <section
-          className="col-10"
+          className="px-2"
           id="principal"
           style={{
+            flex: 1,
             height: "100vh",
             overflowY: "hidden",
             overflowX: "hidden",
           }}
         >
-           <section className="row grey lighten-4" id="Topbar">
+          <section className="row grey lighten-4" id="Topbar">
             <Topbar
-              title={title}
+              title={`${cookies.get("user", { path: "/" }).nomuser} ${
+                cookies.get("user", { path: "/" }).prenomsuser
+              } - ${
+                cookies.get("user", { path: "/" }).labelprofil
+              }`}
               toggleFullscreen={toggleFullscreen}
               fullscreen={fullscreen}
             />
-          </section> 
+          </section>
           <section>
             {Pages.map(({ path, Component, store }, index) => (
               <Route exact key={index} path={path}>

@@ -20,3 +20,7 @@ body {
 .color {
   color : red
 }
+
+input, label{
+  font-size: 13px !important;
+}

@@ -1,13 +1,11 @@
 .Sideitem {
-  font-size: 15px;
   border-right: 8px transparent solid !important;
-  transition: all .2s ease;
 }
 
 .Sideitem.active {
-  background-color: rgba(0, 0, 0, 0.281);
-  color : rgb(5, 177, 168) !important;
-  border-right: 8px rgb(5, 177, 168) solid !important;
+  background-color:#97bf0f;
+  color : white !important;
+  border-right: 8px #87ac0f solid !important;
   font-weight: bold !important;
 }
 .Sidehead{
@@ -19,5 +17,5 @@
 
 .Sidebar{
   overflow-x: hidden;
-  background-color: rgba(0, 0, 0, 0.74);
+  background-color: rgba(10, 126, 194, 0.897);
 }

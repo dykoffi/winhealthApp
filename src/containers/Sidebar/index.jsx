@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import "./sidebar.css";
 
@@ -27,20 +28,13 @@ SideHead.prototype = {
 
 export const SideItem = ({ icon, text, actif, active }) => (
   <div
-    className={`row Sideitem px-2 py-1 ${
+    title={text}
+    className={`row Sideitem text-center d-flex justify-content-center ${
       actif ? "text-info active" : "text-light"
     }`}
     onClick={() => active()}
   >
-    <div className="col-12 ">
-      <span className="d-flex align-items-center font-weight-normal">
-        <i
-          style={{ fontSize: "12px" }}
-          className={`mdi-${icon} mr-3 mdi-2x`}
-        ></i>{" "}
-        {text}
-      </span>
-    </div>
+    <i style={{ fontSize: "9px" }} className={`mdi-${icon} mdi-3x col-9`}></i>{" "}
   </div>
 );
 SideItem.prototype = {
@@ -57,23 +51,27 @@ const ListItem = ({ children }) => (
 const Sidebar = ({ user, fonctions }) => {
   const [actif, setactif] = useState(0);
   return (
-    <div className="row page Sidebar">
-      <div className="col-12">
-        <SideHead user={user} />
-        {fonctions && (
-          <ListItem>
-            {fonctions.map(({ title, icon, path }, i) => (
-              <NavLink key={i} exact to={path}>
-                <SideItem
-                  icon={icon}
-                  text={title}
-                  actif={actif === i}
-                  active={() => setactif(i)}
-                />
-              </NavLink>
-            ))}
-          </ListItem>
-        )}
+    <div className="col-12 page Sidebar">
+      <div className="row">
+        <div className="col-12">
+          {/* <SideHead user={user} /> */}
+          {fonctions && (
+            <>
+              <ListItem>
+                {fonctions.map(({ title, icon, path }, i) => (
+                  <NavLink key={i} exact to={path}>
+                    <SideItem
+                      text={title}
+                      icon={icon}
+                      actif={actif === i}
+                      active={() => setactif(i)}
+                    />
+                  </NavLink>
+                ))}
+              </ListItem>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

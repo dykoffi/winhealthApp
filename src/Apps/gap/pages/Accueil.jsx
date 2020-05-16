@@ -1,18 +1,15 @@
 import React, { useEffect } from "react";
+import logo from "../../../static/images/logo.png";
 
 const Accueil = ({ sendTitle }) => {
   useEffect(() => {
     sendTitle("GAP Accueil");
   });
   return (
-    <div className="Accueil row p-3">
-      <div className="col-12 text-center text-secondary">
-        <h2>Bienvenue sur Win GAP</h2>
-        <p>
-          votre interface qui vous permettra de gérer toutes les données
-          administratives liées au patient
-        </p>
-      </div>
+    <div className="Accueil d-flex justify-content-center align-items-center row p-3" style={{
+      height:'90vh'
+    }}>
+      <img src={logo} className="col-3" style={{opacity:0.7}} alt="" />
     </div>
   );
 };

@@ -15,7 +15,7 @@ const Onglet = ({ links, currentPage, setCurrentPage }) => {
             cursor: "pointer",
           }}
           className={`px-3 text-center onglet py-2 ${
-            currentPage === target ? "grey lighten-5 text-secondary actifOnglet" : "text-secondary"
+            currentPage === target ? "white text-secondary actifOnglet" : "text-secondary"
           } `}
         >
           <i className={`mdi-${icon} mr-2`}></i>

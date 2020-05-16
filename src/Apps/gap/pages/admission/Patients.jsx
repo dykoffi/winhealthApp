@@ -6,7 +6,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 
 const Patients = ({ loading }) => {
   return (
-    <div className="row p-3 Patients">
+    <div className="row p-2 Patients">
       <div className="col-12">
         <TablePatients />
       </div>
