@@ -1,6 +1,6 @@
 import Axios from "axios"
 import { Cookies } from 'react-cookie'
-import { header } from "../../constants/apiQuery"
+import { header } from "../../../global/apiQuery"
 import { thunkListProfil } from './list'
 import store from './store'
 

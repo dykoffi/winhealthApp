@@ -2,12 +2,26 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { deconnexionUser } from "../Apps/connexion/functions";
+import { Menu, MenuItem, IconButton, Avatar } from "@material-ui/core";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import FullscreenIcon from "@material-ui/icons/Fullscreen";
+import FullscreenExitIcon from "@material-ui/icons/FullscreenExit";
 
-const Topbar = ({ toggleFullscreen, title, fullscreen }) => {
+const Topbar = ({ toggleFullscreen, title, fullscreen, user }) => {
   moment.locale("fr");
   const [time, settime] = useState(
     moment().format("ddd DD MMMM YYYY - HH : mm : ss")
   );
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,44 +34,50 @@ const Topbar = ({ toggleFullscreen, title, fullscreen }) => {
   }, []);
 
   return (
-    <div className="col-12 px-1 Topbar">
-      <div className="row">
-        <div className="col-3 p-2">
-          <small className="p-3">{title}</small>
-        </div>
-        <div className="col-6 d-flex justify-content-center align-items-center">
-          <small>{time}</small>
-        </div>
-        <div className="col-2 offset-1 icons p-2">
-          <div className="row text-secondary">
-            <div
-              className="col-3 icon d-flex justify-content-center"
-              onClick={() => toggleFullscreen()}
-            >
-              <i
-                title={!fullscreen ? "Plein écran" : "Ecran reduit"}
-                className={`mdi-navigation-${
-                  fullscreen ? "fullscreen-exit" : "fullscreen"
-                }`}
-              ></i>
-            </div>
-            <div
-              className="col-3 icon d-flex justify-content-center"
-              title="Notifications"
-            >
-              <i className="mdi-social-notifications-on"></i>
-            </div>
-            <div
-              title="Déconnexion"
-              className="col-3 icon d-flex justify-content-center"
-              onClick={() => {
-                deconnexionUser();
-              }}
-            >
-              <i className="mdi-action-lock red-textb"></i>
-            </div>
-          </div>
-        </div>
+    <div className="row p-1">
+      <div className="col-3">
+        <small>{title}</small>
+      </div>
+      <div className="col-6 text-center">
+        <small>{time}</small>
+      </div>
+      <div className="col-3 text-center">
+        <IconButton size="small" onClick={toggleFullscreen}>
+          {!fullscreen ? <FullscreenIcon /> : <FullscreenExitIcon />}
+        </IconButton>
+        <IconButton
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          size="small"
+          onClick={handleClick}
+        >
+          <AccountCircleIcon />
+        </IconButton>
+        {/* <Avatar size="small" className={{}}>YD</Avatar> */}
+        <Menu
+          elevation={1}
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem style={{ fontSize: "13px" }} onClick={handleClose}>
+            Notification
+          </MenuItem>
+          <MenuItem style={{ fontSize: "13px" }} onClick={deconnexionUser}>
+            Déconnexion
+          </MenuItem>
+        </Menu>
+        <small>{user}</small>
       </div>
     </div>
   );

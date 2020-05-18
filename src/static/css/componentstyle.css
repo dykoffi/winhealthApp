@@ -143,15 +143,6 @@ a:focus {
   color: white;
 }
 
-/* Topbar */
-.Topbar .icon {
-  cursor: pointer;
-  transition: all 0.4s ease;
-  font-size: 20px;
-}
-.Topbar .icon:hover {
-  background-color: rgba(226, 226, 226, 0.774);
-}
 
 /* Verticalist */
 

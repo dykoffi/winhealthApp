@@ -13,14 +13,17 @@ body {
   transition: all 0.2s ease;
 }
 
-.ombre-bottom{
+.ombre-bottom {
   box-shadow: 0 8px 0.25rem -6px rgba(0, 0, 0, 0.075) !important;
 }
 
 .color {
-  color : red
+  color: red;
 }
 
-input, label{
+input,select {
   font-size: 13px !important;
+}
+label {
+  font-size: 13.4px !important;
 }

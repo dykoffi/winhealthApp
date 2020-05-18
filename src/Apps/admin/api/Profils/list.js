@@ -3,7 +3,7 @@ import { Cookies } from 'react-cookie'
 import moment from 'moment'
 
 import { disableModal } from './modal'
-import { header } from "../../constants/apiQuery"
+import { header } from "../../../global/apiQuery"
 
 const cookies = new Cookies()
 const initState = {

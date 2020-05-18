@@ -1,22 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Input from "@material-ui/core/TextField";
-import { TextField, Select } from "../../../../components/InputCustom";
+import Select from "@material-ui/core/Select";
 import Axios from "axios";
+
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 
 import { thunkDetailsPatient } from "../../api/admission/detailsPatient";
 import { connect } from "react-redux";
-import { header } from "../../constants/apiQuery";
+import { header } from "../../../global/apiQuery";
+import { MenuItem, InputLabel, FormControl, Button } from "@material-ui/core";
+
+import SendIcon from "@material-ui/icons/Send";
+
+import ThemeContext from "../../../global/context";
 
 const AddPatient = ({ thunkDetailsPatient }) => {
+  const theme = useContext(ThemeContext);
   const [inputs, setinput] = useState({
-    ipp: "",
     nom: "",
     prenoms: "",
-    nomjeune: "",
+    civilite: "",
     sexe: "",
-    datenaissance: "",
+    datenaissance: new Date(),
     lieunaissance: "",
     nationalite: "",
     habitation: "",
@@ -36,6 +47,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
     nompersonnesure: "",
     prenomspersonnesure: "",
     contactpersonnesure: "",
+    qualitepersonnesure: "",
     assure: "",
     assurance: "",
   });
@@ -47,22 +59,22 @@ const AddPatient = ({ thunkDetailsPatient }) => {
     style: "standart",
   });
   //patient
-  function setipp({ target: { value } }) {
-    setinput({ ...inputs, ipp: value });
-  }
+  // function setipp({ target: { value } }) {
+  //   setinput({ ...inputs, ipp: value });
+  // }
   function setnom({ target: { value } }) {
     setinput({ ...inputs, nom: value });
   }
   function setprenoms({ target: { value } }) {
     setinput({ ...inputs, prenoms: value });
   }
-  function setnomjeune({ target: { value } }) {
-    setinput({ ...inputs, nomjeune: value });
+  function setcivilite({ target: { value } }) {
+    setinput({ ...inputs, civilite: value });
   }
   function setsexe({ target: { value } }) {
     setinput({ ...inputs, sexe: value });
   }
-  function setdatenaissance({ target: { value } }) {
+  function setdatenaissance(value) {
     setinput({ ...inputs, datenaissance: value });
   }
   function setlieunaissance({ target: { value } }) {
@@ -127,6 +139,9 @@ const AddPatient = ({ thunkDetailsPatient }) => {
   function setcontactpersonnesure({ target: { value } }) {
     setinput({ ...inputs, contactpersonnesure: value });
   }
+  function setqualitepersonnesure({ target: { value } }) {
+    setinput({ ...inputs, qualitepersonnesure: value });
+  }
 
   //assurance
   function setassure({ target: { value } }) {
@@ -140,19 +155,15 @@ const AddPatient = ({ thunkDetailsPatient }) => {
     const {
       nom,
       prenoms,
-      ipp,
-      datenaissance,
+      civilite,
       habitation,
-      lieunaissance,
       contactpersonnesure,
       sexe,
     } = inputs;
     if (
       nom.trim().length === 0 ||
+      civilite.trim().length === 0 ||
       prenoms.trim().length === 0 ||
-      ipp.trim().length === 0 ||
-      datenaissance.trim().length === 0 ||
-      lieunaissance.trim().length === 0 ||
       habitation.trim().length === 0 ||
       sexe.trim().length === 0 ||
       contactpersonnesure.trim().length === 0
@@ -202,265 +213,392 @@ const AddPatient = ({ thunkDetailsPatient }) => {
   }
 
   return (
-    <div className="row p-3">
-      <h6 className="font-weight-bold font-italic text-secondary">
-        Information personnelles du patient
-      </h6>
-      <div className="col-12 mb-4 grey-text text-darken-1">
-        <div className="row py-2">
+    <div className="row p-4">
+      <fieldset className="border col-4 px-4 py-2 mx-1 grey-text text-darken-1">
+        <legend className="grey lighten-4 px-3">
+          <small>Patient</small>
+        </legend>
+        <div className="row py-1">
+          <FormControl variant="outlined" size="small" className="m-1 col">
+            <InputLabel id="civilite-label">Civilité</InputLabel>
+            <Select
+              required
+              labelId="civilite-label"
+              id="civilite"
+              label="Civilité"
+              value={inputs.civilite}
+              onChange={setcivilite}
+              error={inputs.civilite.trim().length === 0}
+              style={{ fontSize: "13px" }}
+            >
+              <MenuItem style={{ fontSize: "13px" }} value={"m"}>
+                M.
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"mme"}>
+                Mme
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"mlle"}>
+                Mlle
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"enf"}>
+                Enfant
+              </MenuItem>
+            </Select>
+          </FormControl>
           <Input
-            label="Size"
-            id="filled-size-small"
+            required
+            className="m-1 col-4"
             variant="outlined"
             size="small"
-            margin="dense"
-            value={inputs.ipp}
-            onChange={setipp}
-          />
-          {/* <TextField
-            className="col-2 required"
-            label="IPP du patient"
-            value={inputs.ipp}
-            onChange={setipp}
-          /> */}
-          <TextField
-            className="col-2 required"
             label="Nom"
-            value={inputs.nom}
             onChange={setnom}
+            value={inputs.nom}
+            error={inputs.nom.trim().length === 0}
           />
-          <TextField
-            className="col-2 required"
+
+          <Input
+            required
+            className="m-1 col-4"
+            variant="outlined"
+            size="small"
             label="Prenoms"
             value={inputs.prenoms}
             onChange={setprenoms}
-          />
-          <TextField
-            className="col-2"
-            label="Nom de jeune fille"
-            value={inputs.nomjeune}
-            onChange={setnomjeune}
+            error={inputs.prenoms.trim().length === 0}
           />
         </div>
-        <div className="row py-2">
-          <Select
-            value={inputs.sexe}
-            onChange={setsexe}
-            className="col-2 required"
-            label="Sexe"
-            options={[
-              { value: "M", label: "M" },
-              { value: "F", label: "F" },
-            ]}
-          />
-          <TextField
-            value={inputs.datenaissance}
-            onChange={setdatenaissance}
-            className="col-2 required"
-            label="Date de naissance"
-            type="date"
-          />
-          <TextField
-            className="col-2 required"
+        <div className="row py-1">
+          <FormControl variant="outlined" size="small" className="m-1 col">
+            <InputLabel id="sexe-label">Sexe</InputLabel>
+            <Select
+              required
+              labelId="sexe-label"
+              id="sexe"
+              label="Sexe"
+              value={inputs.sexe}
+              onChange={setsexe}
+              error={inputs.sexe.trim().length === 0}
+              style={{ fontSize: "13px" }}
+            >
+              <MenuItem style={{ fontSize: "13px" }} value={"M"}>
+                M
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"F"}>
+                F
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <Input
+            className="m-1 col-4"
+            variant="outlined"
+            size="small"
             label="Lieu de naissance"
             value={inputs.lieunaissance}
             onChange={setlieunaissance}
           />
-          <TextField
-            className="col-2 required"
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              id="date-picker-dialog"
+              format="dd/MM/yyyy"
+              value={inputs.datenaissance}
+              onChange={setdatenaissance}
+              className="m-1 col-4"
+            />
+          </MuiPickersUtilsProvider>
+        </div>
+        <div className="row py-1">
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
             label="Nationalité"
             value={inputs.nationalite}
             onChange={setnationalite}
           />
-        </div>
-        <div className="row py-2">
-          <TextField
-            className="col-2 required"
-            label="Lieu d'habitation"
+          <Input
+            required
+            className="m-1 col"
+            variant="outlined"
+            size="small"
+            label="Domicile"
             value={inputs.habitation}
             onChange={sethabitation}
+            error={inputs.habitation.trim().length === 0}
           />
-          <TextField
-            className="col-2"
+          <Input
+            className="m-1 col-3"
+            variant="outlined"
+            size="small"
             label="Contact"
             value={inputs.contact}
             onChange={setcontact}
           />
-          <Select
-            value={inputs.situation}
-            onChange={setsituation}
-            className="col-2"
-            label="Situation matrimoniale"
-            options={[
-              { value: "marie", label: "Marié" },
-              { value: "divorce", label: "Divorcé" },
-              { value: "concubinage", label: "Concubinage" },
-              { value: "veuf", label: "Veuf (ve)" },
-            ]}
-          />
-          <Select
-            value={inputs.religion}
-            onChange={setreligion}
-            className="col-2"
-            label="Réligion"
-            options={[
-              { value: "chretien", label: "Chretien" },
-              { value: "musulman", label: "Musulman" },
-              { value: "boudiste", label: "Boudiste" },
-              { value: "animiste", label: "Animiste" },
-              { value: "autre", label: "Autre réligion" },
-              { value: "sans", label: "Sans réligion" },
-            ]}
-          />
         </div>
-        <div className="row py-2">
-          <Select
-            value={inputs.profession}
-            onChange={setprofession}
-            className="col-2"
-            label="Profession"
-            options={[
-              { value: "activité", label: "En activité" },
-              { value: "chomage", label: "Au chomage" },
-              { value: "retraite", label: "Retraité" },
-            ]}
-          />
+        <div className="row py-1">
+          <FormControl variant="outlined" size="small" className="m-1 col">
+            <InputLabel id="situation-label">Situation</InputLabel>
+            <Select
+              labelId="situation-label"
+              id="situation"
+              label="Situation"
+              value={inputs.situation}
+              onChange={setsituation}
+              style={{ fontSize: "13px" }}
+            >
+              <MenuItem style={{ fontSize: "13px" }} value={"Marié"}>
+                Marié(e)
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Célibataire"}>
+                Célibataire
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Divorcé"}>
+                Divorcé(e)
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Concubinage"}>
+                Concubinage
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Veuf"}>
+                Veuf(ve)
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined" size="small" className="m-1 col">
+            <InputLabel id="religion-label">Réligion</InputLabel>
+            <Select
+              labelId="religion-label"
+              id="religion"
+              label="Réligion"
+              value={inputs.religion}
+              onChange={setreligion}
+              style={{ fontSize: "13px" }}
+            >
+              <MenuItem style={{ fontSize: "13px" }} value={"Chrétient"}>
+                Chrétient(ne)
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Musulman"}>
+                Musulman(e)
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Boudiste"}>
+                Boudiste
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Animiste"}>
+                Animiste
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Autre"}>
+                Autre réligion
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Sans"}>
+                Sans réligion
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined" size="small" className="m-1 col">
+            <InputLabel id="profession-label">Proffession</InputLabel>
+            <Select
+              labelId="profession-label"
+              id="profession"
+              value={inputs.profession}
+              label="Profession"
+              onChange={setprofession}
+              style={{ fontSize: "13px" }}
+            >
+              <MenuItem style={{ fontSize: "13px" }} value={"Activité"}>
+                En activité
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Chomage"}>
+                Chomage
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Retraité"}>
+                Retraité(e)
+              </MenuItem>
+            </Select>
+          </FormControl>
         </div>
-      </div>
-      <h6 className="font-weight-bold font-italic text-secondary">
-        Informations relatives aux parents
-      </h6>
-      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
-        <div className="row py-2">
-          <TextField
-            className="col-2"
+      </fieldset>
+
+      <fieldset className="border col-5 py-2 px-4 mx-2 grey-text text-darken-1">
+        <legend className="grey lighten-4 px-3">
+          <small>Contacts patient</small>
+        </legend>
+        <div className="row py-1">
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
             label="Nom du père"
             value={inputs.nompere}
             onChange={setnompere}
           />
-          <TextField
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
+            label="Prenoms du père"
             value={inputs.prenomspere}
             onChange={setprenomspere}
-            className="col-2"
-            label="Prenoms du père"
           />
-          <TextField
+          <Input
+            className="m-1 col-4"
+            variant="outlined"
+            size="small"
+            label="Contact du père"
             value={inputs.contactpere}
             onChange={setcontactpere}
-            className="col-2"
-            label="Contact du père"
           />
         </div>
-        <div className="row py-2">
-          <TextField
-            className="col-2"
+        <div className="row py-1">
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
             label="Nom de la mère"
             value={inputs.nommere}
             onChange={setnommere}
           />
-          <TextField
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
+            label="Prenoms de la mère"
             value={inputs.prenomsmere}
             onChange={setprenomsmere}
-            className="col-2"
-            label="Prenoms de la mère"
           />
-          <TextField
+          <Input
+            className="m-1 col-4"
+            variant="outlined"
+            size="small"
+            label="Contact de la mère"
             value={inputs.contactmere}
             onChange={setcontactmere}
-            className="col-2"
-            label="Contact de la mère"
           />
         </div>
-      </div>
-      <h6 className="font-weight-bold font-italic text-secondary">
-        Informations relatives au tuteur
-      </h6>
-      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
-        <div className="row py-2">
-          <TextField
-            className="col-2"
+        <div className="row py-1">
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
             label="Nom du tuteur"
             value={inputs.nomtuteur}
             onChange={setnomtuteur}
           />
-          <TextField
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
+            label="Prenoms du tuteur"
             value={inputs.prenomstuteur}
             onChange={setprenomstuteur}
-            className="col-2"
-            label="Prenoms du tuteur"
           />
-          <TextField
+          <Input
+            className="m-1 col-4"
+            variant="outlined"
+            size="small"
+            label="Contact du tuteur"
             value={inputs.contacttuteur}
             onChange={setcontacttuteur}
-            className="col-2"
-            label="Contact du tuteur"
           />
         </div>
-      </div>
-      <h6 className="font-weight-bold font-italic text-secondary">
-        Personne à contacter en cas de besoin
-      </h6>
-      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
-        <div className="row py-2">
-          <TextField
-            className="col-2"
+        <small>Personne à contacter en cas de besoins</small>
+        <div className="row py-1">
+          <Input
+            className="m-1 col-2"
+            variant="outlined"
+            size="small"
+            label="Qualité"
+            value={inputs.qualitepersonnesure}
+            onChange={setqualitepersonnesure}
+          />
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
             label="Nom"
             value={inputs.nompersonnesure}
             onChange={setnompersonnesure}
           />
-          <TextField
+          <Input
+            className="m-1 col"
+            variant="outlined"
+            size="small"
+            label="Prenoms"
             value={inputs.prenomspersonnesure}
             onChange={setprenomspersonnesure}
-            className="col-2"
-            label="Prenoms"
           />
-          <TextField
+          <Input
+            required
+            className="m-1 col-3"
+            variant="outlined"
+            size="small"
+            label="Contact"
             value={inputs.contactpersonnesure}
             onChange={setcontactpersonnesure}
-            className="col-2 required"
-            label="Contact"
+            error={inputs.contactpersonnesure.trim().length === 0}
           />
         </div>
-      </div>
-      <h6 className="font-weight-bold font-italic text-secondary">
-        Informations relatives à l'assurance
-      </h6>
-      <div className="col-12 px-5 mb-4 grey-text text-darken-1">
-        <div className="row py-2">
-          <Select
-            value={inputs.assure}
-            onChange={setassure}
-            className="col-2"
-            label="Assuré(e) ?"
-            options={[
-              { value: "oui", label: "Oui" },
-              { value: "non", label: "Non" },
-            ]}
-          />
-          {inputs.assure === "oui" && (
+      </fieldset>
+
+      <fieldset className="border col py-2 px-4 mx-2 grey-text text-darken-1">
+        <legend className="grey lighten-4 px-3">
+          <small>Assurance patient</small>
+        </legend>
+        <div className="row py-1">
+          <FormControl variant="outlined" size="small" className="m-1 col-12">
+            <InputLabel id="assure-label">Assuré ?</InputLabel>
             <Select
-              value={inputs.assurance}
-              onChange={setassurance}
-              className="col-2"
-              label="Nom de l'assurance"
-              options={[
-                { value: "nsia", label: "NSIA" },
-                { value: "sgbci", label: "SBGCI" },
-                { value: "alianz", label: "Alianz" },
-              ]}
-            />
+              labelId="assure-label"
+              id="assure"
+              label="Assuré ?"
+              value={inputs.assure}
+              onChange={setassure}
+              style={{ fontSize: "13px" }}
+            >
+              <MenuItem style={{ fontSize: "13px" }} value={"oui"}>
+                Oui
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"non"}>
+                Non
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+        <div className="row py-1">
+          {inputs.assure === "oui" && (
+            <FormControl variant="outlined" size="small" className="m-1 col-12">
+              <InputLabel id="assurance-label">Assurance</InputLabel>
+              <Select
+                labelId="assurance-label"
+                id="assurance"
+                label="Assurance"
+                value={inputs.assurance}
+                onChange={setassurance}
+                style={{ fontSize: "13px" }}
+              >
+                <MenuItem style={{ fontSize: "13px" }} value={"sgbci"}>
+                  SGBCI
+                </MenuItem>
+                <MenuItem style={{ fontSize: "13px" }} value={"nsia"}>
+                  NSIA
+                </MenuItem>
+              </Select>
+            </FormControl>
           )}
         </div>
-      </div>
-      <div className="">
-        <button
+      </fieldset>
+      <div className="col-12 mt-4">
+        <Button
+          variant="contained"
+          endIcon={<SendIcon />}
           onClick={() => {
             send();
           }}
-          className="btn btn-primary btn-sm"
+          style={{
+            textTransform: "none",
+            backgroundColor: theme.primary,
+            color: "white",
+          }}
         >
-          Envoyer le formulaire
-        </button>
+          Enregistrer le patient
+        </Button>
         <Snackbar
           anchorOrigin={{
             vertical: "bottom",
@@ -474,7 +612,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           open={alert.show}
         >
           <MuiAlert
-            elevation={6}
+            elevation={2}
             variant={alert.style}
             severity={alert.severity}
           >

@@ -6,7 +6,7 @@ import {
   thunkEncaisserFactures,
   thunkAnnulerFactures,
 } from "../../api/caisse/factures";
-import { socket } from "../../constants/apiQuery";
+import { socket } from "../../../global/apiQuery";
 
 const AttenteFacture = ({
   listFacturesAttentes,

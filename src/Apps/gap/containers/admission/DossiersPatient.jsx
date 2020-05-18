@@ -4,7 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { header } from "../../constants/apiQuery";
+import { header } from "../../../global/apiQuery";
 import Facture from "../../documents/Facture";
 import { TextField, Select } from "../../../../components/InputCustom";
 import {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Axios from "axios";
-import { header } from "../../constants/apiQuery";
+import { header } from "../../../global/apiQuery";
 
 import Statcard from "../../../../components/Statcard";
 

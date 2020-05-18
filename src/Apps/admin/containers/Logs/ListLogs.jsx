@@ -7,7 +7,7 @@ import logsType from "../../constants/typeLogs";
 
 import { setTypeLogs, thunkSetListList } from "../../api/Logs/listLogs";
 import Axios from "axios";
-import { header } from "../../constants/apiQuery";
+import { header } from "../../../global/apiQuery";
 
 const ListLogs = ({
   setTypeLogs,

@@ -1,10 +1,10 @@
 .onglet.actifOnglet {
-  border: 0.5px rgba(187, 187, 187, 0.801) solid;
-  border-bottom: 0.5px transparent solid;
+  border: 0.2px rgba(187, 187, 187, 0.801) solid;
+  border-bottom: 0.2px transparent solid;
 }
 
 .onglet, .onglets {
   font-size: 13px;
-  border: 0.5px transparent solid;
-  border-bottom: 0.5px rgba(187, 187, 187, 0.801) solid;
+  border: 0.2px transparent solid;
+  border-bottom: 0.2px rgba(187, 187, 187, 0.801) solid;
 }

@@ -2,7 +2,7 @@ import Axios from "axios"
 import { Cookies } from 'react-cookie'
 
 import { disableModal } from './modal'
-import { header } from "../../constants/apiQuery"
+import { header } from "../../../global/apiQuery"
 
 const cookies = new Cookies()
 const initState = {

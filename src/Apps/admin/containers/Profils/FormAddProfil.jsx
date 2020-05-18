@@ -9,7 +9,7 @@ import moment from "moment";
 import { disableModal } from "../../api/Profils/modal";
 import { thunkUpdateListProfil } from "../../api/Profils/list";
 import { connect } from "react-redux";
-import { header } from "../../constants/apiQuery";
+import { header } from "../../../global/apiQuery";
 import Text from "../../../../components/Text";
 
 const FormAddProfil = ({

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { setActiveApp, thunkSetListApps } from "../../api/Logs/app";
 import LoadingPoint from "../../../../components/LoadingPoint";
 import Axios from "axios";
-import { header } from "../../constants/apiQuery";
+import { header } from "../../../global/apiQuery";
 
 const ListApp = ({ listApps, currentApp, setActiveApp, thunkSetListApps }) => {
   const [allLogs, setallLogs] = useState([]);

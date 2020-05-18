@@ -7,7 +7,7 @@ import Notif from "../../../../components/Notification";
 
 //import des action creators
 import { setCurrentPage, setNotification } from "../../api/caisse/pages";
-import { socket } from "../../constants/apiQuery";
+import { socket } from "../../../global/apiQuery";
 import { Snackbar } from "@material-ui/core";
 
 const Caisse = ({

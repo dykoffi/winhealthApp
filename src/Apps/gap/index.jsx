@@ -26,7 +26,7 @@ const Gap = () => {
     }
   }
   return (
-    <div className="col-12 page grey lighten-5" id="gap">
+    <div className="col-12 page" id="gap">
       <div className="row">
         <section
           id="navbar"
@@ -40,7 +40,7 @@ const Gap = () => {
           />
         </section>
         <section
-          className="px-2"
+          className="white"
           id="principal"
           style={{
             flex: 1,
@@ -49,9 +49,10 @@ const Gap = () => {
             overflowX: "hidden",
           }}
         >
-          <section className="row grey lighten-4" id="Topbar">
+          <section className="col-12 grey lighten-4" id="Topbar">
             <Topbar
-              title={`${cookies.get("user", { path: "/" }).nomuser} ${
+            title={title}
+              user={`${cookies.get("user", { path: "/" }).nomuser} ${
                 cookies.get("user", { path: "/" }).prenomsuser
               } - ${
                 cookies.get("user", { path: "/" }).labelprofil
@@ -60,7 +61,7 @@ const Gap = () => {
               fullscreen={fullscreen}
             />
           </section>
-          <section>
+          <section className="col-12">
             {Pages.map(({ path, Component, store }, index) => (
               <Route exact key={index} path={path}>
                 {store ? (

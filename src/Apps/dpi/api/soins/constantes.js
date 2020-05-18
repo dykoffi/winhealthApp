@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { header, socket } from "../../constants/apiQuery"
+import { header, socket } from "../../../global/apiQuery"
 import { Cookies } from 'react-cookie'
 // import store from './store'
 const cookies = new Cookies()

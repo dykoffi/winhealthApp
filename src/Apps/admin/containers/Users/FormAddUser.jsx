@@ -4,7 +4,7 @@ import { disableModal } from "../../api/Users/modal";
 import { thunkUpdateListUser } from "../../api/Users/list";
 import password from "../../api/Users/getPassword";
 import { connect } from "react-redux";
-import { header } from "../../constants/apiQuery";
+import { header } from "../../../global/apiQuery";
 import Check from "../../../../components/Check";
 import Text from "../../../../components/Text";
 import LoadingPoint from "../../../../components/LoadingPoint";

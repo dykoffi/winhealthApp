@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
-import { header } from "../../gap/constants/apiQuery";
+import { header } from "../../global/apiQuery";
 
 Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
 

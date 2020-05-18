@@ -1,6 +1,6 @@
 import Axios from "axios"
 import { setCurrentPage } from './pages'
-import { header } from '../../constants/apiQuery'
+import { header } from '../../../global/apiQuery'
 
 const initState = {
     listAttentePatients: [],

@@ -9,7 +9,7 @@ import Notif from "../../../../components/Notification";
 //import des action creators
 import { setCurrentPage, setNotification } from "../../api/medical/pages";
 import { thunkDetailsPatient } from "../../api/medical/patients";
-import { socket } from "../../constants/apiQuery";
+import { socket } from "../../../global/apiQuery";
 import { Snackbar } from "@material-ui/core";
 const Soins = ({
   sendTitle,

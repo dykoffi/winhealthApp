@@ -7,7 +7,7 @@ import {
   thunkDetailsPatient,
 } from "../../api/medical/patients";
 
-import { socket } from "../../constants/apiQuery";
+import { socket } from "../../../global/apiQuery";
 
 const TableListPatient = ({
   thunkListAttentePatients,
