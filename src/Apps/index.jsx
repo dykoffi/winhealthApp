@@ -1,9 +1,9 @@
-import React, { createContext } from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
 //les themes
-import ThemeContext, { Theme } from "./global/context";
+import ThemeContext, { Info } from "./global/context";
 
 //importation des differentes applications
 const Connexion = React.lazy(() => import("./connexion"));
@@ -14,7 +14,7 @@ const Dpi = React.lazy(() => import("./dpi"));
 const App = () => {
   return (
     <div id="App" className="row">
-      <ThemeContext.Provider value={Theme.default}>
+      <ThemeContext.Provider value={Info}>
         <Route
           render={() => {
             const cookies = new Cookies();

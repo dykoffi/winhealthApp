@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import Input from "@material-ui/core/TextField";
+import TextField from "@material-ui/core/TextField";
+import InputMask from "react-input-mask";
 import Select from "@material-ui/core/Select";
 import Axios from "axios";
 
@@ -15,13 +16,41 @@ import { thunkDetailsPatient } from "../../api/admission/detailsPatient";
 import { connect } from "react-redux";
 import { header } from "../../../global/apiQuery";
 import { MenuItem, InputLabel, FormControl, Button } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 
 import SendIcon from "@material-ui/icons/Send";
 
-import ThemeContext from "../../../global/context";
+import GlobalContext, { Info } from "../../../global/context";
+
+const Input = withStyles({
+  root: {
+    "& label.Mui-focused": {
+      color: Info.theme.primary,
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: Info.theme.primary,
+    },
+    "& .MuiOutlinedInput-root": {
+      "&.Mui-focused fieldset": {
+        borderColor: Info.theme.primary,
+      },
+    },
+  },
+})(TextField);
+
+const InputContact = (props) => (
+  <InputMask
+    mask="(225) 99 999 999"
+    permanent={[0, 1, 2, 3, 4, 5]}
+    value={props.value}
+    onChange={props.onChange}
+  >
+    {(inputProps) => <Input type="tel" {...props} />}
+  </InputMask>
+);
 
 const AddPatient = ({ thunkDetailsPatient }) => {
-  const theme = useContext(ThemeContext);
+  const global = useContext(GlobalContext);
   const [inputs, setinput] = useState({
     nom: "",
     prenoms: "",
@@ -59,9 +88,6 @@ const AddPatient = ({ thunkDetailsPatient }) => {
     style: "standart",
   });
   //patient
-  // function setipp({ target: { value } }) {
-  //   setinput({ ...inputs, ipp: value });
-  // }
   function setnom({ target: { value } }) {
     setinput({ ...inputs, nom: value });
   }
@@ -146,7 +172,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
   //assurance
   function setassure({ target: { value } }) {
     setinput({ ...inputs, assure: value });
-    if (value === "non" || value === "") setinput({ ...inputs, assurance: "" });
+    // if (value === "non" || value === "") setinput({ ...inputs, assurance: "" });
   }
   function setassurance({ target: { value } }) {
     setinput({ ...inputs, assurance: value });
@@ -215,8 +241,8 @@ const AddPatient = ({ thunkDetailsPatient }) => {
   return (
     <div className="row p-4">
       <fieldset className="border col-4 px-4 py-2 mx-1 grey-text text-darken-1">
-        <legend className="grey lighten-4 px-3">
-          <small>Patient</small>
+        <legend className="grey lighten-4 px-3 font-weight-bold">
+          <small className="font-weight-bold">Patient</small>
         </legend>
         <div className="row py-1">
           <FormControl variant="outlined" size="small" className="m-1 col">
@@ -325,8 +351,8 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             onChange={sethabitation}
             error={inputs.habitation.trim().length === 0}
           />
-          <Input
-            className="m-1 col-3"
+          <InputContact
+            className="m-1 col-4"
             variant="outlined"
             size="small"
             label="Contact"
@@ -402,14 +428,38 @@ const AddPatient = ({ thunkDetailsPatient }) => {
               onChange={setprofession}
               style={{ fontSize: "13px" }}
             >
-              <MenuItem style={{ fontSize: "13px" }} value={"Activité"}>
-                En activité
+              <MenuItem style={{ fontSize: "13px" }} value={"agriculteurs"}>
+                Agriculteurs
               </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Chomage"}>
-                Chomage
+              <MenuItem style={{ fontSize: "13px" }} value={"artisans"}>
+                Artisants
               </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Retraité"}>
+              <MenuItem style={{ fontSize: "13px" }} value={"commerçant"}>
+                Commerçants
+              </MenuItem>
+              <MenuItem
+                style={{ fontSize: "13px" }}
+                value={"chef d'entreprise"}
+              >
+                Chef d'entreprise
+              </MenuItem>
+              <MenuItem
+                style={{ fontSize: "13px" }}
+                value={"profession liberale"}
+              >
+                Professions liberales
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"etudiant"}>
+                Étudiant(e)
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"retraité"}>
                 Retraité(e)
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"salarié"}>
+                Salarié(e)
+              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"sans activité"}>
+                Sans activité
               </MenuItem>
             </Select>
           </FormControl>
@@ -417,8 +467,8 @@ const AddPatient = ({ thunkDetailsPatient }) => {
       </fieldset>
 
       <fieldset className="border col-5 py-2 px-4 mx-2 grey-text text-darken-1">
-        <legend className="grey lighten-4 px-3">
-          <small>Contacts patient</small>
+        <legend className="grey lighten-4 px-3 font-weight-bold">
+          <small className="font-weight-bold">Contacts patient</small>
         </legend>
         <div className="row py-1">
           <Input
@@ -437,7 +487,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             value={inputs.prenomspere}
             onChange={setprenomspere}
           />
-          <Input
+          <InputContact
             className="m-1 col-4"
             variant="outlined"
             size="small"
@@ -463,7 +513,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             value={inputs.prenomsmere}
             onChange={setprenomsmere}
           />
-          <Input
+          <InputContact
             className="m-1 col-4"
             variant="outlined"
             size="small"
@@ -489,7 +539,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             value={inputs.prenomstuteur}
             onChange={setprenomstuteur}
           />
-          <Input
+          <InputContact
             className="m-1 col-4"
             variant="outlined"
             size="small"
@@ -498,7 +548,9 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             onChange={setcontacttuteur}
           />
         </div>
-        <small>Personne à contacter en cas de besoins</small>
+        <small className="font-weight-bold">
+          Personne à contacter en cas de besoins
+        </small>
         <div className="row py-1">
           <Input
             className="m-1 col-2"
@@ -524,7 +576,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             value={inputs.prenomspersonnesure}
             onChange={setprenomspersonnesure}
           />
-          <Input
+          <InputContact
             required
             className="m-1 col-3"
             variant="outlined"
@@ -539,7 +591,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
 
       <fieldset className="border col py-2 px-4 mx-2 grey-text text-darken-1">
         <legend className="grey lighten-4 px-3">
-          <small>Assurance patient</small>
+          <small className="font-weight-bold">Assurance patient</small>
         </legend>
         <div className="row py-1">
           <FormControl variant="outlined" size="small" className="m-1 col-12">
@@ -593,11 +645,11 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           }}
           style={{
             textTransform: "none",
-            backgroundColor: theme.primary,
+            backgroundColor: global.theme.primary,
             color: "white",
           }}
         >
-          Enregistrer le patient
+          Valider
         </Button>
         <Snackbar
           anchorOrigin={{
@@ -612,11 +664,11 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           open={alert.show}
         >
           <MuiAlert
-            elevation={2}
+            elevation={1}
             variant={alert.style}
             severity={alert.severity}
           >
-            {alert.message}
+            <small>{alert.message}</small>
           </MuiAlert>
         </Snackbar>
       </div>

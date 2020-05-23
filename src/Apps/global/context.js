@@ -1,13 +1,16 @@
 import { createContext } from "react";
+import { Cookies } from 'react-cookie'
 
-export const Theme = {
-    default : {
-        primary : "#0a7ec2e5",
-        secondary : "#97bf0f",
-        secondaryDark : "#87ac0f"
-    }
+const cookies = new Cookies()
+
+export const Info = {
+    theme: {
+        primary: "#0a7ec2e5",
+        secondary: "#97bf0f",
+        secondaryDark: "#87ac0f"
+    },
+    user: cookies.get("user", { path: "/" })
 }
 
-const ThemeContext = createContext(Theme.default);
-
-export default ThemeContext
+const GlobalContext = createContext(Info);
+export default GlobalContext

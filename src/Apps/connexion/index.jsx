@@ -5,7 +5,7 @@ import logo from "../../static/images/wh_logo.png";
 import { header } from "../global/apiQuery";
 import LoadingPoint from "../../components/LoadingPoint";
 import { TextField, Button } from "@material-ui/core";
-import ThemeContext from "../global/context";
+import GlobalContext from "../global/context";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 //components
 
@@ -16,7 +16,7 @@ const Connexion = () => {
   const [login, setlogin] = useState("");
   const [pass, setpass] = useState("");
 
-  const theme = useContext(ThemeContext);
+  const global = useContext(GlobalContext);
   function changeLogin({ target: { value } }) {
     setlogin(value);
   }
@@ -121,7 +121,7 @@ const Connexion = () => {
                   className="white-text col-12 mt-4"
                   style={{
                     textTransform: "none",
-                    backgroundColor: theme.primary,
+                    backgroundColor: global.theme.primary,
                   }}
                 >
                   Connexion

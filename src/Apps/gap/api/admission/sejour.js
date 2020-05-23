@@ -1,5 +1,6 @@
 import Axios from "axios"
 import { header, socket } from "../../../global/apiQuery"
+import { Info } from "../../../global/context"
 
 const initState = {
     listSejour: [],
@@ -91,11 +92,12 @@ export function thunkListSejour(patient) {
 
 export function thunkAddSejour(data, patient) {
     return async (dispatch) => {
+        const user = Info.user
         dispatch(setLoadingSejour())
         Axios({
             method: "POST",
             url: `${header.url}/gap/add/sejour/${patient}`,
-            data: data,
+            data: { ...data, ...user },
             headers: {
                 "content-type": "application/x-www-form-urlencoded",
             }
@@ -105,7 +107,6 @@ export function thunkAddSejour(data, patient) {
                 dispatch(thunkListSejour(patient))
                 dispatch(thunkCurrentFacture(patient))
             })
-
     }
 }
 
@@ -116,7 +117,7 @@ export function thunkDetailsSejour(idSejour) {
             url: `${header.url}/gap/details/sejour/${idSejour}`
         })
             .then(({ data: { rows } }) => {
-              rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
+                rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
             })
     }
 }

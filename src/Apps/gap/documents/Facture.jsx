@@ -131,7 +131,7 @@ const DownloadLink = ({
     seturl(pngUrl);
   }, []);
   return (
-    <div>
+    <div className="row">
       <QR
         value={code}
         id="img"
@@ -169,7 +169,7 @@ const DownloadLink = ({
             loading ? (
               <small>Chargement de facture ...</small>
             ) : (
-              <a href={url} className="btn btn-sm btn-danger" target="blank">
+              <a href={url} className="btn btn-sm btn-danger col-12" target="blank">
                 imprimer la facture
               </a>
             )
@@ -225,26 +225,25 @@ const Facture = ({
               }}
             >
               <Text style={styles.title}>PATIENT(E)</Text>
-
               <View style={styles.content}>
                 <View style={styles.l}>
-                  <Text style={styles.g}>IPP</Text>
+                  <Text style={styles.g}>IPP : </Text>
                   <Text>{ipppatient}</Text>
                 </View>
                 <View style={styles.l}>
-                  <Text style={styles.g}>NOM </Text>
+                  <Text style={styles.g}>NOM : </Text>
                   <Text>
                     {nompatient} {prenomspatient}
                   </Text>
                 </View>
                 <View style={styles.l}>
-                  <Text style={styles.g}>NAISSANCE </Text>
+                  <Text style={styles.g}>NAISSANCE :  </Text>
                   <Text>
                     {datenaissancepatient} à {lieunaissancepatient}
                   </Text>
                 </View>
                 <View style={styles.l}>
-                  <Text style={styles.g}>DOMICILE </Text>
+                  <Text style={styles.g}>DOMICILE : </Text>
                   <Text>{habitationpatient}</Text>
                 </View>
               </View>
@@ -261,15 +260,15 @@ const Facture = ({
               </Text>
               <View style={styles.content}>
                 <View style={styles.l}>
-                  <Text style={styles.g}>ENTRÉ(E) À </Text>
+                  <Text style={styles.g}>ENTRÉ(E) À :  </Text>
                   <Text>{heuredebutsejour}</Text>
                 </View>
                 <View style={styles.l}>
-                  <Text style={styles.g}>SORTI(E) À </Text>
+                  <Text style={styles.g}>SORTI(E) À :  </Text>
                   <Text>{heurefinsejour}</Text>
                 </View>
                 <View style={styles.l}>
-                  <Text style={styles.g}>MOTIF </Text>
+                  <Text style={styles.g}>TYPE DE SEJOUR : </Text>
                   <Text>{typesejour}</Text>
                 </View>
               </View>
@@ -337,10 +336,10 @@ const styles = StyleSheet.create({
   l: {
     display: "flex",
     flexDirection: "row",
+    flex: 1
   },
   g: {
     fontFamily: "Roboto-Bold",
-    flex: 1,
     color: "grey",
   },
   content: {

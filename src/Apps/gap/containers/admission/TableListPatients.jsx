@@ -18,7 +18,24 @@ import moment from "moment";
 
 import { thunkDetailsPatient } from "../../api/admission/detailsPatient";
 import { TextField, Avatar, Chip } from "@material-ui/core";
-import ThemeContext from "../../../global/context";
+import { withStyles } from "@material-ui/core/styles";
+import GlobalContext, {Info} from "../../../global/context";
+
+const Input = withStyles({
+  root: {
+    "& label.Mui-focused": {
+      color: Info.theme.primary,
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: Info.theme.primary,
+    },
+    "& .MuiOutlinedInput-root": {
+      "&.Mui-focused fieldset": {
+        borderColor: Info.theme.primary,
+      },
+    },
+  },
+})(TextField);
 
 const TableListPatient = ({
   thunkListPatient,
@@ -26,7 +43,7 @@ const TableListPatient = ({
   listPatients,
   thunkDetailsPatient,
 }) => {
-  const theme = useContext(ThemeContext);
+  const global = useContext(GlobalContext);
   const [columns] = useState([
     "N°",
     "IPP",
@@ -54,22 +71,21 @@ const TableListPatient = ({
     <div className="row">
       <div className="col-12">
         <div className="row mb-2">
-          <TextField
+          <Input
             className="col-2"
             variant="outlined"
             size="small"
-            label="Rechercher"
+            label="Rechercher un patient"
             value={value}
             onChange={(ev) => researching(ev)}
-            autoFocus
           />
-          <div className="col text-right">
+          <div className="col">
             <Chip
-              label="patient(s)"
+            label="patient(s)"
               avatar={
                 <Avatar
                   className="white-text"
-                  style={{ backgroundColor: theme.primary }}
+                  style={{ backgroundColor: global.theme.primary }}
                 >
                   {listPatients.length}
                 </Avatar>
@@ -77,79 +93,97 @@ const TableListPatient = ({
             />
           </div>
         </div>
+      </div>
+      <div className="col-12">
         <div className="row">
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table" size="small">
-              <TableHead style={{ backgroundColor: theme.secondaryDark }}>
-                <TableRow>
-                  {columns.map((col, i) => (
-                    <TableCell
-                      style={{ fontSize: "14px", color: "white" }}
-                      key={i}
-                    >
-                      {col}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {listPatients.map(
-                  (
-                    {
-                      iddossier,
-                      ipppatient,
-                      nompatient,
-                      prenomspatient,
-                      sexepatient,
-                      habitationpatient,
-                      datenaissancepatient,
-                      lieunaissancepatient,
-                      nationalitepatient,
-                      contactpatient,
-                    },
-                    i
-                  ) => (
-                    <TableRow key={i}>
+          {listPatients.length === 0 ? (
+            <div className="col-12 text-secondary text-center">
+              <h3 className="text-center lead">Aucun patient</h3>
+              <small>
+                Pour en créer un, rendez-vous dans 'ajouter un patient' puis
+                rerenseignez les informations
+              </small>
+            </div>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table" size="small">
+                <TableHead
+                  style={{ backgroundColor: global.theme.secondaryDark }}
+                >
+                  <TableRow>
+                    {columns.map((col, i) => (
                       <TableCell
-                        style={{ fontSize: "13px" }}
-                        component="th"
-                        scope="row"
+                        style={{ fontSize: "14px", color: "white" }}
+                        key={i}
                       >
-                        {i}
+                        {col}
                       </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {ipppatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {nompatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {prenomspatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {sexepatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {habitationpatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {datenaissancepatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {lieunaissancepatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {nationalitepatient}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "13px" }}>
-                        {contactpatient}
-                      </TableCell>
-                    </TableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {listPatients.map(
+                    (
+                      {
+                        iddossier,
+                        ipppatient,
+                        nompatient,
+                        prenomspatient,
+                        sexepatient,
+                        habitationpatient,
+                        datenaissancepatient,
+                        lieunaissancepatient,
+                        nationalitepatient,
+                        contactpatient,
+                      },
+                      i
+                    ) => (
+                      <TableRow
+                        key={i}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => thunkDetailsPatient(iddossier)}
+                      >
+                        <TableCell
+                          style={{ fontSize: "13px" }}
+                          component="th"
+                          scope="row"
+                        >
+                          {i + 1}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {ipppatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {nompatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {prenomspatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {sexepatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {habitationpatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {datenaissancepatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {lieunaissancepatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {nationalitepatient}
+                        </TableCell>
+                        <TableCell style={{ fontSize: "13px" }}>
+                          {contactpatient}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </div>
       </div>
     </div>

@@ -9,10 +9,6 @@ body {
   min-height: 100vh !important;
 }
 
-* {
-  transition: all 0.2s ease;
-}
-
 .ombre-bottom {
   box-shadow: 0 8px 0.25rem -6px rgba(0, 0, 0, 0.075) !important;
 }

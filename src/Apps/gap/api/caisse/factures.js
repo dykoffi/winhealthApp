@@ -17,9 +17,9 @@ const SET_CURRENT_FACTURE = "SET_CURRENT_FACTURE"
 //     type: SET_LIST_FACTURES,
 //     listFactures: data
 // })
-// const setCurrentFacture = () => ({
-//     type: SET_CURRENT_FACTURE,
-// })
+const setCurrentFacture = () => ({
+    type: SET_CURRENT_FACTURE,
+})
 
 const setListFacturesAttentes = (data) => ({
     type: SET_LIST_FACTURES_ATTENTES,
@@ -53,22 +53,30 @@ const factureReducer = (state = initState, action) => {
 
 export function thunkListFactures() {
     return async (dispatch) => {
-        return async (dispatch) => {
-            Axios({
-                url: `${header.url}/gap/list/factures`
-            }).then(({ data: { rows } }) => {
-                dispatch(setListFacturesAttentes(rows))
-            })
-        }
+        Axios({
+            url: `${header.url}/gap/list/factures`
+        }).then(({ data: { rows } }) => {
+            dispatch(setListFacturesAttentes(rows))
+        })
     }
 }
 
-export function thunkEncaisserFactures(idsejour,patient) {
+export function thunkDetailsFacture(idfacture) {
+    return async (dispatch) => {
+        Axios({
+            url: `${header.url}/gap/details/facture/${idfacture}`
+        }).then(({ data: { rows } }) => {
+            dispatch(setCurrentFacture(rows[0]))
+        })
+    }
+}
+
+export function thunkEncaisserFactures(idsejour, patient) {
     return async (dispatch) => {
         Axios({
             url: `${header.url}/gap/encaisser/facture/${idsejour}`
         }).then(({ data: { rows } }) => {
-            socket.emit("facture_encaisser",{sejour:idsejour,patient:patient})
+            socket.emit("facture_encaisser", { sejour: idsejour, patient: patient })
             dispatch(thunkListFacturesAttentes())
         })
     }
@@ -89,7 +97,17 @@ export function thunkListFacturesAttentes() {
         Axios({
             url: `${header.url}/gap/list/factures_attentes`
         }).then(({ data: { rows } }) => {
-            dispatch(setListFacturesAttentes(rows))
+           rows ? dispatch(setListFacturesAttentes(rows)) : dispatch(setListFacturesAttentes([])) 
+        })
+    }
+}
+
+export function thunkSearchFacture(idFacture) {
+    return async (dispatch) => {
+        Axios({
+            url: `${header.url}/gap/search/facture/${idFacture}`
+        }).then(({ data: { rows } }) => {
+           rows ? dispatch(setListFacturesAttentes(rows)) : dispatch(setListFacturesAttentes([])) 
         })
     }
 }
