@@ -4,7 +4,8 @@ import { header, socket } from "../../../global/apiQuery"
 const initState = {
     listFactures: [],
     listFacturesAttentes: [],
-    currentFacture: null,
+    currentFacture: {},
+    showModal: false
 
 }
 
@@ -12,13 +13,11 @@ const initState = {
 const SET_LIST_FACTURES = "SET_LIST_FACTURES"
 const SET_LIST_FACTURES_ATTENTES = "SET_LIST_FACTURES_ATTENTES"
 const SET_CURRENT_FACTURE = "SET_CURRENT_FACTURE"
+const SET_SHOW_MODAL = "SET_SHOW_MODAL"
 
-// const setListFacture = (data) => ({
-//     type: SET_LIST_FACTURES,
-//     listFactures: data
-// })
-const setCurrentFacture = () => ({
+const setCurrentFacture = (data) => ({
     type: SET_CURRENT_FACTURE,
+    currentFacture: data
 })
 
 const setListFacturesAttentes = (data) => ({
@@ -26,6 +25,10 @@ const setListFacturesAttentes = (data) => ({
     listFacturesAttentes: data
 })
 
+export const setShowModal = (bool) => ({
+    type : SET_SHOW_MODAL,
+    showModal: bool
+})
 
 //le reducer
 
@@ -46,6 +49,11 @@ const factureReducer = (state = initState, action) => {
                 ...state,
                 currentFacture: action.currentFacture
             };
+        case SET_SHOW_MODAL:
+            return {
+                ...state,
+                showModal: action.showModal
+            };
         default:
             return state;
     }
@@ -61,22 +69,28 @@ export function thunkListFactures() {
     }
 }
 
-export function thunkDetailsFacture(idfacture) {
+export function thunkDetailsFacture(numeroFacture) {
     return async (dispatch) => {
         Axios({
-            url: `${header.url}/gap/details/facture/${idfacture}`
+            url: `${header.url}/gap/details/facture/${numeroFacture}`
         }).then(({ data: { rows } }) => {
-            dispatch(setCurrentFacture(rows[0]))
+            rows ? dispatch(setCurrentFacture(rows[0])) : dispatch(setCurrentFacture({}))
+            dispatch(setShowModal(true))
         })
     }
 }
 
-export function thunkEncaisserFactures(idsejour, patient) {
+export function thunkEncaisserFactures(numeroFacture, data) {
     return async (dispatch) => {
         Axios({
-            url: `${header.url}/gap/encaisser/facture/${idsejour}`
+            method: "POST",
+            url: `${header.url}/gap/encaisser/facture/${numeroFacture}`,
+            data: data,
+            headers: {
+                "content-type": "application/x-www-form-urlencoded",
+            }
         }).then(({ data: { rows } }) => {
-            socket.emit("facture_encaisser", { sejour: idsejour, patient: patient })
+            //socket.emit("facture_encaisser", { sejour: idsejour, patient: patient })
             dispatch(thunkListFacturesAttentes())
         })
     }
@@ -97,18 +111,22 @@ export function thunkListFacturesAttentes() {
         Axios({
             url: `${header.url}/gap/list/factures_attentes`
         }).then(({ data: { rows } }) => {
-           rows ? dispatch(setListFacturesAttentes(rows)) : dispatch(setListFacturesAttentes([])) 
+            rows ? dispatch(setListFacturesAttentes(rows)) : dispatch(setListFacturesAttentes([]))
         })
     }
 }
 
-export function thunkSearchFacture(idFacture) {
+export function thunkSearchFacture(numeroFacture) {
     return async (dispatch) => {
-        Axios({
-            url: `${header.url}/gap/search/facture/${idFacture}`
-        }).then(({ data: { rows } }) => {
-           rows ? dispatch(setListFacturesAttentes(rows)) : dispatch(setListFacturesAttentes([])) 
-        })
+        if (numeroFacture.trim().length === 0) {
+            dispatch(thunkListFacturesAttentes())
+        } else {
+            Axios({
+                url: `${header.url}/gap/search/facture/${numeroFacture}`
+            }).then(({ data: { rows } }) => {
+                rows ? dispatch(setListFacturesAttentes(rows)) : dispatch(setListFacturesAttentes([]))
+            })
+        }
     }
 }
 

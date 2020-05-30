@@ -49,7 +49,7 @@ const Gap = () => {
             overflowX: "hidden",
           }}
         >
-          <section className="col-12 grey lighten-4" id="Topbar">
+          <section className="col-12 bg-light" id="Topbar">
             <Topbar
             title={title}
               user={`${cookies.get("user", { path: "/" }).nomuser} ${

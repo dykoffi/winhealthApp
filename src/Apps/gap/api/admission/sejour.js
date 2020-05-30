@@ -6,7 +6,7 @@ const initState = {
     listSejour: [],
     currentSejour: null,
     detailsSejour: null,
-    loadingSejour: false
+    loadingSejour: false    
 }
 
 
@@ -110,11 +110,29 @@ export function thunkAddSejour(data, patient) {
     }
 }
 
-export function thunkDetailsSejour(idSejour) {
+export function thunkAddControle(numeroSejour,data,patient){
+    return async (dispatch)=>{
+        Axios({
+            method:"POST",
+            url: `${header.url}/gap/add/controle/${numeroSejour}`,
+        data: { ...data },
+            headers: {
+                "content-type": "application/x-www-form-urlencoded",
+            }
+        })
+            .then(() => {
+                socket.emit("facture_nouvelle")
+                dispatch(thunkListSejour(patient))
+                dispatch(thunkCurrentFacture(patient))
+            })
+    }
+}
+
+export function thunkDetailsSejour(idSejour,numeroSejour) {
     return async (dispatch) => {
         dispatch(setLoadingSejour())
         Axios({
-            url: `${header.url}/gap/details/sejour/${idSejour}`
+            url: `${header.url}/gap/details/sejour/${idSejour}/${numeroSejour}`
         })
             .then(({ data: { rows } }) => {
                 rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
@@ -129,7 +147,7 @@ export function thunkCurrentFacture(patient) {
             url: `${header.url}/gap/imprimer/facture/${patient}`
         })
             .then(({ data: { rows } }) => {
-                rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
+                rows[0] ? dispatch(thunkDetailsSejour(rows[0].idsejour,rows[0].numerosejour)) : dispatch(setCurrentSejour(null))
             })
     }
 }

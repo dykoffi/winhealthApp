@@ -63,7 +63,6 @@ const detailsReducer = (state = initState, action) => {
 }
 
 //les thunks
-
 export function thunkDetailsPatient(idPatient) {
     return async (dispatch) => {
         dispatch(setLoading())

@@ -4,10 +4,8 @@ import { connect } from "react-redux";
 const DetailsPatient = ({ currentPatient }) => {
   return (
     <div className="DetailsPatient row">
-      <fieldset className="border rounded col-12 px-4 py-2 mx-1 grey-text text-darken-1">
-        <legend className="grey lighten-4 px-3 font-weight-bold">
-          <small className="font-weight-bold">Patient</small>
-        </legend>
+      <div className="bg-light rounded col-12 px-4 py-2 mx-1 grey-text text-darken-1" style={{fontSize:'14px'}}>
+        <h6 className="mt-3">Patient</h6>
         <small>
           IPP : <b>{currentPatient.ipppatient}</b>
         </small>
@@ -86,15 +84,15 @@ const DetailsPatient = ({ currentPatient }) => {
             </>
           )} */}
         <br />
-        <h5 className="mt-3">Personne à contacter</h5>
+        <h6 className="mt-3">Personne à contacter</h6>
         <small>
           ({currentPatient.qualitepersonnesurepatient}){" "}
           {currentPatient.nompersonnesurepatient}{" "}
           {currentPatient.prenomspersonnesurepatient}{" "}
-          <b>({currentPatient.contactpersonnesurepatient})</b>
+          <b>{currentPatient.contactpersonnesurepatient}</b>
         </small>
         <br />
-      </fieldset>
+      </div>
     </div>
   );
 };

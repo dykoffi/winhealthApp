@@ -17,7 +17,7 @@ const Dossiers = ({ currentPatient }) => {
         </>
       ) : (
         <div className="col-12 text-secondary text-center">
-          <h3 className="text-center lead">Aucun patient selectionné</h3>
+          <h5 className="text-center lead">Aucun patient selectionné</h5>
           <small>Rendez vous dans liste des patients et selectionnez un patient</small>
         </div>
       )}

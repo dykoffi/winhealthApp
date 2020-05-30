@@ -4,9 +4,10 @@ import { Cookies } from "react-cookie";
 import logo from "../../static/images/wh_logo.png";
 import { header } from "../global/apiQuery";
 import LoadingPoint from "../../components/LoadingPoint";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, IconButton } from "@material-ui/core";
 import GlobalContext from "../global/context";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
+import InputAdornment from '@material-ui/core/InputAdornment';
 //components
 
 const Connexion = () => {
@@ -65,7 +66,7 @@ const Connexion = () => {
         >
           <div
             className="col-3 white px-5 py-4 rounded"
-            style={{ opacity: 0.92 }}
+            style={{ opacity: 0.72 }}
           >
             <div className="row">
               <div className="text-dark text-center col-12 mb-2">
@@ -85,12 +86,14 @@ const Connexion = () => {
                 />
                 <TextField
                   error={error}
+                  id="outlined-adornment-password"
                   required
                   className="my-2 col-12"
                   variant="outlined"
                   size="small"
                   type="password"
                   label="Password"
+                  onKeyPress={(ev)=>{ev.charCode===13 && connexionUser(login, pass);}}
                   value={pass}
                   onChange={changePass}
                 />
@@ -121,6 +124,7 @@ const Connexion = () => {
                   className="white-text col-12 mt-4"
                   style={{
                     textTransform: "none",
+                    fontsize:"13px",
                     backgroundColor: global.theme.primary,
                   }}
                 >

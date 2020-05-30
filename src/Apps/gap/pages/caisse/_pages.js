@@ -1,8 +1,8 @@
-import ListFacture from './ListFacture'
+import Compte from './Compte'
 import AttenteFacture from './AttenteFacture'
 
 const Pages = [
-    { id:"listFacture", Component: ListFacture },
+    { id:"compte", Component: Compte },
     { id:"attenteFacture", Component: AttenteFacture },
 ]
 export default Pages

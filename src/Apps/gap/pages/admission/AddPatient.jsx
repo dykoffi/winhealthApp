@@ -241,7 +241,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
   return (
     <div className="row p-4">
       <fieldset className="border col-4 px-4 py-2 mx-1 grey-text text-darken-1">
-        <legend className="grey lighten-4 px-3 font-weight-bold">
+        <legend className="grey lighten-3 px-3 font-weight-bold">
           <small className="font-weight-bold">Patient</small>
         </legend>
         <div className="row py-1">
@@ -257,16 +257,16 @@ const AddPatient = ({ thunkDetailsPatient }) => {
               error={inputs.civilite.trim().length === 0}
               style={{ fontSize: "13px" }}
             >
-              <MenuItem style={{ fontSize: "13px" }} value={"m"}>
+              <MenuItem style={{ fontSize: "13px" }} value={"M"}>
                 M.
               </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"mme"}>
+              <MenuItem style={{ fontSize: "13px" }} value={"Mme"}>
                 Mme
               </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"mlle"}>
+              <MenuItem style={{ fontSize: "13px" }} value={"Mlle"}>
                 Mlle
               </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"enf"}>
+              <MenuItem style={{ fontSize: "13px" }} value={"Enf"}>
                 Enfant
               </MenuItem>
             </Select>
@@ -467,7 +467,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
       </fieldset>
 
       <fieldset className="border col-5 py-2 px-4 mx-2 grey-text text-darken-1">
-        <legend className="grey lighten-4 px-3 font-weight-bold">
+        <legend className="grey lighten-3 px-3 font-weight-bold">
           <small className="font-weight-bold">Contacts patient</small>
         </legend>
         <div className="row py-1">
@@ -589,8 +589,8 @@ const AddPatient = ({ thunkDetailsPatient }) => {
         </div>
       </fieldset>
 
-      <fieldset className="border col py-2 px-4 mx-2 grey-text text-darken-1">
-        <legend className="grey lighten-4 px-3">
+      {/* <fieldset className="border col py-2 px-4 mx-2 grey-text text-darken-1">
+        <legend className="grey lighten-3 px-3">
           <small className="font-weight-bold">Assurance patient</small>
         </legend>
         <div className="row py-1">
@@ -635,7 +635,7 @@ const AddPatient = ({ thunkDetailsPatient }) => {
             </FormControl>
           )}
         </div>
-      </fieldset>
+      </fieldset> */}
       <div className="col-12 mt-4">
         <Button
           variant="contained"

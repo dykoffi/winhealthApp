@@ -5,7 +5,12 @@ import {
   thunkListFacturesAttentes,
   thunkEncaisserFactures,
   thunkAnnulerFactures,
+  thunkSearchFacture,
+  thunkDetailsFacture,
+  setShowModal,
 } from "../../api/caisse/factures";
+import CancelIcon from '@material-ui/icons/CancelOutlined'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutlined'
 import { socket } from "../../../global/apiQuery";
 import {
   TextField,
@@ -31,45 +36,55 @@ import {
 
 const AttenteFacture = ({
   listFacturesAttentes,
+  currentFacture,
+  showModal,
   thunkListFacturesAttentes,
+  thunkDetailsFacture,
   thunkEncaisserFactures,
   thunkAnnulerFactures,
+  thunkSearchFacture,
+  setShowModal,
 }) => {
-  const [value] = useState("");
-  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
   const [inputs, setinput] = useState({
     modepaiement: "",
     montantrecu: "",
   });
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (numeroFacture) => {
+    thunkDetailsFacture(numeroFacture);
   };
-  function setmode() {
+  const handleClose = () => {
+    setShowModal(false);
+    setinput({});
+  };
+  function sendData(numeroFacture) {
+    thunkEncaisserFactures(numeroFacture, inputs);
+    handleClose();
+  }
+  function setmode({ target: { value } }) {
     setinput({ ...inputs, modepaiement: value });
   }
-  function setmontant(value) {
+  function setmontant({ target: { value } }) {
     setinput({ ...inputs, montantrecu: value });
   }
 
-  const handleClose = () => {
-    setinput({});
-    setOpen(false);
-  };
   const [columns] = useState([
     "N°",
-    "Numero",
+    "Numero de facture",
     "Date",
     "Heure",
     "Patient",
     "Auteur",
-    "Montant",
+    "Montant Total",
     "Reste à payer",
   ]);
+
   const global = useContext(GlobalContext);
+
   function researching({ target: { value } }) {
-    setmontant(value);
-    // thunkSearchPatient(value.trim());
+    setValue(value);
+    thunkSearchFacture(value.trim());
   }
 
   useEffect(() => {
@@ -80,37 +95,37 @@ const AttenteFacture = ({
   }, []);
   return (
     <div className="AttenteFacture row p-2">
+      <div className="col-12">
+        <div className="row mb-2">
+          <TextField
+            className="col-2"
+            variant="outlined"
+            size="small"
+            label="Rechercher une facture"
+            value={value}
+            onChange={(ev) => researching(ev)}
+          />
+          <div className="col">
+            <Chip
+              label="facture(s)"
+              avatar={
+                <Avatar
+                  className="white-text"
+                  style={{ backgroundColor: global.theme.primary }}
+                >
+                  {listFacturesAttentes.length}
+                </Avatar>
+              }
+            />
+          </div>
+        </div>
+      </div>
       {listFacturesAttentes.length === 0 ? (
         <div className="col-12 text-secondary text-center">
           <h3 className="text-center lead">Aucune facture en attente</h3>
         </div>
       ) : (
         <>
-          <div className="col-12">
-            <div className="row mb-2">
-              <TextField
-                className="col-2"
-                variant="outlined"
-                size="small"
-                label="Rechercher une facture"
-                value={value}
-                onChange={(ev) => researching(ev)}
-              />
-              <div className="col text-right">
-                <Chip
-                  label="facture(s)"
-                  avatar={
-                    <Avatar
-                      className="white-text"
-                      style={{ backgroundColor: global.theme.primary }}
-                    >
-                      {listFacturesAttentes.length}
-                    </Avatar>
-                  }
-                />
-              </div>
-            </div>
-          </div>
           <div className="col-12">
             <div className="row">
               <TableContainer component={Paper}>
@@ -121,6 +136,7 @@ const AttenteFacture = ({
                     <TableRow>
                       {columns.map((col, i) => (
                         <TableCell
+                          align="center"
                           style={{ fontSize: "14px", color: "white" }}
                           key={i}
                         >
@@ -139,42 +155,70 @@ const AttenteFacture = ({
                           auteurfacture,
                           nompatient,
                           prenomspatient,
-                          prixacte,
+                          montanttotalfacture,
+                          restefacture,
+                          civilitepatient,
                         },
                         i
                       ) => (
                         <TableRow
                           key={i}
                           style={{ cursor: "pointer" }}
-                          onClick={handleClickOpen}
+                          onClick={() => handleClickOpen(numerofacture)}
                         >
                           <TableCell
+                            align="center"
                             style={{ fontSize: "13px" }}
                             component="th"
                             scope="row"
                           >
                             {i + 1}
                           </TableCell>
-                          <TableCell style={{ fontSize: "13px" }}>
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "13px" }}
+                          >
                             {numerofacture}
                           </TableCell>
-                          <TableCell style={{ fontSize: "13px" }}>
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "13px" }}
+                          >
                             {datefacture}
                           </TableCell>
-                          <TableCell style={{ fontSize: "13px" }}>
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "13px" }}
+                          >
                             {heurefacture}
                           </TableCell>
-                          <TableCell style={{ fontSize: "13px" }}>
-                            {nompatient} {prenomspatient}
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "13px" }}
+                          >
+                            {civilitepatient} {nompatient} {prenomspatient}
                           </TableCell>
-                          <TableCell style={{ fontSize: "13px" }}>
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "13px" }}
+                          >
                             {auteurfacture}
                           </TableCell>
-                          <TableCell style={{ fontSize: "13px" }}>
-                            {prixacte} FCFA
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "13px" }}
+                          >
+                            {montanttotalfacture} FCFA
                           </TableCell>
-                          <TableCell style={{ fontSize: "13px" }}>
-                            {prixacte} FCFA
+                          <TableCell
+                            className={
+                              restefacture < 0 &&
+                              "flash animated infinite red-text font-weight-bold"
+                            }
+                            align="center"
+                            style={{ fontSize: "13px" }}
+                          >
+                            {restefacture} FCFA
                           </TableCell>
                         </TableRow>
                       )
@@ -187,7 +231,7 @@ const AttenteFacture = ({
         </>
       )}
       <Dialog
-        open={open}
+        open={showModal}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -195,74 +239,113 @@ const AttenteFacture = ({
         maxWidth="xs"
       >
         <DialogTitle className="text-center" id="alert-dialog-title">
-          <b>Facture N° 85df54</b>
+          <b>Facture N° {currentFacture.numerofacture}</b>
         </DialogTitle>
         <DialogContent>
           <div className="row">
             <div className="col-12">
-              <div className="row my-3 mx-1 d-flex flex-column">
-                <small>
-                  <b>(2020135 -006)</b> Koffi edy
-                </small>
-                <small>
-                  <b>Montant total</b> : 15 000 FCFA
-                </small>
-                <small>
-                  <b>Reste à payer</b> : 2500 FCFA
-                </small>
+              <div className="row mx-1">
+                <div className="col-12">
+                  <h2 className="lead text-center">
+                    {currentFacture.civilitepatient} {currentFacture.nompatient}{" "}
+                    {currentFacture.prenomspatient}
+                  </h2>
+                </div>
+                <div className="col-6">
+                  <small>
+                    <b>Montant total</b> : {currentFacture.montanttotalfacture}{" "}
+                    FCFA
+                  </small>
+                </div>
+                <div className="col-6 text-right">
+                  <small>
+                    <b>Reste à payer</b> :{" "}
+                    <span
+                      className={
+                        currentFacture.restefacture < 0 &&
+                        "flash animated infinite red-text font-weight-bold"
+                      }
+                    >
+                      {currentFacture.restefacture} FCFA
+                    </span>
+                  </small>
+                </div>
               </div>
               <div className="row my-3 mx-1">
                 <FormControl variant="outlined" size="small" className="col">
                   <InputLabel id="typesejour-label">
                     Mode de paiement
                   </InputLabel>
-                  <Select
-                    labelId="typesejour-label"
-                    id="typesejour"
-                    value={inputs.modepaiment}
-                    onChange={setmode}
-                    label="Mode de paiement"
-                    style={{ fontSize: "13px" }}
-                  >
-                    <MenuItem
+
+                  {currentFacture.restefacture > 0 ? (
+                    <Select
+                      labelId="typesejour-label"
+                      id="typesejour"
+                      value={inputs.modepaiment}
+                      onChange={setmode}
+                      label="Mode de paiement"
                       style={{ fontSize: "13px" }}
-                      value={"consultation"}
                     >
-                      Chèque
-                    </MenuItem>
-                    <MenuItem style={{ fontSize: "13px" }} value={"urgence"}>
-                      Espèces
-                    </MenuItem>
-                    <MenuItem style={{ fontSize: "13px" }} value={"imagerie"}>
-                      Électronique
-                    </MenuItem>
-                    <MenuItem
+                      <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
+                        Chèque
+                      </MenuItem>
+                      <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>
+                        Espèces
+                      </MenuItem>
+                      <MenuItem
+                        style={{ fontSize: "13px" }}
+                        value={"Électronique"}
+                      >
+                        Électronique
+                      </MenuItem>
+                      <MenuItem
+                        style={{ fontSize: "13px" }}
+                        value={"Mobile money"}
+                      >
+                        Mobile money
+                      </MenuItem>
+                    </Select>
+                  ) : (
+                    <Select
+                      labelId="typesejour-label"
+                      id="typesejour"
+                      value={inputs.modepaiment}
+                      onChange={setmode}
+                      label="Mode de paiement"
                       style={{ fontSize: "13px" }}
-                      value={"hospitalisation"}
                     >
-                      Mobile money
-                    </MenuItem>
-                  </Select>
+                      <MenuItem
+                        style={{ fontSize: "13px" }}
+                        value={"Remboursement"}
+                      >
+                        Remboursement
+                      </MenuItem>
+                    </Select>
+                  )}
                 </FormControl>
                 <TextField
                   className="col-5 ml-2"
                   variant="outlined"
                   size="small"
+                  type="number"
+                  
                   label="Montant recu"
                   value={inputs.montantrecu}
-                  onChange={(ev) => researching(ev)}
+                  onChange={setmontant}
                 />
               </div>
             </div>
           </div>
         </DialogContent>
         <DialogActions>
-          <Button
+        <Button
             variant="contained"
             className="mb-2 bg-light"
+            startIcon={<CancelIcon />}
             onClick={handleClose}
             style={{
               textTransform: "none",
+              fontSize: "13px",
             }}
           >
             Annuler
@@ -270,14 +353,16 @@ const AttenteFacture = ({
           <Button
             variant="contained"
             className="mb-2"
-            onClick={handleClose}
+            onClick={() => sendData(currentFacture.numerofacture)}
+            startIcon={<CheckCircleOutlineIcon />}
             style={{
               textTransform: "none",
-              color: "white",
               backgroundColor: global.theme.primary,
+              color: "white",
+              fontSize: "13px",
             }}
           >
-            Générer le reçu de paiement
+            Valider la transaction
           </Button>
         </DialogActions>
       </Dialog>
@@ -287,14 +372,17 @@ const AttenteFacture = ({
 
 const mapStateToProps = (state) => {
   const {
-    factureReducer: { listFacturesAttentes },
+    factureReducer: { listFacturesAttentes, currentFacture, showModal },
   } = state;
-  return { listFacturesAttentes };
+  return { listFacturesAttentes, currentFacture, showModal };
 };
 
 const AttenteFactureConnected = connect(mapStateToProps, {
   thunkListFacturesAttentes,
   thunkEncaisserFactures,
   thunkAnnulerFactures,
+  thunkSearchFacture,
+  thunkDetailsFacture,
+  setShowModal,
 })(AttenteFacture);
 export default AttenteFactureConnected;

@@ -2,6 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import moment from "moment";
 import Dialog from "@material-ui/core/Dialog";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import AddIcon from "@material-ui/icons/Add";
+import BallotIcon from "@material-ui/icons/Ballot";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -15,7 +20,7 @@ import {
 import { connect } from "react-redux";
 import Axios from "axios";
 import QR from "qrcode.react";
-import Facture from '../../documents/Facture'
+import Facture from "../../documents/Facture";
 import {
   TextField,
   TableContainer,
@@ -31,7 +36,8 @@ import {
   Select,
   Button,
 } from "@material-ui/core";
-import GlobalContext from "../../../global/context";
+import GlobalContext, { Info } from "../../../global/context";
+import { withStyles } from "@material-ui/core/styles";
 
 import DateFnsUtils from "@date-io/date-fns";
 import frLocale from "date-fns/locale/fr";
@@ -41,6 +47,21 @@ import {
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 
+const Input = withStyles({
+  root: {
+    "& label.Mui-focused": {
+      color: Info.theme.primary,
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: Info.theme.primary,
+    },
+    "& .MuiOutlinedInput-root": {
+      "&.Mui-focused fieldset": {
+        borderColor: Info.theme.primary,
+      },
+    },
+  },
+})(TextField);
 const DossiersPatient = ({
   thunkListSejour,
   thunkAddSejour,
@@ -52,6 +73,8 @@ const DossiersPatient = ({
 }) => {
   moment.locales("fr");
   const [open, setOpen] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [openControle, setOpenControle] = useState(false);
   const [inputs, setinput] = useState({
     debutDate: new Date(),
     finDate: new Date(),
@@ -79,12 +102,34 @@ const DossiersPatient = ({
   function settype({ target: { value } }) {
     setinput({ ...inputs, type: value });
   }
-
   function setmedecin({ target: { value } }) {
     setinput({ ...inputs, medecin: value });
   }
 
+  function setgestionnaireAssure({ target: { value } }) {
+    setinput({ ...inputs, gestionnaireAssure: value });
+  }
+  function setgarantAssure({ target: { value } }) {
+    setinput({ ...inputs, garantAssure: value });
+  }
+  function setbeneficiaireAssure({ target: { value } }) {
+    setinput({ ...inputs, beneficiaireAssure: value });
+  }
+  function setidentiteAssure({ target: { value } }) {
+    setinput({ ...inputs, identiteAssure: value });
+  }
+  function setmatriculeAssure({ target: { value } }) {
+    setinput({ ...inputs, matriculeAssure: value });
+  }
+  function setnumeroPECAssure({ target: { value } }) {
+    setinput({ ...inputs, numeroPECAssure: value });
+  }
+  function settauxAssure({ target: { value } }) {
+    setinput({ ...inputs, tauxAssure: value });
+  }
+
   const handleClickOpen = () => {
+    setDisabled(false);
     setOpen(true);
   };
 
@@ -92,11 +137,15 @@ const DossiersPatient = ({
     setinput({});
     setOpen(false);
   };
+  const closeControle = () => {
+    setOpenControle(false);
+  };
   function sendDTata() {
+    setOpen(false);
     thunkAddSejour({ ...inputs, actes: actes }, currentPatient.iddossier);
     setinput({});
-    setOpen(false);
   }
+
   useEffect(() => {
     Axios({
       url: `${header.url}/gap/list/actes`,
@@ -127,11 +176,11 @@ const DossiersPatient = ({
       {currentSejour !== null ? (
         <div className="col-12 white text-secondary mb-2">
           <div className="row">
-            <div className="col-7">
-              <div className="row">
-                <div className="col-6">
+            <div className="col-10 p-0">
+              <div className="row" style={{ fontSize: "14px" }}>
+                <div className="col-4">
                   <small>
-                    <b>Numero du sejour:</b> {currentSejour.numerosejour}
+                    <b>Numero du sejour :</b> {currentSejour.numerosejour}
                   </small>
                   <br />
                   <small>
@@ -154,7 +203,32 @@ const DossiersPatient = ({
                     <b>Type du séjour :</b> {currentSejour.typesejour}
                   </small>
                 </div>
-                <div className="col-6">
+                <div className="col-4">
+                  <small>
+                    <b>Gestionnaire :</b> ASCOMA
+                  </small>
+                  <br />
+                  <small>
+                    <b>Garant :</b> ALIANZ
+                  </small>
+                  <br />
+                  <small>
+                    <b>Béneficiaire :</b> L'assuré
+                  </small>
+                  <br />
+                  <small>
+                    <b>Assuré Principal :</b> KOFFI EDY
+                  </small>
+                  <br />
+                  <small>
+                    <b>N° Matricule :</b> mp859moh
+                  </small>
+                  <br />
+                  <small>
+                    <b>N° Prise en charge :</b> 154m
+                  </small>
+                </div>
+                <div className="col-4">
                   <small>
                     <b>N° Facture :</b> {currentSejour.numerofacture}
                   </small>
@@ -168,40 +242,71 @@ const DossiersPatient = ({
                   </small>
                   <br />
                   <small>
-                    <b>Montant Total:</b> {currentSejour.montanttotalfacture} FCFA
+                    <b>Montant Total :</b> {currentSejour.montanttotalfacture}{" "}
+                    FCFA
                   </small>
                   <br />
                   <small>
-                    <b>Reste à payer :</b> {currentSejour.restefacture} FCFA
+                    <b>Taux d'exoneration :</b> 80%
                   </small>
                   <br />
+                  <small>
+                    <b>Reste à payer :</b>{" "}
+                    <span
+                      className={
+                        currentSejour.restefacture < 0 &&
+                        "flash animated infinite red-text font-weight-bold"
+                      }
+                    >
+                      {" "}
+                      {currentSejour.restefacture} FCFA
+                    </span>
+                  </small>
                 </div>
               </div>
             </div>
-            <div className="col-2 offset-3">
+            <div className="col-2">
               <QR
                 value={`${header.url}/gap/verify/facture/${currentSejour.idfacture}`}
                 id="img"
                 fgColor="#696969"
+                style={{transform:'scale(0.8)'}}
                 includeMargin={true}
               />
             </div>
           </div>
           <div className="row mt-2">
-            <Button
+            <Button disableElevation
               variant="contained"
               className="mr-2"
+              startIcon={<AddIcon />}
               onClick={handleClickOpen}
               style={{
                 textTransform: "none",
                 backgroundColor: global.theme.primary,
                 color: "white",
+                fontSize: "11px",
               }}
             >
               Nouveau séjour
             </Button>
+            {2 - currentSejour.nbcontrole > 0 && (
+              <Button disableElevation
+                variant="contained"
+                className="mr-2"
+                startIcon={<BallotIcon />}
+                onClick={() => setOpenControle(true)}
+                style={{
+                  textTransform: "none",
+                  fontSize: "11px",
+                }}
+              >
+                Contrôle (reste {2 - currentSejour.nbcontrole})
+              </Button>
+            )}
+
             <div className="col-3">
-               <Facture
+              {/* <Facture
                 //patient
                 nompatient={currentSejour.nompatient}
                 prenomspatient={currentSejour.prenomspatient}
@@ -225,7 +330,7 @@ const DossiersPatient = ({
                 //acte
                 libelleacte={currentSejour.libelleacte}
                 prixacte={currentSejour.montanttotalfacture}
-              />
+              /> */}
             </div>
           </div>
         </div>
@@ -234,21 +339,27 @@ const DossiersPatient = ({
           variant="contained"
           className="mb-2"
           onClick={handleClickOpen}
+          startIcon={<AddIcon />}
           style={{
             textTransform: "none",
             backgroundColor: global.theme.primary,
             color: "white",
+            fontSize: "11px",
           }}
         >
           Nouveau séjour
         </Button>
       )}
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} elevation={0}>
         <Table aria-label="simple table" size="small">
-          <TableHead style={{ backgroundColor: global.theme.secondaryDark }}>
+          <TableHead style={{ backgroundColor: global.theme.primary }}>
             <TableRow>
               {columns.map((col, i) => (
-                <TableCell align="center" style={{ fontSize: "14px", color: "white" }} key={i}>
+                <TableCell
+                  align="center"
+                  style={{ fontSize: "11px", color: "white" }}
+                  key={i}
+                >
                   {col}
                 </TableCell>
               ))}
@@ -265,42 +376,44 @@ const DossiersPatient = ({
                   typesejour,
                   statussejour,
                   idsejour,
+                  numerosejour,
                 },
                 i
               ) => (
                 <TableRow
                   key={i}
                   style={{ cursor: "pointer" }}
-                  onClick={() => thunkDetailsSejour(idsejour)}
+                  onClick={() => thunkDetailsSejour(idsejour, numerosejour)}
                   className={
                     currentSejour &&
                     currentSejour.idsejour === idsejour &&
-                    "grey lighten-4"
+                    "grey lighten-3"
                   }
                 >
-                  <TableCell align="center"
-                    style={{ fontSize: "13px" }}
+                  <TableCell
+                    align="center"
+                    style={{ fontSize: "11px" }}
                     component="th"
                     scope="row"
                   >
                     {i + 1}
                   </TableCell>
-                  <TableCell align="center" style={{ fontSize: "13px" }}>
+                  <TableCell align="center" style={{ fontSize: "11px" }}>
                     {datedebutsejour}
                   </TableCell>
-                  <TableCell align="center" style={{ fontSize: "13px" }}>
+                  <TableCell align="center" style={{ fontSize: "11px" }}>
                     {datefinsejour}
                   </TableCell>
-                  <TableCell align="center" style={{ fontSize: "13px" }}>
+                  <TableCell align="center" style={{ fontSize: "11px" }}>
                     {heuredebutsejour}
                   </TableCell>
-                  <TableCell align="center" style={{ fontSize: "13px" }}>
+                  <TableCell align="center" style={{ fontSize: "11px" }}>
                     {heurefinsejour}
                   </TableCell>
-                  <TableCell align="center" style={{ fontSize: "13px" }}>
+                  <TableCell align="center" style={{ fontSize: "11px" }}>
                     {typesejour}
                   </TableCell>
-                  <TableCell align="center" style={{ fontSize: "13px" }}>
+                  <TableCell align="center" style={{ fontSize: "11px" }}>
                     {statussejour}
                   </TableCell>
                 </TableRow>
@@ -318,16 +431,15 @@ const DossiersPatient = ({
           fullWidth={true}
           maxWidth="xs"
         >
-          <DialogTitle
-            className="text-center text-secondary"
-            id="alert-dialog-title"
-          >
-            <b>Ajouter un nouveau sejour</b>
+          <DialogTitle className="text-center" id="alert-dialog-title">
+            <small className="font-weight-bold">
+              Ajouter un nouveau sejour
+            </small>
           </DialogTitle>
           <DialogContent>
             <div className="row">
               <div className="col-12">
-                <div className="row mx-1 my-3">
+                <div className="row mx-1 my-2">
                   <MuiPickersUtilsProvider
                     utils={DateFnsUtils}
                     locale={frLocale}
@@ -347,7 +459,7 @@ const DossiersPatient = ({
                     />
                   </MuiPickersUtilsProvider>
                 </div>
-                <div className="row mx-1 my-3">
+                <div className="row mx-1 my-2">
                   <MuiPickersUtilsProvider
                     utils={DateFnsUtils}
                     locale={frLocale}
@@ -367,7 +479,7 @@ const DossiersPatient = ({
                     />
                   </MuiPickersUtilsProvider>
                 </div>
-                <div className="row mx-1 my-3">
+                <div className="row mx-1 my-2">
                   <FormControl variant="outlined" size="small" className="col">
                     <InputLabel id="typesejour-label">
                       Type de sejour
@@ -378,30 +490,30 @@ const DossiersPatient = ({
                       value={inputs.type}
                       onChange={settype}
                       label="Type de sejour"
-                      style={{ fontSize: "13px" }}
+                      style={{ fontSize: "11px" }}
                     >
                       <MenuItem
-                        style={{ fontSize: "13px" }}
+                        style={{ fontSize: "11px" }}
                         value={"consultation"}
                       >
                         Consultation
                       </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={"urgence"}>
+                      <MenuItem style={{ fontSize: "11px" }} value={"urgence"}>
                         Urgence
                       </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={"biologie"}>
+                      <MenuItem style={{ fontSize: "11px" }} value={"biologie"}>
                         Biologie
                       </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={"imagerie"}>
+                      <MenuItem style={{ fontSize: "11px" }} value={"imagerie"}>
                         Imagerie
                       </MenuItem>
                       <MenuItem
-                        style={{ fontSize: "13px" }}
+                        style={{ fontSize: "11px" }}
                         value={"hospitalisation"}
                       >
                         Hospitalisation
                       </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={"soins"}>
+                      <MenuItem style={{ fontSize: "11px" }} value={"soins"}>
                         Soins
                       </MenuItem>
                     </Select>
@@ -419,24 +531,24 @@ const DossiersPatient = ({
                       value={inputs.medecin}
                       onChange={setmedecin}
                       label="Type de sejour"
-                      style={{ fontSize: "13px" }}
+                      style={{ fontSize: "11px" }}
                     >
-                      <MenuItem style={{ fontSize: "13px" }} value={1}>
+                      <MenuItem style={{ fontSize: "11px" }} value={1}>
                         KOFFI Edy
                       </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={2}>
+                      <MenuItem style={{ fontSize: "11px" }} value={2}>
                         N'DONGO Abdoulaye
                       </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={3}>
+                      <MenuItem style={{ fontSize: "11px" }} value={3}>
                         GBADJE Wilfried
                       </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={4}>
+                      <MenuItem style={{ fontSize: "11px" }} value={4}>
                         ZAKI Audrey
                       </MenuItem>
                     </Select>
                   </FormControl>
                 </div>
-                <div className="row my-3">
+                <div className="row my-3 mx-1">
                   <Autocomplete
                     multiple
                     size="small"
@@ -463,6 +575,139 @@ const DossiersPatient = ({
                     )}
                   />
                 </div>
+                <div className="row mx-1 my-2">
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="m-1 col"
+                  >
+                    <InputLabel id="assurance-label">Gestionnaire</InputLabel>
+                    <Select
+                      labelId="assurance-label"
+                      id="assurance"
+                      label="Gestionnaire"
+                      value={inputs.assurance}
+                      onChange={setgestionnaireAssure}
+                      style={{ fontSize: "11px" }}
+                    >
+                      <MenuItem style={{ fontSize: "11px" }} value={"sgbci"}>
+                        SGBCI
+                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"nsia"}>
+                        NSIA
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="m-1 col"
+                  >
+                    <InputLabel id="assurance-label">Garant</InputLabel>
+                    <Select
+                      labelId="assurance-label"
+                      id="assurance"
+                      label="Garant"
+                      value={inputs.assurance}
+                      onChange={setgarantAssure}
+                      style={{ fontSize: "11px" }}
+                    >
+                      <MenuItem style={{ fontSize: "11px" }} value={"sgbci"}>
+                        SGBCI
+                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"nsia"}>
+                        NSIA
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="row mx-1 my-2">
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="m-1 col"
+                  >
+                    <InputLabel id="assurance-label">Bénéficiaire</InputLabel>
+                    <Select
+                      labelId="assurance-label"
+                      id="assurance"
+                      label="Bénéficiaire"
+                      value={inputs.beneficiaire}
+                      onChange={setbeneficiaireAssure}
+                      style={{ fontSize: "11px" }}
+                    >
+                      <MenuItem style={{ fontSize: "11px" }} value={"assuré"}>
+                        L'assuré
+                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"enfant"}>
+                        L'enfant
+                      </MenuItem>
+                      <MenuItem
+                        style={{ fontSize: "11px" }}
+                        value={"conjoint(e)"}
+                      >
+                        Le/La conjoint(e)
+                      </MenuItem>
+                      <MenuItem
+                        style={{ fontSize: "11px" }}
+                        value={"ayant droit"}
+                      >
+                        L'ayant droit
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Input
+                    className="m-1 col-7"
+                    variant="outlined"
+                    size="small"
+                    label="Identité de l'Assuré"
+                    value={inputs.identiteAssure}
+                    onChange={setidentiteAssure}
+                  />
+                </div>
+                <div className="row mx-1 my-2">
+                  <Input
+                    className="m-1 col-4"
+                    variant="outlined"
+                    size="small"
+                    label="Matricule"
+                    value={inputs.matriculeAssure}
+                    onChange={setmatriculeAssure}
+                  />
+                  <Input
+                    className="m-1 col-4"
+                    variant="outlined"
+                    size="small"
+                    label="N° PEC"
+                    value={inputs.numeroPECAssure}
+                    onChange={setnumeroPECAssure}
+                  />
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="m-1 col"
+                  >
+                    <InputLabel id="assurance-label">Taux</InputLabel>
+                    <Select
+                      labelId="assurance-label"
+                      id="assurance"
+                      label="Taux"
+                      value={inputs.tauxAssurance}
+                      onChange={settauxAssure}
+                      style={{ fontSize: "11px" }}
+                    >
+                      <MenuItem style={{ fontSize: "11px" }} value={70}>
+                        70%
+                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={80}>
+                        80%
+                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={100}>
+                        100%
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
               </div>
             </div>
           </DialogContent>
@@ -470,9 +715,103 @@ const DossiersPatient = ({
             <Button
               variant="contained"
               className="mb-2 bg-light"
+              startIcon={<CancelIcon />}
               onClick={handleClose}
               style={{
                 textTransform: "none",
+                fontSize: "11px",
+              }}
+            >
+              Annuler
+            </Button>
+            <Button
+              variant="contained"
+              className="mb-2"
+              onClick={() => {
+                setDisabled(true);
+                sendDTata();
+              }}
+              disabled={disabled}
+              startIcon={<ChromeReaderModeIcon />}
+              style={{
+                textTransform: "none",
+                backgroundColor: global.theme.primary,
+                fontSize: "11px",
+                color: "white",
+              }}
+            >
+              Generer la facture
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openControle}
+          onClose={closeControle}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          fullWidth={true}
+          maxWidth="xs"
+        >
+          <DialogTitle className="text-center" id="alert-dialog-title">
+            <small className="font-weight-bold">
+              Ajouter un nouveau Controle
+            </small>
+          </DialogTitle>
+          <DialogContent>
+            <div className="row">
+              <div className="col-12">
+                <div className="row mx-1 my-2">
+                  <MuiPickersUtilsProvider
+                    utils={DateFnsUtils}
+                    locale={frLocale}
+                  >
+                    <KeyboardDatePicker
+                      id="datedebut"
+                      format="dd/MM/yyyy"
+                      value={inputs.debutDate}
+                      onChange={setdebutDate}
+                      className="m-1 col"
+                    />
+                    <KeyboardTimePicker
+                      id="heuredebut"
+                      value={inputs.DebutHeure}
+                      onChange={setDebutHeure}
+                      className="m-1 col"
+                    />
+                  </MuiPickersUtilsProvider>
+                </div>
+                <div className="row mx-1 my-2">
+                  <MuiPickersUtilsProvider
+                    utils={DateFnsUtils}
+                    locale={frLocale}
+                  >
+                    <KeyboardDatePicker
+                      id="datefin"
+                      format="dd/MM/yyyy"
+                      value={inputs.finDate}
+                      onChange={setfinDate}
+                      className="m-1 col"
+                    />
+                    <KeyboardTimePicker
+                      id="heurefin"
+                      value={inputs.finHeure}
+                      onChange={setfinHeure}
+                      className="m-1 col"
+                    />
+                  </MuiPickersUtilsProvider>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              className="mb-2 bg-light"
+              startIcon={<CancelIcon />}
+              onClick={handleClose}
+              style={{
+                textTransform: "none",
+                fontSize: "11px",
               }}
             >
               Annuler
@@ -481,13 +820,15 @@ const DossiersPatient = ({
               variant="contained"
               className="mb-2"
               onClick={sendDTata}
+              startIcon={<CheckCircleOutlineIcon />}
               style={{
                 textTransform: "none",
                 backgroundColor: global.theme.primary,
                 color: "white",
+                fontSize: "11px",
               }}
             >
-              Generer la facture
+              Valider
             </Button>
           </DialogActions>
         </Dialog>

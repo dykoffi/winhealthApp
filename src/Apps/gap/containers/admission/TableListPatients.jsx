@@ -113,7 +113,7 @@ const TableListPatient = ({
                   <TableRow>
                     {columns.map((col, i) => (
                       <TableCell
-                        style={{ fontSize: "14px", color: "white" }}
+                        style={{ fontSize: "12px", color: "white" }}
                         key={i}
                       >
                         {col}
@@ -144,37 +144,37 @@ const TableListPatient = ({
                         onClick={() => thunkDetailsPatient(iddossier)}
                       >
                         <TableCell
-                          style={{ fontSize: "13px" }}
+                          style={{ fontSize: "11px" }}
                           component="th"
                           scope="row"
                         >
                           {i + 1}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {ipppatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {nompatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {prenomspatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {sexepatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {habitationpatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {datenaissancepatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {lieunaissancepatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {nationalitepatient}
                         </TableCell>
-                        <TableCell style={{ fontSize: "13px" }}>
+                        <TableCell style={{ fontSize: "11px" }}>
                           {contactpatient}
                         </TableCell>
                       </TableRow>

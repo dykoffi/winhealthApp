@@ -49,7 +49,6 @@ export function thunkListPatient() {
         Axios({
             url: `${header.url}/gap/list/patients`
         }).then(({ data: { rows } }) => {
-            console.log(rows)
             dispatch(setListPatients(rows))
         })
     }
@@ -59,12 +58,7 @@ export function thunkSearchPatient(info) {
     return async (dispatch) => {
         dispatch(setLoading())
         if (info.trim().length === 0) {
-            Axios({
-                url: `${header.url}/gap/list/patients`
-            }).then(({ data: { rows } }) => {
-                console.log(rows)
-                dispatch(setListPatients(rows))
-            })
+           dispatch(thunkListPatient())
         } else {
             Axios({
                 url: `${header.url}/gap/search/patients/${info}`

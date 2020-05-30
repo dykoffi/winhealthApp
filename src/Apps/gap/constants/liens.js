@@ -16,6 +16,13 @@ export const navMenu = [
         path: "/gap/caisse"
 
     },
+    {
+        title: 'Assurance',
+        icon: 'action-account-child',
+        path: "/gap/assurance"
+
+    },
+    
     // {
     //     title: 'Parametres',
     //     icon: 'action-settings',

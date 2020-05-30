@@ -28,7 +28,7 @@ const Caisse = ({
 
   return (
     <div className="Caisse row">
-      <section className="col-12 px-3 grey lighten-4">
+      <section className="col-12 px-3 bg-light">
         <Onglet
           links={Listonglets}
           currentPage={currentPage}
