@@ -23,3 +23,8 @@ input,select {
 label {
   font-size: 13.4px !important;
 }
+
+table, button {
+  font-size: 11px !important;
+}
+

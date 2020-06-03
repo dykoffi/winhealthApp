@@ -7,7 +7,7 @@ import LoadingPoint from "../../components/LoadingPoint";
 import { TextField, Button, IconButton } from "@material-ui/core";
 import GlobalContext from "../global/context";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from "@material-ui/core/InputAdornment";
 //components
 
 const Connexion = () => {
@@ -65,19 +65,20 @@ const Connexion = () => {
           className="form col-12 px-5 d-flex justify-content-center align-items-center"
         >
           <div
-            className="col-3 white px-5 py-4 rounded"
-            style={{ opacity: 0.72 }}
+            className="col-3 white px-3 py-3 rounded"
+            style={{ opacity: 0.82 }}
           >
             <div className="row">
               <div className="text-dark text-center col-12 mb-2">
-                <img src={logo} alt="" className="col-5" />
-                <h6 className="lead">WinHealth Connexion</h6>
+                <img src={logo} alt="" className="col-4" />
+                <br />
+                <small>WinHealth Connexion</small>
               </div>
               <div className="col-12">
                 <TextField
                   error={error}
                   required
-                  className="my-2 col-12"
+                  className="my-1 col-12"
                   variant="outlined"
                   size="small"
                   label="Identifiant"
@@ -88,12 +89,14 @@ const Connexion = () => {
                   error={error}
                   id="outlined-adornment-password"
                   required
-                  className="my-2 col-12"
+                  className="my-1 col-12"
                   variant="outlined"
                   size="small"
                   type="password"
                   label="Password"
-                  onKeyPress={(ev)=>{ev.charCode===13 && connexionUser(login, pass);}}
+                  onKeyPress={(ev) => {
+                    ev.charCode === 13 && connexionUser(login, pass);
+                  }}
                   value={pass}
                   onChange={changePass}
                 />
@@ -101,7 +104,7 @@ const Connexion = () => {
                 <br />
                 <div className="text-center">
                   {loading ? (
-                    <LoadingPoint />
+                    <small className="grey-text text-center">Verification ...</small>
                   ) : error ? (
                     <small className="red-text text-center">
                       Données incorrectes, veuillez reessayer
@@ -113,6 +116,7 @@ const Connexion = () => {
                   )}
                 </div>
                 <Button
+                  disableElevation
                   variant="contained"
                   endIcon={<LockOpenIcon />}
                   disabled={
@@ -121,10 +125,10 @@ const Connexion = () => {
                   onClick={() => {
                     connexionUser(login, pass);
                   }}
-                  className="white-text col-12 mt-4"
+                  className="white-text col-12 mt-2"
                   style={{
                     textTransform: "none",
-                    fontsize:"13px",
+                    fontsize: "11px",
                     backgroundColor: global.theme.primary,
                   }}
                 >

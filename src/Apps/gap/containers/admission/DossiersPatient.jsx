@@ -6,6 +6,8 @@ import AddIcon from "@material-ui/icons/Add";
 import BallotIcon from "@material-ui/icons/Ballot";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import PrintIcon from "@material-ui/icons/Print";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -35,6 +37,9 @@ import {
   MenuItem,
   Select,
   Button,
+  Chip,
+  Avatar,
+  IconButton,
 } from "@material-ui/core";
 import GlobalContext, { Info } from "../../../global/context";
 import { withStyles } from "@material-ui/core/styles";
@@ -83,6 +88,7 @@ const DossiersPatient = ({
   });
   const [listActes, setListActe] = useState([]);
   const [actes, setActes] = useState([]);
+  const [listAssurances, setListAssurances] = useState([]);
 
   const global = useContext(GlobalContext);
 
@@ -106,26 +112,26 @@ const DossiersPatient = ({
     setinput({ ...inputs, medecin: value });
   }
 
-  function setgestionnaireAssure({ target: { value } }) {
-    setinput({ ...inputs, gestionnaireAssure: value });
+  function setgestionnaire(value) {
+    setinput({ ...inputs, gestionnaire: value });
   }
-  function setgarantAssure({ target: { value } }) {
-    setinput({ ...inputs, garantAssure: value });
+  function setorganisme(value) {
+    setinput({ ...inputs, organisme: value });
   }
-  function setbeneficiaireAssure({ target: { value } }) {
-    setinput({ ...inputs, beneficiaireAssure: value });
+  function setbeneficiaire({ target: { value } }) {
+    setinput({ ...inputs, beneficiaire: value });
   }
-  function setidentiteAssure({ target: { value } }) {
-    setinput({ ...inputs, identiteAssure: value });
+  function setassurePrinc({ target: { value } }) {
+    setinput({ ...inputs, assurePrinc: value });
   }
   function setmatriculeAssure({ target: { value } }) {
     setinput({ ...inputs, matriculeAssure: value });
   }
-  function setnumeroPECAssure({ target: { value } }) {
-    setinput({ ...inputs, numeroPECAssure: value });
+  function setnumeroPEC({ target: { value } }) {
+    setinput({ ...inputs, numeroPEC: value });
   }
-  function settauxAssure({ target: { value } }) {
-    setinput({ ...inputs, tauxAssure: value });
+  function settaux({ target: { value } }) {
+    setinput({ ...inputs, taux: value });
   }
 
   const handleClickOpen = () => {
@@ -156,6 +162,15 @@ const DossiersPatient = ({
       });
       setListActe(actes);
     });
+    Axios({
+      url: `${header.url}/gap/list/assurances`,
+    }).then(({ data: { rows } }) => {
+      const assurances = [];
+      rows.forEach(({ idassurance, nomassurance }) => {
+        assurances.push({ value: idassurance, label: nomassurance });
+      });
+      setListAssurances(assurances);
+    });
   }, []);
 
   useEffect(() => {
@@ -163,11 +178,9 @@ const DossiersPatient = ({
     thunkCurrentFacture(currentPatient.iddossier);
   }, [currentPatient.iddossier]);
   const [columns] = useState([
-    "N°",
-    "Date de début",
-    "Date de fin",
-    "Heure de début",
-    "Heure de fin",
+    "N° Sejour",
+    "Date et heure de début",
+    "Date et heure de fin",
     "Type de séjour",
     "Statut du séjour",
   ]);
@@ -178,67 +191,66 @@ const DossiersPatient = ({
           <div className="row">
             <div className="col-10 p-0">
               <div className="row" style={{ fontSize: "14px" }}>
-                <div className="col-4">
+                <div className="col-3">
                   <small>
-                    <b>Numero du sejour :</b> {currentSejour.numerosejour}
+                    <b>N° du sejour :</b> {currentSejour.numerosejour}
                   </small>
                   <br />
                   <small>
-                    <b>Date de debut :</b> {currentSejour.datedebutsejour}
+                    <b>Date de debut :</b> {currentSejour.datedebutsejour}{" "}
+                    {currentSejour.heuredebutsejour}
                   </small>
+
                   <br />
                   <small>
-                    <b>Heure de debut :</b> {currentSejour.heuredebutsejour}
-                  </small>
-                  <br />
-                  <small>
-                    <b>Date de fin :</b> {currentSejour.datefinsejour}
-                  </small>
-                  <br />
-                  <small>
-                    <b>Heure de fin :</b> {currentSejour.heurefinsejour}
+                    <b>Date de fin :</b> {currentSejour.datefinsejour}{" "}
+                    {currentSejour.heurefinsejour}
                   </small>
                   <br />
                   <small>
                     <b>Type du séjour :</b> {currentSejour.typesejour}
                   </small>
                 </div>
-                <div className="col-4">
+                <div className="col">
                   <small>
-                    <b>Gestionnaire :</b> ASCOMA
+                    <b>Gestionnaire :</b> {currentSejour.gestionnaire}
                   </small>
                   <br />
                   <small>
-                    <b>Garant :</b> ALIANZ
+                    <b>Garant :</b> {currentSejour.organisme}
                   </small>
                   <br />
                   <small>
-                    <b>Béneficiaire :</b> L'assuré
+                    <b>Béneficiaire :</b> {currentSejour.beneficiaire}
                   </small>
                   <br />
                   <small>
-                    <b>Assuré Principal :</b> KOFFI EDY
+                    <b>Assuré Principal :</b> {currentSejour.assureprinc}
+                  </small>
+                  <br />
+                </div>
+                <div className="col-2">
+                  <small>
+                    <b>N° Fact. :</b> {currentSejour.numerofacture}
                   </small>
                   <br />
                   <small>
-                    <b>N° Matricule :</b> mp859moh
+                    <b>N° Mat.:</b> {currentSejour.matriculeassure}
                   </small>
                   <br />
                   <small>
-                    <b>N° Prise en charge :</b> 154m
+                    <b>N° PEC :</b> {currentSejour.numeropec}
                   </small>
+                  <br />
+                  <small>
+                    <b>Taux :</b> {currentSejour.taux}%
+                  </small>
+                  <br />
                 </div>
                 <div className="col-4">
                   <small>
-                    <b>N° Facture :</b> {currentSejour.numerofacture}
-                  </small>
-                  <br />
-                  <small>
-                    <b>Date :</b> {currentSejour.datefacture}
-                  </small>
-                  <br />
-                  <small>
-                    <b>Heure :</b> {currentSejour.heurefacture}
+                    <b>Date de création :</b> {currentSejour.datefacture}{" "}
+                    {currentSejour.heurefacture}
                   </small>
                   <br />
                   <small>
@@ -247,38 +259,50 @@ const DossiersPatient = ({
                   </small>
                   <br />
                   <small>
-                    <b>Taux d'exoneration :</b> 80%
+                    <b>Part Assu :</b> {currentSejour.partassurancefacture}{" "}FCFA, <b>Reste</b> : ({currentSejour.resteassurancefacture} FCFA)
                   </small>
                   <br />
                   <small>
-                    <b>Reste à payer :</b>{" "}
-                    <span
-                      className={
-                        currentSejour.restefacture < 0 &&
-                        "flash animated infinite red-text font-weight-bold"
-                      }
-                    >
-                      {" "}
-                      {currentSejour.restefacture} FCFA
-                    </span>
+                    <b>Part Patiient :</b> {currentSejour.partpatientfacture}{" "}FCFA, <b>Reste</b> : ({currentSejour.restepatientfacture} FCFA)
                   </small>
+                  <br />
                 </div>
               </div>
             </div>
-            <div className="col-2">
+            <div className="col-1">
               <QR
                 value={`${header.url}/gap/verify/facture/${currentSejour.idfacture}`}
                 id="img"
+                size={100}
                 fgColor="#696969"
-                style={{transform:'scale(0.8)'}}
+                style={{ transform: "scale(0.8)" }}
                 includeMargin={true}
               />
             </div>
           </div>
           <div className="row mt-2">
-            <Button disableElevation
+            <TextField
+              className="col-2 mr-1"
+              variant="outlined"
+              size="small"
+              label="Rechercher un sejour"
+            />
+            <Chip
+              className="mx-1"
+              label="sejours(s)"
+              avatar={
+                <Avatar
+                  className="white-text"
+                  style={{ backgroundColor: global.theme.primary }}
+                >
+                  {listSejour.length}
+                </Avatar>
+              }
+            />
+            <Button
+              disableElevation
               variant="contained"
-              className="mr-2"
+              className="mx-1"
               startIcon={<AddIcon />}
               onClick={handleClickOpen}
               style={{
@@ -291,9 +315,10 @@ const DossiersPatient = ({
               Nouveau séjour
             </Button>
             {2 - currentSejour.nbcontrole > 0 && (
-              <Button disableElevation
+              <Button
+                disableElevation
                 variant="contained"
-                className="mr-2"
+                className="mx-1"
                 startIcon={<BallotIcon />}
                 onClick={() => setOpenControle(true)}
                 style={{
@@ -332,32 +357,40 @@ const DossiersPatient = ({
                 prixacte={currentSejour.montanttotalfacture}
               /> */}
             </div>
+            <div className="col d-flex justify-content-end p-0">
+              <IconButton aria-label="print" size="small">
+                <PrintIcon />
+              </IconButton>
+              <IconButton aria-label="delete" size="small">
+                <DeleteOutlineIcon />
+              </IconButton>
+            </div>
           </div>
         </div>
       ) : (
-        <Button
-          variant="contained"
-          className="mb-2"
-          onClick={handleClickOpen}
-          startIcon={<AddIcon />}
-          style={{
-            textTransform: "none",
-            backgroundColor: global.theme.primary,
-            color: "white",
-            fontSize: "11px",
-          }}
-        >
-          Nouveau séjour
-        </Button>
-      )}
+          <Button
+            variant="contained"
+            className="mb-2"
+            onClick={handleClickOpen}
+            startIcon={<AddIcon />}
+            style={{
+              textTransform: "none",
+              backgroundColor: global.theme.primary,
+              color: "white",
+              fontSize: "11px",
+            }}
+          >
+            Nouveau séjour
+          </Button>
+        )}
       <TableContainer component={Paper} elevation={0}>
         <Table aria-label="simple table" size="small">
-          <TableHead style={{ backgroundColor: global.theme.primary }}>
+          <TableHead style={{ backgroundColor: global.theme.secondaryDark }}>
             <TableRow>
               {columns.map((col, i) => (
                 <TableCell
                   align="center"
-                  style={{ fontSize: "11px", color: "white" }}
+                  style={{ fontSize: "11px", color:"white" }}
                   key={i}
                 >
                   {col}
@@ -380,44 +413,23 @@ const DossiersPatient = ({
                 },
                 i
               ) => (
-                <TableRow
-                  key={i}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => thunkDetailsSejour(idsejour, numerosejour)}
-                  className={
-                    currentSejour &&
-                    currentSejour.idsejour === idsejour &&
-                    "grey lighten-3"
-                  }
-                >
-                  <TableCell
-                    align="center"
-                    style={{ fontSize: "11px" }}
-                    component="th"
-                    scope="row"
+                  <TableRow
+                    key={i}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => thunkDetailsSejour(idsejour, numerosejour)}
+                    className={
+                      currentSejour &&
+                      currentSejour.idsejour === idsejour &&
+                      "bg-light"
+                    }
                   >
-                    {i + 1}
-                  </TableCell>
-                  <TableCell align="center" style={{ fontSize: "11px" }}>
-                    {datedebutsejour}
-                  </TableCell>
-                  <TableCell align="center" style={{ fontSize: "11px" }}>
-                    {datefinsejour}
-                  </TableCell>
-                  <TableCell align="center" style={{ fontSize: "11px" }}>
-                    {heuredebutsejour}
-                  </TableCell>
-                  <TableCell align="center" style={{ fontSize: "11px" }}>
-                    {heurefinsejour}
-                  </TableCell>
-                  <TableCell align="center" style={{ fontSize: "11px" }}>
-                    {typesejour}
-                  </TableCell>
-                  <TableCell align="center" style={{ fontSize: "11px" }}>
-                    {statussejour}
-                  </TableCell>
-                </TableRow>
-              )
+                    <TableCell align="center" style={{ fontSize: "11px" }} component="th" scope="row">{numerosejour}</TableCell>
+                    <TableCell align="center" style={{ fontSize: "11px" }}>{datedebutsejour} {heuredebutsejour}</TableCell>
+                    <TableCell align="center" style={{ fontSize: "11px" }}>{datefinsejour} {heurefinsejour}</TableCell>
+                    <TableCell align="center" style={{ fontSize: "11px" }}>{typesejour}</TableCell>
+                    <TableCell align="center" style={{ fontSize: "11px" }}>{statussejour}</TableCell>
+                  </TableRow>
+                )
             )}
           </TableBody>
         </Table>
@@ -432,9 +444,7 @@ const DossiersPatient = ({
           maxWidth="xs"
         >
           <DialogTitle className="text-center" id="alert-dialog-title">
-            <small className="font-weight-bold">
-              Ajouter un nouveau sejour
-            </small>
+            <small className="font-weight-bold">Ajouter un nouveau sejour</small>
           </DialogTitle>
           <DialogContent>
             <div className="row">
@@ -481,9 +491,7 @@ const DossiersPatient = ({
                 </div>
                 <div className="row mx-1 my-2">
                   <FormControl variant="outlined" size="small" className="col">
-                    <InputLabel id="typesejour-label">
-                      Type de sejour
-                    </InputLabel>
+                    <InputLabel id="typesejour-label">Type de sejour</InputLabel>
                     <Select
                       labelId="typesejour-label"
                       id="typesejour"
@@ -492,30 +500,12 @@ const DossiersPatient = ({
                       label="Type de sejour"
                       style={{ fontSize: "11px" }}
                     >
-                      <MenuItem
-                        style={{ fontSize: "11px" }}
-                        value={"consultation"}
-                      >
-                        Consultation
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={"urgence"}>
-                        Urgence
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={"biologie"}>
-                        Biologie
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={"imagerie"}>
-                        Imagerie
-                      </MenuItem>
-                      <MenuItem
-                        style={{ fontSize: "11px" }}
-                        value={"hospitalisation"}
-                      >
-                        Hospitalisation
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={"soins"}>
-                        Soins
-                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"Consultation"}>Consultation</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"Urgence"}>Urgence</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"Biologie"}>Biologie</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"Imagerie"}>Imagerie</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"hospitalisation"}>Hospitalisation</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"Soins"}>Soins</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl
@@ -533,18 +523,10 @@ const DossiersPatient = ({
                       label="Type de sejour"
                       style={{ fontSize: "11px" }}
                     >
-                      <MenuItem style={{ fontSize: "11px" }} value={1}>
-                        KOFFI Edy
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={2}>
-                        N'DONGO Abdoulaye
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={3}>
-                        GBADJE Wilfried
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={4}>
-                        ZAKI Audrey
-                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={1}>KOFFI Edy</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={2}>N'DONGO Abdoulaye</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={3}>GBADJE Wilfried</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={4}>ZAKI Audrey</MenuItem>
                     </Select>
                   </FormControl>
                 </div>
@@ -555,16 +537,10 @@ const DossiersPatient = ({
                     className="col-12"
                     id="actesList"
                     options={listActes}
-                    onChange={(event, newValue) => {
-                      setActes(newValue.map((elt) => elt.value));
-                    }}
+                    onChange={(event, newValue) => { setActes(newValue.map((elt) => elt.value)); }}
                     getOptionLabel={(option) => option.label}
                     filterSelectedOptions
-                    renderOption={(option) => (
-                      <>
-                        <small>{option.label}</small>
-                      </>
-                    )}
+                    renderOption={(option) => (<><small style={{ fontSize: "11px" }}>{option.label}</small></>)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -576,50 +552,42 @@ const DossiersPatient = ({
                   />
                 </div>
                 <div className="row mx-1 my-2">
-                  <FormControl
-                    variant="outlined"
+                  <Autocomplete
                     size="small"
-                    className="m-1 col"
-                  >
-                    <InputLabel id="assurance-label">Gestionnaire</InputLabel>
-                    <Select
-                      labelId="assurance-label"
-                      id="assurance"
-                      label="Gestionnaire"
-                      value={inputs.assurance}
-                      onChange={setgestionnaireAssure}
-                      style={{ fontSize: "11px" }}
-                    >
-                      <MenuItem style={{ fontSize: "11px" }} value={"sgbci"}>
-                        SGBCI
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={"nsia"}>
-                        NSIA
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl
-                    variant="outlined"
+                    className="col mr-2"
+                    id="assurancesList"
+                    options={listAssurances}
+                    onChange={(event, newValue) => { setgestionnaire(newValue.label); }}
+                    getOptionLabel={(option) => option.label}
+                    filterSelectedOptions
+                    renderOption={(option) => (<><small style={{ fontSize: "11px" }}>{option.label}</small></>)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Gestionnaire"
+                        placeholder="Ajouter ..."
+                      />
+                    )}
+                  />
+                  <Autocomplete
                     size="small"
-                    className="m-1 col"
-                  >
-                    <InputLabel id="assurance-label">Garant</InputLabel>
-                    <Select
-                      labelId="assurance-label"
-                      id="assurance"
-                      label="Garant"
-                      value={inputs.assurance}
-                      onChange={setgarantAssure}
-                      style={{ fontSize: "11px" }}
-                    >
-                      <MenuItem style={{ fontSize: "11px" }} value={"sgbci"}>
-                        SGBCI
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={"nsia"}>
-                        NSIA
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
+                    className="col"
+                    id="assurancesList"
+                    options={listAssurances}
+                    onChange={(event, newValue) => { setorganisme(newValue.label); }}
+                    getOptionLabel={(option) => option.label}
+                    filterSelectedOptions
+                    renderOption={(option) => (<><small style={{ fontSize: "11px" }}>{option.label}</small></>)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Organisme"
+                        placeholder="Ajouter ..."
+                      />
+                    )}
+                  />
                 </div>
                 <div className="row mx-1 my-2">
                   <FormControl
@@ -632,28 +600,13 @@ const DossiersPatient = ({
                       labelId="assurance-label"
                       id="assurance"
                       label="Bénéficiaire"
-                      value={inputs.beneficiaire}
-                      onChange={setbeneficiaireAssure}
+                      onChange={setbeneficiaire}
                       style={{ fontSize: "11px" }}
                     >
-                      <MenuItem style={{ fontSize: "11px" }} value={"assuré"}>
-                        L'assuré
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={"enfant"}>
-                        L'enfant
-                      </MenuItem>
-                      <MenuItem
-                        style={{ fontSize: "11px" }}
-                        value={"conjoint(e)"}
-                      >
-                        Le/La conjoint(e)
-                      </MenuItem>
-                      <MenuItem
-                        style={{ fontSize: "11px" }}
-                        value={"ayant droit"}
-                      >
-                        L'ayant droit
-                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"assuré"}>L'assuré</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"enfant"}>L'enfant</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"conjoint(e)"}>Le/La conjoint(e)</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={"ayant droit"}>L'ayant droit</MenuItem>
                     </Select>
                   </FormControl>
                   <Input
@@ -661,8 +614,7 @@ const DossiersPatient = ({
                     variant="outlined"
                     size="small"
                     label="Identité de l'Assuré"
-                    value={inputs.identiteAssure}
-                    onChange={setidentiteAssure}
+                    onChange={setassurePrinc}
                   />
                 </div>
                 <div className="row mx-1 my-2">
@@ -671,7 +623,6 @@ const DossiersPatient = ({
                     variant="outlined"
                     size="small"
                     label="Matricule"
-                    value={inputs.matriculeAssure}
                     onChange={setmatriculeAssure}
                   />
                   <Input
@@ -679,8 +630,7 @@ const DossiersPatient = ({
                     variant="outlined"
                     size="small"
                     label="N° PEC"
-                    value={inputs.numeroPECAssure}
-                    onChange={setnumeroPECAssure}
+                    onChange={setnumeroPEC}
                   />
                   <FormControl
                     variant="outlined"
@@ -692,19 +642,12 @@ const DossiersPatient = ({
                       labelId="assurance-label"
                       id="assurance"
                       label="Taux"
-                      value={inputs.tauxAssurance}
-                      onChange={settauxAssure}
+                      onChange={settaux}
                       style={{ fontSize: "11px" }}
                     >
-                      <MenuItem style={{ fontSize: "11px" }} value={70}>
-                        70%
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={80}>
-                        80%
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "11px" }} value={100}>
-                        100%
-                      </MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={70}>70%</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={80}>80%</MenuItem>
+                      <MenuItem style={{ fontSize: "11px" }} value={100}>100%</MenuItem>
                     </Select>
                   </FormControl>
                 </div>

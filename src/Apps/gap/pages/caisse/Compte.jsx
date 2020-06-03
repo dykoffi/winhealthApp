@@ -113,7 +113,7 @@ const AttenteFacture = ({
   }
   useEffect(() => {
     Axios({
-      url: `${header.url}/gap/list/patients`,
+      url: `${header.url}/gap/list/patients_no_compte`,
     }).then(({ data: { rows } }) => {
       setListPatients(rows);
     });
@@ -150,6 +150,8 @@ const AttenteFacture = ({
           </div>
           <div className="col d-flex justify-content-end p-0">
             <Button
+              disableElevation
+              disableFocusRipple
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => {
@@ -159,7 +161,7 @@ const AttenteFacture = ({
                 textTransform: "none",
                 backgroundColor: global.theme.primary,
                 color: "white",
-                fontSize: "13px",
+                fontSize: "11px",
               }}
             >
               Nouveau compte
@@ -169,22 +171,24 @@ const AttenteFacture = ({
       </div>
       {listComptes.length === 0 ? (
         <div className="col-12 text-secondary text-center">
-          <h3 className="text-center lead">Aucun compte existant</h3>
+          <h6 className="text-center lead">Aucun compte existant</h6>
+          <small>
+            Pour en ajouter un cliquez sur le boutton 'Nouveau compte' puis
+            renseignez les informations
+          </small>
         </div>
       ) : (
         <>
           <div className="col-12">
             <div className="row">
-              <TableContainer component={Paper}>
+              <TableContainer component={Paper} elevation={0}>
                 <Table aria-label="simple table" size="small">
-                  <TableHead
-                    style={{ backgroundColor: global.theme.secondaryDark }}
-                  >
+                  <TableHead style={{ backgroundColor: global.theme.secondaryDark  }}>
                     <TableRow>
                       {columns.map((col, i) => (
                         <TableCell
                           align="center"
-                          style={{ fontSize: "14px", color: "white" }}
+                          style={{ fontSize: "11px", color: "white" }}
                           key={i}
                         >
                           {col}
@@ -213,7 +217,7 @@ const AttenteFacture = ({
                         >
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                             component="th"
                             scope="row"
                           >
@@ -221,31 +225,31 @@ const AttenteFacture = ({
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {numerocompte}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {datecompte}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {heurecompte}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {civilitepatient} {nompatient} {prenomspatient}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {montantcompte} FCFA
                           </TableCell>
@@ -315,18 +319,22 @@ const AttenteFacture = ({
         </DialogContent>
         <DialogActions>
           <Button
+            disableElevation
+            disableFocusRipple
             variant="contained"
             className="mb-2 bg-light"
             startIcon={<CancelIcon />}
             onClick={closeNewCompte}
             style={{
               textTransform: "none",
-              fontSize: "13px",
+              fontSize: "11px",
             }}
           >
             Annuler
           </Button>
           <Button
+            disableElevation
+            disableFocusRipple
             variant="contained"
             className="mb-2"
             onClick={createCompte}
@@ -335,7 +343,7 @@ const AttenteFacture = ({
               textTransform: "none",
               backgroundColor: global.theme.primary,
               color: "white",
-              fontSize: "13px",
+              fontSize: "11px",
             }}
           >
             Valider
@@ -374,15 +382,15 @@ const AttenteFacture = ({
                     value={inputs.type}
                     onChange={settype}
                     label="Type"
-                    style={{ fontSize: "13px" }}
+                    style={{ fontSize: "11px" }}
                   >
                     <MenuItem
-                      style={{ fontSize: "13px" }}
+                      style={{ fontSize: "11px" }}
                       value={"Remboursement"}
                     >
                       Remboursement
                     </MenuItem>
-                    <MenuItem style={{ fontSize: "13px" }} value={"Dépot"}>
+                    <MenuItem style={{ fontSize: "11px" }} value={"Dépot"}>
                       Dépot
                     </MenuItem>
                   </Select>
@@ -403,22 +411,22 @@ const AttenteFacture = ({
                     value={inputs.mode}
                     onChange={setmode}
                     label="Mode de paiement"
-                    style={{ fontSize: "13px" }}
+                    style={{ fontSize: "11px" }}
                   >
-                    <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
+                    <MenuItem style={{ fontSize: "11px" }} value={"Chèque"}>
                       Chèque
                     </MenuItem>
-                    <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>
+                    <MenuItem style={{ fontSize: "11px" }} value={"Espèces"}>
                       Espèces
                     </MenuItem>
                     <MenuItem
-                      style={{ fontSize: "13px" }}
+                      style={{ fontSize: "11px" }}
                       value={"Électronique"}
                     >
                       Électronique
                     </MenuItem>
                     <MenuItem
-                      style={{ fontSize: "13px" }}
+                      style={{ fontSize: "11px" }}
                       value={"Mobile money"}
                     >
                       Mobile money
@@ -440,18 +448,22 @@ const AttenteFacture = ({
         </DialogContent>
         <DialogActions>
           <Button
+            disableElevation
+            disableFocusRipple
             variant="contained"
             className="mb-2 bg-light"
             startIcon={<CancelIcon />}
             onClick={closeTransaction}
             style={{
               textTransform: "none",
-              fontSize: "13px",
+              fontSize: "11px",
             }}
           >
             Annuler
           </Button>
           <Button
+            disableElevation
+            disableFocusRipple
             variant="contained"
             className="mb-2"
             onClick={validTransaction}
@@ -460,7 +472,7 @@ const AttenteFacture = ({
               textTransform: "none",
               backgroundColor: global.theme.primary,
               color: "white",
-              fontSize: "13px",
+              fontSize: "11px",
             }}
           >
             Valider la transaction

@@ -26,7 +26,7 @@ const setListFacturesAttentes = (data) => ({
 })
 
 export const setShowModal = (bool) => ({
-    type : SET_SHOW_MODAL,
+    type: SET_SHOW_MODAL,
     showModal: bool
 })
 
@@ -84,7 +84,7 @@ export function thunkEncaisserFactures(numeroFacture, data) {
     return async (dispatch) => {
         Axios({
             method: "POST",
-            url: `${header.url}/gap/encaisser/facture/${numeroFacture}`,
+            url: `${header.url}/gap/encaisser_patient/facture/${numeroFacture}`,
             data: data,
             headers: {
                 "content-type": "application/x-www-form-urlencoded",

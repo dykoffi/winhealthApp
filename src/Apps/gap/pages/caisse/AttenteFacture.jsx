@@ -9,8 +9,8 @@ import {
   thunkDetailsFacture,
   setShowModal,
 } from "../../api/caisse/factures";
-import CancelIcon from '@material-ui/icons/CancelOutlined'
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutlined'
+import CancelIcon from "@material-ui/icons/CancelOutlined";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
 import { socket } from "../../../global/apiQuery";
 import {
   TextField,
@@ -59,7 +59,10 @@ const AttenteFacture = ({
     setinput({});
   };
   function sendData(numeroFacture) {
-    thunkEncaisserFactures(numeroFacture, inputs);
+    thunkEncaisserFactures(numeroFacture, {
+      ...inputs,
+      compte: currentFacture.numerocompte,
+    });
     handleClose();
   }
   function setmode({ target: { value } }) {
@@ -77,7 +80,10 @@ const AttenteFacture = ({
     "Patient",
     "Auteur",
     "Montant Total",
-    "Reste à payer",
+    "Part ASSU",
+    "Reste ASSU",
+    "Part Patient",
+    "Reste Patient",
   ]);
 
   const global = useContext(GlobalContext);
@@ -122,22 +128,23 @@ const AttenteFacture = ({
       </div>
       {listFacturesAttentes.length === 0 ? (
         <div className="col-12 text-secondary text-center">
-          <h3 className="text-center lead">Aucune facture en attente</h3>
+          <h6 className="text-center lead">Aucune facture en attente</h6>
+          <small>
+           Les factures sont générées lors de l'ajout d'un séjour
+          </small>
         </div>
       ) : (
         <>
           <div className="col-12">
             <div className="row">
-              <TableContainer component={Paper}>
+              <TableContainer component={Paper} elevation={0}>
                 <Table aria-label="simple table" size="small">
-                  <TableHead
-                    style={{ backgroundColor: global.theme.secondaryDark }}
-                  >
+                  <TableHead style={{ backgroundColor: global.theme.secondaryDark }}>
                     <TableRow>
                       {columns.map((col, i) => (
                         <TableCell
                           align="center"
-                          style={{ fontSize: "14px", color: "white" }}
+                          style={{ fontSize: "11px", color: "white" }}
                           key={i}
                         >
                           {col}
@@ -149,6 +156,7 @@ const AttenteFacture = ({
                     {listFacturesAttentes.map(
                       (
                         {
+                          civilitepatient,
                           numerofacture,
                           datefacture,
                           heurefacture,
@@ -156,8 +164,10 @@ const AttenteFacture = ({
                           nompatient,
                           prenomspatient,
                           montanttotalfacture,
-                          restefacture,
-                          civilitepatient,
+                          partassurancefacture,
+                          resteassurancefacture,
+                          partpatientfacture,
+                          restepatientfacture,
                         },
                         i
                       ) => (
@@ -168,7 +178,7 @@ const AttenteFacture = ({
                         >
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                             component="th"
                             scope="row"
                           >
@@ -176,49 +186,67 @@ const AttenteFacture = ({
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {numerofacture}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {datefacture}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {heurefacture}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {civilitepatient} {nompatient} {prenomspatient}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {auteurfacture}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
                             {montanttotalfacture} FCFA
                           </TableCell>
                           <TableCell
+                            align="center"
+                            style={{ fontSize: "11px" }}
+                          >
+                            {partassurancefacture} FCFA
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "11px" }}
+                          >
+                            {resteassurancefacture} FCFA
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            style={{ fontSize: "11px" }}
+                          >
+                            {partpatientfacture} FCFA
+                          </TableCell>
+                          <TableCell
                             className={
-                              restefacture < 0 &&
+                              restepatientfacture < 0 &&
                               "flash animated infinite red-text font-weight-bold"
                             }
                             align="center"
-                            style={{ fontSize: "13px" }}
+                            style={{ fontSize: "11px" }}
                           >
-                            {restefacture} FCFA
+                            {restepatientfacture} FCFA
                           </TableCell>
                         </TableRow>
                       )
@@ -251,13 +279,8 @@ const AttenteFacture = ({
                     {currentFacture.prenomspatient}
                   </h2>
                 </div>
-                <div className="col-6">
-                  <small>
-                    <b>Montant total</b> : {currentFacture.montanttotalfacture}{" "}
-                    FCFA
-                  </small>
-                </div>
-                <div className="col-6 text-right">
+                <div className="col-6 p-0">
+                 
                   <small>
                     <b>Reste à payer</b> :{" "}
                     <span
@@ -266,79 +289,115 @@ const AttenteFacture = ({
                         "flash animated infinite red-text font-weight-bold"
                       }
                     >
-                      {currentFacture.restefacture} FCFA
+                      {currentFacture.restepatientfacture} FCFA
                     </span>
                   </small>
-                </div>
-              </div>
-              <div className="row my-3 mx-1">
-                <FormControl variant="outlined" size="small" className="col">
-                  <InputLabel id="typesejour-label">
-                    Mode de paiement
-                  </InputLabel>
-
-                  {currentFacture.restefacture > 0 ? (
-                    <Select
-                      labelId="typesejour-label"
-                      id="typesejour"
-                      value={inputs.modepaiment}
-                      onChange={setmode}
-                      label="Mode de paiement"
-                      style={{ fontSize: "13px" }}
-                    >
-                      <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
-                        Chèque
-                      </MenuItem>
-                      <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>
-                        Espèces
-                      </MenuItem>
-                      <MenuItem
-                        style={{ fontSize: "13px" }}
-                        value={"Électronique"}
-                      >
-                        Électronique
-                      </MenuItem>
-                      <MenuItem
-                        style={{ fontSize: "13px" }}
-                        value={"Mobile money"}
-                      >
-                        Mobile money
-                      </MenuItem>
-                    </Select>
-                  ) : (
-                    <Select
-                      labelId="typesejour-label"
-                      id="typesejour"
-                      value={inputs.modepaiment}
-                      onChange={setmode}
-                      label="Mode de paiement"
-                      style={{ fontSize: "13px" }}
-                    >
-                      <MenuItem
-                        style={{ fontSize: "13px" }}
-                        value={"Remboursement"}
-                      >
-                        Remboursement
-                      </MenuItem>
-                    </Select>
+                  <br />
+                  {currentFacture.numerocompte !== null && (
+                    <>
+                      <small>
+                        <b>N° compte : </b> {currentFacture.numerocompte}{" "}
+                      </small>
+                      <br />
+                      <small>
+                        <b>Solde : </b> {currentFacture.montantcompte}
+                        {" FCFA"}
+                      </small>{" "}
+                    </>
                   )}
-                </FormControl>
-                <TextField
-                  className="col-5 ml-2"
-                  variant="outlined"
-                  size="small"
-                  type="number"
-                  
-                  label="Montant recu"
-                  value={inputs.montantrecu}
-                  onChange={setmontant}
-                />
+                </div>
+                <div className="col-6 text-right"></div>
               </div>
+              {currentFacture.restefacture !== 0 && (
+                <div className="row my-3 mx-1">
+                  <FormControl variant="outlined" size="small" className="col">
+                    <InputLabel id="typesejour-label">
+                      Mode de paiement
+                    </InputLabel>
+                    {currentFacture.montantcompte > 0 ? (
+                      <Select
+                        labelId="typesejour-label"
+                        id="typesejour"
+                        value={inputs.modepaiment}
+                        onChange={setmode}
+                        label="Mode de paiement"
+                        style={{ fontSize: "13px" }}
+                      >
+                        <MenuItem style={{ fontSize: "13px" }} value={"Compte"}>
+                          Compte
+                        </MenuItem>
+                        <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
+                          Chèque
+                        </MenuItem>
+                        <MenuItem
+                          style={{ fontSize: "13px" }}
+                          value={"Espèces"}
+                        >
+                          Espèces
+                        </MenuItem>
+                        <MenuItem
+                          style={{ fontSize: "13px" }}
+                          value={"Électronique"}
+                        >
+                          Électronique
+                        </MenuItem>
+                        <MenuItem
+                          style={{ fontSize: "13px" }}
+                          value={"Mobile money"}
+                        >
+                          Mobile money
+                        </MenuItem>
+                      </Select>
+                    ) : (
+                      <Select
+                        labelId="typesejour-label"
+                        id="typesejour"
+                        value={inputs.modepaiment}
+                        onChange={setmode}
+                        label="Mode de paiement"
+                        style={{ fontSize: "13px" }}
+                      >
+                        <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
+                          Chèque
+                        </MenuItem>
+                        <MenuItem
+                          style={{ fontSize: "13px" }}
+                          value={"Espèces"}
+                        >
+                          Espèces
+                        </MenuItem>
+                        <MenuItem
+                          style={{ fontSize: "13px" }}
+                          value={"Électronique"}
+                        >
+                          Électronique
+                        </MenuItem>
+                        <MenuItem
+                          style={{ fontSize: "13px" }}
+                          value={"Mobile money"}
+                        >
+                          Mobile money
+                        </MenuItem>
+                      </Select>
+                    )}
+                  </FormControl>
+                  <TextField
+                    className="col-5 ml-2"
+                    variant="outlined"
+                    size="small"
+                    type="number"
+                    max={10}
+                    label="Montant recu"
+                    value={inputs.montantrecu}
+                    onChange={setmontant}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </DialogContent>
         <DialogActions>
-        <Button
+          <Button
             variant="contained"
             className="mb-2 bg-light"
             startIcon={<CancelIcon />}

@@ -1,11 +1,11 @@
 .onglet.actifOnglet {
-  border-bottom: 2px solid transparent ;
+  border-bottom: 4px solid transparent ;
   background-color: #0a7ec2e5 !important;
   color : white !important
 }
 
 .onglets {
   font-size: 13px;
-  border-bottom: 2px #0a7ec2e5 solid ;
+  border-bottom: 4px #0a7ec2e5 solid ;
 }
  
