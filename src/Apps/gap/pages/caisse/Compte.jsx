@@ -54,34 +54,15 @@ const AttenteFacture = ({
   const [ipp, setipp] = useState();
   const [openNewCompte, setOpenNewCompte] = useState(false);
   const [listPatients, setListPatients] = useState();
-  const [inputs, setinput] = useState({
-    mode: "",
-    montant: "",
-    type: "",
-  });
+  const [inputs, setinput] = useState({ mode: "", montant: "", type: "", });
 
-  function closeNewCompte() {
-    setOpenNewCompte(false);
-    setipp("");
-  }
-  function createCompte() {
-    thunkAddcompte(ipp);
-    setOpenNewCompte(false);
-  }
-  function closeTransaction() {
-    setinput({});
-    setShowModal(false);
-  }
+  function closeNewCompte() { setOpenNewCompte(false); setipp(""); }
+  function createCompte() { thunkAddcompte(ipp); setOpenNewCompte(false); }
+  function closeTransaction() { setinput({}); setShowModal(false); }
 
-  function setmode({ target: { value } }) {
-    setinput({ ...inputs, mode: value });
-  }
-  function settype({ target: { value } }) {
-    setinput({ ...inputs, type: value });
-  }
-  function setmontant({ target: { value } }) {
-    setinput({ ...inputs, montant: value });
-  }
+  function setmode({ target: { value } }) { setinput({ ...inputs, mode: value }); }
+  function settype({ target: { value } }) { setinput({ ...inputs, type: value }); }
+  function setmontant({ target: { value } }) { setinput({ ...inputs, montant: value }); }
 
   const [columns] = useState([
     "N°",
@@ -94,10 +75,7 @@ const AttenteFacture = ({
 
   const global = useContext(GlobalContext);
 
-  function researching({ target: { value } }) {
-    setValue(value);
-    thunkSearchCompte(value.trim());
-  }
+  function researching({ target: { value } }) {setValue(value);thunkSearchCompte(value.trim());}
   function validTransaction() {
     thunkAddTransaction(
       {
@@ -178,91 +156,91 @@ const AttenteFacture = ({
           </small>
         </div>
       ) : (
-        <>
-          <div className="col-12">
-            <div className="row">
-              <TableContainer component={Paper} elevation={0}>
-                <Table aria-label="simple table" size="small">
-                  <TableHead style={{ backgroundColor: global.theme.secondaryDark  }}>
-                    <TableRow>
-                      {columns.map((col, i) => (
-                        <TableCell
-                          align="center"
-                          style={{ fontSize: "11px", color: "white" }}
-                          key={i}
-                        >
-                          {col}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {listComptes.map(
-                      (
-                        {
-                          numerocompte,
-                          datecompte,
-                          heurecompte,
-                          nompatient,
-                          prenomspatient,
-                          civilitepatient,
-                          montantcompte,
-                        },
-                        i
-                      ) => (
-                        <TableRow
-                          key={i}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => thunkSetCurrentCompte(numerocompte)}
-                        >
+          <>
+            <div className="col-12">
+              <div className="row">
+                <TableContainer component={Paper} elevation={0}>
+                  <Table aria-label="simple table" size="small">
+                    <TableHead style={{ backgroundColor: global.theme.secondaryDark }}>
+                      <TableRow>
+                        {columns.map((col, i) => (
                           <TableCell
                             align="center"
-                            style={{ fontSize: "11px" }}
-                            component="th"
-                            scope="row"
+                            style={{ fontSize: "11px", color: "white" }}
+                            key={i}
                           >
-                            {i + 1}
+                            {col}
                           </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {numerocompte}
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {listComptes.map(
+                        (
+                          {
+                            numerocompte,
+                            datecompte,
+                            heurecompte,
+                            nompatient,
+                            prenomspatient,
+                            civilitepatient,
+                            montantcompte,
+                          },
+                          i
+                        ) => (
+                            <TableRow
+                              key={i}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => thunkSetCurrentCompte(numerocompte)}
+                            >
+                              <TableCell
+                                align="center"
+                                style={{ fontSize: "11px" }}
+                                component="th"
+                                scope="row"
+                              >
+                                {i + 1}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                style={{ fontSize: "11px" }}
+                              >
+                                {numerocompte}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                style={{ fontSize: "11px" }}
+                              >
+                                {datecompte}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                style={{ fontSize: "11px" }}
+                              >
+                                {heurecompte}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                style={{ fontSize: "11px" }}
+                              >
+                                {civilitepatient} {nompatient} {prenomspatient}
+                              </TableCell>
+                              <TableCell
+                                align="center"
+                                style={{ fontSize: "11px" }}
+                              >
+                                {montantcompte} FCFA
                           </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {datecompte}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {heurecompte}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {civilitepatient} {nompatient} {prenomspatient}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {montantcompte} FCFA
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                            </TableRow>
+                          )
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
       <Dialog
         open={openNewCompte}
         onClose={closeNewCompte}
@@ -291,7 +269,7 @@ const AttenteFacture = ({
                   }}
                   getOptionLabel={(option) =>
                     `(${
-                      option.ipppatient
+                    option.ipppatient
                     }) ${option.nompatient.toLowerCase()} ${option.prenomspatient.toLowerCase()}`
                   }
                   filterSelectedOptions

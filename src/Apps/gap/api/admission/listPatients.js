@@ -25,20 +25,9 @@ const setLoading = () => ({
 
 const listPatientsReducer = (state = initState, action) => {
     switch (action.type) {
-        case SET_LIST_PATIENTS:
-            return {
-                ...state,
-                listPatients: action.listPatients,
-                loading: action.loading
-            }
-
-        case LOADING:
-            return {
-                ...state,
-                loading: action.loading
-            }
-        default:
-            return state
+        case SET_LIST_PATIENTS: return { ...state, listPatients: action.listPatients, loading: action.loading }
+        case LOADING: return { ...state, loading: action.loading }
+        default: return state
     }
 }
 
@@ -58,7 +47,7 @@ export function thunkSearchPatient(info) {
     return async (dispatch) => {
         dispatch(setLoading())
         if (info.trim().length === 0) {
-           dispatch(thunkListPatient())
+            dispatch(thunkListPatient())
         } else {
             Axios({
                 url: `${header.url}/gap/search/patients/${info}`

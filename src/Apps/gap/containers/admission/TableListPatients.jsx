@@ -1,14 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { connect } from "react-redux";
 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-
 import {
   thunkListPatient,
   thunkSearchPatient,
@@ -103,112 +95,31 @@ const TableListPatient = ({
               </small>
             </div>
           ) : (
-              <div className="col-12">
-                <div className="row">
-                  <TableContainer component={Paper} elevation={0}>
-                    <Table aria-label="simple table" size="small">
-                      <TableHead
-                        style={{ backgroundColor: global.theme.secondaryDark}}
-                      >
-                        <TableRow>
-                          {columns.map((col, i) => (
-                            <TableCell
-                              align="center"
-                              style={{ fontSize: "11px", color:"white" }}
-                              key={i}
-                            >
-                              {col}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {listPatients.map(
-                          (
-                            {
-                              iddossier,
-                              ipppatient,
-                              nompatient,
-                              prenomspatient,
-                              sexepatient,
-                              habitationpatient,
-                              datenaissancepatient,
-                              lieunaissancepatient,
-                              nationalitepatient,
-                              contactpatient,
-                              civilitepatient,
-                            },
-                            i
-                          ) => (
-                              <TableRow
-                                key={i}
-                                style={{ cursor: "pointer" }}
-                                onClick={() => thunkDetailsPatient(iddossier)}
-                              >
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                  component="th"
-                                  scope="row"
-                                >
-                                  {i + 1}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {ipppatient}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {civilitepatient} {nompatient} {prenomspatient}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {sexepatient}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {habitationpatient}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {datenaissancepatient}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {lieunaissancepatient}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {nationalitepatient}
-                                </TableCell>
-                                <TableCell
-                                  align="center"
-                                  style={{ fontSize: "11px" }}
-                                >
-                                  {contactpatient}
-                                </TableCell>
-                              </TableRow>
-                            )
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </div>
-              </div>
+              <table className="table-sm table-hover col-12">
+                <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+                  <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                </thead>
+                <tbody>
+                  {listPatients.map(({ iddossier, ipppatient, nompatient, prenomspatient, sexepatient, habitationpatient, datenaissancepatient, lieunaissancepatient, nationalitepatient, contactpatient, civilitepatient, }, i) => (
+                    <tr
+                      key={i}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => thunkDetailsPatient(iddossier)}
+                    >
+                      <td>{i + 1}</td>
+                      <td>{ipppatient}</td>
+                      <td>{civilitepatient} {nompatient} {prenomspatient}</td>
+                      <td>{sexepatient}</td>
+                      <td>{habitationpatient}</td>
+                      <td>{datenaissancepatient}</td>
+                      <td>{lieunaissancepatient}</td>
+                      <td>{nationalitepatient}</td>
+                      <td>{contactpatient}</td>
+                    </tr>
+                  )
+                  )}
+                </tbody>
+              </table>
             )}
         </div>
       </div>

@@ -11,8 +11,6 @@ import {
 } from "../../api/assurance/assurances";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
-import AddIcon from "@material-ui/icons/Add";
-import { socket } from "../../../global/apiQuery";
 import {
   TextField,
   Avatar,
@@ -136,9 +134,12 @@ const Assurance = ({
             />
           </div>
           <div className="col d-flex justify-content-end p-0">
-            <button className="btn btn-sm btn-outline-primary" onClick={() => {
-              setShowModal(true);
-            }}>Ajouter une assurance</button>
+            <button className="btn btn-sm rounded-0 btn-light"
+              // style={{ backgroundColor: global.theme.primary, color:'white' }}
+              onClick={() => { setShowModal(true); }}>
+              <i className="mdi-content-add mr-2"></i>
+                Ajouter une assurance
+                </button>
           </div>
         </div>
       </div>

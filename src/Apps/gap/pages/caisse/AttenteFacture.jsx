@@ -16,13 +16,6 @@ import {
   TextField,
   Avatar,
   Chip,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   DialogContent,
   DialogTitle,
   DialogActions,
@@ -130,134 +123,38 @@ const AttenteFacture = ({
         <div className="col-12 text-secondary text-center">
           <h6 className="text-center lead">Aucune facture en attente</h6>
           <small>
-           Les factures sont générées lors de l'ajout d'un séjour
+            Les factures sont générées lors de l'ajout d'un séjour
           </small>
         </div>
       ) : (
-        <>
-          <div className="col-12">
-            <div className="row">
-              <TableContainer component={Paper} elevation={0}>
-                <Table aria-label="simple table" size="small">
-                  <TableHead style={{ backgroundColor: global.theme.secondaryDark }}>
-                    <TableRow>
-                      {columns.map((col, i) => (
-                        <TableCell
-                          align="center"
-                          style={{ fontSize: "11px", color: "white" }}
-                          key={i}
-                        >
-                          {col}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {listFacturesAttentes.map(
-                      (
-                        {
-                          civilitepatient,
-                          numerofacture,
-                          datefacture,
-                          heurefacture,
-                          auteurfacture,
-                          nompatient,
-                          prenomspatient,
-                          montanttotalfacture,
-                          partassurancefacture,
-                          resteassurancefacture,
-                          partpatientfacture,
-                          restepatientfacture,
-                        },
-                        i
-                      ) => (
-                        <TableRow
-                          key={i}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleClickOpen(numerofacture)}
-                        >
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                            component="th"
-                            scope="row"
-                          >
-                            {i + 1}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {numerofacture}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {datefacture}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {heurefacture}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {civilitepatient} {nompatient} {prenomspatient}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {auteurfacture}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {montanttotalfacture} FCFA
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {partassurancefacture} FCFA
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {resteassurancefacture} FCFA
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {partpatientfacture} FCFA
-                          </TableCell>
-                          <TableCell
-                            className={
-                              restepatientfacture < 0 &&
-                              "flash animated infinite red-text font-weight-bold"
-                            }
-                            align="center"
-                            style={{ fontSize: "11px" }}
-                          >
-                            {restepatientfacture} FCFA
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          </div>
-        </>
-      )}
+          <table className="col-12 table-sm table-sm table-hover">
+            <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+              <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+            </thead>
+            <tbody>
+              {listFacturesAttentes.map(
+                ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
+                  <tr key={i} style={{ cursor: "pointer" }} onClick={() => handleClickOpen(numerofacture)}>
+                    <td>{i + 1}</td>
+                    <td>{numerofacture}</td>
+                    <td>{datefacture}</td>
+                    <td>{heurefacture}</td>
+                    <td>{civilitepatient} {nompatient} {prenomspatient}</td>
+                    <td>{auteurfacture}</td>
+                    <td>{montanttotalfacture} FCFA</td>
+                    <td>{partassurancefacture} FCFA</td>
+                    <td>{resteassurancefacture} FCFA</td>
+                    <td>{partpatientfacture} FCFA</td>
+                    <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                      {restepatientfacture} FCFA
+                      </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+
+        )}
       <Dialog
         open={showModal}
         onClose={handleClose}
@@ -280,7 +177,7 @@ const AttenteFacture = ({
                   </h2>
                 </div>
                 <div className="col-6 p-0">
-                 
+
                   <small>
                     <b>Reste à payer</b> :{" "}
                     <span
@@ -349,37 +246,37 @@ const AttenteFacture = ({
                         </MenuItem>
                       </Select>
                     ) : (
-                      <Select
-                        labelId="typesejour-label"
-                        id="typesejour"
-                        value={inputs.modepaiment}
-                        onChange={setmode}
-                        label="Mode de paiement"
-                        style={{ fontSize: "13px" }}
-                      >
-                        <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
-                          Chèque
-                        </MenuItem>
-                        <MenuItem
+                        <Select
+                          labelId="typesejour-label"
+                          id="typesejour"
+                          value={inputs.modepaiment}
+                          onChange={setmode}
+                          label="Mode de paiement"
                           style={{ fontSize: "13px" }}
-                          value={"Espèces"}
                         >
-                          Espèces
+                          <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
+                            Chèque
                         </MenuItem>
-                        <MenuItem
-                          style={{ fontSize: "13px" }}
-                          value={"Électronique"}
-                        >
-                          Électronique
+                          <MenuItem
+                            style={{ fontSize: "13px" }}
+                            value={"Espèces"}
+                          >
+                            Espèces
                         </MenuItem>
-                        <MenuItem
-                          style={{ fontSize: "13px" }}
-                          value={"Mobile money"}
-                        >
-                          Mobile money
+                          <MenuItem
+                            style={{ fontSize: "13px" }}
+                            value={"Électronique"}
+                          >
+                            Électronique
                         </MenuItem>
-                      </Select>
-                    )}
+                          <MenuItem
+                            style={{ fontSize: "13px" }}
+                            value={"Mobile money"}
+                          >
+                            Mobile money
+                        </MenuItem>
+                        </Select>
+                      )}
                   </FormControl>
                   <TextField
                     className="col-5 ml-2"

@@ -6,7 +6,6 @@ const initState = {
     listFacturesAttentes: [],
     currentFacture: {},
     showModal: false
-
 }
 
 //les actions 

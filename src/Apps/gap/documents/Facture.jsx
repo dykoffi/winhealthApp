@@ -11,7 +11,9 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
+import PrintIcon from "@material-ui/icons/Print";
 import { header } from "../../global/apiQuery";
+import { IconButton } from "@material-ui/core";
 
 Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
 
@@ -167,16 +169,17 @@ const DownloadLink = ({
         >
           {({ blob, url, loading, error }) =>
             loading ? (
-              <small>Chargement de facture ...</small>
+              <small>...</small>
             ) : (
-              <a href={url} className="btn btn-sm btn-danger col-12" target="blank">
-                imprimer la facture
-              </a>
-            )
+                <IconButton aria-label="print" size="small" href={url} target="blank">
+                  <PrintIcon />
+                </IconButton>
+              )
           }
         </PDFDownloadLink>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 
@@ -249,14 +252,14 @@ const Facture = ({
               </View>
 
               <Text style={styles.title}>
-                SEJOUR DU 
+                SEJOUR DU
                 {datedebutsejour === datefinsejour ? (
                   <> {datedebutsejour}</>
                 ) : (
-                  <>
-                     {datedebutsejour} AU {datefinsejour}
-                  </>
-                )}
+                    <>
+                      {datedebutsejour} AU {datefinsejour}
+                    </>
+                  )}
               </Text>
               <View style={styles.content}>
                 <View style={styles.l}>

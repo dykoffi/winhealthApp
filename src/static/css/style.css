@@ -24,7 +24,10 @@ label {
   font-size: 13.4px !important;
 }
 
-table, button {
+table {
   font-size: 11px !important;
 }
 
+button{
+  font-size: 12.5px !important;
+}

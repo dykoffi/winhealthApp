@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-import Tooltip from "@material-ui/core/Tooltip";
 
 import "./sidebar.css";
 
@@ -31,7 +30,7 @@ export const SideItem = ({ icon, text, actif, active }) => (
     title={text}
     className={`row Sideitem text-center d-flex justify-content-center ${
       actif ? "text-info active" : "text-light"
-    }`}
+      }`}
     onClick={() => active()}
   >
     <i style={{ fontSize: "9px" }} className={`mdi-${icon} mdi-3x col-9`}></i>{" "}
@@ -50,6 +49,7 @@ const ListItem = ({ children }) => (
 
 const Sidebar = ({ user, fonctions }) => {
   const [actif, setactif] = useState(0);
+
   return (
     <div className="col-12 page Sidebar">
       <div className="row">

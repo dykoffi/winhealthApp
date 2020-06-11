@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import logo from "../../../static/images/logo.png";
+import logo from "../../../static/images/logoWH.png";
 import { header } from "../../global/apiQuery";
 
 const Accueil = ({ sendTitle }) => {
@@ -15,8 +15,8 @@ const Accueil = ({ sendTitle }) => {
         height: "90vh",
       }}
     >
-      <img src={logo} className="col-3" style={{ opacity: 0.9 }} alt="" />
-      <h6 className="small">Bienvenu sur le GAP de Winhealth</h6>
+      <img src={logo} className="col-4" style={{ opacity: 0.9 }} alt="" />
+      <h6 className="small bg-light p-1">Bienvenu sur le GAP de Winhealth</h6>
     </div>
   );
 };

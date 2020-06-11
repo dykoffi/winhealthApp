@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Provider } from "react-redux";
 import { Cookies } from "react-cookie";
 import { Route } from "react-router-dom";
@@ -8,12 +8,17 @@ import { Pages } from "./constants/pages";
 import Navbar from "../../containers/Sidebar/";
 
 import Topbar from "../../components/Topbar";
+import $ from 'jquery'
 
 const Gap = () => {
   const cookies = new Cookies();
   const [title, setTitle] = useState("Accueil");
   const [fullscreen, setfullscreen] = useState(false);
-
+  useEffect(() => {
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  })
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();

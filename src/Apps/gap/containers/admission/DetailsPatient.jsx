@@ -4,55 +4,19 @@ import { connect } from "react-redux";
 const DetailsPatient = ({ currentPatient }) => {
   return (
     <div className="DetailsPatient row">
-      <div className="bg-light rounded col-12 px-4 py-2 mx-1 grey-text text-darken-1" style={{fontSize:'14px'}}>
+      <div className="bg-light rounded col-12 px-4 py-2 mx-1 grey-text text-darken-1" style={{ fontSize: '14px' }}>
         <h6 className="mt-3">Patient</h6>
-        <small>
-          IPP : <b>{currentPatient.ipppatient}</b>
-        </small>
-        <br />
-        <small>
-          Nom et prenoms :{" "}
-          <b>
-            {currentPatient.nompatient} {currentPatient.prenomspatient}
-          </b>
-        </small>
-        <br />
-        <small>
-          Sexe : <b>{currentPatient.sexepatient}</b>
-        </small>
-        <br />
-        <small>
-          Domicile : <b>{currentPatient.habitationpatient}</b>
-        </small>
-        <br />
-        <small>
-          Date de naissance : <b>{currentPatient.datenaissancepatient}</b>
-        </small>
-        <br />
-        <small>
-          Lieu de naissance : <b>{currentPatient.lieunaissancepatient}</b>
-        </small>
-        <br />
-        <small>
-          Nationalité : <b>{currentPatient.nationalitepatient}</b>
-        </small>
-        <br />
-        <small>
-          Contact : <b>{currentPatient.contactpatient}</b>
-        </small>
-        <br />
-        <small>
-          Situation matrimoniale :{" "}
-          <b>{currentPatient.situationmatrimonialepatient}</b>
-        </small>
-        <br />
-        <small>
-          Religion : <b>{currentPatient.religionpatient}</b>
-        </small>
-        <br />
-        <small>
-          Profession : <b>{currentPatient.professionpatient}</b>
-        </small>
+        <small>IPP : <b>{currentPatient.ipppatient}</b></small><br />
+        <small>Nom et prenoms :{" "}<b>{currentPatient.nompatient} {currentPatient.prenomspatient}</b></small><br />
+        <small>Sexe : <b>{currentPatient.sexepatient}</b></small><br />
+        <small>Domicile : <b>{currentPatient.habitationpatient}</b></small><br />
+        <small>Date de naissance : <b>{currentPatient.datenaissancepatient}</b></small><br />
+        <small>Lieu de naissance : <b>{currentPatient.lieunaissancepatient}</b></small><br />
+        <small>Nationalité : <b>{currentPatient.nationalitepatient}</b></small><br />
+        <small>Contact : <b>{currentPatient.contactpatient}</b></small><br />
+        <small>Situation matrimoniale :{" "}<b>{currentPatient.situationmatrimonialepatient}</b></small><br />
+        <small>Religion : <b>{currentPatient.religionpatient}</b></small><br />
+        <small>Profession : <b>{currentPatient.professionpatient}</b></small>
         {/* {currentPatient.nomperepatient.trim() !== "" ||
           currentPatient.nomtuteurpatient.trim() !== "" ||
           currentPatient.nommerepatient.trim() !== "" || (
@@ -98,9 +62,7 @@ const DetailsPatient = ({ currentPatient }) => {
 };
 
 const mapStateToProps = (state) => {
-  const {
-    detailsPatientReducer: { currentPatient },
-  } = state;
+  const { detailsPatientReducer: { currentPatient }, } = state;
   return { currentPatient };
 };
 
