@@ -83,7 +83,9 @@ const DossiersPatient = ({
     "3ème Tiers"
   ])
   const global = useContext(GlobalContext);
-
+  const handleClickOpen = () => { setDisabled(false); setOpen(true); }
+  const handleClose = () => { setinput({}); setOpen(false); };
+  const closeControle = () => { setOpenControle(false); };
   function setdebutDate(value) { setinput({ ...inputs, debutDate: value }); }
   function setfinDate(value) { setinput({ ...inputs, finDate: value }); }
   function setDebutHeure(value) { setinput({ ...inputs, DebutHeure: value }); }
@@ -97,10 +99,6 @@ const DossiersPatient = ({
   function setmatriculeAssure({ target: { value } }) { setinput({ ...inputs, matriculeAssure: value }); }
   function setnumeroPEC({ target: { value } }) { setinput({ ...inputs, numeroPEC: value }); }
   function settaux({ target: { value } }) { setinput({ ...inputs, taux: value }); }
-
-  const handleClickOpen = () => { setDisabled(false); setOpen(true); }
-  const handleClose = () => { setinput({}); setOpen(false); };
-  const closeControle = () => { setOpenControle(false); };
   function sendDTata() { setOpen(false); thunkAddSejour({ ...inputs, actes: actes }, currentPatient.iddossier); setinput({}) }
 
   useEffect(() => {
@@ -145,12 +143,7 @@ const DossiersPatient = ({
     });
   }
 
-  function setQte({ target: { value } }, i) {
-    const tab = qt.copyWithin()
-    tab[i] = { qte: parseInt(value) }
-    setQt(tab)
-  }
-
+  function setQte({ target: { value } }, i) { const tab = qt.copyWithin(); tab[i] = { qte: parseInt(value) }; setQt(tab); }
   useEffect(() => { thunkListSejour(currentPatient.iddossier); thunkCurrentFacture(currentPatient.iddossier) }, [currentPatient.iddossier]);
 
   return (

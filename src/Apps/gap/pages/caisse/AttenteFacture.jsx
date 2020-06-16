@@ -10,6 +10,7 @@ import {
   setShowModal,
 } from "../../api/caisse/factures";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
+import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
 import { socket } from "../../../global/apiQuery";
 import {
@@ -44,13 +45,10 @@ const AttenteFacture = ({
     montantrecu: "",
   });
 
-  const handleClickOpen = (numeroFacture) => {
-    thunkDetailsFacture(numeroFacture);
-  };
-  const handleClose = () => {
-    setShowModal(false);
-    setinput({});
-  };
+  const handleClickOpen = (numeroFacture) => { thunkDetailsFacture(numeroFacture); };
+  const handleClose = () => { setShowModal(false); setinput({}); };
+  function setmode({ target: { value } }) { setinput({ ...inputs, modepaiement: value }); }
+  function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
   function sendData(numeroFacture) {
     thunkEncaisserFactures(numeroFacture, {
       ...inputs,
@@ -58,19 +56,13 @@ const AttenteFacture = ({
     });
     handleClose();
   }
-  function setmode({ target: { value } }) {
-    setinput({ ...inputs, modepaiement: value });
-  }
-  function setmontant({ target: { value } }) {
-    setinput({ ...inputs, montantrecu: value });
-  }
-
   const [columns] = useState([
     "N°",
     "Numero de facture",
     "Date",
     "Heure",
     "Patient",
+    "Type de sejour",
     "Auteur",
     "Montant Total",
     "Part ASSU",
@@ -80,11 +72,7 @@ const AttenteFacture = ({
   ]);
 
   const global = useContext(GlobalContext);
-
-  function researching({ target: { value } }) {
-    setValue(value);
-    thunkSearchFacture(value.trim());
-  }
+  function researching({ target: { value } }) { setValue(value); thunkSearchFacture(value.trim()); }
 
   useEffect(() => {
     thunkListFacturesAttentes();
@@ -127,24 +115,25 @@ const AttenteFacture = ({
           </small>
         </div>
       ) : (
-          <table className="col-12 table-sm table-sm table-hover">
+          <table className="col-12 table-sm table-sm table-hover table-striped">
             <thead style={{ backgroundColor: global.theme.secondaryDark }}>
               <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
             </thead>
             <tbody>
               {listFacturesAttentes.map(
-                ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
+                ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
                   <tr key={i} style={{ cursor: "pointer" }} onClick={() => handleClickOpen(numerofacture)}>
-                    <td>{i + 1}</td>
-                    <td>{numerofacture}</td>
+                    <td className="font-weight-bold">{i + 1}</td>
+                    <td className="font-weight-bold">{numerofacture}</td>
                     <td>{datefacture}</td>
                     <td>{heurefacture}</td>
-                    <td>{civilitepatient} {nompatient} {prenomspatient}</td>
+                    <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                    <td>{typesejour}</td>
                     <td>{auteurfacture}</td>
                     <td>{montanttotalfacture} FCFA</td>
                     <td>{partassurancefacture} FCFA</td>
                     <td>{resteassurancefacture} FCFA</td>
-                    <td>{partpatientfacture} FCFA</td>
+                    <td className="font-weight-bold">{partpatientfacture} FCFA</td>
                     <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
                       {restepatientfacture} FCFA
                       </td>
@@ -163,21 +152,15 @@ const AttenteFacture = ({
         fullWidth={true}
         maxWidth="xs"
       >
-        <DialogTitle className="text-center" id="alert-dialog-title">
+        <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
           <b>Facture N° {currentFacture.numerofacture}</b>
         </DialogTitle>
         <DialogContent>
           <div className="row">
             <div className="col-12">
               <div className="row mx-1">
-                <div className="col-12">
-                  <h2 className="lead text-center">
-                    {currentFacture.civilitepatient} {currentFacture.nompatient}{" "}
-                    {currentFacture.prenomspatient}
-                  </h2>
-                </div>
                 <div className="col-6 p-0">
-
+                  <small><b>Patient : </b>{currentFacture.civilitepatient}{" "} {currentFacture.nompatient}{" "} {currentFacture.prenomspatient}<br /></small>
                   <small>
                     <b>Reste à payer</b> :{" "}
                     <span
@@ -192,6 +175,7 @@ const AttenteFacture = ({
                   <br />
                   {currentFacture.numerocompte !== null && (
                     <>
+                      <hr className="bg-light" />
                       <small>
                         <b>N° compte : </b> {currentFacture.numerocompte}{" "}
                       </small>
@@ -205,47 +189,14 @@ const AttenteFacture = ({
                 </div>
                 <div className="col-6 text-right"></div>
               </div>
-              {currentFacture.restefacture !== 0 && (
-                <div className="row my-3 mx-1">
-                  <FormControl variant="outlined" size="small" className="col">
-                    <InputLabel id="typesejour-label">
-                      Mode de paiement
+              {currentFacture.restepatientfacture !== 0 && (
+                <>
+                  <div className="row my-3 mx-1">
+                    <FormControl variant="filled" size="small" className="col">
+                      <InputLabel id="typesejour-label">
+                        Mode de paiement
                     </InputLabel>
-                    {currentFacture.montantcompte > 0 ? (
-                      <Select
-                        labelId="typesejour-label"
-                        id="typesejour"
-                        value={inputs.modepaiment}
-                        onChange={setmode}
-                        label="Mode de paiement"
-                        style={{ fontSize: "13px" }}
-                      >
-                        <MenuItem style={{ fontSize: "13px" }} value={"Compte"}>
-                          Compte
-                        </MenuItem>
-                        <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
-                          Chèque
-                        </MenuItem>
-                        <MenuItem
-                          style={{ fontSize: "13px" }}
-                          value={"Espèces"}
-                        >
-                          Espèces
-                        </MenuItem>
-                        <MenuItem
-                          style={{ fontSize: "13px" }}
-                          value={"Électronique"}
-                        >
-                          Électronique
-                        </MenuItem>
-                        <MenuItem
-                          style={{ fontSize: "13px" }}
-                          value={"Mobile money"}
-                        >
-                          Mobile money
-                        </MenuItem>
-                      </Select>
-                    ) : (
+                      {currentFacture.montantcompte > 0 ? (
                         <Select
                           labelId="typesejour-label"
                           id="typesejour"
@@ -254,6 +205,9 @@ const AttenteFacture = ({
                           label="Mode de paiement"
                           style={{ fontSize: "13px" }}
                         >
+                          <MenuItem style={{ fontSize: "13px" }} value={"Compte"}>
+                            Compte
+                        </MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
                             Chèque
                         </MenuItem>
@@ -276,27 +230,64 @@ const AttenteFacture = ({
                             Mobile money
                         </MenuItem>
                         </Select>
-                      )}
-                  </FormControl>
-                  <TextField
-                    className="col-5 ml-2"
-                    variant="outlined"
-                    size="small"
-                    type="number"
-                    max={10}
-                    label="Montant recu"
-                    value={inputs.montantrecu}
-                    onChange={setmontant}
-                  />
-                </div>
+                      ) : (
+                          <Select
+                            labelId="typesejour-label"
+                            id="typesejour"
+                            value={inputs.modepaiment}
+                            onChange={setmode}
+                            label="Mode de paiement"
+                            style={{ fontSize: "13px" }}
+                          >
+                            <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
+                              Chèque
+                        </MenuItem>
+                            <MenuItem
+                              style={{ fontSize: "13px" }}
+                              value={"Espèces"}
+                            >
+                              Espèces
+                        </MenuItem>
+                            <MenuItem
+                              style={{ fontSize: "13px" }}
+                              value={"Électronique"}
+                            >
+                              Électronique
+                        </MenuItem>
+                            <MenuItem
+                              style={{ fontSize: "13px" }}
+                              value={"Mobile money"}
+                            >
+                              Mobile money
+                        </MenuItem>
+                          </Select>
+                        )}
+                    </FormControl>
+                    <TextField
+                      className="col-5 ml-2"
+                      variant="filled"
+                      size="small"
+                      type="number"
+                      max={10}
+                      label="Montant recu"
+                      value={inputs.montantrecu}
+                      onChange={setmontant}
+                    />
+                  </div>
+                  <div className="col-12 d-flex">
+                    <ReportProblemOutlinedIcon className="bg-warning mr-2" />
+                    <small className="font-weight-bold">Renseignez tous les champs néccessaires pour le paiement d'une facture</small>
+                  </div>
+                </>
               )}
+
             </div>
           </div>
         </DialogContent>
         <DialogActions>
           <Button
             variant="contained"
-            className="mb-2 bg-light"
+            className="mb-2"
             startIcon={<CancelIcon />}
             onClick={handleClose}
             style={{

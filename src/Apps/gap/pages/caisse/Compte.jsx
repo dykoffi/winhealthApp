@@ -75,7 +75,7 @@ const AttenteFacture = ({
 
   const global = useContext(GlobalContext);
 
-  function researching({ target: { value } }) {setValue(value);thunkSearchCompte(value.trim());}
+  function researching({ target: { value } }) { setValue(value); thunkSearchCompte(value.trim()); }
   function validTransaction() {
     thunkAddTransaction(
       {
@@ -128,8 +128,6 @@ const AttenteFacture = ({
           </div>
           <div className="col d-flex justify-content-end p-0">
             <Button
-              disableElevation
-              disableFocusRipple
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => {
@@ -156,90 +154,25 @@ const AttenteFacture = ({
           </small>
         </div>
       ) : (
-          <>
-            <div className="col-12">
-              <div className="row">
-                <TableContainer component={Paper} elevation={0}>
-                  <Table aria-label="simple table" size="small">
-                    <TableHead style={{ backgroundColor: global.theme.secondaryDark }}>
-                      <TableRow>
-                        {columns.map((col, i) => (
-                          <TableCell
-                            align="center"
-                            style={{ fontSize: "11px", color: "white" }}
-                            key={i}
-                          >
-                            {col}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {listComptes.map(
-                        (
-                          {
-                            numerocompte,
-                            datecompte,
-                            heurecompte,
-                            nompatient,
-                            prenomspatient,
-                            civilitepatient,
-                            montantcompte,
-                          },
-                          i
-                        ) => (
-                            <TableRow
-                              key={i}
-                              style={{ cursor: "pointer" }}
-                              onClick={() => thunkSetCurrentCompte(numerocompte)}
-                            >
-                              <TableCell
-                                align="center"
-                                style={{ fontSize: "11px" }}
-                                component="th"
-                                scope="row"
-                              >
-                                {i + 1}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ fontSize: "11px" }}
-                              >
-                                {numerocompte}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ fontSize: "11px" }}
-                              >
-                                {datecompte}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ fontSize: "11px" }}
-                              >
-                                {heurecompte}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ fontSize: "11px" }}
-                              >
-                                {civilitepatient} {nompatient} {prenomspatient}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ fontSize: "11px" }}
-                              >
-                                {montantcompte} FCFA
-                          </TableCell>
-                            </TableRow>
-                          )
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
-            </div>
-          </>
+          <table className="table-sm col-12 table-hover table-striped">
+            <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+              <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+            </thead>
+            <tbody>
+              {listComptes.map(
+                ({ numerocompte, datecompte, heurecompte, nompatient, prenomspatient, civilitepatient, montantcompte, }, i) => (
+                  <tr key={i} style={{ cursor: "pointer" }} onClick={() => thunkSetCurrentCompte(numerocompte)} >
+                    <td>{i + 1}</td>
+                    <td>{numerocompte}</td>
+                    <td>{datecompte}</td>
+                    <td>{heurecompte}</td>
+                    <td>{civilitepatient} {nompatient} {prenomspatient}</td>
+                    <td>{montantcompte} FCFA</td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
         )}
       <Dialog
         open={openNewCompte}

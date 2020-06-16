@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { connect } from "react-redux";
 
-import {
-  thunkListPatient,
-  thunkSearchPatient,
-} from "../../api/admission/listPatients";
-
 import moment from "moment";
-
+import { thunkListPatient, thunkSearchPatient, } from "../../api/admission/listPatients";
 import { thunkDetailsPatient } from "../../api/admission/detailsPatient";
 import { TextField, Avatar, Chip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -15,26 +10,15 @@ import GlobalContext, { Info } from "../../../global/context";
 
 const Input = withStyles({
   root: {
-    "& label.Mui-focused": {
-      color: Info.theme.primary,
-    },
-    "& .MuiInput-underline:after": {
-      borderBottomColor: Info.theme.primary,
-    },
+    "& label.Mui-focused": { color: Info.theme.primary, },
+    "& .MuiInput-underline:after": { borderBottomColor: Info.theme.primary, },
     "& .MuiOutlinedInput-root": {
-      "&.Mui-focused fieldset": {
-        borderColor: Info.theme.primary,
-      },
+      "&.Mui-focused fieldset": { borderColor: Info.theme.primary, },
     },
   },
 })(TextField);
 
-const TableListPatient = ({
-  thunkListPatient,
-  thunkSearchPatient,
-  listPatients,
-  thunkDetailsPatient,
-}) => {
+const TableListPatient = ({ thunkListPatient, thunkSearchPatient, listPatients, thunkDetailsPatient, }) => {
   const global = useContext(GlobalContext);
   const [columns] = useState([
     "N°",
@@ -50,13 +34,8 @@ const TableListPatient = ({
   moment.locale("fr");
   // const [search, setsearch] = useState()
   const [value, setvalue] = useState("");
-  function researching({ target: { value } }) {
-    setvalue(value);
-    thunkSearchPatient(value.trim());
-  }
-  useEffect(() => {
-    thunkListPatient();
-  }, []);
+  function researching({ target: { value } }) { setvalue(value); thunkSearchPatient(value.trim()); }
+  useEffect(() => { thunkListPatient(); }, []);
 
   return (
     <div className="row">
@@ -72,14 +51,7 @@ const TableListPatient = ({
           <div className="col">
             <Chip
               label="patient(s)"
-              avatar={
-                <Avatar
-                  className="white-text"
-                  style={{ backgroundColor: global.theme.primary }}
-                >
-                  {listPatients.length}
-                </Avatar>
-              }
+              avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > {listPatients.length}</Avatar>}
             />
           </div>
         </div>
@@ -89,13 +61,10 @@ const TableListPatient = ({
           {listPatients.length === 0 ? (
             <div className="col-12 text-secondary text-center">
               <h3 className="text-center lead">Aucun patient</h3>
-              <small>
-                Pour en créer un, rendez-vous dans 'ajouter un patient' puis
-                rerenseignez les informations
-              </small>
+              <small> Pour en créer un, rendez-vous dans 'ajouter un patient' puis rerenseignez les informations </small>
             </div>
           ) : (
-              <table className="table-sm table-hover col-12">
+              <table className="table-sm table-hover col-12 table-striped">
                 <thead style={{ backgroundColor: global.theme.secondaryDark }}>
                   <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
                 </thead>
@@ -107,8 +76,8 @@ const TableListPatient = ({
                       onClick={() => thunkDetailsPatient(iddossier)}
                     >
                       <td>{i + 1}</td>
-                      <td>{ipppatient}</td>
-                      <td>{civilitepatient} {nompatient} {prenomspatient}</td>
+                      <td><b>{ipppatient}</b></td>
+                      <td><b>{civilitepatient} {nompatient} {prenomspatient}</b></td>
                       <td>{sexepatient}</td>
                       <td>{habitationpatient}</td>
                       <td>{datenaissancepatient}</td>
@@ -127,16 +96,6 @@ const TableListPatient = ({
   );
 };
 
-const mapStateToProp = (state) => {
-  const {
-    listPatientsReducer: { listPatients },
-  } = state;
-  return { listPatients };
-};
-
-const TableListPatientConnected = connect(mapStateToProp, {
-  thunkListPatient,
-  thunkSearchPatient,
-  thunkDetailsPatient,
-})(TableListPatient);
+const mapStateToProp = (state) => { const { listPatientsReducer: { listPatients }, } = state; return { listPatients }; };
+const TableListPatientConnected = connect(mapStateToProp, { thunkListPatient, thunkSearchPatient, thunkDetailsPatient, })(TableListPatient);
 export default TableListPatientConnected;

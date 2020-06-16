@@ -30,23 +30,10 @@ const setCurrentCompte = (compte) => ({
 //REDUCER
 const comptesReducer = (state = initState, action) => {
     switch (action.type) {
-        case SET_LIST_COMPTES:
-            return {
-                ...state,
-                listComptes: action.listComptes
-            };
-        case SET_CURRENT_COMPTE:
-            return {
-                ...state,
-                currentCompte: action.currentCompte
-            };
-        case SET_SHOW_MODAL:
-            return {
-                ...state,
-                showModal: action.showModal
-            };
-        default:
-            return state;
+        case SET_LIST_COMPTES: return { ...state, listComptes: action.listComptes };
+        case SET_CURRENT_COMPTE: return { ...state, currentCompte: action.currentCompte };
+        case SET_SHOW_MODAL: return { ...state, showModal: action.showModal };
+        default: return state;
     }
 }
 
@@ -54,13 +41,10 @@ const comptesReducer = (state = initState, action) => {
 
 export function thunkListComptes() {
     return async (dispatch) => {
-        Axios({
-            url: `${header.url}/gap/list/comptes`
-        }).then(({ data: { rows } }) => {
+        Axios({ url: `${header.url}/gap/list/comptes` }).then(({ data: { rows } }) => {
             dispatch(setListComptes(rows))
         })
     }
-
 }
 
 export function thunkAddcompte(ipp) {
@@ -69,37 +53,28 @@ export function thunkAddcompte(ipp) {
             method: "POST",
             url: `${header.url}/gap/add/compte`,
             data: { ipp },
-            headers: {
-                "content-type": "application/x-www-form-urlencoded",
-            }
-        }).then(({ data: { rows } }) => {
-            dispatch(thunkListComptes())
-        })
+            headers: { "content-type": "application/x-www-form-urlencoded", }
+        }).then(({ data: { rows } }) => { dispatch(thunkListComptes()) })
     }
 }
 
-export function thunkAddTransaction(data,compte) {
+export function thunkAddTransaction(data, compte) {
     return async (dispatch) => {
         Axios({
             method: "POST",
             url: `${header.url}/gap/add/transaction`,
             data: { ...data, compte },
-            headers: {
-                "content-type": "application/x-www-form-urlencoded",
-            }
+            headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(({ data: { rows } }) => {
             dispatch(thunkListComptes())
             dispatch(setShowModal(false))
-            
         })
     }
 }
 
 export function thunkDetailsCompte(numeroCompte) {
     return async (dispatch) => {
-        Axios({
-            url: `${header.url}/gap/details/compte/${numeroCompte}`
-        }).then(({ data: { rows } }) => {
+        Axios({ url: `${header.url}/gap/details/compte/${numeroCompte}` }).then(({ data: { rows } }) => {
             rows ? dispatch(setCurrentCompte(rows[0])) : dispatch(setCurrentCompte({}))
             dispatch(setShowModal(true))
         })
@@ -108,9 +83,7 @@ export function thunkDetailsCompte(numeroCompte) {
 
 export function thunkSetCurrentCompte(numeroCompte) {
     return async (dispatch) => {
-        Axios({
-            url: `${header.url}/gap/details/compte/${numeroCompte}`
-        }).then(({ data: { rows } }) => {
+        Axios({ url: `${header.url}/gap/details/compte/${numeroCompte}` }).then(({ data: { rows } }) => {
             rows ? dispatch(setCurrentCompte(rows[0])) : dispatch(setCurrentCompte({}))
             dispatch(setShowModal(true))
         })

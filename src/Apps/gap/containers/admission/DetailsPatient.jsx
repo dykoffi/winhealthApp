@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 const DetailsPatient = ({ currentPatient }) => {
   return (
     <div className="DetailsPatient row">
-      <div className="bg-light rounded col-12 px-4 py-2 mx-1 grey-text text-darken-1" style={{ fontSize: '14px' }}>
+      <div className="rounded col-12 px-4 py-2 mx-1 grey-text text-darken-1" style={{ fontSize: '14px' }}>
         <h6 className="mt-3">Patient</h6>
         <small>IPP : <b>{currentPatient.ipppatient}</b></small><br />
         <small>Nom et prenoms :{" "}<b>{currentPatient.nompatient} {currentPatient.prenomspatient}</b></small><br />

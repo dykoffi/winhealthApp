@@ -1,8 +1,8 @@
 import listeAssurances from './listeAssurances'
-import Borderaux from './borderaux'
+import Bordereaux from './bordereaux'
 
 const Pages = [
     { id:"listeAssurances", Component: listeAssurances },
-    { id:"borderaux", Component: Borderaux },
+    { id:"bordereaux", Component: Bordereaux },
 ]
 export default Pages

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Provider } from "react-redux";
 import { Cookies } from "react-cookie";
 import { Route } from "react-router-dom";
@@ -8,17 +8,12 @@ import { Pages } from "./constants/pages";
 import Navbar from "../../containers/Sidebar/";
 
 import Topbar from "../../components/Topbar";
-import $ from 'jquery'
 
 const Gap = () => {
   const cookies = new Cookies();
   const [title, setTitle] = useState("Accueil");
   const [fullscreen, setfullscreen] = useState(false);
-  useEffect(() => {
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  })
+
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -35,9 +30,7 @@ const Gap = () => {
       <div className="row">
         <section
           id="navbar"
-          style={{
-            flex: "none",
-          }}
+          style={{ flex: "none", }}
         >
           <Navbar
             user={cookies.get("user", { path: "/" })}
@@ -47,21 +40,13 @@ const Gap = () => {
         <section
           className="white"
           id="principal"
-          style={{
-            flex: 1,
-            height: "100vh",
-            overflowY: "hidden",
-            overflowX: "hidden",
-          }}
+          style={{ flex: 1, height: "100vh", overflowY: "hidden", overflowX: "hidden", }}
         >
           <section className="col-12 bg-light" id="Topbar">
             <Topbar
-            title={title}
-              user={`${cookies.get("user", { path: "/" }).nomuser} ${
-                cookies.get("user", { path: "/" }).prenomsuser
-              } - ${
-                cookies.get("user", { path: "/" }).labelprofil
-              }`}
+              title={title}
+              user={`${cookies.get("user", { path: "/" }).nomuser} ${cookies.get("user", { path: "/" }).prenomsuser} - ${cookies.get("user", { path: "/" }).labelprofil
+                }`}
               toggleFullscreen={toggleFullscreen}
               fullscreen={fullscreen}
             />
@@ -71,19 +56,9 @@ const Gap = () => {
               <Route exact key={index} path={path}>
                 {store ? (
                   <Provider store={store}>
-                    <Component
-                      sendTitle={(title) => {
-                        setTitle(title);
-                      }}
-                    />
+                    <Component sendTitle={(title) => { setTitle(title); }} />
                   </Provider>
-                ) : (
-                  <Component
-                    sendTitle={(title) => {
-                      setTitle(title);
-                    }}
-                  />
-                )}
+                ) : (<Component sendTitle={(title) => { setTitle(title); }} />)}
               </Route>
             ))}
           </section>

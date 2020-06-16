@@ -8,9 +8,12 @@ import {
   thunkUpdateAssurance,
   thunkDetailsAssurance,
   thunkSearchAssurance,
+  setShowModalDetails
 } from "../../api/assurance/assurances";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
+import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import {
   TextField,
   Avatar,
@@ -26,6 +29,8 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
+import AddIcon from '@material-ui/icons/Add'
+
 const Assurance = ({
   thunkAddAssurance,
   thunkListAssurances,
@@ -36,56 +41,12 @@ const Assurance = ({
   currentAssurance,
   loading,
   listAssurances,
+  showModalDetails,
+  setShowModalDetails
 }) => {
   const [value, setValue] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [inputs, setinput] = useState({
-    nom: "",
-    code: "",
-    type: "",
-    adresse: "",
-    telephone: "",
-    fax: "",
-    mail: "",
-    site_web: "",
-  });
-
-  const handleClickOpen = (idAssurance) => {
-    thunkDetailsAssurance(idAssurance);
-  };
-  const handleClose = () => {
-    setShowModal(false);
-    setinput({});
-  };
-  function sendData(data) {
-    thunkAddAssurance(data);
-    handleClose();
-  }
-  function setnom({ target: { value } }) {
-    setinput({ ...inputs, nom: value });
-  }
-  function setcode({ target: { value } }) {
-    setinput({ ...inputs, code: value });
-  }
-  function settype({ target: { value } }) {
-    setinput({ ...inputs, type: value });
-  }
-  function setadresse({ target: { value } }) {
-    setinput({ ...inputs, adresse: value });
-  }
-  function settelephone({ target: { value } }) {
-    setinput({ ...inputs, telephone: value });
-  }
-  function setfax({ target: { value } }) {
-    setinput({ ...inputs, fax: value });
-  }
-  function setmail({ target: { value } }) {
-    setinput({ ...inputs, mail: value });
-  }
-  function setsite_web({ target: { value } }) {
-    setinput({ ...inputs, site_web: value });
-  }
-
+  const global = useContext(GlobalContext);
   const [columns] = useState([
     "N°",
     "Nom",
@@ -98,17 +59,44 @@ const Assurance = ({
     "Site web",
   ]);
 
-  const global = useContext(GlobalContext);
+  const [inputs, setinput] = useState({
+    nom: "",
+    code: "",
+    type: "",
+    adresse: "",
+    telephone: "",
+    fax: "",
+    mail: "",
+    site_web: "",
+  });
 
-  function researching({ target: { value } }) {
-    setValue(value);
-    thunkSearchAssurance(value.trim());
+  const handleClickOpen = (idAssurance) => { thunkDetailsAssurance(idAssurance); };
+  const handleClose = () => { setShowModal(false); setinput({}); };
+  const CloseDetailsModal = () => { setShowModalDetails(false); };
+  function sendData(data) { thunkAddAssurance(data); handleClose(); }
+  function setnom({ target: { value } }) { setinput({ ...inputs, nom: value }); }
+  function setcode({ target: { value } }) { setinput({ ...inputs, code: value }); }
+  function settype({ target: { value } }) { setinput({ ...inputs, type: value }); }
+  function setadresse({ target: { value } }) { setinput({ ...inputs, adresse: value }); }
+  function settelephone({ target: { value } }) { setinput({ ...inputs, telephone: value }); }
+  function setfax({ target: { value } }) { setinput({ ...inputs, fax: value }); }
+  function setmail({ target: { value } }) { setinput({ ...inputs, mail: value }); }
+  function setsite_web({ target: { value } }) { setinput({ ...inputs, site_web: value }); }
+  function researching({ target: { value } }) { setValue(value); thunkSearchAssurance(value.trim()); }
+  function verify() {
+    if (
+      inputs.nom.trim() !== "" &&
+      inputs.code.trim() !== "" &&
+      inputs.type.trim() !== "" &&
+      inputs.adresse.trim() !== "" &&
+      inputs.telephone.trim() !== "" &&
+      inputs.mail.trim() !== "" &&
+      inputs.site_web.trim() !== "" &&
+      inputs.fax.trim() !== ""
+    ) { return true } else { return false }
   }
 
-  useEffect(() => {
-    thunkListAssurances();
-    console.log(listAssurances)
-  }, []);
+  useEffect(() => { thunkListAssurances(); console.log(listAssurances) }, []);
   return (
     <div className="Assurance row p-2">
       <div className="col-12">
@@ -134,12 +122,21 @@ const Assurance = ({
             />
           </div>
           <div className="col d-flex justify-content-end p-0">
-            <button className="btn btn-sm rounded-0 btn-light"
-              // style={{ backgroundColor: global.theme.primary, color:'white' }}
-              onClick={() => { setShowModal(true); }}>
-              <i className="mdi-content-add mr-2"></i>
-                Ajouter une assurance
-                </button>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                setShowModal(true);
+              }}
+              style={{
+                textTransform: "none",
+                backgroundColor: global.theme.primary,
+                color: "white",
+                fontSize: "11px",
+              }}
+            >
+              Ajouter une assurance
+            </Button>
           </div>
         </div>
       </div>
@@ -152,17 +149,19 @@ const Assurance = ({
           </small>
         </div>
       ) : (
-          <table className="table-sm col-12 table-hover">
+          <table className="table-sm col-12 table-hover table-striped">
             <thead style={{ backgroundColor: global.theme.secondaryDark }}>
               <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
             </thead>
             <tbody>
               {listAssurances.map(
-                ({ nomassurance, codeassurance, typeassurance, localassurance, telassurance, faxassurance, mailassurance, siteassurance }, i) => (
-                  <tr key={i} style={{ cursor: "pointer" }} onClick={() => handleClickOpen(nomassurance)}>
-                    <td>{i + 1}</td>
+                ({ idassurance, nomassurance, codeassurance, typeassurance, localassurance, telassurance, faxassurance, mailassurance, siteassurance }, i) => (
+                  <tr key={i} style={{ cursor: "pointer" }} onClick={() => {
+                    thunkDetailsAssurance(idassurance)
+                  }}>
+                    <td className="font-weight-bold">{i + 1}</td>
                     <td className="font-weight-bold">{nomassurance}</td>
-                    <td>{codeassurance}</td>
+                    <td className="font-weight-bold">{codeassurance}</td>
                     <td>{typeassurance}</td>
                     <td>{localassurance}</td>
                     <td>{telassurance}</td>
@@ -187,7 +186,7 @@ const Assurance = ({
           className="text-center text-secondary"
           id="alert-dialog-title"
         >
-          <small>Ajouter une assurance</small>
+          <b>Ajouter une assurance</b>
         </DialogTitle>
         <DialogContent>
           <div className="row">
@@ -232,7 +231,7 @@ const Assurance = ({
                   </Select>
                 </FormControl>
                 <TextField
-                  className="col-7 ml-2"
+                  className="col-6 ml-2"
                   variant="outlined"
                   size="small"
                   label="Adresse"
@@ -271,13 +270,14 @@ const Assurance = ({
                   onChange={setsite_web}
                 />
               </div>
+              <small>Veuiller renseigner toutes les informations néccessaires avant la validation</small>
             </div>
           </div>
         </DialogContent>
         <DialogActions>
           <Button
             variant="contained"
-            className="mb-2 bg-light"
+            className="mb-2"
             startIcon={<CancelIcon />}
             onClick={handleClose}
             style={{
@@ -303,15 +303,179 @@ const Assurance = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog
+        open={showModalDetails}
+        onClose={CloseDetailsModal}
+        onEntered={() =>
+          setinput({
+            nom: currentAssurance.nomassurance,
+            code: currentAssurance.codeassurance,
+            type: currentAssurance.typeassurance,
+            adresse: currentAssurance.localassurance,
+            telephone: currentAssurance.telassurance,
+            fax: currentAssurance.faxassurance,
+            mail: currentAssurance.mailassurance,
+            site_web: currentAssurance.siteassurance,
+          })
+        }
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth={true}
+        maxWidth="xs"
+      >
+        <DialogTitle
+          className="text-center text-secondary"
+          id="alert-dialog-title"
+        >
+          <b>Effectuer une modification</b>
+        </DialogTitle>
+        <DialogContent>
+          <div className="row">
+            <div className="col-12">
+              <div className="row my-3 mx-1">
+                <TextField
+                  className="col mr-2"
+                  variant="standard"
+                  size="small"
+                  label="Nom"
+                  defaultValue={currentAssurance.nomassurance}
+                  onChange={setnom}
+                />
+                <TextField
+                  className="col"
+                  variant="standard"
+                  size="small"
+                  label="Code"
+                  defaultValue={currentAssurance.codeassurance}
+                  onChange={setcode}
+                />
+              </div>
+              <div className="row my-3 mx-1">
+                <FormControl variant="standard" size="small" className="col">
+                  <InputLabel id="typeAssurance-label">
+                    Type d'assurance
+                  </InputLabel>
+                  <Select
+                    labelId="typeAssurance-label"
+                    id="typeAssurance"
+                    onChange={settype}
+                    defaultValue={currentAssurance.typeassurance}
+                    label="Type d'assurance"
+                    style={{ fontSize: "11px" }}
+                  >
+                    <MenuItem
+                      style={{ fontSize: "11px" }}
+                      value={"Gestionnaire"}
+                    >
+                      Gestionnaire
+                    </MenuItem>
+                    <MenuItem style={{ fontSize: "11px" }} value={"Organisme"}>
+                      Organisme
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+                <TextField
+                  className="col-6 ml-2"
+                  variant="standard"
+                  size="small"
+                  label="Adresse"
+                  defaultValue={currentAssurance.localassurance}
+                  onChange={setadresse}
+                />
+              </div>
+              <div className="row my-3 mx-1">
+                <TextField
+                  className="col mr-2"
+                  variant="standard"
+                  size="small"
+                  defaultValue={currentAssurance.codeassurance}
+                  label="Téléphone"
+                  onChange={settelephone}
+                />
+                <TextField
+                  className="col"
+                  variant="standard"
+                  size="small"
+                  label="Fax"
+                  defaultValue={currentAssurance.faxassurance}
+                  onChange={setfax}
+                />
+              </div>
+              <div className="row my-3 mx-1">
+                <TextField
+                  className="col mr-2"
+                  variant="standard"
+                  size="small"
+                  label="Mail"
+                  defaultValue={currentAssurance.mailassurance}
+                  onChange={setmail}
+                />
+                <TextField
+                  className="col"
+                  variant="standard"
+                  size="small"
+                  label="Site web"
+                  defaultValue={currentAssurance.siteassurance}
+                  onChange={setsite_web}
+                />
+              </div>
+              <div className="col-12 d-flex justify-content-center">
+                <ReportProblemOutlinedIcon className="bg-warning mr-2" />
+                <small className="font-weight-bold">La suppression est sans confirmation et irrévocable</small>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            className="mb-2"
+            startIcon={<CancelIcon />}
+            onClick={CloseDetailsModal}
+            style={{
+              textTransform: "none",
+              fontSize: "11px",
+            }}
+          >
+            Annuler
+          </Button>
+          <Button
+            variant="contained"
+            className="mb-2 bg-danger text-white"
+            startIcon={<DeleteOutlineIcon />}
+            onClick={() => { thunkDeleteAssurance(currentAssurance.idassurance) }}
+            style={{
+              textTransform: "none",
+              fontSize: "11px",
+            }}
+          >
+            Supprimer
+          </Button>
+          <Button
+            variant="contained"
+            className="mb-2"
+            onClick={() => thunkUpdateAssurance(currentAssurance.idassurance, inputs)}
+            startIcon={<CheckCircleOutlineIcon />}
+            style={{
+              textTransform: "none",
+              backgroundColor: global.theme.primary,
+              color: "white",
+              fontSize: "11px",
+            }}
+          >
+            Valider la modification
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
 const mapStateToProps = (state) => {
   const {
-    assuranceReducer: { listAssurances, currentAssurance, loading },
+    assuranceReducer: { listAssurances, showModalDetails, currentAssurance, loading },
   } = state;
-  return { listAssurances, currentAssurance, loading };
+  return { listAssurances, showModalDetails, currentAssurance, loading };
 };
 
 const AssuranceConnected = connect(mapStateToProps, {
@@ -321,5 +485,6 @@ const AssuranceConnected = connect(mapStateToProps, {
   thunkUpdateAssurance,
   thunkDetailsAssurance,
   thunkSearchAssurance,
+  setShowModalDetails
 })(Assurance);
 export default AssuranceConnected;

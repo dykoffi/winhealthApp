@@ -9,7 +9,7 @@ const SET_CURRENT_FACTURE = "SET_CURRENT_FACTURE"
 const SET_SHOW_MODAL = "SET_SHOW_MODAL"
 
 const setCurrentFacture = (data) => ({ type: SET_CURRENT_FACTURE, currentFacture: data })
-const setListFactures = (data) => ({ type: SET_LIST_FACTURES, listFacturesAttentes: data })
+const setListFactures = (data) => ({ type: SET_LIST_FACTURES, listFactures: data })
 export const setShowModal = (bool) => ({ type: SET_SHOW_MODAL, showModal: bool })
 
 //le reducer
@@ -22,7 +22,25 @@ const borderauReducer = (state = initState, action) => {
     }
 }
 
-export function thunkListFactures() {
-    return async (dispatch) => { Axios({ url: `${header.url}/gap/list/factures` }).then(({ data: { rows } }) => { dispatch(setListFactures(rows)) }) }
+export function thunkListFacturesByAssurances({ assurance, debutDateString, finDateString, typeSejour }) {
+    return async (dispatch) => {
+        Axios({
+            method: "GET",
+            url: `${header.url}/gap/list/factures/${assurance}/${debutDateString}/${finDateString}`
+        }).then(({ data: { rows } }) => { rows ? dispatch(setListFactures(rows)) : dispatch(setListFactures([])) })
+    }
 }
+
+export function thunkAddBordereau(data) {
+    return async (dispatch) => {
+        Axios({
+            method: "POST",
+            url: `${header.url}/gap/add/bordereau`,
+            data: data,
+            headers: { "content-type": "application/x-www-form-urlencoded", }
+        }).then()
+    }
+}
+
+
 export default borderauReducer
