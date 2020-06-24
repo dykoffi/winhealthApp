@@ -71,7 +71,18 @@ const Assurance = ({
   });
 
   const handleClickOpen = (idAssurance) => { thunkDetailsAssurance(idAssurance); };
-  const handleClose = () => { setShowModal(false); setinput({}); };
+  const handleClose = () => {
+    setShowModal(false); setinput({
+      nom: "",
+      code: "",
+      type: "",
+      adresse: "",
+      telephone: "",
+      fax: "",
+      mail: "",
+      site_web: "",
+    });
+  };
   const CloseDetailsModal = () => { setShowModalDetails(false); };
   function sendData(data) { thunkAddAssurance(data); handleClose(); }
   function setnom({ target: { value } }) { setinput({ ...inputs, nom: value }); }
@@ -85,14 +96,14 @@ const Assurance = ({
   function researching({ target: { value } }) { setValue(value); thunkSearchAssurance(value.trim()); }
   function verify() {
     if (
-      inputs.nom.trim() !== "" &&
-      inputs.code.trim() !== "" &&
-      inputs.type.trim() !== "" &&
-      inputs.adresse.trim() !== "" &&
-      inputs.telephone.trim() !== "" &&
-      inputs.mail.trim() !== "" &&
-      inputs.site_web.trim() !== "" &&
-      inputs.fax.trim() !== ""
+      inputs.nom.trim() === "" ||
+      // inputs.code.trim() === "" ||
+      inputs.type.trim() === ""
+      // inputs.adresse.trim() === "" ||
+      // inputs.telephone.trim() === "" ||
+      // inputs.mail.trim() === "" ||
+      // inputs.site_web.trim() === "" ||
+      // inputs.fax.trim() === ""
     ) { return true } else { return false }
   }
 
@@ -194,21 +205,21 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Nom"
                   onChange={setnom}
                 />
                 <TextField
                   className="col"
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Code"
                   onChange={setcode}
                 />
               </div>
               <div className="row my-3 mx-1">
-                <FormControl variant="outlined" size="small" className="col">
+                <FormControl variant="standard" size="small" className="col">
                   <InputLabel id="typeAssurance-label">
                     Type d'assurance
                   </InputLabel>
@@ -232,7 +243,7 @@ const Assurance = ({
                 </FormControl>
                 <TextField
                   className="col-6 ml-2"
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Adresse"
                   onChange={setadresse}
@@ -241,14 +252,14 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Téléphone"
                   onChange={settelephone}
                 />
                 <TextField
                   className="col"
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Fax"
                   onChange={setfax}
@@ -257,20 +268,23 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Mail"
                   onChange={setmail}
                 />
                 <TextField
                   className="col"
-                  variant="outlined"
+                  variant="standard"
                   size="small"
                   label="Site web"
                   onChange={setsite_web}
                 />
               </div>
-              <small>Veuiller renseigner toutes les informations néccessaires avant la validation</small>
+              <div className="col-12 d-flex">
+                <ReportProblemOutlinedIcon className="bg-warning mr-2" />
+                <small className="font-weight-bold">Renseignez tous les champs néccessaires pour la creation d'assuurance</small>
+              </div>
             </div>
           </div>
         </DialogContent>
@@ -290,6 +304,7 @@ const Assurance = ({
           <Button
             variant="contained"
             className="mb-2"
+            disabled={verify()}
             onClick={() => sendData(inputs)}
             startIcon={<CheckCircleOutlineIcon />}
             style={{
@@ -421,7 +436,7 @@ const Assurance = ({
               </div>
               <div className="col-12 d-flex justify-content-center">
                 <ReportProblemOutlinedIcon className="bg-warning mr-2" />
-                <small className="font-weight-bold">La suppression est sans confirmation et irrévocable</small>
+                <small className="font-weight-bold">La suppression est sans confirmation et irréversible</small>
               </div>
             </div>
           </div>

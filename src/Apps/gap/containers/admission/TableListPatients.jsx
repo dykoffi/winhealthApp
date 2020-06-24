@@ -18,7 +18,7 @@ const Input = withStyles({
   },
 })(TextField);
 
-const TableListPatient = ({ thunkListPatient, thunkSearchPatient, listPatients, thunkDetailsPatient, }) => {
+const TableListPatient = ({ thunkListPatient, thunkSearchPatient, listPatients, thunkDetailsPatient, currentPatient }) => {
   const global = useContext(GlobalContext);
   const [columns] = useState([
     "N°",
@@ -74,6 +74,7 @@ const TableListPatient = ({ thunkListPatient, thunkSearchPatient, listPatients, 
                       key={i}
                       style={{ cursor: "pointer" }}
                       onClick={() => thunkDetailsPatient(iddossier)}
+                      className={currentPatient && currentPatient.ipppatient === ipppatient && "bgcolor-primary font-weight-bold white-text"}
                     >
                       <td>{i + 1}</td>
                       <td><b>{ipppatient}</b></td>
@@ -96,6 +97,7 @@ const TableListPatient = ({ thunkListPatient, thunkSearchPatient, listPatients, 
   );
 };
 
-const mapStateToProp = (state) => { const { listPatientsReducer: { listPatients }, } = state; return { listPatients }; };
+
+const mapStateToProp = (state) => { const { listPatientsReducer: { listPatients }, } = state; const { detailsPatientReducer: { currentPatient } } = state; return { listPatients, currentPatient }; };
 const TableListPatientConnected = connect(mapStateToProp, { thunkListPatient, thunkSearchPatient, thunkDetailsPatient, })(TableListPatient);
 export default TableListPatientConnected;

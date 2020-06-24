@@ -128,7 +128,6 @@ const Bordereau = ({
                         />
                     </div>
                     <Button
-                        disableElevation
                         variant="contained"
                         startIcon={<SearchIcon />}
                         onClick={sendData}

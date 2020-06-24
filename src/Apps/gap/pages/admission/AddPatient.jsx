@@ -88,95 +88,44 @@ const AddPatient = ({ thunkDetailsPatient }) => {
     style: "standart",
   });
   //patient
-  function setnom({ target: { value } }) {
-    setinput({ ...inputs, nom: value });
-  }
-  function setprenoms({ target: { value } }) {
-    setinput({ ...inputs, prenoms: value });
-  }
-  function setcivilite({ target: { value } }) {
-    setinput({ ...inputs, civilite: value });
-  }
-  function setsexe({ target: { value } }) {
-    setinput({ ...inputs, sexe: value });
-  }
-  function setdatenaissance(value) {
-    setinput({ ...inputs, datenaissance: value });
-  }
-  function setlieunaissance({ target: { value } }) {
-    setinput({ ...inputs, lieunaissance: value });
-  }
-  function setnationalite({ target: { value } }) {
-    setinput({ ...inputs, nationalite: value });
-  }
-  function sethabitation({ target: { value } }) {
-    setinput({ ...inputs, habitation: value });
-  }
-  function setcontact({ target: { value } }) {
-    setinput({ ...inputs, contact: value });
-  }
-  function setprofession({ target: { value } }) {
-    setinput({ ...inputs, profession: value });
-  }
-  function setreligion({ target: { value } }) {
-    setinput({ ...inputs, religion: value });
-  }
-  function setsituation({ target: { value } }) {
-    setinput({ ...inputs, situation: value });
-  }
+  function setnom({ target: { value } }) { setinput({ ...inputs, nom: value }); }
+  function setprenoms({ target: { value } }) { setinput({ ...inputs, prenoms: value }); }
+  function setcivilite({ target: { value } }) { setinput({ ...inputs, civilite: value }); }
+  function setsexe({ target: { value } }) { setinput({ ...inputs, sexe: value }); }
+  function setdatenaissance(value) { setinput({ ...inputs, datenaissance: value }); }
+  function setlieunaissance({ target: { value } }) { setinput({ ...inputs, lieunaissance: value }); }
+  function setnationalite({ target: { value } }) { setinput({ ...inputs, nationalite: value }); }
+  function sethabitation({ target: { value } }) { setinput({ ...inputs, habitation: value }); }
+  function setcontact({ target: { value } }) { setinput({ ...inputs, contact: value }); }
+  function setprofession({ target: { value } }) { setinput({ ...inputs, profession: value }); }
+  function setreligion({ target: { value } }) { setinput({ ...inputs, religion: value }); }
+  function setsituation({ target: { value } }) { setinput({ ...inputs, situation: value }); }
+
   //pere
-  function setnompere({ target: { value } }) {
-    setinput({ ...inputs, nompere: value });
-  }
-  function setprenomspere({ target: { value } }) {
-    setinput({ ...inputs, prenomspere: value });
-  }
-  function setcontactpere({ target: { value } }) {
-    setinput({ ...inputs, contactpere: value });
-  }
+  function setnompere({ target: { value } }) { setinput({ ...inputs, nompere: value }); }
+  function setprenomspere({ target: { value } }) { setinput({ ...inputs, prenomspere: value }); }
+  function setcontactpere({ target: { value } }) { setinput({ ...inputs, contactpere: value }); }
+
   //mere
-  function setnommere({ target: { value } }) {
-    setinput({ ...inputs, nommere: value });
-  }
-  function setprenomsmere({ target: { value } }) {
-    setinput({ ...inputs, prenomsmere: value });
-  }
-  function setcontactmere({ target: { value } }) {
-    setinput({ ...inputs, contactmere: value });
-  }
+  function setnommere({ target: { value } }) { setinput({ ...inputs, nommere: value }); }
+  function setprenomsmere({ target: { value } }) { setinput({ ...inputs, prenomsmere: value }); }
+  function setcontactmere({ target: { value } }) { setinput({ ...inputs, contactmere: value }); }
+
   //tuteur
-  function setnomtuteur({ target: { value } }) {
-    setinput({ ...inputs, nomtuteur: value });
-  }
-  function setprenomstuteur({ target: { value } }) {
-    setinput({ ...inputs, prenomstuteur: value });
-  }
-  function setcontacttuteur({ target: { value } }) {
-    setinput({ ...inputs, contacttuteur: value });
-  }
+  function setnomtuteur({ target: { value } }) { setinput({ ...inputs, nomtuteur: value }); }
+  function setprenomstuteur({ target: { value } }) { setinput({ ...inputs, prenomstuteur: value }); }
+  function setcontacttuteur({ target: { value } }) { setinput({ ...inputs, contacttuteur: value }); }
 
   //personne sur
-  function setnompersonnesure({ target: { value } }) {
-    setinput({ ...inputs, nompersonnesure: value });
-  }
-  function setprenomspersonnesure({ target: { value } }) {
-    setinput({ ...inputs, prenomspersonnesure: value });
-  }
-  function setcontactpersonnesure({ target: { value } }) {
-    setinput({ ...inputs, contactpersonnesure: value });
-  }
-  function setqualitepersonnesure({ target: { value } }) {
-    setinput({ ...inputs, qualitepersonnesure: value });
-  }
+  function setnompersonnesure({ target: { value } }) { setinput({ ...inputs, nompersonnesure: value }); }
+  function setprenomspersonnesure({ target: { value } }) { setinput({ ...inputs, prenomspersonnesure: value }); }
+  function setcontactpersonnesure({ target: { value } }) { setinput({ ...inputs, contactpersonnesure: value }); }
+  function setqualitepersonnesure({ target: { value } }) { setinput({ ...inputs, qualitepersonnesure: value }); }
 
   //assurance
-  function setassure({ target: { value } }) {
-    setinput({ ...inputs, assure: value });
-    // if (value === "non" || value === "") setinput({ ...inputs, assurance: "" });
-  }
-  function setassurance({ target: { value } }) {
-    setinput({ ...inputs, assurance: value });
-  }
+  // if (value === "non" || value === "") setinput({ ...inputs, assurance: "" });
+  function setassure({ target: { value } }) { setinput({ ...inputs, assure: value }); }
+  function setassurance({ target: { value } }) { setinput({ ...inputs, assurance: value }); }
   function verifyField() {
     const {
       nom,

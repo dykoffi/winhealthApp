@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import socket from 'socket.io-client'
 import logo from "../../../static/images/logoms2.jpg";
 import QR from "qrcode.react";
 import {
@@ -125,6 +126,7 @@ const DownloadLink = ({
   prixacte,
 }) => {
   const [url, seturl] = useState(null);
+  const io = socket.connect('https://localhost:8000')
   useEffect(() => {
     const canvas = document.getElementById("img");
     const pngUrl = canvas
@@ -171,9 +173,11 @@ const DownloadLink = ({
             loading ? (
               <small>...</small>
             ) : (
-                <IconButton aria-label="print" size="small" href={url} target="blank">
-                  <PrintIcon />
-                </IconButton>
+                <>
+                  <IconButton aria-label="print" size="small" href={url} target="blank">
+                    <PrintIcon />
+                  </IconButton>
+                </>
               )
           }
         </PDFDownloadLink>

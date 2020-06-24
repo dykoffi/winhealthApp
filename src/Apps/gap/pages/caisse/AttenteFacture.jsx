@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
 import GlobalContext from "../../../global/context";
+
 import {
   thunkListFacturesAttentes,
   thunkEncaisserFactures,
@@ -10,9 +11,10 @@ import {
   setShowModal,
 } from "../../api/caisse/factures";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
+import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
-import { socket } from "../../../global/apiQuery";
+import { socket, header } from "../../../global/apiQuery";
 import {
   TextField,
   Avatar,
@@ -39,6 +41,7 @@ const AttenteFacture = ({
   thunkSearchFacture,
   setShowModal,
 }) => {
+  const [projection, setprojection] = useState(false)
   const [value, setValue] = useState("");
   const [inputs, setinput] = useState({
     modepaiement: "",
@@ -46,17 +49,26 @@ const AttenteFacture = ({
   });
 
   const handleClickOpen = (numeroFacture) => { thunkDetailsFacture(numeroFacture); };
-  const handleClose = () => { setShowModal(false); setinput({}); };
+  const handleClose = () => {
+    setprojection(false)
+    setShowModal(false)
+    setinput({ modepaiement: "", montantrecu: "", })
+  };
   function setmode({ target: { value } }) { setinput({ ...inputs, modepaiement: value }); }
   function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
+  function project() {
+    socket.emit("project_facture", currentFacture)
+    projection ? setprojection(false) : setprojection(true);
+  }
   function sendData(numeroFacture) {
     thunkEncaisserFactures(numeroFacture, {
       ...inputs,
       compte: currentFacture.numerocompte,
     });
     handleClose();
+
   }
-  const [columns] = useState([
+  const columns = [
     "N°",
     "Numero de facture",
     "Date",
@@ -69,7 +81,7 @@ const AttenteFacture = ({
     "Reste ASSU",
     "Part Patient",
     "Reste Patient",
-  ]);
+  ]
 
   const global = useContext(GlobalContext);
   function researching({ target: { value } }) { setValue(value); thunkSearchFacture(value.trim()); }
@@ -79,6 +91,16 @@ const AttenteFacture = ({
     socket.on("facture_nouvelle", () => {
       thunkListFacturesAttentes();
     });
+    socket.on("valid_paiement", (nof, montant) => {
+
+      thunkEncaisserFactures(nof,
+        {
+          modepaiement: "Compte",
+          montantrecu: montant,
+          compte: currentFacture.numerocompte,
+        });
+      handleClose();
+    })
   }, []);
   return (
     <div className="AttenteFacture row p-2">
@@ -133,8 +155,8 @@ const AttenteFacture = ({
                     <td>{montanttotalfacture} FCFA</td>
                     <td>{partassurancefacture} FCFA</td>
                     <td>{resteassurancefacture} FCFA</td>
-                    <td className="font-weight-bold">{partpatientfacture} FCFA</td>
-                    <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                    <td >{partpatientfacture} FCFA</td>
+                    <td className={`font-weight-bold ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
                       {restepatientfacture} FCFA
                       </td>
                   </tr>
@@ -142,11 +164,12 @@ const AttenteFacture = ({
               )}
             </tbody>
           </table>
-
         )}
       <Dialog
         open={showModal}
         onClose={handleClose}
+        disableBackdropClick
+        disableEscapeKeyDown
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth={true}
@@ -154,6 +177,7 @@ const AttenteFacture = ({
       >
         <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
           <b>Facture N° {currentFacture.numerofacture}</b>
+          {currentFacture.restepatientfacture === 0 && <><br /><small className="green-text font-weight-bold">(déjà payée)</small></>}
         </DialogTitle>
         <DialogContent>
           <div className="row">
@@ -205,30 +229,11 @@ const AttenteFacture = ({
                           label="Mode de paiement"
                           style={{ fontSize: "13px" }}
                         >
-                          <MenuItem style={{ fontSize: "13px" }} value={"Compte"}>
-                            Compte
-                        </MenuItem>
-                          <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
-                            Chèque
-                        </MenuItem>
-                          <MenuItem
-                            style={{ fontSize: "13px" }}
-                            value={"Espèces"}
-                          >
-                            Espèces
-                        </MenuItem>
-                          <MenuItem
-                            style={{ fontSize: "13px" }}
-                            value={"Électronique"}
-                          >
-                            Électronique
-                        </MenuItem>
-                          <MenuItem
-                            style={{ fontSize: "13px" }}
-                            value={"Mobile money"}
-                          >
-                            Mobile money
-                        </MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Compte"}>Compte</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
                         </Select>
                       ) : (
                           <Select
@@ -239,27 +244,10 @@ const AttenteFacture = ({
                             label="Mode de paiement"
                             style={{ fontSize: "13px" }}
                           >
-                            <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
-                              Chèque
-                        </MenuItem>
-                            <MenuItem
-                              style={{ fontSize: "13px" }}
-                              value={"Espèces"}
-                            >
-                              Espèces
-                        </MenuItem>
-                            <MenuItem
-                              style={{ fontSize: "13px" }}
-                              value={"Électronique"}
-                            >
-                              Électronique
-                        </MenuItem>
-                            <MenuItem
-                              style={{ fontSize: "13px" }}
-                              value={"Mobile money"}
-                            >
-                              Mobile money
-                        </MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
                           </Select>
                         )}
                     </FormControl>
@@ -287,6 +275,20 @@ const AttenteFacture = ({
         <DialogActions>
           <Button
             variant="contained"
+            className={`mb-2 ${projection && "red text-white"}`}
+            startIcon={<DesktopWindowsIcon />}
+            onClick={() => {
+              project();
+            }}
+            style={{
+              textTransform: "none",
+              fontSize: "13px",
+            }}
+          >
+            projeter
+          </Button>
+          <Button
+            variant="contained"
             className="mb-2"
             startIcon={<CancelIcon />}
             onClick={handleClose}
@@ -297,9 +299,10 @@ const AttenteFacture = ({
           >
             Annuler
           </Button>
-          <Button
+          {currentFacture.restepatientfacture !== 0 && <Button
             variant="contained"
             className="mb-2"
+            disabled={inputs.modepaiement.trim() === "" || inputs.montantrecu.trim() === ""}
             onClick={() => sendData(currentFacture.numerofacture)}
             startIcon={<CheckCircleOutlineIcon />}
             style={{
@@ -310,7 +313,7 @@ const AttenteFacture = ({
             }}
           >
             Valider la transaction
-          </Button>
+          </Button>}
         </DialogActions>
       </Dialog>
     </div>
@@ -333,3 +336,4 @@ const AttenteFactureConnected = connect(mapStateToProps, {
   setShowModal,
 })(AttenteFacture);
 export default AttenteFactureConnected;
+

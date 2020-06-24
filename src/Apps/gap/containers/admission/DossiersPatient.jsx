@@ -56,7 +56,21 @@ const DossiersPatient = ({
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [openControle, setOpenControle] = useState(false);
-  const [inputs, setinput] = useState({ debutDate: new Date(), finDate: new Date(), DebutHeure: new Date(), finHeure: new Date(), });
+  const [inputs, setinput] = useState({
+    debutDate: new Date(),
+    finDate: new Date(),
+    DebutHeure: new Date(),
+    finHeure: new Date(),
+    type: "NEANT",
+    medecin: "",
+    gestionnaire: "",
+    organisme: "",
+    beneficiaire: "",
+    assurePrinc: "",
+    matriculeAssure: "NEANT",
+    numeroPEC: "",
+    taux: ""
+  });
   const [listActes, setListActe] = useState([]);
   // const [listActesSejour, setListActesSejour] = useState([]);
   const [actes, setActes] = useState([]);
@@ -181,7 +195,7 @@ const DossiersPatient = ({
             </div>
             <div className="col-1">
               <QR
-                value={`${header.url}/gap/verify/facture/${currentSejour.idfacture}`}
+                value={`${header.local}/gap/verify/facture/${currentSejour.idfacture}`}
                 id="img"
                 size={100}
                 fgColor="#696969"
@@ -210,7 +224,6 @@ const DossiersPatient = ({
               }
             />
             <Button
-              disableElevation
               variant="contained"
               className="mx-1"
               startIcon={<AddIcon />}
@@ -226,7 +239,6 @@ const DossiersPatient = ({
             </Button>
             {2 - currentSejour.nbcontrole > 0 && (
               <Button
-                disableElevation
                 variant="contained"
                 className="mx-1"
                 startIcon={<BallotIcon />}
@@ -273,7 +285,6 @@ const DossiersPatient = ({
       ) : (
           <Button
             variant="contained"
-            disableElevation
             className="mb-2"
             onClick={handleClickOpen}
             startIcon={<AddIcon />}
@@ -288,7 +299,7 @@ const DossiersPatient = ({
           </Button>
         )}
 
-      <table className="col-12 table-sm table-hover">
+      <table className="col-12 table-sm table-hover table-striped">
         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
           <tr>{columns.map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
         </thead>
@@ -298,7 +309,7 @@ const DossiersPatient = ({
               key={i}
               style={{ cursor: "pointer" }}
               onClick={() => thunkDetailsSejour(idsejour, numerosejour)}
-              className={currentSejour && currentSejour.idsejour === idsejour && "table-active"}
+              className={currentSejour && currentSejour.idsejour === idsejour && "bgcolor-primary font-weight-bold white-text"}
             >
               <td>{numerosejour}</td>
               <td>{datedebutsejour} {heuredebutsejour}</td>
@@ -543,15 +554,6 @@ const DossiersPatient = ({
                     </Select>
                   </FormControl>
                 </div>
-              </div>
-              <div className="col-12">
-                {
-                  test.map(({ test }, i) => (<Input size="small" value={test} onChange={(ev) => settest(prev => {
-                    let tab = prev.copyWithin()
-                    tab[i].test = ev.target.value
-                    return tab
-                  })} />))
-                }
               </div>
               <table className="col-12 table-sm mx-1">
                 <thead className="p-2" style={{ backgroundColor: global.theme.primary }}>

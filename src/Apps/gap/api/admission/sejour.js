@@ -6,7 +6,7 @@ const initState = {
     listSejour: [],
     currentSejour: null,
     detailsSejour: null,
-    loadingSejour: false    
+    loadingSejour: false
 }
 
 
@@ -47,34 +47,11 @@ const setLoadingSejour = () => ({
 
 const sejourReducer = (state = initState, action) => {
     switch (action.type) {
-        case SET_LIST_SEJOUR:
-            return {
-                ...state,
-                listSejour: action.listSejour,
-                loadingSejour: action.loadingSejour
-            }
-        case SET_DETAILS_SEJOUR:
-            return {
-                ...state,
-                detailsSejour: action.detailsSejour,
-                loadingSejour: action.loadingSejour
-            }
-        case SET_LOADING_SEJOUR:
-            return {
-                ...state,
-                loadingSejour: action.loadingSejour
-            }
-        case SET_CURRENT_SEJOUR:
-            console.log("current sejour")
-            console.log(state)
-            return {
-                ...state,
-                currentSejour: action.currentSejour,
-                loadingSejour: action.loadingSejour
-            }
-
-        default:
-            return state
+        case SET_LIST_SEJOUR: return { ...state, listSejour: action.listSejour, loadingSejour: action.loadingSejour }
+        case SET_DETAILS_SEJOUR: return { ...state, detailsSejour: action.detailsSejour, loadingSejour: action.loadingSejour }
+        case SET_LOADING_SEJOUR: return { ...state, loadingSejour: action.loadingSejour }
+        case SET_CURRENT_SEJOUR: return { ...state, currentSejour: action.currentSejour, loadingSejour: action.loadingSejour }
+        default: return state
     }
 }
 
@@ -110,12 +87,12 @@ export function thunkAddSejour(data, patient) {
     }
 }
 
-export function thunkAddControle(numeroSejour,data,patient){
-    return async (dispatch)=>{
+export function thunkAddControle(numeroSejour, data, patient) {
+    return async (dispatch) => {
         Axios({
-            method:"POST",
+            method: "POST",
             url: `${header.url}/gap/add/controle/${numeroSejour}`,
-        data: { ...data },
+            data: { ...data },
             headers: {
                 "content-type": "application/x-www-form-urlencoded",
             }
@@ -128,7 +105,7 @@ export function thunkAddControle(numeroSejour,data,patient){
     }
 }
 
-export function thunkDetailsSejour(idSejour,numeroSejour) {
+export function thunkDetailsSejour(idSejour, numeroSejour) {
     return async (dispatch) => {
         dispatch(setLoadingSejour())
         Axios({
@@ -147,7 +124,7 @@ export function thunkCurrentFacture(patient) {
             url: `${header.url}/gap/imprimer/facture/${patient}`
         })
             .then(({ data: { rows } }) => {
-                rows[0] ? dispatch(thunkDetailsSejour(rows[0].idsejour,rows[0].numerosejour)) : dispatch(setCurrentSejour(null))
+                rows[0] ? dispatch(thunkDetailsSejour(rows[0].idsejour, rows[0].numerosejour)) : dispatch(setCurrentSejour(null))
             })
     }
 }

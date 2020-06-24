@@ -1,33 +1,36 @@
 body {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 .ombre {
-  box-shadow: 0.3px 0.3px 15px rgba(214, 214, 214, 0.192);
+    box-shadow: 0.3px 0.3px 15px rgba(214, 214, 214, 0.192);
 }
+
 .page {
-  min-height: 100vh !important;
+    min-height: 100vh !important;
 }
 
 .ombre-bottom {
-  box-shadow: 0 8px 0.25rem -6px rgba(0, 0, 0, 0.075) !important;
+    box-shadow: 0 8px 0.25rem -6px rgba(0, 0, 0, 0.075) !important;
 }
 
 .color {
-  color: red;
+    color: red;
 }
 
-input,select {
-  font-size: 13px !important;
+input,
+select {
+    font-size: 13px !important;
 }
+
 label {
-  font-size: 13.4px !important;
+    font-size: 13.4px !important;
 }
 
 table {
-  font-size: 11px !important;
+    font-size: 11px !important;
 }
 
-button{
-  font-size: 12.5px !important;
+button {
+    font-size: 12.5px !important;
 }

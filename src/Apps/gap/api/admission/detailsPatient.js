@@ -37,28 +37,10 @@ const setDossiersPatient = (data) => (
 //reducer
 const detailsReducer = (state = initState, action) => {
     switch (action.type) {
-        case SET_CURRENT_PATIENT:
-            return {
-                ...state,
-                loading: action.loading,
-                currentPatient: action.currentPatient
-            }
-
-        case SET_DOSSIERS_PATIENT:
-            return {
-                ...state,
-                loading: action.loading,
-                currentPatient: action.currentPatient
-            }
-
-        case SET_LOADING:
-            return {
-                ...state,
-                loading: action.loading,
-            }
-
-        default:
-            return state
+        case SET_CURRENT_PATIENT: return { ...state, loading: action.loading, currentPatient: action.currentPatient }
+        case SET_DOSSIERS_PATIENT: return { ...state, loading: action.loading, currentPatient: action.currentPatient }
+        case SET_LOADING: return { ...state, loading: action.loading, }
+        default: return state
     }
 }
 
@@ -70,8 +52,8 @@ export function thunkDetailsPatient(idPatient) {
             url: `${header.url}/gap/details/patient/${idPatient}`
         })
             .then(({ data: { rows } }) => {
-               dispatch(setCurrentPatient(rows[0]))
-               dispatch(setCurrentPage("dossiersPatient"))
+                dispatch(setCurrentPatient(rows[0]))
+                dispatch(setCurrentPage("dossiersPatient"))
             })
     }
 }
