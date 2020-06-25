@@ -62,7 +62,7 @@ const DetailsPatient = ({ currentPatient }) => {
 };
 
 const mapStateToProps = (state) => {
-  const { detailsPatientReducer: { currentPatient }, } = state;
+  const { PatientReducer: { currentPatient }, } = state;
   return { currentPatient };
 };
 

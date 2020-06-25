@@ -378,15 +378,8 @@ const Assurance = ({
                     label="Type d'assurance"
                     style={{ fontSize: "11px" }}
                   >
-                    <MenuItem
-                      style={{ fontSize: "11px" }}
-                      value={"Gestionnaire"}
-                    >
-                      Gestionnaire
-                    </MenuItem>
-                    <MenuItem style={{ fontSize: "11px" }} value={"Organisme"}>
-                      Organisme
-                    </MenuItem>
+                    <MenuItem style={{ fontSize: "11px" }} value={"Gestionnaire"}>Gestionnaire</MenuItem>
+                    <MenuItem style={{ fontSize: "11px" }} value={"Organisme"}>Organisme</MenuItem>
                   </Select>
                 </FormControl>
                 <TextField

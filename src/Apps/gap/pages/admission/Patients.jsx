@@ -11,27 +11,27 @@ const Patients = ({ loading }) => {
         <TablePatients />
       </div>
       <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          open={loading}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={loading}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="standard"
+          severity="info"
         >
-          <MuiAlert
-            elevation={6}
-            variant="standard"
-            severity="info"
-          >
-            Recherche de patients ...
+          Recherche de patients ...
           </MuiAlert>
-        </Snackbar>
+      </Snackbar>
     </div>
   );
 };
 
 const mapStateToProp = (state) => {
   const {
-    listPatientsReducer: { loading },
+    PatientReducer: { loading },
   } = state;
   return { loading };
 };

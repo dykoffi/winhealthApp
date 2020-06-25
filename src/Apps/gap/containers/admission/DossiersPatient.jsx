@@ -715,7 +715,7 @@ const DossiersPatient = ({
 };
 const mapStatetoProps = (state) => {
   const {
-    detailsPatientReducer: { currentPatient },
+    PatientReducer: { currentPatient },
   } = state;
   const {
     sejourReducer: { listSejour, currentSejour },

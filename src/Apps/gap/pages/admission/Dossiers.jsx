@@ -26,7 +26,7 @@ const Dossiers = ({ currentPatient }) => {
 };
 const mapStateToProps = (state) => {
   const {
-    detailsPatientReducer: { currentPatient },
+    PatientReducer: { currentPatient },
   } = state;
   return { currentPatient };
 };

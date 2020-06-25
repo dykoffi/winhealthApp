@@ -122,10 +122,6 @@ const AddPatient = ({ thunkDetailsPatient }) => {
   function setcontactpersonnesure({ target: { value } }) { setinput({ ...inputs, contactpersonnesure: value }); }
   function setqualitepersonnesure({ target: { value } }) { setinput({ ...inputs, qualitepersonnesure: value }); }
 
-  //assurance
-  // if (value === "non" || value === "") setinput({ ...inputs, assurance: "" });
-  function setassure({ target: { value } }) { setinput({ ...inputs, assure: value }); }
-  function setassurance({ target: { value } }) { setinput({ ...inputs, assurance: value }); }
   function verifyField() {
     const {
       nom,
@@ -206,18 +202,10 @@ const AddPatient = ({ thunkDetailsPatient }) => {
               error={inputs.civilite.trim().length === 0}
               style={{ fontSize: "13px" }}
             >
-              <MenuItem style={{ fontSize: "13px" }} value={"M"}>
-                M.
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Mme"}>
-                Mme
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Mlle"}>
-                Mlle
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Enf"}>
-                Enfant
-              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"M"}>M.</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Mme"}>Mme</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Mlle"}>Mlle</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Enf"}>Enfant</MenuItem>
             </Select>
           </FormControl>
           <Input
@@ -255,12 +243,8 @@ const AddPatient = ({ thunkDetailsPatient }) => {
               error={inputs.sexe.trim().length === 0}
               style={{ fontSize: "13px" }}
             >
-              <MenuItem style={{ fontSize: "13px" }} value={"M"}>
-                M
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"F"}>
-                F
-              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"M"}>M</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"F"}>F</MenuItem>
             </Select>
           </FormControl>
           <Input
@@ -320,21 +304,11 @@ const AddPatient = ({ thunkDetailsPatient }) => {
               onChange={setsituation}
               style={{ fontSize: "13px" }}
             >
-              <MenuItem style={{ fontSize: "13px" }} value={"Marié"}>
-                Marié(e)
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Célibataire"}>
-                Célibataire
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Divorcé"}>
-                Divorcé(e)
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Concubinage"}>
-                Concubinage
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Veuf"}>
-                Veuf(ve)
-              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Marié"}>Marié(e)</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Célibataire"}>Célibataire</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Divorcé"}>Divorcé(e)</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Concubinage"}>Concubinage</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Veuf"}>Veuf(ve)</MenuItem>
             </Select>
           </FormControl>
           <FormControl variant="outlined" size="small" className="m-1 col">
@@ -347,24 +321,12 @@ const AddPatient = ({ thunkDetailsPatient }) => {
               onChange={setreligion}
               style={{ fontSize: "13px" }}
             >
-              <MenuItem style={{ fontSize: "13px" }} value={"Chrétient"}>
-                Chrétient(ne)
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Musulman"}>
-                Musulman(e)
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Boudiste"}>
-                Boudiste
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Animiste"}>
-                Animiste
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Autre"}>
-                Autre réligion
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"Sans"}>
-                Sans réligion
-              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Chrétient"}>Chrétient(ne)</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Musulman"}>Musulman(e)</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Boudiste"}>Boudiste</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Animiste"}>Animiste</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Autre"}>Autre réligion</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"Sans"}>Sans réligion</MenuItem>
             </Select>
           </FormControl>
           <FormControl variant="outlined" size="small" className="m-1 col">
@@ -377,44 +339,24 @@ const AddPatient = ({ thunkDetailsPatient }) => {
               onChange={setprofession}
               style={{ fontSize: "13px" }}
             >
-              <MenuItem style={{ fontSize: "13px" }} value={"agriculteurs"}>
-                Agriculteurs
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"artisans"}>
-                Artisants
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"commerçant"}>
-                Commerçants
-              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"agriculteurs"}>Agriculteurs</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"artisans"}>Artisants</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"commerçant"}>Commerçants</MenuItem>
               <MenuItem
                 style={{ fontSize: "13px" }}
                 value={"chef d'entreprise"}
               >
                 Chef d'entreprise
               </MenuItem>
-              <MenuItem
-                style={{ fontSize: "13px" }}
-                value={"profession liberale"}
-              >
-                Professions liberales
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"etudiant"}>
-                Étudiant(e)
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"retraité"}>
-                Retraité(e)
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"salarié"}>
-                Salarié(e)
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"sans activité"}>
-                Sans activité
-              </MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"profession liberale"}>Professions liberales</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"etudiant"}>Étudiant(e)</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"retraité"}>Retraité(e)</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"salarié"}>Salarié(e)</MenuItem>
+              <MenuItem style={{ fontSize: "13px" }} value={"sans activité"}>Sans activité</MenuItem>
             </Select>
           </FormControl>
         </div>
       </fieldset>
-
       <fieldset className="border col-5 py-2 px-4 mx-2 grey-text text-darken-1">
         <legend className="grey lighten-3 px-3 font-weight-bold">
           <small className="font-weight-bold">Contacts patient</small>
@@ -537,88 +479,22 @@ const AddPatient = ({ thunkDetailsPatient }) => {
           />
         </div>
       </fieldset>
-
-      {/* <fieldset className="border col py-2 px-4 mx-2 grey-text text-darken-1">
-        <legend className="grey lighten-3 px-3">
-          <small className="font-weight-bold">Assurance patient</small>
-        </legend>
-        <div className="row py-1">
-          <FormControl variant="outlined" size="small" className="m-1 col-12">
-            <InputLabel id="assure-label">Assuré ?</InputLabel>
-            <Select
-              labelId="assure-label"
-              id="assure"
-              label="Assuré ?"
-              value={inputs.assure}
-              onChange={setassure}
-              style={{ fontSize: "13px" }}
-            >
-              <MenuItem style={{ fontSize: "13px" }} value={"oui"}>
-                Oui
-              </MenuItem>
-              <MenuItem style={{ fontSize: "13px" }} value={"non"}>
-                Non
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-        <div className="row py-1">
-          {inputs.assure === "oui" && (
-            <FormControl variant="outlined" size="small" className="m-1 col-12">
-              <InputLabel id="assurance-label">Assurance</InputLabel>
-              <Select
-                labelId="assurance-label"
-                id="assurance"
-                label="Assurance"
-                value={inputs.assurance}
-                onChange={setassurance}
-                style={{ fontSize: "13px" }}
-              >
-                <MenuItem style={{ fontSize: "13px" }} value={"sgbci"}>
-                  SGBCI
-                </MenuItem>
-                <MenuItem style={{ fontSize: "13px" }} value={"nsia"}>
-                  NSIA
-                </MenuItem>
-              </Select>
-            </FormControl>
-          )}
-        </div>
-      </fieldset> */}
       <div className="col-12 mt-4">
         <Button
           variant="contained"
-          endIcon={<SendIcon />}
-          onClick={() => {
-            send();
-          }}
-          style={{
-            textTransform: "none",
-            backgroundColor: global.theme.primary,
-            color: "white",
-          }}
+          endIcon={<SendIcon />} onClick={() => { send(); }}
+          style={{ textTransform: "none", backgroundColor: global.theme.primary, color: "white", }}
         >
           Valider
         </Button>
         <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right", }}
           // TransitionComponent={<Slide direction="right" />}
           autoHideDuration={alert.time}
-          onClose={() => {
-            setalert({ ...alert, show: false });
-          }}
+          onClose={() => { setalert({ ...alert, show: false }); }}
           open={alert.show}
         >
-          <MuiAlert
-            elevation={1}
-            variant={alert.style}
-            severity={alert.severity}
-          >
-            <small>{alert.message}</small>
-          </MuiAlert>
+          <MuiAlert elevation={1} variant={alert.style} severity={alert.severity}><small>{alert.message}</small></MuiAlert>
         </Snackbar>
       </div>
     </div>
