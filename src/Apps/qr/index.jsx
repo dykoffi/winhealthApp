@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import QrReader from 'react-qr-scanner'
 import logo from '../../static/images/logo.png'
 import qr from '../../static/images/qr.png'
-import PDFViewer from 'pdf-viewer-reactjs'
 import { header, socket } from "../global/apiQuery";
 import { useEffect } from "react";
 import Alert from '@material-ui/lab/Alert';

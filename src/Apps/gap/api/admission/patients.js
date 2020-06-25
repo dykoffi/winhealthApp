@@ -88,11 +88,11 @@ export function thunkSearchPatient(info) {
     }
 }
 
-export function thunkDetailsPatient(idPatient) {
+export function thunkDetailsPatient(ipppatient) {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: `${header.url}/gap/details/patient/${idPatient}`
+            url: `${header.url}/gap/details/patient/${ipppatient}`
         })
             .then(({ data: { rows } }) => {
                 dispatch(setCurrentPatient(rows[0]))

@@ -2,13 +2,22 @@ import React, { useState, useEffect, useContext } from "react";
 import { connect } from "react-redux";
 
 import moment from "moment";
-import { thunkListPatient, thunkSearchPatient, thunkAddPatient, setModalAdd, thunkDetailsPatient, thunkDeletePatient, setModalModif, thunkModifPatient } from "../../api/admission/patients";
+import {
+  thunkListPatient,
+  thunkSearchPatient,
+  thunkAddPatient,
+  setModalAdd,
+  thunkDetailsPatient,
+  thunkDeletePatient,
+  setModalModif,
+  thunkModifPatient
+} from "../../api/admission/patients";
+
 import { setCurrentPage } from "../../api/admission/pages"
 
 import { TextField, Avatar, Chip, Dialog, Button, DialogTitle, DialogContent, DialogActions } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import GlobalContext, { Info } from "../../../global/context";
-import Axios from "axios";
 
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import AddIcon from '@material-ui/icons/Add'
@@ -19,6 +28,8 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 
+import QrReader from 'react-qr-scanner'
+
 import InputMask from "react-input-mask";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
@@ -27,8 +38,11 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 
+import qr from '../../../../static/images/qr2.png'
+
 import { header } from "../../../global/apiQuery";
 import { MenuItem, InputLabel, FormControl } from "@material-ui/core";
+import Axios from "axios";
 
 const Input = withStyles({
   root: {
@@ -66,8 +80,8 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
   ]
   moment.locale("fr");
   const [value, setvalue] = useState("");
-  function researching({ target: { value } }) { setvalue(value); thunkSearchPatient(value.trim()); }
-
+  const [scanQR, setscanQR] = useState(null)
+  const [vallueQR, setvalueQR] = useState(null)
   const [inputs, setinput] = useState({
     nom: "",
     prenoms: "",
@@ -132,6 +146,8 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
   function setprenomspersonnesure({ target: { value } }) { setinput({ ...inputs, prenomspersonnesure: value }); }
   function setcontactpersonnesure({ target: { value } }) { setinput({ ...inputs, contactpersonnesure: value }); }
   function setqualitepersonnesure({ target: { value } }) { setinput({ ...inputs, qualitepersonnesure: value }); }
+
+  function researching({ target: { value } }) { setvalue(value); thunkSearchPatient(value.trim()); }
   const handleClose = () => {
     setinput({
       nom: "",
@@ -235,11 +251,14 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             <Button
               variant="contained"
               startIcon={<CropFreeIcon />}
-              // onClick={() => { setmodif(true); }}
+              onClick={() => {
+                scanQR ? setscanQR(false) : setscanQR(true)
+              }}
               style={{
                 textTransform: "none",
                 fontSize: "11px",
               }}
+              className={scanQR && "red white-text"}
             >
               Scanner le code QR
             </Button>
@@ -290,7 +309,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                     <tr
                       key={i}
                       style={{ cursor: "pointer" }}
-                      onClick={() => thunkDetailsPatient(iddossier)}
+                      onClick={() => thunkDetailsPatient(ipppatient)}
                       className={currentPatient && currentPatient.ipppatient === ipppatient && "bgcolor-primary font-weight-bold white-text"}
                     >
                       <td>{i + 1}</td>
@@ -667,7 +686,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
               nationalite: currentPatient.nationalitepatient,
               habitation: currentPatient.habitationpatient,
               contact: currentPatient.contactpatient,
-              situation: currentPatient.situationpatient,
+              situation: currentPatient.situationmatrimonialepatient,
               religion: currentPatient.religionpatient,
               profession: currentPatient.professionpatient,
               nompere: currentPatient.nomperepatient,
@@ -692,7 +711,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             </b>
           </DialogTitle>
           <DialogContent>
-            <small className="font-weight-bold bg-light">Patient</small>
+            <small className="font-weight-bold bg-light">Patient ({currentPatient.ipppatient})</small>
             <div className="row py-1">
               <FormControl variant="standard" size="small" className="m-1 col">
                 <InputLabel id="civilite-label">Civilité</InputLabel>
@@ -992,10 +1011,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
               className="mb-2"
               startIcon={<CancelIcon />}
               onClick={CloseModif}
-              style={{
-                textTransform: "none",
-                fontSize: "11px",
-              }}
+              style={{ textTransform: "none", fontSize: "11px", }}
             >
               Annuler
             </Button>
@@ -1051,7 +1067,31 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             </Button>
           </DialogActions>
         </Dialog>
-              
+
+        {
+          scanQR && <div style={{ position: "fixed", zIndex: "10001", right: "0.5cm", bottom: "0.5cm" }}
+            className="bg-light col-2 d-flex p-0 flex-column border justify-content-center text-center align-items-center">
+            <img src={qr} height={125} width={125} alt="" className="animated infinite flash" />
+            <small style={{ fontSize: "10px" }} className="text-secondary">Scanner votre le Qr code pour identifier le patient</small>
+            <QrReader
+              delay={500}
+              style={{ width: "100%" }}
+              onError={(err) => { console.log(err) }}
+              onScan={(result) => {
+                if (result != null) {
+                  Axios({ url: `${header.url}/gap/details/patient/${result}` })
+                    .then(({ data: { rows } }) => {
+                      if (rows.length === 0) alert("Ce patient n'existe pas ici")
+                      else thunkDetailsPatient(result)
+                    })
+                }
+              }}
+            />
+            {/* {result === "false" && <Alert severity="error">Erreur</Alert>}
+          {result === "true" && <Alert severity="success">Transaction reussie</Alert>} */}
+          </div>
+        }
+
       </div>
     </div>
   );
