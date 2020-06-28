@@ -5,13 +5,13 @@ import { connect } from "react-redux";
 
 const Dossiers = ({ currentPatient }) => {
   return (
-    <div className="Dossiers row p-3">
+    <div className="Dossiers row">
       {currentPatient.iddossier ? (
         <>
-          <section className="col-3">
+          <section className="col-12">
             <DetailsPatient />
           </section>
-          <section className="col-9">
+          <section className="col-12 p-3">
             <DossiersPatient />
           </section>
         </>

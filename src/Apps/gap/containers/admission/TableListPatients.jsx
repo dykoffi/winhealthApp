@@ -37,6 +37,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import frLocale from "date-fns/locale/fr";
 
 import qr from '../../../../static/images/qr2.png'
 
@@ -258,7 +259,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                 textTransform: "none",
                 fontSize: "11px",
               }}
-              className={scanQR && "red white-text"}
+              className={scanQR ? "red white-text" : ""}
             >
               Scanner le code QR
             </Button>
@@ -279,7 +280,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             <Button
               variant="contained"
               startIcon={<AddIcon />}
-              onClick={() => { setModalAdd(true); }}
+              onClick={() => { setModalAdd(true) }}
               style={{
                 textTransform: "none",
                 backgroundColor: global.theme.primary,
@@ -297,7 +298,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
           {listPatients.length === 0 ? (
             <div className="col-12 text-secondary text-center">
               <h3 className="text-center lead">Aucun patient</h3>
-              <small> Pour en créer un, rendez-vous dans 'ajouter un patient' puis rerenseignez les informations </small>
+              <small> Pour en créer un, cliquer le boutton 'ajouter un patient' puis rerenseignez les informations </small>
             </div>
           ) : (
               <table className="table-sm table-hover col-12 table-striped">
@@ -310,7 +311,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                       key={i}
                       style={{ cursor: "pointer" }}
                       onClick={() => thunkDetailsPatient(ipppatient)}
-                      className={currentPatient && currentPatient.ipppatient === ipppatient && "bgcolor-primary font-weight-bold white-text"}
+                      className={(currentPatient && currentPatient.ipppatient === ipppatient) ? "bgcolor-primary font-weight-bold white-text" : ""}
                     >
                       <td>{i + 1}</td>
                       <td><b>{ipppatient}</b></td>
@@ -410,10 +411,11 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                 value={inputs.lieunaissance}
                 onChange={setlieunaissance}
               />
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
                 <KeyboardDatePicker
+                  label="Date de naissance"
                   id="date-picker-dialog"
-                  format="dd/MM/yyyy"
+                  format="dd MMMM yyyy"
                   value={inputs.datenaissance}
                   onChange={setdatenaissance}
                   className="m-1 col-4"
@@ -629,7 +631,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                 error={inputs.contactpersonnesure.trim().length === 0}
               />
             </div>
-            <div className="col-12 d-flex text-center mt-2">
+            <div className="col-12 d-flex justify-content-center align-items-center text-center mt-2">
               <ReportProblemOutlinedIcon className="bg-warning mr-2" />
               <small className="font-weight-bold">Veuillez Renseigner tous les champs Obligatoires avant la creation du patient</small>
             </div>
@@ -681,7 +683,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
               prenoms: currentPatient.prenomspatient,
               civilite: currentPatient.civilitepatient,
               sexe: currentPatient.sexepatient,
-              datenaissance: new Date(),
+              datenaissance: new Date((currentPatient.datenaissancepatient).split('-').reverse().join('-')),
               lieunaissance: currentPatient.lieunaissancepatient,
               nationalite: currentPatient.nationalitepatient,
               habitation: currentPatient.habitationpatient,
@@ -692,7 +694,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
               nompere: currentPatient.nomperepatient,
               prenomspere: currentPatient.prenomsperepatient,
               contactpere: currentPatient.contactperepatient,
-              nommere: currentPatient.nomerepatient,
+              nommere: currentPatient.nommerepatient,
               prenomsmere: currentPatient.prenomsmerepatient,
               contactmere: currentPatient.contactmerepatient,
               nomtuteur: currentPatient.nomtuteurpatient,
@@ -778,15 +780,18 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                 value={inputs.lieunaissance}
                 onChange={setlieunaissance}
               />
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
                 <KeyboardDatePicker
+                  label="Date de naissance"
                   id="date-picker-dialog"
-                  format="dd/MM/yyyy"
+                  format="dd MMMM yyyy"
+                  autoOk
                   value={inputs.datenaissance}
                   onChange={setdatenaissance}
                   className="m-1 col-4"
                 />
               </MuiPickersUtilsProvider>
+
             </div>
             <div className="row py-1">
               <Input
@@ -1067,9 +1072,8 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             </Button>
           </DialogActions>
         </Dialog>
-
         {
-          scanQR && <div style={{ position: "fixed", zIndex: "10001", right: "0.5cm", bottom: "0.5cm" }}
+          scanQR && !modalModif && !modalAdd && <div style={{ position: "fixed", zIndex: "10001", right: "0.5cm", bottom: "0.5cm" }}
             className="bg-light col-2 d-flex p-0 flex-column border justify-content-center text-center align-items-center">
             <img src={qr} height={125} width={125} alt="" className="animated infinite flash" />
             <small style={{ fontSize: "10px" }} className="text-secondary">Scanner votre le Qr code pour identifier le patient</small>

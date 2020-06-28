@@ -1,7 +1,7 @@
 import Axios from "axios";
 import React, { useState, useContext } from "react";
 import { Cookies } from "react-cookie";
-import logo from "../../static/images/logoWH.png";
+import logo from "../../static/images/logo4.png";
 import { header } from "../global/apiQuery";
 // import { TextField, TextFieldLine } from "../../components/InputCustom";
 import { TextField } from '@material-ui/core'
@@ -14,8 +14,14 @@ const Input = withStyles({
     "& label.Mui-focused": {
       color: Info.theme.primary,
     },
-    "& .MuiInput-underline:after": {
+    "_& .MuiInput-underline:after": {
       borderBottomColor: Info.theme.primary,
+    },
+    get "& .MuiInput-underline:after"() {
+      return this["_& .MuiInput-underline:after"];
+    },
+    set "& .MuiInput-underline:after"(value) {
+      this["_& .MuiInput-underline:after"] = value;
     },
     "& .MuiOutlinedInput-root": {
       "&.Mui-focused fieldset": {

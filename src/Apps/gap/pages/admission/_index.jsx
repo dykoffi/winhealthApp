@@ -21,7 +21,7 @@ const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
         />
       </section>
       <section
-        className="col-12 p-3"
+        className="col-12"
         style={{
           height: "90vh",
           overflowY: "scroll",

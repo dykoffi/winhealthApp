@@ -6,8 +6,7 @@ import AddIcon from "@material-ui/icons/Add";
 import BallotIcon from "@material-ui/icons/Ballot";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+
 import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -164,7 +163,7 @@ const DossiersPatient = ({
     <div className="DossiersPatient row p-3">
       {currentSejour !== null ? (
         <div className="col-12 white text-secondary mb-2">
-          <div className="row">
+          {/* <div className="row">
             <div className="col-10 p-0">
               <div className="row" style={{ fontSize: "14px" }}>
                 <div className="col-3">
@@ -203,8 +202,8 @@ const DossiersPatient = ({
                 includeMargin={true}
               />
             </div>
-          </div>
-          <div className="row mt-2">
+          </div> */}
+          <div className="row ">
             <TextField
               className="col-2 mr-1"
               variant="outlined"
@@ -276,10 +275,6 @@ const DossiersPatient = ({
                 prixacte={currentSejour.montanttotalfacture}
               />
             </div>
-            <div className="col d-flex justify-content-end p-0">
-              <IconButton size="small"><EditIcon /></IconButton>
-              <IconButton size="small"><DeleteOutlineIcon /></IconButton>
-            </div>
           </div>
         </div>
       ) : (
@@ -345,14 +340,19 @@ const DossiersPatient = ({
                     locale={frLocale}
                   >
                     <KeyboardDatePicker
+                      label="Date de début"
                       id="datedebut"
-                      format="dd/MM/yyyy"
+                      format="dd MMMM yyyy"
+                      autoOk
                       value={inputs.debutDate}
                       onChange={setdebutDate}
                       className="m-1 col"
                     />
                     <KeyboardTimePicker
                       id="heuredebut"
+                      label="Heure de début"
+                      ampm={false}
+                      autoOk
                       value={inputs.DebutHeure}
                       onChange={setDebutHeure}
                       className="m-1 col"
@@ -367,12 +367,17 @@ const DossiersPatient = ({
                   >
                     <KeyboardDatePicker
                       id="datefin"
-                      format="dd/MM/yyyy"
+                      label="Date de fin"
+                      format="dd MMMM yyyy"
+                      autoOk
                       value={inputs.finDate}
                       onChange={setfinDate}
                       className="m-1 col"
                     />
                     <KeyboardTimePicker
+                      label="Heure de fin"
+                      autoOk
+                      ampm={false}
                       id="heurefin"
                       value={inputs.finHeure}
                       onChange={setfinHeure}
@@ -651,6 +656,7 @@ const DossiersPatient = ({
                     />
                     <KeyboardTimePicker
                       id="heuredebut"
+                      ampm={false}
                       value={inputs.DebutHeure}
                       onChange={setDebutHeure}
                       className="m-1 col"
@@ -672,6 +678,7 @@ const DossiersPatient = ({
                     <KeyboardTimePicker
                       id="heurefin"
                       value={inputs.finHeure}
+                      ampm={false}
                       onChange={setfinHeure}
                       className="m-1 col"
                     />
