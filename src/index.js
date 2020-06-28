@@ -13,7 +13,6 @@ import './static/font/css/fontawesome.css'
 import './static/css/componentstyle.css'
 
 import './static/javascripts/main'
-import 'bootstrap'
 
 import { CookiesProvider } from 'react-cookie';
 import Chargement from './components/Chargement'

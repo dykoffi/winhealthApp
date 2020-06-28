@@ -72,7 +72,7 @@ const Connexion = () => {
           <div className="col-2 white px-3 py-3 rounded" style={{ opacity: 0.82 }}>
             <div className="row">
               <div className="text-dark text-center col-12 mb-2">
-                <img src={logo} alt="" className="col-10" /><br />
+                <img src={logo} alt="" className="col-7" /><br />
                 <small>WinHealth Connexion</small>
               </div>
               <div className="col-12">
