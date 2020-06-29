@@ -66,7 +66,6 @@ const AttenteFacture = ({
       compte: currentFacture.numerocompte,
     });
     handleClose();
-
   }
   const columns = [
     "N°",
@@ -92,7 +91,6 @@ const AttenteFacture = ({
       thunkListFacturesAttentes();
     });
     socket.on("valid_paiement", (nof, montant) => {
-
       thunkEncaisserFactures(nof,
         {
           modepaiement: "Compte",

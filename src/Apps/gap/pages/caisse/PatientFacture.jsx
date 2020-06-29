@@ -49,7 +49,7 @@ const FacturePatient = ({
   const [ipp, setipp] = useState();
   const [listPatients, setListPatients] = useState([]);
   const [modalAllfacture, setModalAllfacture] = useState(false)
-  const [compte, setcompte] = useState({})
+  const [compte, setcompte] = useState({ numerocompte: "", solde: "" })
   const [fg, setfg] = useState([])
   const [inputs, setinput] = useState({
     modepaiement: "",
@@ -78,16 +78,23 @@ const FacturePatient = ({
   function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
 
   function sendGlobalData() {
+    fg.push(compte.numerocompte)
     thunkEncaisserAllFactures(fg)
     setModalAllfacture(false)
-    setinput({})
+    setinput({
+      modepaiement: "",
+      montantrecu: "",
+    })
   }
   function sendData(numeroFacture) {
     thunkEncaisserFactures(numeroFacture, {
       ...inputs,
       compte: currentFacture.numerocompte,
     });
-    setinput({})
+    setinput({
+      modepaiement: "",
+      montantrecu: "",
+    })
   }
   useEffect(() => {
     Axios({ url: `${header.url}/gap/list/patients`, }).then(({ data: { rows } }) => {
@@ -285,7 +292,7 @@ const FacturePatient = ({
           <div className="row">
             <div className="col-12">
               <div className="row mx-1">
-                <div className="col-6 p-0">
+                <div className="col-12 p-0">
                   <small><b>Patient : </b>{currentFacture.civilitepatient}{" "} {currentFacture.nompatient}{" "} {currentFacture.prenomspatient}<br /></small>
                   <small>
                     <b>Reste à payer</b> :{" "}
@@ -313,7 +320,6 @@ const FacturePatient = ({
                     </>
                   )}
                 </div>
-                <div className="col-6 text-right"></div>
               </div>
               {currentFacture.restepatientfacture !== 0 && (
                 <>

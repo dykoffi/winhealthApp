@@ -160,68 +160,99 @@ const DossiersPatient = ({
   useEffect(() => { thunkListSejour(currentPatient.iddossier); thunkCurrentFacture(currentPatient.iddossier) }, [currentPatient.iddossier]);
 
   return (
-    <div className="DossiersPatient row p-3">
-      {currentSejour !== null ? (
+    <div className="DossiersPatient row px-3">
+      {currentSejour !== null && (
         <div className="col-12 white text-secondary mb-2">
-          {/* <div className="row">
+          <div className="row">
             <div className="col-10 p-0">
-              <div className="row" style={{ fontSize: "14px" }}>
+              <div className="row" style={{ fontSize: "14.5px" }}>
                 <div className="col-3">
+                  <h6>Sejour</h6>
                   <small><b>N° du sejour :</b> {currentSejour.numerosejour}</small><br />
                   <small><b>Date de debut :</b> {currentSejour.datedebutsejour}{" "}{currentSejour.heuredebutsejour}</small><br />
                   <small><b>Date de fin :</b> {currentSejour.datefinsejour}{" "}{currentSejour.heurefinsejour}</small><br />
                   <small><b>Type du séjour :</b> {currentSejour.typesejour}</small>
                 </div>
                 <div className="col">
-                  <small><b>Gestionnaire :</b> {currentSejour.gestionnaire}</small><br />
-                  <small><b>Garant :</b> {currentSejour.organisme}</small><br />
-                  <small><b>Béneficiaire :</b> {currentSejour.beneficiaire}</small><br />
-                  <small><b>Assuré Principal :</b> {currentSejour.assureprinc}</small><br />
-                </div>
-                <div className="col-2">
-                  <small><b>N° Fact. :</b> {currentSejour.numerofacture}</small><br />
-                  <small><b>N° Mat.:</b> {currentSejour.matriculeassure}</small><br />
-                  <small><b>N° PEC :</b> {currentSejour.numeropec}</small><br />
-                  <small><b>Taux :</b> {currentSejour.taux}%</small><br />
-                </div>
-                <div className="col-4">
+                  <h6>Facture ({currentSejour.numerofacture})</h6>
                   <small><b>Date de création :</b> {currentSejour.datefacture}{" "}{currentSejour.heurefacture}</small><br />
                   <small><b>Montant Total :</b> {currentSejour.montanttotalfacture}{" "}FCFA</small><br />
-                  <small><b>Part Assu :</b> {currentSejour.partassurancefacture}{" "}FCFA, <b>Reste</b> : ({currentSejour.resteassurancefacture} FCFA)</small><br />
-                  <small><b>Part Patiient :</b> {currentSejour.partpatientfacture}{" "}FCFA, <b>Reste</b> : ({currentSejour.restepatientfacture} FCFA)</small><br />
+                  <small><b>Part Assu :</b> {currentSejour.partassurancefacture}{" "}FCFA, <b>Reste</b> : {currentSejour.resteassurancefacture} FCFA</small><br />
+                  <small><b>Part Patiient :</b> {currentSejour.partpatientfacture}{" "}FCFA, <b>Reste</b> : {currentSejour.restepatientfacture} FCFA</small><br />
+                </div>
+                <div className="col">
+                  <h6>Assurance ({currentSejour.gestionnaire})</h6>
+                  <small><b>Béneficiaire :</b> {currentSejour.beneficiaire}</small><br />
+                  <small><b>Assuré Principal :</b> {currentSejour.assureprinc}</small><br />
+                  <small><b>N° Mat.:</b> {currentSejour.matriculeassure}</small>, <small><b>N° PEC :</b> {currentSejour.numeropec}</small><br />
+                  <small><b>Taux :</b> {currentSejour.taux}%</small><br />
+                </div>
+                <div className="col-auto d-flex align-items-center">
+                  {2 - currentSejour.nbcontrole > 0 && (
+                    <Button
+                      variant="contained"
+                      className="mx-1"
+                      startIcon={<BallotIcon />}
+                      onClick={() => setOpenControle(true)}
+                      style={{
+                        textTransform: "none",
+                        fontSize: "11px",
+                      }}
+                    >
+                      Contrôle (reste {2 - currentSejour.nbcontrole})
+                    </Button>
+                  )}
+                  <Facture
+                    nompatient={currentSejour.nompatient}
+                    prenomspatient={currentSejour.prenomspatient}
+                    datenaissancepatient={currentSejour.datenaissancepatient}
+                    lieunaissancepatient={currentSejour.lieunaissancepatient}
+                    ipppatient={currentSejour.ipppatient}
+                    habitationpatient={currentSejour.habitationpatient}
+                    //facture
+                    numerofacture={currentSejour.numerofacture}
+                    datefacture={currentSejour.datefacture}
+                    heurefacture={currentSejour.heurefacture}
+                    auteurfacture={currentSejour.auteurfacture}
+                    code={`${header.url}/gap/verify/facture/${currentSejour.idfacture}`}
+                    //sejour
+                    datedebutsejour={currentSejour.datedebutsejour}
+                    datefinsejour={currentSejour.datefinsejour}
+                    heuredebutsejour={currentSejour.heuredebutsejour}
+                    heurefinsejour={currentSejour.heurefinsejour}
+                    typesejour={currentSejour.typesejour}
+                    //acte
+                    libelleacte={currentSejour.libelleacte}
+                    prixacte={currentSejour.montanttotalfacture}
+                  />
                 </div>
               </div>
             </div>
-            <div className="col-1">
-              <QR
-                value={`${header.local}/gap/verify/facture/${currentSejour.idfacture}`}
-                id="img"
-                size={100}
-                fgColor="#696969"
-                style={{ transform: "scale(0.8)" }}
-                includeMargin={true}
-              />
-            </div>
-          </div> */}
-          <div className="row ">
-            <TextField
-              className="col-2 mr-1"
-              variant="outlined"
-              size="small"
-              label="Rechercher un sejour"
-            />
-            <Chip
-              className="mx-1"
-              label="sejours(s)"
-              avatar={
-                <Avatar
-                  className="white-text"
-                  style={{ backgroundColor: global.theme.primary }}
-                >
-                  {listSejour.length}
-                </Avatar>
-              }
-            />
+          </div>
+          <hr className="bg-light" />
+        </div>
+      )}
+      <div className="col-12">
+        <div className="row mb-1">
+          <TextField
+            className="col-2 mr-1"
+            variant="outlined"
+            size="small"
+            label="Rechercher un sejour"
+          />
+          <Chip
+            className="mx-1"
+            label="sejours(s)"
+            avatar={
+              <Avatar
+                className="white-text"
+                style={{ backgroundColor: global.theme.primary }}
+              >
+                {listSejour.length}
+              </Avatar>
+            }
+          />
+          <div className="col d-flex justify-content-end p-0">
             <Button
               variant="contained"
               className="mx-1"
@@ -236,64 +267,9 @@ const DossiersPatient = ({
             >
               Nouveau séjour
             </Button>
-            {2 - currentSejour.nbcontrole > 0 && (
-              <Button
-                variant="contained"
-                className="mx-1"
-                startIcon={<BallotIcon />}
-                onClick={() => setOpenControle(true)}
-                style={{
-                  textTransform: "none",
-                  fontSize: "11px",
-                }}
-              >
-                Contrôle (reste {2 - currentSejour.nbcontrole})
-              </Button>
-            )}
-            <div className="col d-flex align-items-center">
-              <Facture
-                nompatient={currentSejour.nompatient}
-                prenomspatient={currentSejour.prenomspatient}
-                datenaissancepatient={currentSejour.datenaissancepatient}
-                lieunaissancepatient={currentSejour.lieunaissancepatient}
-                ipppatient={currentSejour.ipppatient}
-                habitationpatient={currentSejour.habitationpatient}
-                //facture
-                numerofacture={currentSejour.numerofacture}
-                datefacture={currentSejour.datefacture}
-                heurefacture={currentSejour.heurefacture}
-                auteurfacture={currentSejour.auteurfacture}
-                code={`${header.url}/gap/verify/facture/${currentSejour.idfacture}`}
-                //sejour
-                datedebutsejour={currentSejour.datedebutsejour}
-                datefinsejour={currentSejour.datefinsejour}
-                heuredebutsejour={currentSejour.heuredebutsejour}
-                heurefinsejour={currentSejour.heurefinsejour}
-                typesejour={currentSejour.typesejour}
-                //acte
-                libelleacte={currentSejour.libelleacte}
-                prixacte={currentSejour.montanttotalfacture}
-              />
-            </div>
           </div>
         </div>
-      ) : (
-          <Button
-            variant="contained"
-            className="mb-2"
-            onClick={handleClickOpen}
-            startIcon={<AddIcon />}
-            style={{
-              textTransform: "none",
-              backgroundColor: global.theme.primary,
-              color: "white",
-              fontSize: "11px",
-            }}
-          >
-            Nouveau séjour
-          </Button>
-        )}
-
+      </div>
       <table className="col-12 table-sm table-hover table-striped">
         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
           <tr>{columns.map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>

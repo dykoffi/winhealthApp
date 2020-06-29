@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import QrReader from 'react-qr-scanner'
-import logo from '../../static/images/logo.png'
+import logo from '../../static/images/logo4.png'
 import qr from '../../static/images/qr.png'
 import { header, socket } from "../global/apiQuery";
 import { useEffect } from "react";
@@ -23,7 +23,7 @@ const Gap = () => {
       {
         !facture ? (
           <div className="row d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-            <img src={logo} alt="" />
+            <img src={logo} className="infinite animated pulse" alt="" style={{height:150}} />
           </div>
         ) : (
             <div className="row">

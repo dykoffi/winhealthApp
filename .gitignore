@@ -8,9 +8,8 @@
 # testing
 /coverage
 
-# production
-/build
-
+#push
+push.sh
 # misc
 .DS_Store
 .env.local

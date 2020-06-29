@@ -1080,7 +1080,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             <QrReader
               delay={500}
               style={{ width: "100%" }}
-              onError={(err) => { console.log(err) }}
+              onError={(err) => { alert(err) }}
               onScan={(result) => {
                 if (result != null) {
                   Axios({ url: `${header.url}/gap/details/patient/${result}` })

@@ -4,7 +4,7 @@ import QR from "qrcode.react";
 
 const DetailsPatient = ({ currentPatient }) => {
   return (
-    <div className="DetailsPatient bgcolor-primary text-white row p-3">
+    <div className="DetailsPatient bgcolor-primary text-white row p-3 border-left">
       <div className="col-3" style={{ fontSize: '14.5px' }}>
         <h6 className="">Patient ({currentPatient.ipppatient})</h6>
         <small>Nom et prenoms :{" "}<b>{currentPatient.nompatient} {currentPatient.prenomspatient}</b></small><br />
