@@ -1,0 +1,42 @@
+{
+  "files": {
+    "static/js/0.e2639532.chunk.js": "/static/js/0.e2639532.chunk.js",
+    "static/js/1.c2f8afca.chunk.js": "/static/js/1.c2f8afca.chunk.js",
+    "static/js/2.50a72ebe.chunk.js": "/static/js/2.50a72ebe.chunk.js",
+    "static/js/3.f62cb770.chunk.js": "/static/js/3.f62cb770.chunk.js",
+    "main.css": "/static/css/main.94519d14.chunk.css",
+    "main.js": "/static/js/main.ecf22ac8.chunk.js",
+    "runtime-main.js": "/static/js/runtime-main.88cc720f.js",
+    "static/css/6.0a3115e1.chunk.css": "/static/css/6.0a3115e1.chunk.css",
+    "static/js/6.131c4124.chunk.js": "/static/js/6.131c4124.chunk.js",
+    "static/js/7.a1a5f906.chunk.js": "/static/js/7.a1a5f906.chunk.js",
+    "static/css/8.fa7d4c00.chunk.css": "/static/css/8.fa7d4c00.chunk.css",
+    "static/js/8.cec68871.chunk.js": "/static/js/8.cec68871.chunk.js",
+    "static/js/9.5560ed31.chunk.js": "/static/js/9.5560ed31.chunk.js",
+    "static/js/10.78f0a1e9.chunk.js": "/static/js/10.78f0a1e9.chunk.js",
+    "static/js/11.bd0aac27.chunk.js": "/static/js/11.bd0aac27.chunk.js",
+    "static/js/12.be306884.chunk.js": "/static/js/12.be306884.chunk.js",
+    "static/js/13.4d5366b4.chunk.js": "/static/js/13.4d5366b4.chunk.js",
+    "static/js/14.6f17760d.chunk.js": "/static/js/14.6f17760d.chunk.js",
+    "index.html": "/index.html",
+    "precache-manifest.cea6c92754bdde9939260af033c0fb7f.js": "/precache-manifest.cea6c92754bdde9939260af033c0fb7f.js",
+    "service-worker.js": "/service-worker.js",
+    "static/js/0.e2639532.chunk.js.LICENSE.txt": "/static/js/0.e2639532.chunk.js.LICENSE.txt",
+    "static/js/6.131c4124.chunk.js.LICENSE.txt": "/static/js/6.131c4124.chunk.js.LICENSE.txt",
+    "static/js/7.a1a5f906.chunk.js.LICENSE.txt": "/static/js/7.a1a5f906.chunk.js.LICENSE.txt",
+    "static/media/icones.css": "/static/media/Material-Design-Iconsd41d.2f198897.eot",
+    "static/media/all.css": "/static/media/fa-solid-900.ea363ed4.eot",
+    "static/media/componentstyle.css": "/static/media/fond.ff323fcb.jpg",
+    "static/media/logo3.png": "/static/media/logo3.5f50cfa6.png",
+    "static/media/logo4.png": "/static/media/logo4.59ba5830.png",
+    "static/media/logoms2.jpg": "/static/media/logoms2.d0d80492.jpg",
+    "static/media/qr.png": "/static/media/qr.294d3e5c.png",
+    "static/media/qr2.png": "/static/media/qr2.42d4692d.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.88cc720f.js",
+    "static/js/7.a1a5f906.chunk.js",
+    "static/css/main.94519d14.chunk.css",
+    "static/js/main.ecf22ac8.chunk.js"
+  ]
+}
