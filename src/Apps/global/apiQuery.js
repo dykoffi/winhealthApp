@@ -4,7 +4,7 @@ const hosttest = "192.168.16.211"
 const pdfhost = "localhost"
 export const header = {
     timeout: 1000,
-    url: process.env.NODE_ENV === 'production' ? `https://${hostprod}` : `https://${hostprod}`,
+    url: process.env.NODE_ENV === 'production' ? `https://${hostprod}` : `https://${hosttest}:8000`,
     local: `http://${pdfhost}:3000`
 }
 export const socket = io(header.url)
