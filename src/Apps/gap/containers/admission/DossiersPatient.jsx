@@ -157,7 +157,11 @@ const DossiersPatient = ({
   }
 
   function setQte({ target: { value } }, i) { const tab = qt.copyWithin(); tab[i] = { qte: parseInt(value) }; setQt(tab); }
-  useEffect(() => { thunkListSejour(currentPatient.iddossier); thunkCurrentFacture(currentPatient.iddossier) }, [currentPatient.iddossier]);
+  useEffect(() => {
+    thunkListSejour(currentPatient.iddossier);
+    thunkCurrentFacture(currentPatient.iddossier)
+  },
+    [currentPatient.iddossier]);
 
   return (
     <div className="DossiersPatient row px-3">
@@ -279,7 +283,7 @@ const DossiersPatient = ({
             <tr
               key={i}
               style={{ cursor: "pointer" }}
-              onClick={() => thunkDetailsSejour(idsejour, numerosejour)}
+              onClick={() => thunkDetailsSejour(numerosejour)}
               className={currentSejour && currentSejour.idsejour === idsejour && "bgcolor-primary font-weight-bold white-text"}
             >
               <td>{numerosejour}</td>

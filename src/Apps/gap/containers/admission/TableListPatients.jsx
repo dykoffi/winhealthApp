@@ -336,6 +336,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           fullWidth={true}
+          transitionDuration={0}
           maxWidth="sm"
         >
           <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
@@ -672,6 +673,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
         <Dialog
           disableBackdropClick
           open={modalModif}
+          transitionDuration={0}
           onClose={CloseModif}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"

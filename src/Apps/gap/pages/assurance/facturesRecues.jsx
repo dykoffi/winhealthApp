@@ -96,7 +96,7 @@ const Bordereau = ({
     }, [inputs.assurance, inputs.typeSejour])
 
     return (
-        <div className="Bordereau row p-2">
+        <div className="FacturesRecues row p-2">
             <Button
                 variant="contained"
                 onClick={() => setShowModal(true)}

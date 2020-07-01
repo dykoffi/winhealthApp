@@ -23,7 +23,6 @@ const setListSejour = (data) => (
     }
 )
 
-
 const setCurrentSejour = (sejour) => (
     {
         type: SET_CURRENT_SEJOUR,
@@ -105,11 +104,11 @@ export function thunkAddControle(numeroSejour, data, patient) {
     }
 }
 
-export function thunkDetailsSejour(idSejour, numeroSejour) {
+export function thunkDetailsSejour(numeroSejour) {
     return async (dispatch) => {
         dispatch(setLoadingSejour())
         Axios({
-            url: `${header.url}/gap/details/sejour/${idSejour}/${numeroSejour}`
+            url: `${header.url}/gap/details/sejour/${numeroSejour}`,
         })
             .then(({ data: { rows } }) => {
                 rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
@@ -118,15 +117,15 @@ export function thunkDetailsSejour(idSejour, numeroSejour) {
 }
 
 export function thunkCurrentFacture(patient) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const { sejourReducer: { currentSejour } } = getState()
         dispatch(setLoadingSejour())
         Axios({
             url: `${header.url}/gap/imprimer/facture/${patient}`
         })
             .then(({ data: { rows } }) => {
-                rows[0] ? dispatch(thunkDetailsSejour(rows[0].idsejour, rows[0].numerosejour)) : dispatch(setCurrentSejour(null))
+                rows[0] ? dispatch(currentSejour ? thunkDetailsSejour(currentSejour.numerosejour) : thunkDetailsSejour(rows[0].numerosejour)) : dispatch(setCurrentSejour(null))
             })
     }
 }
-
 export default sejourReducer

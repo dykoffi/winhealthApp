@@ -92,7 +92,10 @@ export function thunkDetailsPatient(ipppatient) {
     return async (dispatch) => {
         dispatch(setLoading())
         Axios({
-            url: `${header.url}/gap/details/patient/${ipppatient}`
+            url: `${header.url}/gap/details/patient/${ipppatient}`,
+            // headers:{
+            //     crossorigin : 'anonymous'
+            // }
         })
             .then(({ data: { rows } }) => {
                 dispatch(setCurrentPatient(rows[0]))

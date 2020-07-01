@@ -14,6 +14,7 @@ import CancelIcon from "@material-ui/icons/CancelOutlined";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import AddIcon from '@material-ui/icons/Add'
 import {
   TextField,
   Avatar,
@@ -29,7 +30,6 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-import AddIcon from '@material-ui/icons/Add'
 
 const Assurance = ({
   thunkAddAssurance,
