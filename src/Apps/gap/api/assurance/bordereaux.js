@@ -20,7 +20,7 @@ const SET_SHOW_MODAL = "SET_SHOW_MODAL"
 
 const setCurrentFacture = (data) => ({ type: SET_CURRENT_FACTURE, currentFacture: data })
 const setListFactures = (data) => ({ type: SET_LIST_FACTURES, listFactures: data })
-const setListFacturesByAssurance = (data) => ({ type: SET_LIST_FACTURES_BY_ASSURANCE, listFacturesByAssurance: data })
+export const setListFacturesByAssurance = (data) => ({ type: SET_LIST_FACTURES_BY_ASSURANCE, listFacturesByAssurance: data })
 export const setListFacturesRecues = (data) => ({ type: SET_LIST_FACTURES_RECUES, listFacturesRecues: data })
 export const setListFacturesValides = (data) => ({ type: SET_LIST_FACTURES_VALIDES, listFacturesValides: data })
 export const setShowModal = (bool) => ({ type: SET_SHOW_MODAL, showModal: bool })

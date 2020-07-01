@@ -9,13 +9,12 @@ import {
     thunkListFacturesByAssurances,
     thunkSendFacturesValides,
     setListFacturesValides,
+    setListFacturesByAssurance,
     thunkListFactures
 } from "../../api/assurance/bordereaux";
-
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-
 import {
     TextField,
     Avatar,
@@ -41,7 +40,8 @@ const Bordereau = ({
     listFactures,
     listFacturesByAssurance,
     listFacturesValides,
-    setListFacturesValides
+    setListFacturesValides,
+    setListFacturesByAssurance
 }) => {
 
     const [value, setValue] = useState("");
@@ -56,7 +56,6 @@ const Bordereau = ({
         finDate: new Date()
     });
 
-
     const handleClose = () => {
         setShowModal(false);
         setinput({
@@ -67,6 +66,8 @@ const Bordereau = ({
             debutDate: new Date(),
             finDate: new Date()
         });
+        setListFacturesValides([])
+        setListFacturesByAssurance([])
     };
     function setdebutDate(value) {
         setinput({
@@ -118,7 +119,7 @@ const Bordereau = ({
     return (
         <div className="Facturesvalides row p-2">
             <div className="col-12">
-                <div className="row mb-2">
+                <div className="row">
                     <TextField
                         className="col-2"
                         variant="outlined"
@@ -129,13 +130,13 @@ const Bordereau = ({
                     />
                     <div className="col-2">
                         <Chip
-                            label="Facture(s) recue(s)"
+                            label="Facture(s) valide(s)"
                             avatar={
                                 <Avatar
                                     className="white-text"
                                     style={{ backgroundColor: global.theme.primary }}
                                 >
-                                    {listFactures.filter(facture => facture.statutfactures === 'valide').length}
+                                    {listFactures.filter(facture => facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
                                 </Avatar>
                             }
                         />
@@ -157,13 +158,13 @@ const Bordereau = ({
                     </div>
                 </div>
             </div>
-            <table className="table-sm col-12 table-hover table-striped my-3">
+            <table className="table-sm col-12 table-hover table-striped my-2">
                 <thead style={{ backgroundColor: global.theme.secondaryDark }}>
                     <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                        ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
                             <tr
                                 key={i}
                                 style={{ cursor: "pointer" }}
@@ -173,7 +174,7 @@ const Bordereau = ({
                                 <td>{datefacture}</td>
                                 <td>{heurefacture}</td>
                                 <td className="font-weight-bold">{typesejour}</td>
-                                <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                                <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                 <td>Wilfried GBADJE</td>
                                 <td>{auteurfacture}</td>
                                 <td>{montanttotalfacture} FCFA</td>
@@ -190,7 +191,7 @@ const Bordereau = ({
             </table>
             <Dialog
                 open={showModal}
-                onClose={() => setShowModal(false)}
+                onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 fullWidth={true}
@@ -201,7 +202,7 @@ const Bordereau = ({
                     className="text-center text-secondary"
                     id="alert-dialog-title"
                 >
-                    <b>Ajouter des factures recues</b>
+                    <b>Valider des factures conformes</b>
                 </DialogTitle>
                 <DialogContent>
                     <div className="col-12">
@@ -271,13 +272,13 @@ const Bordereau = ({
                             </div>
                         </div>
                     </div>
-                    <table className="table-sm col-12 table-hover table-striped my-3">
+                    <table className="table-sm col-12 table-hover table-striped my-2">
                         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
                             <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').map(
-                                ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                                ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
                                         className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
@@ -295,7 +296,7 @@ const Bordereau = ({
                                         <td>{datefacture}</td>
                                         <td>{heurefacture}</td>
                                         <td className="font-weight-bold">{typesejour}</td>
-                                        <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                                        <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                         <td>Wilfried GBADJE</td>
                                         <td>{auteurfacture}</td>
                                         <td>{montanttotalfacture} FCFA</td>
@@ -328,7 +329,7 @@ const Bordereau = ({
                         variant="contained"
                         onClick={() => {
                             thunkSendFacturesValides(listFacturesValides)
-                            setShowModal(false)
+                            handleClose()
                         }}
                         disabled={listFacturesValides.length === 0}
                         startIcon={<AssignmentTurnedInIcon />}
@@ -351,5 +352,5 @@ const mapStatToProps = state => {
     const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures } } = state
     return { listFacturesByAssurance, listFacturesValides, listFactures }
 }
-const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, setListFacturesValides, })(Bordereau)
+const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, setListFacturesValides, setListFacturesByAssurance })(Bordereau)
 export default BordereauConnected;

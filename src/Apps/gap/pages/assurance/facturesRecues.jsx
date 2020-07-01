@@ -9,7 +9,7 @@ import {
     thunkListFacturesByAssurances,
     thunkSendFacturesRecues,
     setListFacturesRecues,
-    setListFacturesValides,
+    setListFacturesByAssurance,
     thunkListFactures
 } from "../../api/assurance/bordereaux";
 
@@ -35,8 +35,7 @@ import {
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import SearchIcon from '@material-ui/icons/Search'
-import { thunkAddAssurance } from "../../api/assurance/assurances";
+
 
 const Bordereau = ({
     thunkListFacturesByAssurances,
@@ -46,8 +45,10 @@ const Bordereau = ({
     listFacturesByAssurance,
     listFacturesRecues,
     setListFacturesRecues,
+    setListFacturesByAssurance
 }) => {
 
+    const global = useContext(GlobalContext);
     const [value, setValue] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
@@ -60,33 +61,43 @@ const Bordereau = ({
         finDate: new Date()
     });
 
-
-    const handleClose = () => { setShowModal(false); setinput({}); };
-    function setdebutDate(value) {
+    const handleClose = () => {
+        setShowModal(false);
         setinput({
-            ...inputs,
-            debutDate: value,
-            debutDateString: moment(value.toString()).format('DD-MM-YYYY')
-        })
-    }
-    function setfinDate(value) {
-        setinput({
-            ...inputs,
-            finDate: value,
-            finDateString: moment(value.toString()).format('DD-MM-YYYY')
-        })
-    }
+            nomassurance: "",
+            typeSejour: "",
+            debutDateString: moment().format('DD-MM-YYYY'),
+            finDateString: moment().format('DD-MM-YYYY'),
+            debutDate: new Date(),
+            finDate: new Date()
+        });
+        setListFacturesRecues([])
+        setListFacturesByAssurance([])
+    };
 
+    function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
+    function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
     function setassurance(value) { setinput({ ...inputs, assurance: value }) }
-    function sendData() { thunkListFacturesByAssurances(inputs) }
 
-    const columns = ["N°", "N°facture", "Date", "Heure", "Type de sejour", "Patient", "Medecin", "Auteur", "Montant Total", "Part Assu", "Reste assurance", "Part patient", "Reste patient",]
-    const global = useContext(GlobalContext);
+    const columns = [
+        "N°",
+        "N°facture",
+        "Date",
+        "Heure",
+        "Type de sejour",
+        "Patient",
+        "Medecin",
+        "Auteur",
+        "Montant Total",
+        "Part Assu",
+        "Reste assurance",
+        "Part patient",
+        "Reste patient",]
 
     useEffect(() => {
         thunkListFactures()
-        Axios({ url: `${header.url}/gap/list/assurances`, }).then(({ data: { rows } }) => {
+        Axios({ url: `${header.url}/gap/list/assurances` }).then(({ data: { rows } }) => {
             const Assurance = [];
             rows.forEach(({ idassurance, nomassurance }) => { Assurance.push({ value: idassurance, label: nomassurance }); });
             setListAssurance(Assurance);
@@ -100,7 +111,7 @@ const Bordereau = ({
     return (
         <div className="FacturesRecues row p-2">
             <div className="col-12">
-                <div className="row mb-2">
+                <div className="row">
                     <TextField
                         className="col-2"
                         variant="outlined"
@@ -117,7 +128,7 @@ const Bordereau = ({
                                     className="white-text"
                                     style={{ backgroundColor: global.theme.primary }}
                                 >
-                                    {listFactures.filter(facture => facture.statutfactures === 'recu').length}
+                                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
                                 </Avatar>
                             }
                         />
@@ -139,13 +150,13 @@ const Bordereau = ({
                     </div>
                 </div>
             </div>
-            <table className="table-sm col-12 table-hover table-striped my-3">
+            <table className="table-sm col-12 table-hover table-striped my-2">
                 <thead style={{ backgroundColor: global.theme.secondaryDark }}>
                     <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
                 </thead>
                 <tbody>
-                    {listFactures.filter(facture => facture.statutfactures === 'recu').filter(facture => value.trim() === "" || RegExp(value,'i').test(facture.numerofacture)).map(
-                        ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
+                        ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
                             <tr
                                 key={i}
                                 style={{ cursor: "pointer" }}
@@ -155,7 +166,7 @@ const Bordereau = ({
                                 <td>{datefacture}</td>
                                 <td>{heurefacture}</td>
                                 <td className="font-weight-bold">{typesejour}</td>
-                                <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                                <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                 <td>Wilfried GBADJE</td>
                                 <td>{auteurfacture}</td>
                                 <td>{montanttotalfacture} FCFA</td>
@@ -172,7 +183,7 @@ const Bordereau = ({
             </table>
             <Dialog
                 open={showModal}
-                onClose={() => setShowModal(false)}
+                onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 fullWidth={true}
@@ -253,14 +264,13 @@ const Bordereau = ({
                             </div>
                         </div>
                     </div>
-
                     <table className="table-sm col-12 table-hover table-striped my-3">
                         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
                             <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').map(
-                                ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                                ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
                                         className={listFacturesRecues.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
@@ -278,7 +288,7 @@ const Bordereau = ({
                                         <td>{datefacture}</td>
                                         <td>{heurefacture}</td>
                                         <td className="font-weight-bold">{typesejour}</td>
-                                        <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                                        <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                         <td>Wilfried GBADJE</td>
                                         <td>{auteurfacture}</td>
                                         <td>{montanttotalfacture} FCFA</td>
@@ -311,9 +321,9 @@ const Bordereau = ({
                         variant="contained"
                         onClick={() => {
                             thunkSendFacturesRecues(listFacturesRecues)
-                            setShowModal(false)
+                            handleClose()
                         }}
-                        disabled={listFacturesRecues.length===0}
+                        disabled={listFacturesRecues.length === 0}
                         startIcon={<AssignmentTurnedInIcon />}
                         style={{
                             textTransform: "none",
@@ -334,5 +344,5 @@ const mapStatToProps = state => {
     const { bordereauReducer: { listFacturesByAssurance, listFacturesRecues, listFactures } } = state
     return { listFacturesByAssurance, listFacturesRecues, listFactures }
 }
-const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, setListFacturesRecues, })(Bordereau)
+const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, setListFacturesRecues, setListFacturesByAssurance })(Bordereau)
 export default BordereauConnected;
