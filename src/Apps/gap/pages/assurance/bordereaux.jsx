@@ -33,17 +33,12 @@ import {
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import SearchIcon from '@material-ui/icons/Search'
-import { thunkAddAssurance } from "../../api/assurance/assurances";
 
 const Bordereau = ({
-    thunkAddBordereau,
     thunkListFacturesByAssurances,
     listFactures,
     listFacturesRecues,
-    listFacturesValides,
     setListFacturesRecues,
-    setListFacturesValides
 }) => {
 
     const [value, setValue] = useState("");

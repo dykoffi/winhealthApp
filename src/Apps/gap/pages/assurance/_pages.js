@@ -5,7 +5,7 @@ import FacturesValides from './facturesValides'
 const Pages = [
     { id: "listeAssurances", Component: listeAssurances },
     { id: "bordereaux", Component: Bordereaux },
-    { id: "facturesRecues", Component: FacturesValides },
-    { id: "facturesValides*", Component: FacturesValides },
+    { id: "facturesRecues", Component: FacturesRecues },
+    { id: "facturesValides", Component: FacturesValides },
 ]
 export default Pages

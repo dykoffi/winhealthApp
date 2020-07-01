@@ -7,14 +7,14 @@ import frLocale from "date-fns/locale/fr";
 import {
     thunkAddBordereau,
     thunkListFacturesByAssurances,
-    setListFacturesRecues,
-    setListFacturesValides
+    thunkSendFacturesValides,
+    setListFacturesValides,
+    thunkListFactures
 } from "../../api/assurance/bordereaux";
+
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import AddIcon from '@material-ui/icons/Add'
 
 import {
     TextField,
@@ -33,16 +33,14 @@ import {
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import SearchIcon from '@material-ui/icons/Search'
-import { thunkAddAssurance } from "../../api/assurance/assurances";
 
 const Bordereau = ({
-    thunkAddBordereau,
     thunkListFacturesByAssurances,
+    thunkListFactures,
+    thunkSendFacturesValides,
     listFactures,
-    listFacturesRecues,
+    listFacturesByAssurance,
     listFacturesValides,
-    setListFacturesRecues,
     setListFacturesValides
 }) => {
 
@@ -59,7 +57,17 @@ const Bordereau = ({
     });
 
 
-    const handleClose = () => { setShowModal(false); setinput({}); };
+    const handleClose = () => {
+        setShowModal(false);
+        setinput({
+            nomassurance: "",
+            typeSejour: "",
+            debutDateString: moment().format('DD-MM-YYYY'),
+            finDateString: moment().format('DD-MM-YYYY'),
+            debutDate: new Date(),
+            finDate: new Date()
+        });
+    };
     function setdebutDate(value) {
         setinput({
             ...inputs,
@@ -77,13 +85,25 @@ const Bordereau = ({
 
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
     function setassurance(value) { setinput({ ...inputs, assurance: value }) }
-    function sendData() { thunkListFacturesByAssurances(inputs) }
 
-    const columns = ["N°", "N°facture", "Date", "Heure", "Type de sejour", "Patient", "Medecin", "Auteur", "Montant Total", "Part Assu", "Reste assurance", "Part patient", "Reste patient",]
+    const columns = [
+        "N°",
+        "N°facture",
+        "Date",
+        "Heure",
+        "Type de sejour",
+        "Patient",
+        "Medecin",
+        "Auteur",
+        "Montant Total",
+        "Part Assu",
+        "Reste assurance",
+        "Part patient",
+        "Reste patient",]
     const global = useContext(GlobalContext);
 
     useEffect(() => {
-        sendData()
+        thunkListFactures()
         Axios({ url: `${header.url}/gap/list/assurances`, }).then(({ data: { rows } }) => {
             const Assurance = [];
             rows.forEach(({ idassurance, nomassurance }) => { Assurance.push({ value: idassurance, label: nomassurance }); });
@@ -92,24 +112,82 @@ const Bordereau = ({
     }, []);
 
     useEffect(() => {
-        setListFacturesRecues([])
+        setListFacturesValides([])
     }, [inputs.assurance, inputs.typeSejour])
 
     return (
         <div className="Facturesvalides row p-2">
-            <Button
-                variant="contained"
-                onClick={() => setShowModal(true)}
-                startIcon={<AddIcon />}
-                style={{
-                    textTransform: "none",
-                    backgroundColor: global.theme.primary,
-                    color: "white",
-                    fontSize: "11px",
-                }}
-            >
-                Nouveau borderau
-            </Button>
+            <div className="col-12">
+                <div className="row mb-2">
+                    <TextField
+                        className="col-2"
+                        variant="outlined"
+                        size="small"
+                        label="Rechercher une facture"
+                        value={value}
+                        onChange={({ target: { value } }) => { setValue(value) }}
+                    />
+                    <div className="col-2">
+                        <Chip
+                            label="Facture(s) recue(s)"
+                            avatar={
+                                <Avatar
+                                    className="white-text"
+                                    style={{ backgroundColor: global.theme.primary }}
+                                >
+                                    {listFactures.filter(facture => facture.statutfactures === 'valide').length}
+                                </Avatar>
+                            }
+                        />
+                    </div>
+                    <div className="col d-flex justify-content-end p-0">
+                        <Button
+                            variant="contained"
+                            onClick={() => setShowModal(true)}
+                            startIcon={<AssignmentTurnedInIcon />}
+                            style={{
+                                textTransform: "none",
+                                backgroundColor: global.theme.primary,
+                                color: "white",
+                                fontSize: "11px",
+                            }}
+                        >
+                            Valider des factures
+                        </Button>
+                    </div>
+                </div>
+            </div>
+            <table className="table-sm col-12 table-hover table-striped my-3">
+                <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+                    <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                </thead>
+                <tbody>
+                    {listFactures.filter(facture => facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
+                        ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                            <tr
+                                key={i}
+                                style={{ cursor: "pointer" }}
+                            >
+                                <td>{i + 1}</td>
+                                <td>{numerofacture}</td>
+                                <td>{datefacture}</td>
+                                <td>{heurefacture}</td>
+                                <td className="font-weight-bold">{typesejour}</td>
+                                <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                                <td>Wilfried GBADJE</td>
+                                <td>{auteurfacture}</td>
+                                <td>{montanttotalfacture} FCFA</td>
+                                <td className="font-weight-bold">{partassurancefacture} FCFA</td>
+                                <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
+                                <td>{partpatientfacture} FCFA</td>
+                                <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                                    {restepatientfacture} FCFA
+                                        </td>
+                            </tr>
+                        )
+                    )}
+                </tbody>
+            </table>
             <Dialog
                 open={showModal}
                 onClose={() => setShowModal(false)}
@@ -123,7 +201,7 @@ const Bordereau = ({
                     className="text-center text-secondary"
                     id="alert-dialog-title"
                 >
-                    <b>Creer un bordereau</b>
+                    <b>Ajouter des factures recues</b>
                 </DialogTitle>
                 <DialogContent>
                     <div className="col-12">
@@ -192,52 +270,47 @@ const Bordereau = ({
                                 </MuiPickersUtilsProvider>
                             </div>
                         </div>
-                        <div className="col">
-                            <small>(Etape 1) Veuillez selectionner les factures que vous avez recues</small>
-                        </div>
                     </div>
-                    {
-                        <table className="table-sm col-12 table-hover table-striped my-3">
-                            <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                                <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
-                            </thead>
-                            <tbody>
-                                {listFactures.map(
-                                    ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
-                                        <tr
-                                            key={i}
-                                            className={listFacturesRecues.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => {
-                                                if (listFacturesRecues.includes(numerofacture)) {
-                                                    listFacturesRecues.splice(listFacturesRecues.indexOf(numerofacture), 1)
-                                                    setListFacturesRecues([...listFacturesRecues])
-                                                } else {
-                                                    setListFacturesRecues([...listFacturesRecues, numerofacture])
-                                                }
-                                            }} >
-                                            <td>{i + 1}</td>
-                                            <td>{numerofacture}</td>
-                                            <td>{datefacture}</td>
-                                            <td>{heurefacture}</td>
-                                            <td className="font-weight-bold">{typesejour}</td>
-                                            <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                                            <td>Wilfried GBADJE</td>
-                                            <td>{auteurfacture}</td>
-                                            <td>{montanttotalfacture} FCFA</td>
-                                            <td className="font-weight-bold">{partassurancefacture} FCFA</td>
-                                            <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
-                                            <td>{partpatientfacture} FCFA</td>
-                                            <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
-                                                {restepatientfacture} FCFA
+                    <table className="table-sm col-12 table-hover table-striped my-3">
+                        <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+                            <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                        </thead>
+                        <tbody>
+                            {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').map(
+                                ({ civilitepatient, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                                    <tr
+                                        key={i}
+                                        className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                            if (listFacturesValides.includes(numerofacture)) {
+                                                listFacturesValides.splice(listFacturesValides.indexOf(numerofacture), 1)
+                                                setListFacturesValides([...listFacturesValides])
+                                            } else {
+                                                setListFacturesValides([...listFacturesValides, numerofacture])
+                                            }
+                                        }} >
+                                        <td>{i + 1}</td>
+                                        <td>{numerofacture}</td>
+                                        <td>{datefacture}</td>
+                                        <td>{heurefacture}</td>
+                                        <td className="font-weight-bold">{typesejour}</td>
+                                        <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                                        <td>Wilfried GBADJE</td>
+                                        <td>{auteurfacture}</td>
+                                        <td>{montanttotalfacture} FCFA</td>
+                                        <td className="font-weight-bold">{partassurancefacture} FCFA</td>
+                                        <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
+                                        <td>{partpatientfacture} FCFA</td>
+                                        <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                                            {restepatientfacture} FCFA
                                         </td>
-                                        </tr>
-                                    )
-                                )}
-                            </tbody>
-                        </table>
-                    }
-                    <div className="col"><small>{listFacturesRecues.length} sélectionnée(s)</small></div>
+                                    </tr>
+                                )
+                            )}
+                        </tbody>
+                    </table>
+                    <div className="col"><small>{listFacturesValides.length} sélectionnée(s)</small></div>
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -253,7 +326,11 @@ const Bordereau = ({
                     </Button>
                     <Button
                         variant="contained"
-                        onClick={() => setShowModal(true)}
+                        onClick={() => {
+                            thunkSendFacturesValides(listFacturesValides)
+                            setShowModal(false)
+                        }}
+                        disabled={listFacturesValides.length === 0}
                         startIcon={<AssignmentTurnedInIcon />}
                         style={{
                             textTransform: "none",
@@ -262,7 +339,7 @@ const Bordereau = ({
                             fontSize: "11px",
                         }}
                     >
-                      (Etape 2) Validation
+                        Valider les factures
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -271,8 +348,8 @@ const Bordereau = ({
 };
 
 const mapStatToProps = state => {
-    const { bordereauReducer: { listFactures, listFacturesRecues, listFacturesValides, } } = state
-    return { listFactures, listFacturesRecues, listFacturesValides, }
+    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures } } = state
+    return { listFacturesByAssurance, listFacturesValides, listFactures }
 }
-const BordereauConnected = connect(mapStatToProps, { thunkAddBordereau, thunkListFacturesByAssurances, setListFacturesRecues, setListFacturesValides, })(Bordereau)
+const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, setListFacturesValides, })(Bordereau)
 export default BordereauConnected;

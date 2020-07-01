@@ -21,7 +21,7 @@ const Assurance = ({
   });
 
   return (
-    <div className="Caisse row">
+    <div className="Assurance row">
       <section className="col-12 px-3 bg-light">
         <Onglet
           links={Listonglets}
