@@ -38,11 +38,11 @@ const borderauReducer = (state = initState, action) => {
     }
 }
 
-export function thunkListFacturesByAssurances({ nomassurance, debutDateString, finDateString, typeSejour }) {
+export function thunkListFacturesByAssurances({ nomassurance,nomgarant, debutDateString, finDateString, typeSejour }) {
     return async (dispatch) => {
         Axios({
             method: "GET",
-            url: `${header.url}/gap/list/factures/${nomassurance}/${debutDateString}/${finDateString}/${typeSejour}`
+            url: `${header.url}/gap/list/factures/${nomassurance}/${nomgarant}/${debutDateString}/${finDateString}/${typeSejour}`
         }).then(({ data: { rows } }) => { rows ? dispatch(setListFacturesByAssurance(rows)) : dispatch(setListFacturesByAssurance([])) })
     }
 }
@@ -75,7 +75,7 @@ export function thunkSendFacturesValides(data) {
 
 export function thunkDeleteFacturesRecues(numeroFacture) {
     return async (dispatch) => {
-        Axios({ url: `${header.url}/gap/add/factures_recues/${numeroFacture}` }).then(() => {
+        Axios({ url: `${header.url}/gap/retrait/facture_recue/${numeroFacture}` }).then(() => {
             dispatch(thunkListFactures())
             dispatch(setShowModal(false))
         })

@@ -92,6 +92,7 @@ const Bordereau = ({
     })
     const [inputs, setinput] = useState({
         nomassurance: "",
+        nomgarant: "",
         typeSejour: "",
         debutDateString: moment().format('DD-MM-YYYY'),
         finDateString: moment().format('DD-MM-YYYY'),
@@ -103,6 +104,7 @@ const Bordereau = ({
         setmodal(false);
         setinput({
             nomassurance: "",
+            nomgarant: "",
             typeSejour: "",
             debutDateString: moment().format('DD-MM-YYYY'),
             finDateString: moment().format('DD-MM-YYYY'),
@@ -117,6 +119,7 @@ const Bordereau = ({
     function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
     function setassurance(value) { setinput({ ...inputs, nomassurance: value }) }
+    function setgarant(value) { setinput({ ...inputs, nomgarant: value }) }
 
     function setgestionnaire(value) { setinputModif({ ...inputModifs, gestionnaire: value }); }
     function setorganisme(value) { setinputModif({ ...inputModifs, organisme: value }); }
@@ -139,8 +142,6 @@ const Bordereau = ({
         "Taux",
         "Patient",
         "Assuré Princ",
-        "Medecin",
-        "Auteur",
         "Montant Total",
         "Part Assu",
         "Reste assurance",
@@ -208,7 +209,7 @@ const Bordereau = ({
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                             <tr
                                 key={i}
                                 style={{ cursor: "pointer" }}
@@ -226,8 +227,6 @@ const Bordereau = ({
                                 <td className="font-weight-bold">{taux}%</td>
                                 <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                 <td className="font-weight-bold">{assureprinc}</td>
-                                <td>Wilfried GBADJE</td>
-                                <td>{auteurfacture}</td>
                                 <td>{montanttotalfacture} FCFA</td>
                                 <td className="font-weight-bold">{partassurancefacture} FCFA</td>
                                 <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
@@ -264,21 +263,40 @@ const Bordereau = ({
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
-                                    newValue && inputs.typeSejour.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
+                                    newValue && inputs.typeSejour.trim() !== "" &&
+                                        inputs.nomgarant.trim() !== "" &&
+                                        thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
                                 }}
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
                                 renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
                                 renderInput={(params) => (<TextField {...params} variant="outlined" label="Gestionnaire" placeholder="Ajouter ..." />)}
                             />
-                            <FormControl variant="outlined" size="small" className="col-2 ml-2">
+                            <Autocomplete
+                                size="small"
+                                className="col-2 p-0 mx-2"
+                                options={listAssurances}
+                                onChange={(event, newValue) => {
+                                    newValue && setgarant(newValue.label)
+                                    newValue && inputs.typeSejour.trim() !== "" &&
+                                        inputs.nomassurance.trim() !== "" &&
+                                        thunkListFacturesByAssurances({ ...inputs, nomgarant: newValue.label })
+                                }}
+                                getOptionLabel={(option) => option.label}
+                                filterSelectedOptions
+                                renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Garant" placeholder="Selectionner ..." />)}
+                            />
+                            <FormControl variant="outlined" size="small" className="col-2">
                                 <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                                 <Select
                                     labelId="typesejour-label"
                                     id="typesejour"
                                     onChange={({ target: { value } }) => {
                                         settype(value)
-                                        inputs.nomassurance.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
+                                        inputs.nomassurance.trim() !== "" &&
+                                            inputs.nomgarant.trim() !== "" &&
+                                            thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
                                     }}
                                     label="Type de sejour "
                                     style={{ fontSize: "12px" }}
@@ -329,11 +347,11 @@ const Bordereau = ({
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').map(
-                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
                                         style={{ cursor: "pointer" }}
-                                        className={listFacturesRecues.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
+                                        className={listFacturesRecues.includes(numerofacture) ? "bgcolor-primary white-text" : ""}
                                         onClick={() => {
                                             if (listFacturesRecues.includes(numerofacture)) {
                                                 listFacturesRecues.splice(listFacturesRecues.indexOf(numerofacture), 1)
@@ -359,8 +377,6 @@ const Bordereau = ({
                                         <td className="font-weight-bold">{taux}%</td>
                                         <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                         <td className="font-weight-bold">{assureprinc}</td>
-                                        <td>Wilfried GBADJE</td>
-                                        <td>{auteurfacture}</td>
                                         <td>{montanttotalfacture} FCFA</td>
                                         <td className="font-weight-bold">{partassurancefacture} FCFA</td>
                                         <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
@@ -386,7 +402,7 @@ const Bordereau = ({
                                 }
                             }} style={{ display: "inline" }}>
                                 <Chip
-                                    className={`mr-2 ${tousSelectionner ? "bgcolor-secondaryDark text-white font-weight-bold" : ""}`}
+                                    className={`mr-2 ${tousSelectionner ? "bgcolor-secondaryDark text-white" : ""}`}
                                     style={{ cursor: "pointer" }}
                                     label="Tous selectionner"
                                 />
@@ -662,5 +678,5 @@ const mapStatToProps = state => {
     const { bordereauReducer: { listFacturesByAssurance, listFacturesRecues, listFactures, showModal, currentFacture } } = state
     return { listFacturesByAssurance, listFacturesRecues, listFactures, showModal, currentFacture }
 }
-const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture,thunkDeleteFacturesRecues, setListFacturesRecues, setListFacturesByAssurance, setShowModal })(Bordereau)
+const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture, thunkDeleteFacturesRecues, setListFacturesRecues, setListFacturesByAssurance, setShowModal })(Bordereau)
 export default BordereauConnected;

@@ -49,6 +49,7 @@ const Bordereau = ({
     const [listAssurances, setListAssurance] = useState([]);
     const [inputs, setinput] = useState({
         nomassurance: "",
+        nomgarant: "",
         typeSejour: "",
         debutDateString: moment().format('DD-MM-YYYY'),
         finDateString: moment().format('DD-MM-YYYY'),
@@ -60,6 +61,7 @@ const Bordereau = ({
         setShowModal(false);
         setinput({
             nomassurance: "",
+            nomgarant: "",
             typeSejour: "",
             debutDateString: moment().format('DD-MM-YYYY'),
             finDateString: moment().format('DD-MM-YYYY'),
@@ -69,23 +71,13 @@ const Bordereau = ({
         setListFacturesValides([])
         setListFacturesByAssurance([])
     };
-    function setdebutDate(value) {
-        setinput({
-            ...inputs,
-            debutDate: value,
-            debutDateString: moment(value.toString()).format('DD-MM-YYYY')
-        })
-    }
-    function setfinDate(value) {
-        setinput({
-            ...inputs,
-            finDate: value,
-            finDateString: moment(value.toString()).format('DD-MM-YYYY')
-        })
-    }
 
+    function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
+    function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
     function setassurance(value) { setinput({ ...inputs, nomassurance: value }) }
+    function setgarant(value) { setinput({ ...inputs, nomgarant: value }) }
+
     const columns = [
         "N°",
         "N°facture",
@@ -215,21 +207,40 @@ const Bordereau = ({
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
-                                    newValue && inputs.typeSejour.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
+                                    newValue && inputs.typeSejour.trim() !== "" &&
+                                        inputs.nomgarant.trim() !== "" &&
+                                        thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
                                 }}
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
                                 renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
                                 renderInput={(params) => (<TextField {...params} variant="outlined" label="Gestionnaire" placeholder="Ajouter ..." />)}
                             />
-                            <FormControl variant="outlined" size="small" className="col-2 ml-2">
+                            <Autocomplete
+                                size="small"
+                                className="col-2 p-0 mx-2"
+                                options={listAssurances}
+                                onChange={(event, newValue) => {
+                                    newValue && setgarant(newValue.label)
+                                    newValue && inputs.typeSejour.trim() !== "" &&
+                                        inputs.nomassurance.trim() !== "" &&
+                                        thunkListFacturesByAssurances({ ...inputs, nomgarant: newValue.label })
+                                }}
+                                getOptionLabel={(option) => option.label}
+                                filterSelectedOptions
+                                renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Garant" placeholder="Selectionner ..." />)}
+                            />
+                            <FormControl variant="outlined" size="small" className="col-2">
                                 <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                                 <Select
                                     labelId="typesejour-label"
                                     id="typesejour"
                                     onChange={({ target: { value } }) => {
                                         settype(value)
-                                        inputs.nomassurance.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
+                                        inputs.nomassurance.trim() !== "" &&
+                                            inputs.nomgarant.trim() !== "" &&
+                                            thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
                                     }}
                                     label="Type de sejour "
                                     style={{ fontSize: "12px" }}
