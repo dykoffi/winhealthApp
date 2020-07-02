@@ -77,6 +77,7 @@ export function thunkDeleteFacturesRecues(numeroFacture) {
     return async (dispatch) => {
         Axios({ url: `${header.url}/gap/add/factures_recues/${numeroFacture}` }).then(() => {
             dispatch(thunkListFactures())
+            dispatch(setShowModal(false))
         })
     }
 }
@@ -104,5 +105,13 @@ export function thunkListFactures() {
     return async (dispatch) => { Axios({ url: `${header.url}/gap/list/factures` }).then(({ data: { rows } }) => { dispatch(setListFactures(rows)) }) }
 }
 
+export function thunkDetailsFacture(numeroFacture) {
+    return async (dispatch) => {
+        Axios({ url: `${header.url}/gap/details/facture/${numeroFacture}` }).then(({ data: { rows } }) => {
+            rows ? dispatch(setCurrentFacture(rows[0])) : dispatch(setCurrentFacture({}));
+            dispatch(setShowModal(true))
+        })
+    }
+}
 
 export default borderauReducer

@@ -171,8 +171,8 @@ const AttenteFacture = ({
         disableEscapeKeyDown
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-          transitionDuration={0}
-          fullWidth={true}
+        transitionDuration={0}
+        fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
