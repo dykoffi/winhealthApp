@@ -38,11 +38,11 @@ const borderauReducer = (state = initState, action) => {
     }
 }
 
-export function thunkListFacturesByAssurances({ assurance, debutDateString, finDateString, typeSejour }) {
+export function thunkListFacturesByAssurances({ nomassurance, debutDateString, finDateString, typeSejour }) {
     return async (dispatch) => {
         Axios({
             method: "GET",
-            url: `${header.url}/gap/list/factures/${assurance}/${debutDateString}/${finDateString}/${typeSejour}`
+            url: `${header.url}/gap/list/factures/${nomassurance}/${debutDateString}/${finDateString}/${typeSejour}`
         }).then(({ data: { rows } }) => { rows ? dispatch(setListFacturesByAssurance(rows)) : dispatch(setListFacturesByAssurance([])) })
     }
 }

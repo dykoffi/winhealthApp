@@ -126,7 +126,7 @@ const FacturePatient = ({
     });
   }, [currentPatient, categorieFactures, listFacturesPatient, inputs.modepaiement])
   return (
-    <div className="Dossiers row p-3">
+    <div className="Dossiers row p-2">
       <div className="col-12">
         <div className="row mb-2">
           <Autocomplete
@@ -277,7 +277,8 @@ const FacturePatient = ({
         )
       }
       <Dialog
-        open={showModal}
+          transitionDuration={0}
+          open={showModal}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -412,7 +413,8 @@ const FacturePatient = ({
       </Dialog>
       <Dialog
         open={modalAllfacture}
-        onClose={() => { setModalAllfacture(false) }}
+          transitionDuration={0}
+          onClose={() => { setModalAllfacture(false) }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth={true}

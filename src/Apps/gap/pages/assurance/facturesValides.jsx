@@ -43,7 +43,6 @@ const Bordereau = ({
     setListFacturesValides,
     setListFacturesByAssurance
 }) => {
-
     const [value, setValue] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
@@ -85,8 +84,7 @@ const Bordereau = ({
     }
 
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
-    function setassurance(value) { setinput({ ...inputs, assurance: value }) }
-
+    function setassurance(value) { setinput({ ...inputs, nomassurance: value }) }
     const columns = [
         "N°",
         "N°facture",
@@ -108,13 +106,13 @@ const Bordereau = ({
         Axios({ url: `${header.url}/gap/list/assurances`, }).then(({ data: { rows } }) => {
             const Assurance = [];
             rows.forEach(({ idassurance, nomassurance }) => { Assurance.push({ value: idassurance, label: nomassurance }); });
-            setListAssurance(Assurance);
+            setListAssurance([{ value: "Tous", label: "Tous" }, ...Assurance]);
         });
     }, []);
 
     useEffect(() => {
         setListFacturesValides([])
-    }, [inputs.assurance, inputs.typeSejour])
+    }, [inputs.nomassurance, inputs.typeSejour])
 
     return (
         <div className="Facturesvalides row p-2">
@@ -194,6 +192,8 @@ const Bordereau = ({
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                disableBackdropClick
+                transitionDuration={0}
                 fullWidth={true}
                 style={{ minHeight: "60vh" }}
                 maxWidth="lg"
@@ -214,7 +214,7 @@ const Bordereau = ({
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
-                                    newValue && thunkListFacturesByAssurances({ ...inputs, assurance: newValue.label })
+                                    newValue && inputs.typeSejour.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
                                 }}
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
@@ -228,11 +228,12 @@ const Bordereau = ({
                                     id="typesejour"
                                     onChange={({ target: { value } }) => {
                                         settype(value)
-                                        thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
+                                        inputs.nomassurance.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
                                     }}
                                     label="Type de sejour "
                                     style={{ fontSize: "12px" }}
                                 >
+                                    <MenuItem style={{ fontSize: "12px" }} value={"Tous"}>Tous</MenuItem>
                                     <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
                                     <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
                                     <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
@@ -316,7 +317,7 @@ const Bordereau = ({
                 <DialogActions>
                     <Button
                         variant="contained"
-                        onClick={() => setShowModal(false)}
+                        onClick={handleClose}
                         startIcon={<CancelIcon />}
                         style={{
                             textTransform: "none",

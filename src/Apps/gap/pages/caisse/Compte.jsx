@@ -115,7 +115,7 @@ const AttenteFacture = ({
           />
           <div className="col-2">
             <Chip
-              label="comptes(s)"
+              label="Comptes(s)"
               avatar={
                 <Avatar
                   className="white-text"
@@ -179,7 +179,8 @@ const AttenteFacture = ({
         onClose={closeNewCompte}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        fullWidth={true}
+          transitionDuration={0}
+          fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle
@@ -267,7 +268,8 @@ const AttenteFacture = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth={true}
-        maxWidth="xs"
+          transitionDuration={0}
+          maxWidth="xs"
       >
         <DialogTitle
           className="text-center text-secondary"

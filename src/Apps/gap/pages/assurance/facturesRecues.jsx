@@ -15,6 +15,7 @@ import {
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
+import PrintIcon from '@material-ui/icons/Print';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import AddIcon from '@material-ui/icons/Add'
 
@@ -31,6 +32,8 @@ import {
     Select,
     Button,
     MenuItem,
+    FormControlLabel,
+    Switch,
 } from "@material-ui/core";
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
@@ -50,6 +53,7 @@ const Bordereau = ({
 
     const global = useContext(GlobalContext);
     const [value, setValue] = useState("");
+    const [tousSelectionner, settousSelectionner] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [inputs, setinput] = useState({
@@ -78,13 +82,15 @@ const Bordereau = ({
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
-    function setassurance(value) { setinput({ ...inputs, assurance: value }) }
+    function setassurance(value) { setinput({ ...inputs, nomassurance: value }) }
 
     const columns = [
         "N°",
         "N°facture",
         "Date",
         "Heure",
+        "Gestionnaire",
+        "Organisme",
         "Type de sejour",
         "Patient",
         "Medecin",
@@ -100,13 +106,13 @@ const Bordereau = ({
         Axios({ url: `${header.url}/gap/list/assurances` }).then(({ data: { rows } }) => {
             const Assurance = [];
             rows.forEach(({ idassurance, nomassurance }) => { Assurance.push({ value: idassurance, label: nomassurance }); });
-            setListAssurance(Assurance);
+            setListAssurance([{ value: "Tous", label: "Tous" }, ...Assurance]);
         });
     }, []);
 
     useEffect(() => {
         setListFacturesRecues([])
-    }, [inputs.assurance, inputs.typeSejour])
+    }, [inputs.nomassurance, inputs.typeSejour])
 
     return (
         <div className="FacturesRecues row p-2">
@@ -156,7 +162,7 @@ const Bordereau = ({
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                        ({ numerofacture, gestionnaire, organisme, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
                             <tr
                                 key={i}
                                 style={{ cursor: "pointer" }}
@@ -165,6 +171,8 @@ const Bordereau = ({
                                 <td>{numerofacture}</td>
                                 <td>{datefacture}</td>
                                 <td>{heurefacture}</td>
+                                <td className="font-weight-bold">{gestionnaire}</td>
+                                <td className="font-weight-bold">{organisme}</td>
                                 <td className="font-weight-bold">{typesejour}</td>
                                 <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                 <td>Wilfried GBADJE</td>
@@ -183,9 +191,11 @@ const Bordereau = ({
             </table>
             <Dialog
                 open={showModal}
+                disableBackdropClick
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                transitionDuration={0}
                 fullWidth={true}
                 style={{ minHeight: "60vh" }}
                 maxWidth="lg"
@@ -206,7 +216,7 @@ const Bordereau = ({
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
-                                    newValue && thunkListFacturesByAssurances({ ...inputs, assurance: newValue.label })
+                                    newValue && inputs.typeSejour.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
                                 }}
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
@@ -220,11 +230,12 @@ const Bordereau = ({
                                     id="typesejour"
                                     onChange={({ target: { value } }) => {
                                         settype(value)
-                                        thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
+                                        inputs.nomassurance.trim() !== "" && thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
                                     }}
                                     label="Type de sejour "
                                     style={{ fontSize: "12px" }}
                                 >
+                                    <MenuItem style={{ fontSize: "12px" }} value={"Tous"}>Tous</MenuItem>
                                     <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
                                     <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
                                     <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
@@ -270,23 +281,30 @@ const Bordereau = ({
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').map(
-                                ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                                ({ numerofacture, gestionnaire, organisme, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
-                                        className={listFacturesRecues.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
                                         style={{ cursor: "pointer" }}
+                                        className={listFacturesRecues.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
                                         onClick={() => {
                                             if (listFacturesRecues.includes(numerofacture)) {
                                                 listFacturesRecues.splice(listFacturesRecues.indexOf(numerofacture), 1)
                                                 setListFacturesRecues([...listFacturesRecues])
+                                                settousSelectionner(false)
                                             } else {
+                                                if ([...listFacturesRecues, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').length) {
+                                                    settousSelectionner(true)
+                                                }
                                                 setListFacturesRecues([...listFacturesRecues, numerofacture])
                                             }
-                                        }} >
+                                        }}
+                                    >
                                         <td>{i + 1}</td>
                                         <td>{numerofacture}</td>
                                         <td>{datefacture}</td>
                                         <td>{heurefacture}</td>
+                                        <td className="font-weight-bold">{gestionnaire}</td>
+                                        <td className="font-weight-bold">{organisme}</td>
                                         <td className="font-weight-bold">{typesejour}</td>
                                         <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                         <td>Wilfried GBADJE</td>
@@ -297,18 +315,46 @@ const Bordereau = ({
                                         <td>{partpatientfacture} FCFA</td>
                                         <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
                                             {restepatientfacture} FCFA
-                                        </td>
+                                            </td>
                                     </tr>
                                 )
                             )}
                         </tbody>
                     </table>
-                    <div className="col"><small>{listFacturesRecues.length} sélectionnée(s)</small></div>
+                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').length !== 0 &&
+                        <>
+                            <div onClick={() => {
+                                if (tousSelectionner) {
+                                    setListFacturesRecues([])
+                                    settousSelectionner(false)
+                                } else {
+                                    setListFacturesRecues(
+                                        listFacturesByAssurance
+                                            .filter(facture => facture.statutfactures === 'attente')
+                                            .map(facture => facture.numerofacture)
+                                    )
+                                    settousSelectionner(true)
+                                }
+                            }} style={{ display: "inline" }}>
+                                <Chip
+
+                                    className={`mr-2 ${tousSelectionner ? "bgcolor-secondaryDark text-white font-weight-bold" : ""}`}
+                                    style={{ cursor: "pointer" }}
+                                    label="Tous selectionner"
+                                />
+                            </div>
+                            <Chip
+                                label="Sélectionnée(s)"
+                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > {listFacturesRecues.length} </Avatar>}
+                            />
+                        </>
+                    }
+
                 </DialogContent>
                 <DialogActions>
                     <Button
                         variant="contained"
-                        onClick={() => setShowModal(false)}
+                        onClick={handleClose}
                         startIcon={<CancelIcon />}
                         style={{
                             textTransform: "none",
@@ -316,6 +362,19 @@ const Bordereau = ({
                         }}
                     >
                         Annuler
+                    </Button>
+                    <Button
+                        variant="contained"
+                        // onClick={}
+                        startIcon={<PrintIcon />}
+                        disabled={listFacturesRecues.length !== 0 || listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').length === 0}
+                        className="red text-white"
+                        style={{
+                            textTransform: "none",
+                            fontSize: "11px",
+                        }}
+                    >
+                        Imprimer les factures non reçues
                     </Button>
                     <Button
                         variant="contained"

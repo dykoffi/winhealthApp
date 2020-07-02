@@ -36,7 +36,7 @@ const Caisse = ({
         />
       </section>
       <section
-        className="col-12 p-3"
+        className="col-12 px-3 mt-2"
         style={{
           height: "83vh",
           overflowY: "scroll",

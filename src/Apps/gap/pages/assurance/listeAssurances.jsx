@@ -190,7 +190,8 @@ const Assurance = ({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        fullWidth={true}
+          transitionDuration={0}
+          fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle
@@ -335,7 +336,8 @@ const Assurance = ({
         }
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        fullWidth={true}
+          transitionDuration={0}
+          fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle

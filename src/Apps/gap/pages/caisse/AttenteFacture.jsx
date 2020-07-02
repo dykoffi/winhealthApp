@@ -115,7 +115,7 @@ const AttenteFacture = ({
           />
           <div className="col">
             <Chip
-              label="facture(s)"
+              label="Facture(s)"
               avatar={
                 <Avatar
                   className="white-text"
@@ -171,7 +171,8 @@ const AttenteFacture = ({
         disableEscapeKeyDown
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        fullWidth={true}
+          transitionDuration={0}
+          fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
