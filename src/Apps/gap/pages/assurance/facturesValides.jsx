@@ -44,6 +44,7 @@ const Bordereau = ({
     setListFacturesByAssurance
 }) => {
     const [value, setValue] = useState("");
+    const [tousSelectionner, settousSelectionner] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [inputs, setinput] = useState({
@@ -288,7 +289,11 @@ const Bordereau = ({
                                             if (listFacturesValides.includes(numerofacture)) {
                                                 listFacturesValides.splice(listFacturesValides.indexOf(numerofacture), 1)
                                                 setListFacturesValides([...listFacturesValides])
+                                                settousSelectionner(false)
                                             } else {
+                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').length) {
+                                                    settousSelectionner(true)
+                                                }
                                                 setListFacturesValides([...listFacturesValides, numerofacture])
                                             }
                                         }} >
@@ -312,7 +317,34 @@ const Bordereau = ({
                             )}
                         </tbody>
                     </table>
-                    <div className="col"><small>{listFacturesValides.length} sélectionnée(s)</small></div>
+                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').length !== 0 &&
+                        <>
+                            <div onClick={() => {
+                                if (tousSelectionner) {
+                                    setListFacturesValides([])
+                                    settousSelectionner(false)
+                                } else {
+                                    setListFacturesValides(
+                                        listFacturesByAssurance
+                                            .filter(facture => facture.statutfactures === 'recu')
+                                            .map(facture => facture.numerofacture)
+                                    )
+                                    settousSelectionner(true)
+                                }
+                            }} style={{ display: "inline" }}>
+                                <Chip
+
+                                    className={`mr-2 ${tousSelectionner ? "bgcolor-secondaryDark text-white font-weight-bold" : ""}`}
+                                    style={{ cursor: "pointer" }}
+                                    label="Tous selectionner"
+                                />
+                            </div>
+                            <Chip
+                                label="Sélectionnée(s)"
+                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > {listFacturesValides.length} </Avatar>}
+                            />
+                        </>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button
