@@ -34,3 +34,7 @@ table {
 button {
     font-size: 12.5px !important;
 }
+
+a:active, a:hover, a:visited, a{
+    text-decoration: none;
+}

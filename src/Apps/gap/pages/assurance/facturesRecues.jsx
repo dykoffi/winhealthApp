@@ -3,11 +3,13 @@ import { connect } from "react-redux";
 import moment from 'moment'
 import DateFnsUtils from "@date-io/date-fns";
 import frLocale from "date-fns/locale/fr";
+import FactureNonRecuesDoc from '../../documents/facturesNonRecues'
 import {
     thunkAddBordereau,
     thunkListFacturesByAssurances,
     thunkSendFacturesRecues,
     thunkDeleteFacturesRecues,
+    thunkModifyFacture,
     setListFacturesRecues,
     setListFacturesByAssurance,
     setShowModal,
@@ -19,11 +21,10 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import PrintIcon from '@material-ui/icons/Print';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add'
-
 import {
     TextField,
     Avatar,
@@ -60,11 +61,12 @@ const Input = withStyles({
     },
 })(TextField);
 
-const Bordereau = ({
+const FacturesRecues = ({
     thunkListFacturesByAssurances,
     thunkSendFacturesRecues,
     thunkListFactures,
     thunkDeleteFacturesRecues,
+    thunkModifyFacture,
     listFactures,
     currentFacture,
     listFacturesByAssurance,
@@ -113,6 +115,7 @@ const Bordereau = ({
         });
         setListFacturesRecues([])
         setListFacturesByAssurance([])
+        settousSelectionner(false)
     };
 
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
@@ -153,7 +156,7 @@ const Bordereau = ({
         Axios({ url: `${header.url}/gap/list/assurances` }).then(({ data: { rows } }) => {
             const Assurance = [];
             rows.forEach(({ idassurance, nomassurance }) => { Assurance.push({ value: idassurance, label: nomassurance }); });
-            setListAssurance([{ value: "Tous", label: "Tous" }, ...Assurance]);
+            setListAssurance(Assurance);
         });
     }, []);
 
@@ -187,7 +190,12 @@ const Bordereau = ({
                         />
                     </div>
                     <div className="col d-flex justify-content-end p-0">
+                        {
+                            listFactures.filter(facture => facture.statutfactures === 'attente').length !== 0 &&
+                            <FactureNonRecuesDoc code='edy koffi' facture={listFactures.filter(facture => facture.statutfactures === 'attente')} />
+                        }
                         <Button
+                            size='small'
                             variant="contained"
                             onClick={() => setmodal(true)}
                             startIcon={<AddIcon />}
@@ -260,7 +268,7 @@ const Bordereau = ({
                                 size="small"
                                 className="col-2 p-0"
                                 id="AssuranceList"
-                                options={listAssurances}
+                                options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
                                     newValue && inputs.typeSejour.trim() !== "" &&
@@ -275,7 +283,7 @@ const Bordereau = ({
                             <Autocomplete
                                 size="small"
                                 className="col-2 p-0 mx-2"
-                                options={listAssurances}
+                                options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
                                 onChange={(event, newValue) => {
                                     newValue && setgarant(newValue.label)
                                     newValue && inputs.typeSejour.trim() !== "" &&
@@ -429,19 +437,6 @@ const Bordereau = ({
                     </Button>
                     <Button
                         variant="contained"
-                        // onClick={}
-                        startIcon={<PrintIcon />}
-                        disabled={listFacturesRecues.length !== 0 || listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').length === 0}
-                        className="red text-white"
-                        style={{
-                            textTransform: "none",
-                            fontSize: "11px",
-                        }}
-                    >
-                        Imprimer les factures non reçues
-                    </Button>
-                    <Button
-                        variant="contained"
                         onClick={() => {
                             thunkSendFacturesRecues(listFacturesRecues)
                             handleClose()
@@ -483,7 +478,6 @@ const Bordereau = ({
             >
                 <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
                     <b>Facture N° {currentFacture.numerofacture}</b>
-                    {currentFacture.restepatientfacture === 0 && <><br /><small className="green-text font-weight-bold">(déjà payée)</small></>}
                 </DialogTitle>
                 <DialogContent>
                     <div className="row">
@@ -658,7 +652,10 @@ const Bordereau = ({
                         variant="contained"
                         className="mb-2"
                         onClick={() => { }}
-                        startIcon={<CheckCircleOutlineIcon />}
+                        startIcon={<EditIcon />}
+                        onClick={() => {
+                            thunkModifyFacture(currentFacture.numerosejour, inputModifs)
+                        }}
                         style={{
                             textTransform: "none",
                             backgroundColor: global.theme.primary,
@@ -666,7 +663,7 @@ const Bordereau = ({
                             fontSize: "13px",
                         }}
                     >
-                        Valider la transaction
+                        Valider la modification
                 </Button>
                 </DialogActions>
             </Dialog>
@@ -678,5 +675,5 @@ const mapStatToProps = state => {
     const { bordereauReducer: { listFacturesByAssurance, listFacturesRecues, listFactures, showModal, currentFacture } } = state
     return { listFacturesByAssurance, listFacturesRecues, listFactures, showModal, currentFacture }
 }
-const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture, thunkDeleteFacturesRecues, setListFacturesRecues, setListFacturesByAssurance, setShowModal })(Bordereau)
-export default BordereauConnected;
+const FacturesRecuesConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture, thunkDeleteFacturesRecues, thunkModifyFacture, setListFacturesRecues, setListFacturesByAssurance, setShowModal })(FacturesRecues)
+export default FacturesRecuesConnected;

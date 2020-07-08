@@ -10,10 +10,15 @@ import {
     thunkSendFacturesValides,
     setListFacturesValides,
     setListFacturesByAssurance,
-    thunkListFactures
+    thunkDeleteFacturesValides,
+    thunkListFactures,
+    setShowModal,
+    thunkDetailsFacture
 } from "../../api/assurance/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import {
     TextField,
@@ -33,19 +38,24 @@ import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
-const Bordereau = ({
+const Facturesvalides = ({
     thunkListFacturesByAssurances,
     thunkListFactures,
     thunkSendFacturesValides,
+    thunkDeleteFacturesValides,
     listFactures,
     listFacturesByAssurance,
     listFacturesValides,
     setListFacturesValides,
+    currentFacture,
+    showModal,
+    thunkDetailsFacture,
+    setShowModal,
     setListFacturesByAssurance
 }) => {
     const [value, setValue] = useState("");
     const [tousSelectionner, settousSelectionner] = useState("");
-    const [showModal, setShowModal] = useState(false);
+    const [modal, setmodal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [inputs, setinput] = useState({
         nomassurance: "",
@@ -58,7 +68,7 @@ const Bordereau = ({
     });
 
     const handleClose = () => {
-        setShowModal(false);
+        setmodal(false);
         setinput({
             nomassurance: "",
             nomgarant: "",
@@ -70,6 +80,7 @@ const Bordereau = ({
         });
         setListFacturesValides([])
         setListFacturesByAssurance([])
+        settousSelectionner(false)
     };
 
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
@@ -83,15 +94,19 @@ const Bordereau = ({
         "N°facture",
         "Date",
         "Heure",
+        "Gestionnaire",
+        "Organisme",
         "Type de sejour",
+        "N° PEC",
+        "Matricule Assuré",
+        "Taux",
         "Patient",
-        "Medecin",
-        "Auteur",
+        "Assuré Princ",
         "Montant Total",
         "Part Assu",
         "Reste assurance",
         "Part patient",
-        "Reste patient",]
+    ]
     const global = useContext(GlobalContext);
 
     useEffect(() => {
@@ -135,7 +150,7 @@ const Bordereau = ({
                     <div className="col d-flex justify-content-end p-0">
                         <Button
                             variant="contained"
-                            onClick={() => setShowModal(true)}
+                            onClick={() => setmodal(true)}
                             startIcon={<AssignmentTurnedInIcon />}
                             style={{
                                 textTransform: "none",
@@ -155,33 +170,35 @@ const Bordereau = ({
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                             <tr
                                 key={i}
                                 style={{ cursor: "pointer" }}
+                                onClick={() => { thunkDetailsFacture(numerofacture) }}
                             >
                                 <td>{i + 1}</td>
                                 <td>{numerofacture}</td>
                                 <td>{datefacture}</td>
                                 <td>{heurefacture}</td>
+                                <td className="font-weight-bold">{gestionnaire}</td>
+                                <td className="font-weight-bold">{organisme}</td>
                                 <td className="font-weight-bold">{typesejour}</td>
+                                <td className="font-weight-bold">{numeropec}</td>
+                                <td className="font-weight-bold">{matriculeassure}</td>
+                                <td className="font-weight-bold">{taux}%</td>
                                 <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
-                                <td>Wilfried GBADJE</td>
-                                <td>{auteurfacture}</td>
+                                <td className="font-weight-bold">{assureprinc}</td>
                                 <td>{montanttotalfacture} FCFA</td>
                                 <td className="font-weight-bold">{partassurancefacture} FCFA</td>
                                 <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
                                 <td>{partpatientfacture} FCFA</td>
-                                <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
-                                    {restepatientfacture} FCFA
-                                        </td>
                             </tr>
                         )
                     )}
                 </tbody>
             </table>
             <Dialog
-                open={showModal}
+                open={modal}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -291,7 +308,7 @@ const Bordereau = ({
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').map(
-                                ({ numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, typesejour }, i) => (
+                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
                                         className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
@@ -312,17 +329,18 @@ const Bordereau = ({
                                         <td>{numerofacture}</td>
                                         <td>{datefacture}</td>
                                         <td>{heurefacture}</td>
+                                        <td className="font-weight-bold">{gestionnaire}</td>
+                                        <td className="font-weight-bold">{organisme}</td>
                                         <td className="font-weight-bold">{typesejour}</td>
+                                        <td className="font-weight-bold">{numeropec}</td>
+                                        <td className="font-weight-bold">{matriculeassure}</td>
+                                        <td className="font-weight-bold">{taux}%</td>
                                         <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
-                                        <td>Wilfried GBADJE</td>
-                                        <td>{auteurfacture}</td>
+                                        <td className="font-weight-bold">{assureprinc}</td>
                                         <td>{montanttotalfacture} FCFA</td>
                                         <td className="font-weight-bold">{partassurancefacture} FCFA</td>
                                         <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
                                         <td>{partpatientfacture} FCFA</td>
-                                        <td className={restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}>
-                                            {restepatientfacture} FCFA
-                                        </td>
                                     </tr>
                                 )
                             )}
@@ -388,13 +406,85 @@ const Bordereau = ({
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                open={showModal}
+                onClose={() => { setShowModal(false) }}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                transitionDuration={0}
+                fullWidth={true}
+                maxWidth="xs"
+            >
+                <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
+                    <b>Facture N° {currentFacture.numerofacture}</b>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="row mx-1">
+                                <div className="col-6 p-0">
+                                    <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                                    <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
+                                    <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
+                                    <hr className="bg-light" />
+                                    {currentFacture.gestionnaire !== "" && (
+                                        <>
+                                            <small><b>Gestionnaire : </b> {currentFacture.gestionnaire}</small><br />
+                                            <small><b>Garant : </b> {currentFacture.organisme}</small><br />
+                                            <small><b>Assure princ : </b> {currentFacture.assureprinc}</small><br />
+                                            <small><b>Taux : </b> {currentFacture.taux}%</small><br />
+                                            <small><b>Montant total : </b> {currentFacture.montanttotalfacture} FCFA</small><br />
+                                            <small><b>Part Assurance : </b> {currentFacture.partassurancefacture} FCFA</small><br />
+                                        </>
+                                    )}
+                                </div>
+                                <div className="col-6 text-right"></div>
+                            </div>
+                            <div className="col-12 d-flex justify-content-center mt-4">
+                                <ReportProblemOutlinedIcon className="bg-warning mr-2" />
+                                <small className="font-weight-bold">
+                                    Le retrait et la modification de la facture sont des actions sans confirmation et irréversibles</small>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        className="mb-2"
+                        startIcon={<CancelIcon />}
+                        onClick={() => { setShowModal(false) }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="mb-2 red text-white"
+                        startIcon={<DeleteOutlineIcon />}
+                        onClick={() => { thunkDeleteFacturesValides(currentFacture.numerofacture) }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Retirer
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </div>
     );
 };
 
 const mapStatToProps = state => {
-    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures } } = state
-    return { listFacturesByAssurance, listFacturesValides, listFactures }
+    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showModal } } = state
+    return { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showModal, }
 }
-const BordereauConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, setListFacturesValides, setListFacturesByAssurance })(Bordereau)
-export default BordereauConnected;
+const FacturesvalidesConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDeleteFacturesValides, setListFacturesValides, setListFacturesByAssurance, setShowModal, thunkDetailsFacture })(Facturesvalides)
+export default FacturesvalidesConnected;
