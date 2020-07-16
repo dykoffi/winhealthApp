@@ -428,7 +428,6 @@ const FacturePatient = ({
       >
         <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
           <b>Ventilation globale</b>
-          {currentFacture.restepatientfacture === 0 && <><br /><small className="green-text font-weight-bold">(déjà payée)</small></>}
         </DialogTitle>
         <DialogContent>
           <div className="row">

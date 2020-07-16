@@ -8,7 +8,7 @@ import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import FullscreenExitIcon from "@material-ui/icons/FullscreenExit";
 
 const Topbar = ({ toggleFullscreen, title, fullscreen, user }) => {
-  moment.locale("fr");
+  moment.locale("fr")
   const [time, settime] = useState(
     moment().format("ddd DD MMMM YYYY - HH : mm : ss")
   );
@@ -36,7 +36,7 @@ const Topbar = ({ toggleFullscreen, title, fullscreen, user }) => {
   return (
     <div className="row p-1">
       <div className="col-3">
-        <small>{title}</small>
+        <small className="font-weight-bold">{title}</small>
       </div>
       <div className="col-6 text-center">
         <small>{time}</small>

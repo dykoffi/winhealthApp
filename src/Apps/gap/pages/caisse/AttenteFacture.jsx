@@ -58,7 +58,6 @@ const AttenteFacture = ({
   function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
   function project() {
     socket.emit("project_facture", currentFacture)
-    socket.on("project_facture", (fac) => { alert(fac) })
     projection ? setprojection(false) : setprojection(true);
   }
   function sendData(numeroFacture) {

@@ -456,8 +456,8 @@ const Facturesvalides = ({
                                             <small><b>Garant : </b> {currentFacture.organisme}</small><br />
                                             <small><b>Assure princ : </b> {currentFacture.assureprinc}</small><br />
                                             <small><b>Taux : </b> {currentFacture.taux}%</small><br />
-                                            <small><b>Montant total : </b> {currentFacture.montanttotalfacture} FCFA</small><br />
-                                            <small><b>Part Assurance : </b> {currentFacture.partassurancefacture} FCFA</small><br />
+                                            <small><b>Montant total : </b> {separate(currentFacture.montanttotalfacture)} FCFA</small><br />
+                                            <small><b>Part Assurance : </b> {separate(currentFacture.partassurancefacture)} FCFA</small><br />
                                         </>
                                     )}
                                 </div>

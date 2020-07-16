@@ -519,8 +519,8 @@ const FacturesRecues = ({
                                     <hr className="bg-light" />
                                     {currentFacture.gestionnaire !== "" && (
                                         <>
-                                            <small><b>Montant total : </b> {currentFacture.montanttotalfacture} FCFA</small><br />
-                                            <small><b>Part Assurance : </b> {currentFacture.partassurancefacture} FCFA</small><br />
+                                            <small><b>Montant total : </b> {separate(currentFacture.montanttotalfacture)} FCFA</small><br />
+                                            <small><b>Part Assurance : </b> {separate(currentFacture.partassurancefacture)} FCFA</small><br />
                                         </>
                                     )}
                                 </div>

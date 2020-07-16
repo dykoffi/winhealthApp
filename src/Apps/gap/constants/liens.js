@@ -14,33 +14,25 @@ export const navMenu = [
         title: 'Caisse',
         icon: 'editor-attach-money',
         path: "/gap/caisse"
-
     },
     {
         title: 'Assurance',
         icon: 'action-account-child',
         path: "/gap/assurance"
-
     },
     {
-
         title: 'Ventilation Assurance',
         icon: 'action-assignment-returned',
         path: "/gap/stats"
-
     },
     {
-
         title: 'Statistiques',
         icon: 'action-assessment',
-        path: "/gap/stats"
-
+        path: "/gap/statistiques"
     },
     {
-
         title: 'Parametres',
         icon: 'action-settings',
         path: "/gap/settings"
-
     }
 ]
