@@ -11,6 +11,7 @@ import {
   thunkSetCurrentCompte,
   setShowModal,
   thunkAddTransaction,
+  thunkSearchCompte
 } from "../../api/caisse/comptes";
 import AddIcon from "@material-ui/icons/Add";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -75,8 +76,6 @@ const AttenteFacture = ({
   ]);
 
   const global = useContext(GlobalContext);
-
-  function researching({ target: { value } }) { setValue(value); thunkSearchCompte(value.trim()); }
   function validTransaction() {
     thunkAddTransaction(
       {
@@ -112,7 +111,20 @@ const AttenteFacture = ({
             size="small"
             label="Rechercher un compte"
             value={value}
-            onChange={(ev) => researching(ev)}
+            onChange={({ target: { value } }) => {
+              let v = value
+                .replace("*", "")
+                .replace("+", "")
+                .replace("-", "")
+                .replace("/", "")
+                .replace("~", "")
+                .replace("~", "")
+                .replace(")", "")
+                .replace("(", "")
+                .replace("=", "")
+              setValue(v)
+              thunkSearchCompte(v.trim())
+            }}
           />
           <div className="col-2">
             <Chip
@@ -380,5 +392,6 @@ const AttenteFactureConnected = connect(mapStateToProps, {
   thunkSetCurrentCompte,
   setShowModal,
   thunkAddTransaction,
+  thunkSearchCompte
 })(AttenteFacture);
 export default AttenteFactureConnected;

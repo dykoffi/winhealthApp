@@ -79,8 +79,6 @@ const AttenteFacture = ({
   ]
 
   const global = useContext(GlobalContext);
-  function researching({ target: { value } }) { setValue(value); thunkSearchFacture(value.trim()); }
-
   useEffect(() => {
     thunkListFacturesAttentes();
     socket.on("facture_nouvelle", () => {
@@ -106,7 +104,20 @@ const AttenteFacture = ({
             size="small"
             label="Rechercher une facture"
             value={value}
-            onChange={(ev) => researching(ev)}
+            onChange={({ target: { value } }) => {
+              let v = value
+                .replace("*", "")
+                .replace("+", "")
+                .replace("-", "")
+                .replace("/", "")
+                .replace("~", "")
+                .replace("~", "")
+                .replace(")", "")
+                .replace("(", "")
+                .replace("=", "")
+              setValue(v)
+              thunkSearchFacture(v.trim())
+            }}
           />
           <div className="col">
             <Chip

@@ -90,4 +90,15 @@ export function thunkSetCurrentCompte(numeroCompte) {
     }
 }
 
+export function thunkSearchCompte(numeroCompte) {
+    return async (dispatch) => {
+        if (numeroCompte.trim().length === 0) { dispatch(thunkListComptes()) } else {
+            Axios({ url: `${header.url}/gap/search/compte/${numeroCompte}` }).then(({ data: { rows } }) => {
+                dispatch(setListComptes(rows))
+            })
+        }
+    }
+}
+
+
 export default comptesReducer
