@@ -38,6 +38,7 @@ import {
   Button,
   MenuItem,
 } from "@material-ui/core";
+import { separate } from "../../../global/functions";
 
 const AttenteFacture = ({
   thunkSearchCompte,
@@ -58,7 +59,7 @@ const AttenteFacture = ({
 
   function closeNewCompte() { setOpenNewCompte(false); setipp(""); }
   function createCompte() { thunkAddcompte(ipp); setOpenNewCompte(false); }
-  function closeTransaction() { setinput({}); setShowModal(false); }
+  function closeTransaction() { setinput({ mode: "", montant: "", type: "", }); setShowModal(false); }
 
   function setmode({ target: { value } }) { setinput({ ...inputs, mode: value }); }
   function settype({ target: { value } }) { setinput({ ...inputs, type: value }); }
@@ -87,7 +88,7 @@ const AttenteFacture = ({
       },
       currentCompte.numerocompte
     );
-    setinput({});
+    setinput({ mode: "", montant: "", type: "", });
   }
   useEffect(() => {
     Axios({
@@ -137,7 +138,7 @@ const AttenteFacture = ({
                 textTransform: "none",
                 backgroundColor: global.theme.primary,
                 color: "white",
-                fontSize: "11px",
+                fontSize: "13px",
               }}
             >
               Nouveau compte
@@ -163,11 +164,11 @@ const AttenteFacture = ({
                 ({ numerocompte, datecompte, heurecompte, nompatient, prenomspatient, civilitepatient, montantcompte, }, i) => (
                   <tr key={i} style={{ cursor: "pointer" }} onClick={() => thunkSetCurrentCompte(numerocompte)} >
                     <td>{i + 1}</td>
-                    <td>{numerocompte}</td>
+                    <td className="font-weight-bold">{numerocompte}</td>
                     <td>{datecompte}</td>
                     <td>{heurecompte}</td>
-                    <td>{civilitepatient} {nompatient} {prenomspatient}</td>
-                    <td>{montantcompte} FCFA</td>
+                    <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                    <td className="font-weight-bold">{separate(montantcompte)} FCFA</td>
                   </tr>
                 )
               )}
@@ -179,8 +180,8 @@ const AttenteFacture = ({
         onClose={closeNewCompte}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-          transitionDuration={0}
-          fullWidth={true}
+        transitionDuration={0}
+        fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle
@@ -198,13 +199,9 @@ const AttenteFacture = ({
                   className="col-12"
                   id="listpatients"
                   options={listPatients}
-                  onChange={(event, newValue) => {
-                    setipp(newValue.ipppatient);
-                  }}
+                  onChange={(event, newValue) => { newValue ? setipp(newValue.ipppatient) : setipp(null) }}
                   getOptionLabel={(option) =>
-                    `(${
-                    option.ipppatient
-                    }) ${option.nompatient.toLowerCase()} ${option.prenomspatient.toLowerCase()}`
+                    `(${option.ipppatient}) ${option.nompatient.toLowerCase()} ${option.prenomspatient.toLowerCase()}`
                   }
                   filterSelectedOptions
                   renderOption={(option) => (
@@ -221,6 +218,7 @@ const AttenteFacture = ({
                     <TextField
                       {...params}
                       label="Patient"
+                      variant="outlined"
                       placeholder="Rechercher le patient ..."
                     />
                   )}
@@ -231,31 +229,28 @@ const AttenteFacture = ({
         </DialogContent>
         <DialogActions>
           <Button
-            disableElevation
-            disableFocusRipple
             variant="contained"
-            className="mb-2 bg-light"
+            className="mb-2"
             startIcon={<CancelIcon />}
             onClick={closeNewCompte}
             style={{
               textTransform: "none",
-              fontSize: "11px",
+              fontSize: "13px",
             }}
           >
             Annuler
           </Button>
           <Button
-            disableElevation
-            disableFocusRipple
             variant="contained"
             className="mb-2"
             onClick={createCompte}
             startIcon={<CheckCircleOutlineIcon />}
+            disabled={!ipp}
             style={{
               textTransform: "none",
               backgroundColor: global.theme.primary,
               color: "white",
-              fontSize: "11px",
+              fontSize: "13px",
             }}
           >
             Valider
@@ -263,13 +258,14 @@ const AttenteFacture = ({
         </DialogActions>
       </Dialog>
       <Dialog
+        disableBackdropClick
         open={showModal}
         onClose={closeTransaction}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth={true}
-          transitionDuration={0}
-          maxWidth="xs"
+        transitionDuration={0}
+        maxWidth="xs"
       >
         <DialogTitle
           className="text-center text-secondary"
@@ -280,76 +276,54 @@ const AttenteFacture = ({
         <DialogContent>
           <div className="row">
             <div className="col-12">
-              <small>
-                ({currentCompte.ipppatient}) {currentCompte.nompatient}{" "}
-                {currentCompte.prenomspatient}
-              </small>
-
+              <small> <b>Patient : {" "} </b>{currentCompte.nompatient}{" "}{currentCompte.prenomspatient}</small><br />
+              <small> <b>N° compte : {" "} </b>{currentCompte.numerocompte}</small><br />
+              <small> <b>Solde : {" "} </b>{separate(currentCompte.montantcompte)} FCFA</small><br />
               <div className="row my-3 mx-1">
-                <FormControl variant="outlined" size="small" className="col-3">
+                <FormControl variant="outlined" size="small" className="col-12">
                   <InputLabel id="typesejour-label">Type</InputLabel>
-
                   <Select
                     labelId="typesejour-label"
                     id="typesejour"
                     value={inputs.type}
                     onChange={settype}
+                    variant="filled"
                     label="Type"
-                    style={{ fontSize: "11px" }}
+                    style={{ fontSize: "13px" }}
                   >
-                    <MenuItem
-                      style={{ fontSize: "11px" }}
-                      value={"Remboursement"}
-                    >
-                      Remboursement
-                    </MenuItem>
-                    <MenuItem style={{ fontSize: "11px" }} value={"Dépot"}>
-                      Dépot
-                    </MenuItem>
+                    <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
+                    <MenuItem style={{ fontSize: "13px" }} value={"Dépot"}>Dépot</MenuItem>
                   </Select>
                 </FormControl>
-
+              </div>
+              <div className="row my-3 mx-1">
                 <FormControl
                   variant="outlined"
                   size="small"
-                  className="col mx-2"
+                  className="col mr-2"
                 >
                   <InputLabel id="typesejour-label">
                     Mode de paiement
                   </InputLabel>
-
                   <Select
                     labelId="typesejour-label"
                     id="typesejour"
+                    variant="filled"
                     value={inputs.mode}
                     onChange={setmode}
                     label="Mode de paiement"
-                    style={{ fontSize: "11px" }}
+                    style={{ fontSize: "13px" }}
                   >
-                    <MenuItem style={{ fontSize: "11px" }} value={"Chèque"}>
-                      Chèque
-                    </MenuItem>
-                    <MenuItem style={{ fontSize: "11px" }} value={"Espèces"}>
-                      Espèces
-                    </MenuItem>
-                    <MenuItem
-                      style={{ fontSize: "11px" }}
-                      value={"Électronique"}
-                    >
-                      Électronique
-                    </MenuItem>
-                    <MenuItem
-                      style={{ fontSize: "11px" }}
-                      value={"Mobile money"}
-                    >
-                      Mobile money
-                    </MenuItem>
+                    <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
+                    <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
+                    <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
+                    <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
                   </Select>
                 </FormControl>
                 <TextField
-                  className="col-3"
+                  className="col"
                   type="number"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Montant"
                   value={inputs.montant}
@@ -361,31 +335,28 @@ const AttenteFacture = ({
         </DialogContent>
         <DialogActions>
           <Button
-            disableElevation
-            disableFocusRipple
             variant="contained"
-            className="mb-2 bg-light"
+            className="mb-2"
             startIcon={<CancelIcon />}
             onClick={closeTransaction}
             style={{
               textTransform: "none",
-              fontSize: "11px",
+              fontSize: "13px",
             }}
           >
             Annuler
           </Button>
           <Button
-            disableElevation
-            disableFocusRipple
             variant="contained"
             className="mb-2"
             onClick={validTransaction}
             startIcon={<CheckCircleOutlineIcon />}
+            disabled={inputs.mode.trim() === "" || inputs.type.trim() === "" || inputs.montant.trim() === ""}
             style={{
               textTransform: "none",
               backgroundColor: global.theme.primary,
               color: "white",
-              fontSize: "11px",
+              fontSize: "13px",
             }}
           >
             Valider la transaction

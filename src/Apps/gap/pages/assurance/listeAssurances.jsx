@@ -93,7 +93,6 @@ const Assurance = ({
   function setfax({ target: { value } }) { setinput({ ...inputs, fax: value }); }
   function setmail({ target: { value } }) { setinput({ ...inputs, mail: value }); }
   function setsite_web({ target: { value } }) { setinput({ ...inputs, site_web: value }); }
-  function researching({ target: { value } }) { setValue(value); thunkSearchAssurance(value.trim()); }
   function verify() {
     if (
       inputs.nom.trim() === "" ||
@@ -117,7 +116,21 @@ const Assurance = ({
             variant="outlined"
             size="small"
             label="Rechercher une assurance"
-            onChange={(ev) => researching(ev)}
+            value={value}
+            onChange={({ target: { value } }) => {
+              let v = value
+                .replace("*", "")
+                .replace("+", "")
+                .replace("-", "")
+                .replace("/", "")
+                .replace("~", "")
+                .replace("~", "")
+                .replace(")", "")
+                .replace("(", "")
+                .replace("=", "")
+              setValue(v);
+              thunkSearchAssurance(v.trim());
+            }}
           />
           <div className="col">
             <Chip
@@ -190,8 +203,8 @@ const Assurance = ({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-          transitionDuration={0}
-          fullWidth={true}
+        transitionDuration={0}
+        fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle
@@ -336,8 +349,8 @@ const Assurance = ({
         }
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-          transitionDuration={0}
-          fullWidth={true}
+        transitionDuration={0}
+        fullWidth={true}
         maxWidth="xs"
       >
         <DialogTitle

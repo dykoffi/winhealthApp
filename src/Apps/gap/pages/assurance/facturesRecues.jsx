@@ -12,14 +12,13 @@ import {
     thunkModifyFacture,
     setListFacturesRecues,
     setListFacturesByAssurance,
-    setShowModal,
     thunkDetailsFacture,
-    thunkListFactures
+    thunkListFactures,
+    setShowDetailsFacture
 } from "../../api/assurance/bordereaux";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
-import PrintIcon from '@material-ui/icons/Print';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -44,6 +43,7 @@ import Axios from "axios";
 import GlobalContext, { Info } from "../../../global/context";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { separate } from "../../../global/functions";
 
 const Input = withStyles({
     root: {
@@ -60,7 +60,11 @@ const Input = withStyles({
         },
     },
 })(TextField);
-
+function PaperComponent(props) {
+    return (
+        <div className="row" {...props} ></div>
+    );
+}
 const FacturesRecues = ({
     thunkListFacturesByAssurances,
     thunkSendFacturesRecues,
@@ -72,9 +76,9 @@ const FacturesRecues = ({
     listFacturesByAssurance,
     listFacturesRecues,
     setListFacturesRecues,
-    showModal,
+    showDetailsFacture,
     thunkDetailsFacture,
-    setShowModal,
+    setShowDetailsFacture,
     setListFacturesByAssurance
 }) => {
 
@@ -83,6 +87,8 @@ const FacturesRecues = ({
     const [tousSelectionner, settousSelectionner] = useState("");
     const [modal, setmodal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
+    const [pdf, setpdf] = useState(false);
+    const [urlPDF, seturlPDF] = useState(false);
     const [inputModifs, setinputModif] = useState({
         gestionnaire: "",
         organisme: "",
@@ -117,7 +123,10 @@ const FacturesRecues = ({
         setListFacturesByAssurance([])
         settousSelectionner(false)
     };
-
+    function showPDF(url) {
+        seturlPDF(url)
+        setpdf(true)
+    }
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
@@ -145,10 +154,6 @@ const FacturesRecues = ({
         "Taux",
         "Patient",
         "Assuré Princ",
-        "Montant Total",
-        "Part Assu",
-        "Reste assurance",
-        "Part patient",
     ]
 
     useEffect(() => {
@@ -174,7 +179,19 @@ const FacturesRecues = ({
                         size="small"
                         label="Rechercher une facture"
                         value={value}
-                        onChange={({ target: { value } }) => { setValue(value) }}
+                        onChange={({ target: { value } }) => {
+                            let v = value
+                                .replace("*", "")
+                                .replace("+", "")
+                                .replace("-", "")
+                                .replace("/", "")
+                                .replace("~", "")
+                                .replace("~", "")
+                                .replace(")", "")
+                                .replace("(", "")
+                                .replace("=", "")
+                            setValue(v)
+                        }}
                     />
                     <div className="col-2">
                         <Chip
@@ -184,7 +201,7 @@ const FacturesRecues = ({
                                     className="white-text"
                                     style={{ backgroundColor: global.theme.primary }}
                                 >
-                                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
+                                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
                                 </Avatar>
                             }
                         />
@@ -192,7 +209,7 @@ const FacturesRecues = ({
                     <div className="col d-flex justify-content-end p-0">
                         {
                             listFactures.filter(facture => facture.statutfactures === 'attente').length !== 0 &&
-                            <FactureNonRecuesDoc code='edy koffi' facture={listFactures.filter(facture => facture.statutfactures === 'attente')} />
+                            <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={listFactures.filter(facture => facture.statutfactures === 'attente')} />
                         }
                         <Button
                             size='small'
@@ -213,15 +230,21 @@ const FacturesRecues = ({
             </div>
             <table className="table-sm col-12 table-hover table-striped my-2">
                 <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                    <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                    <tr>
+                        {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                        {["Montant Total",
+                            "Part Assu",
+                            "Reste assurance",
+                            "Part patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+                    </tr>
                 </thead>
                 <tbody>
-                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures }, i) => (
                             <tr
                                 key={i}
-                                style={{ cursor: "pointer" }}
-                                onClick={() => { thunkDetailsFacture(numerofacture) }}
+                                style={{ cursor: statutfactures === 'recu' ? "pointer" : "default" }}
+                                onClick={() => { statutfactures === 'recu' && thunkDetailsFacture(numerofacture) }}
                             >
                                 <td>{i + 1}</td>
                                 <td>{numerofacture}</td>
@@ -235,10 +258,10 @@ const FacturesRecues = ({
                                 <td className="font-weight-bold">{taux}%</td>
                                 <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                 <td className="font-weight-bold">{assureprinc}</td>
-                                <td>{montanttotalfacture} FCFA</td>
-                                <td className="font-weight-bold">{partassurancefacture} FCFA</td>
-                                <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
-                                <td>{partpatientfacture} FCFA</td>
+                                <td className="text-right">{separate(montanttotalfacture)}</td>
+                                <td className="font-weight-bold text-right">{separate(partassurancefacture)}</td>
+                                <td className="font-weight-bold text-right">{separate(resteassurancefacture)}</td>
+                                <td className="text-right">{separate(partpatientfacture)}</td>
                             </tr>
                         )
                     )}
@@ -351,7 +374,13 @@ const FacturesRecues = ({
                     </div>
                     <table className="table-sm col-12 table-hover table-striped my-3">
                         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                            <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                            <tr>
+                                {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                                {["Montant Total",
+                                    "Part Assu",
+                                    "Reste assurance",
+                                    "Part patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+                            </tr>
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').map(
@@ -385,10 +414,10 @@ const FacturesRecues = ({
                                         <td className="font-weight-bold">{taux}%</td>
                                         <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                         <td className="font-weight-bold">{assureprinc}</td>
-                                        <td>{montanttotalfacture} FCFA</td>
-                                        <td className="font-weight-bold">{partassurancefacture} FCFA</td>
-                                        <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
-                                        <td>{partpatientfacture} FCFA</td>
+                                        <td className="text-right">{separate(montanttotalfacture)}</td>
+                                        <td className="font-weight-bold text-right">{separate(partassurancefacture)}</td>
+                                        <td className="font-weight-bold text-right">{separate(resteassurancefacture)}</td>
+                                        <td className="text-right">{separate(partpatientfacture)}</td>
                                     </tr>
                                 )
                             )}
@@ -455,8 +484,8 @@ const FacturesRecues = ({
                 </DialogActions>
             </Dialog>
             <Dialog
-                open={showModal}
-                onClose={() => { setShowModal(false) }}
+                open={showDetailsFacture}
+                onClose={() => { setShowDetailsFacture(false) }}
                 disableBackdropClick
                 disableEscapeKeyDown
                 aria-labelledby="alert-dialog-title"
@@ -628,7 +657,7 @@ const FacturesRecues = ({
                         variant="contained"
                         className="mb-2"
                         startIcon={<CancelIcon />}
-                        onClick={() => { setShowModal(false) }}
+                        onClick={() => { setShowDetailsFacture(false) }}
                         style={{
                             textTransform: "none",
                             fontSize: "13px",
@@ -667,13 +696,26 @@ const FacturesRecues = ({
                 </Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                open={pdf}
+                onClose={() => setpdf(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+                style={{ overflowX: 'hidden' }}
+                maxWidth="md"
+                scroll={'body'}
+                PaperComponent={PaperComponent}
+            >
+                <object data={urlPDF} className="col-12" height={700} type="application/pdf"></object>
+            </Dialog>
         </div>
     );
 };
 
 const mapStatToProps = state => {
-    const { bordereauReducer: { listFacturesByAssurance, listFacturesRecues, listFactures, showModal, currentFacture } } = state
-    return { listFacturesByAssurance, listFacturesRecues, listFactures, showModal, currentFacture }
+    const { bordereauReducer: { listFacturesByAssurance, listFacturesRecues, listFactures, showDetailsFacture, currentFacture } } = state
+    return { listFacturesByAssurance, listFacturesRecues, listFactures, showDetailsFacture, currentFacture }
 }
-const FacturesRecuesConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture, thunkDeleteFacturesRecues, thunkModifyFacture, setListFacturesRecues, setListFacturesByAssurance, setShowModal })(FacturesRecues)
+const FacturesRecuesConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture, thunkDeleteFacturesRecues, thunkModifyFacture, setListFacturesRecues, setListFacturesByAssurance, setShowDetailsFacture })(FacturesRecues)
 export default FacturesRecuesConnected;

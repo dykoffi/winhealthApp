@@ -12,7 +12,7 @@ import {
     setListFacturesByAssurance,
     thunkDeleteFacturesValides,
     thunkListFactures,
-    setShowModal,
+    setShowDetailsFacture,
     thunkDetailsFacture
 } from "../../api/assurance/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -37,6 +37,7 @@ import {
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { separate } from "../../../global/functions";
 
 const Facturesvalides = ({
     thunkListFacturesByAssurances,
@@ -48,9 +49,9 @@ const Facturesvalides = ({
     listFacturesValides,
     setListFacturesValides,
     currentFacture,
-    showModal,
+    showDetailsFacture,
     thunkDetailsFacture,
-    setShowModal,
+    setShowDetailsFacture,
     setListFacturesByAssurance
 }) => {
     const [value, setValue] = useState("");
@@ -102,10 +103,6 @@ const Facturesvalides = ({
         "Taux",
         "Patient",
         "Assuré Princ",
-        "Montant Total",
-        "Part Assu",
-        "Reste assurance",
-        "Part patient",
     ]
     const global = useContext(GlobalContext);
 
@@ -132,7 +129,19 @@ const Facturesvalides = ({
                         size="small"
                         label="Rechercher une facture"
                         value={value}
-                        onChange={({ target: { value } }) => { setValue(value) }}
+                        onChange={({ target: { value } }) => {
+                            let v = value
+                                .replace("*", "")
+                                .replace("+", "")
+                                .replace("-", "")
+                                .replace("/", "")
+                                .replace("~", "")
+                                .replace("~", "")
+                                .replace(")", "")
+                                .replace("(", "")
+                                .replace("=", "")
+                            setValue(v)
+                        }}
                     />
                     <div className="col-2">
                         <Chip
@@ -142,7 +151,7 @@ const Facturesvalides = ({
                                     className="white-text"
                                     style={{ backgroundColor: global.theme.primary }}
                                 >
-                                    {listFactures.filter(facture => facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
+                                    {listFactures.filter(facture => facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
                                 </Avatar>
                             }
                         />
@@ -166,15 +175,21 @@ const Facturesvalides = ({
             </div>
             <table className="table-sm col-12 table-hover table-striped my-2">
                 <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                    <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                    <tr>
+                        {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                        {["Montant Total",
+                            "Part Assu",
+                            "Reste assurance",
+                            "Part patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+                    </tr>
                 </thead>
                 <tbody>
-                    {listFactures.filter(facture => facture.statutfactures === 'valide').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                    {listFactures.filter(facture => facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures }, i) => (
                             <tr
                                 key={i}
-                                style={{ cursor: "pointer" }}
-                                onClick={() => { thunkDetailsFacture(numerofacture) }}
+                                style={{ cursor: statutfactures === 'valide' ? "pointer" : "default" }}
+                                onClick={() => statutfactures === 'valide' ? thunkDetailsFacture(numerofacture) : null}
                             >
                                 <td>{i + 1}</td>
                                 <td>{numerofacture}</td>
@@ -188,10 +203,10 @@ const Facturesvalides = ({
                                 <td className="font-weight-bold">{taux}%</td>
                                 <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                 <td className="font-weight-bold">{assureprinc}</td>
-                                <td>{montanttotalfacture} FCFA</td>
-                                <td className="font-weight-bold">{partassurancefacture} FCFA</td>
-                                <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
-                                <td>{partpatientfacture} FCFA</td>
+                                <td className="text-right">{separate(montanttotalfacture)}</td>
+                                <td className="font-weight-bold text-right">{separate(partassurancefacture)}</td>
+                                <td className="font-weight-bold text-right">{separate(resteassurancefacture)}</td>
+                                <td className="text-right">{separate(partpatientfacture)}</td>
                             </tr>
                         )
                     )}
@@ -304,7 +319,13 @@ const Facturesvalides = ({
                     </div>
                     <table className="table-sm col-12 table-hover table-striped my-2">
                         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                            <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                            <tr>
+                                {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                                {["Montant Total",
+                                    "Part Assu",
+                                    "Reste assurance",
+                                    "Part patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+                            </tr>
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').map(
@@ -337,10 +358,10 @@ const Facturesvalides = ({
                                         <td className="font-weight-bold">{taux}%</td>
                                         <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                                         <td className="font-weight-bold">{assureprinc}</td>
-                                        <td>{montanttotalfacture} FCFA</td>
-                                        <td className="font-weight-bold">{partassurancefacture} FCFA</td>
-                                        <td className="font-weight-bold">{resteassurancefacture} FCFA</td>
-                                        <td>{partpatientfacture} FCFA</td>
+                                        <td className="text-right">{separate(montanttotalfacture)}</td>
+                                        <td className="font-weight-bold text-right">{separate(partassurancefacture)}</td>
+                                        <td className="font-weight-bold text-right">{separate(resteassurancefacture)}</td>
+                                        <td className="text-right">{separate(partpatientfacture)}</td>
                                     </tr>
                                 )
                             )}
@@ -407,8 +428,8 @@ const Facturesvalides = ({
                 </DialogActions>
             </Dialog>
             <Dialog
-                open={showModal}
-                onClose={() => { setShowModal(false) }}
+                open={showDetailsFacture}
+                onClose={() => { setShowDetailsFacture(false) }}
                 disableBackdropClick
                 disableEscapeKeyDown
                 aria-labelledby="alert-dialog-title"
@@ -445,7 +466,7 @@ const Facturesvalides = ({
                             <div className="col-12 d-flex justify-content-center mt-4">
                                 <ReportProblemOutlinedIcon className="bg-warning mr-2" />
                                 <small className="font-weight-bold">
-                                    Le retrait et la modification de la facture sont des actions sans confirmation et irréversibles</small>
+                                    Le retrait de la facture est une action sans confirmation et irréversibles</small>
                             </div>
                         </div>
                     </div>
@@ -455,7 +476,7 @@ const Facturesvalides = ({
                         variant="contained"
                         className="mb-2"
                         startIcon={<CancelIcon />}
-                        onClick={() => { setShowModal(false) }}
+                        onClick={() => { setShowDetailsFacture(false) }}
                         style={{
                             textTransform: "none",
                             fontSize: "13px",
@@ -477,14 +498,13 @@ const Facturesvalides = ({
                     </Button>
                 </DialogActions>
             </Dialog>
-
         </div>
     );
 };
 
 const mapStatToProps = state => {
-    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showModal } } = state
-    return { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showModal, }
+    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture } } = state
+    return { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, }
 }
-const FacturesvalidesConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDeleteFacturesValides, setListFacturesValides, setListFacturesByAssurance, setShowModal, thunkDetailsFacture })(Facturesvalides)
+const FacturesvalidesConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDeleteFacturesValides, setListFacturesValides, setListFacturesByAssurance, setShowDetailsFacture, thunkDetailsFacture })(Facturesvalides)
 export default FacturesvalidesConnected;

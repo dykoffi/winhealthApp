@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import socket from 'socket.io-client'
 import logo from "../../../static/images/logoms2.jpg";
 import QR from "qrcode.react";
 import {
@@ -65,7 +64,6 @@ const DownloadLink = ({
   sejour
 }) => {
   const [url, seturl] = useState(null);
-  const io = socket.connect('https://localhost:8000')
   useEffect(() => {
     const canvas = document.getElementById("img");
     const pngUrl = canvas
@@ -177,13 +175,16 @@ const Facture = ({
                 <View style={styles.l}><Text>SORTI(E) À :  </Text><Text>{heurefinsejour}</Text></View>
                 <View style={styles.l}><Text>TYPE DE SEJOUR : </Text><Text>{typesejour}</Text></View>
               </View>
-              <View style={styles.content}>
-                <Text style={styles.title}>ASSURANCE</Text>
-                <View style={styles.l}><Text>Gestionnaire : </Text><Text>{gestionnaire}</Text></View>
-                <View style={styles.l}><Text>Organisme : </Text><Text>{organisme}</Text></View>
-                <View style={styles.l}><Text>Assure Princ :  </Text><Text>{assureprinc}</Text></View>
-                <View style={styles.l}><Text>Exonération : </Text><Text>{taux}%</Text></View>
-              </View>
+              {gestionnaire.trim() !== "" &&
+                <View style={styles.content}>
+                  <Text style={styles.title}>ASSURANCE</Text>
+                  <View style={styles.l}><Text>Gestionnaire : </Text><Text>{gestionnaire}</Text></View>
+                  <View style={styles.l}><Text>Organisme : </Text><Text>{organisme}</Text></View>
+                  <View style={styles.l}><Text>Assure Princ :  </Text><Text>{assureprinc}</Text></View>
+                  <View style={styles.l}><Text>Exonération : </Text><Text>{taux}%</Text></View>
+                </View>
+              }
+
             </View>
             <View style={{ flex: "10", display: "flex", fontSize: 12, }}>
               <Text style={{ ...styles.title, backgroundColor: "white", textAlign: "center", marginBottom: 10, marginTop: 10, fontSize: 14 }}>

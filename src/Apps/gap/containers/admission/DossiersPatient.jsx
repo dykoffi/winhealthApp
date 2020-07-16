@@ -104,14 +104,13 @@ const DossiersPatient = ({
       finHeure: new Date(),
       type: "",
       medecin: "",
-      
       gestionnaire: "",
       organisme: "",
       beneficiaire: "",
       assurePrinc: "",
       matriculeAssure: "",
       numeroPEC: "",
-      taux: ""
+      taux: 0
     });
     setListActesDef([])
     setOpen(false);
@@ -130,8 +129,25 @@ const DossiersPatient = ({
   function setmatriculeAssure({ target: { value } }) { setinput({ ...inputs, matriculeAssure: value }); }
   function setnumeroPEC({ target: { value } }) { setinput({ ...inputs, numeroPEC: value }); }
   function settaux({ target: { value } }) { setinput({ ...inputs, taux: value }); }
-  function sendDTata() { setOpen(false); thunkAddSejour({ ...inputs, actes: actes }, currentPatient.iddossier); setinput({}) }
-
+  function sendDTata() {
+    thunkAddSejour({ ...inputs, actes: actes }, currentPatient.iddossier);
+    setinput({
+      debutDate: new Date(),
+      finDate: new Date(),
+      DebutHeure: new Date(),
+      finHeure: new Date(),
+      type: "",
+      medecin: "",
+      gestionnaire: "",
+      organisme: "",
+      beneficiaire: "",
+      assurePrinc: "",
+      matriculeAssure: "",
+      numeroPEC: "",
+      taux: 0
+    })
+    //setOpen(false);
+  }
   useEffect(() => {
     Axios({ url: `${header.url}/gap/list/actes` }).then(({ data: { rows } }) => {
       const actes = [];
@@ -196,13 +212,16 @@ const DossiersPatient = ({
                   <small><b>Part Assu :</b> {currentSejour.partassurancefacture}{" "}FCFA, <b>Reste</b> : {currentSejour.resteassurancefacture} FCFA</small><br />
                   <small><b>Part Patiient :</b> {currentSejour.partpatientfacture}{" "}FCFA, <b>Reste</b> : {currentSejour.restepatientfacture} FCFA</small><br />
                 </div>
-                <div className="col">
-                  <h6>Assurance ({currentSejour.gestionnaire})</h6>
-                  <small><b>Béneficiaire :</b> {currentSejour.beneficiaire}</small><br />
-                  <small><b>Assuré Principal :</b> {currentSejour.assureprinc}</small><br />
-                  <small><b>N° Mat.:</b> {currentSejour.matriculeassure}</small>, <small><b>N° PEC :</b> {currentSejour.numeropec}</small><br />
-                  <small><b>Taux :</b> {currentSejour.taux}%</small><br />
-                </div>
+                {
+                  currentSejour.gestionnaire.trim() !== "" && <div className="col">
+                    <h6>Assurance ({currentSejour.gestionnaire})</h6>
+                    <small><b>Béneficiaire :</b> {currentSejour.beneficiaire}</small><br />
+                    <small><b>Assuré Principal :</b> {currentSejour.assureprinc}</small><br />
+                    <small><b>N° Mat.:</b> {currentSejour.matriculeassure}</small>, <small><b>N° PEC :</b> {currentSejour.numeropec}</small><br />
+                    <small><b>Taux :</b> {currentSejour.taux}%</small><br />
+                  </div>
+                }
+
                 <div className="col-auto d-flex align-items-end">
                   {2 - currentSejour.nbcontrole > 0 && (
                     <Button
@@ -423,7 +442,7 @@ const DossiersPatient = ({
                     )}
                   />
                 </div>
-                <div style={{display:"inline"}} onClick={() => {
+                <div style={{ display: "inline" }} onClick={() => {
                   if (assure) {
                     setassure(false)
                   } else {
@@ -540,6 +559,7 @@ const DossiersPatient = ({
                           onChange={settaux}
                           style={{ fontSize: "11px" }}
                         >
+                          <MenuItem style={{ fontSize: "12px" }} value={0}>0%</MenuItem>
                           <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
                           <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
                           <MenuItem style={{ fontSize: "12px" }} value={30}>30%</MenuItem>
@@ -584,8 +604,6 @@ const DossiersPatient = ({
                             listActesDef[i].qte = ev.target.value
                             listActesDef[i].prixT = ev.target.value * listActesDef[i].prixU
                             setListActesDef(listActesDef)
-                            console.log(listActesDef);
-
                           }} /></td>
                           <td><Input size="small" value={listActesDef[i].prixT} /></td>
                           <td> <Input size="small" disabled defaultValue="15000" /></td>
@@ -604,20 +622,14 @@ const DossiersPatient = ({
               className="mb-2 bg-light"
               startIcon={<CancelIcon />}
               onClick={handleClose}
-              style={{
-                textTransform: "none",
-                fontSize: "11px",
-              }}
+              style={{ textTransform: "none", fontSize: "11px", }}
             >
               Annuler
             </Button>
             <Button
               variant="contained"
               className="mb-2"
-              onClick={() => {
-                setDisabled(true);
-                sendDTata();
-              }}
+              onClick={() => { setDisabled(true); sendDTata(); }}
               disabled={disabled}
               startIcon={<ChromeReaderModeIcon />}
               style={{

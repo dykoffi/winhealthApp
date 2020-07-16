@@ -6,7 +6,7 @@ const initState = {
     listPatients: [],
     currentPatient: {},
     modalModif: false,
-    modalAdd : false,
+    modalAdd: false,
     loading: false
 }
 
@@ -17,40 +17,11 @@ const SET_CURRENT_PATIENT = "SET_CURRENT_PATIENT"
 const SET_LOADING = "SET_LOADING"
 
 //definition des actions creators
-const setListPatients = (list) => (
-    {
-        type: SET_LIST_PATIENTS,
-        listPatients: list,
-        loading: false
-    }
-)
-
-export const setModalModif = (bool) => (
-    {
-        type: SET_MODAL_MODIF,
-        modalModif: bool
-    }
-)
-
-export const setModalAdd = (bool) => (
-    {
-        type: SET_MODAL_ADD,
-        modalAdd: bool
-    }
-)
-
-const setCurrentPatient = (data) => ({
-    type: SET_CURRENT_PATIENT,
-    currentPatient: data,
-    loading: false
-})
-
-const setLoading = (bool) => ({
-    type: SET_LOADING,
-    loading: bool
-})
-
-
+const setListPatients = (list) => ({ type: SET_LIST_PATIENTS, listPatients: list, loading: false })
+export const setModalModif = (bool) => ({ type: SET_MODAL_MODIF, modalModif: bool })
+export const setModalAdd = (bool) => ({ type: SET_MODAL_ADD, modalAdd: bool })
+const setCurrentPatient = (data) => ({ type: SET_CURRENT_PATIENT, currentPatient: data, loading: false })
+const setLoading = (bool) => ({ type: SET_LOADING, loading: bool })
 const PatientsReducer = (state = initState, action) => {
     switch (action.type) {
         case SET_LIST_PATIENTS: return { ...state, listPatients: action.listPatients, loading: action.loading }
@@ -93,9 +64,7 @@ export function thunkDetailsPatient(ipppatient) {
         dispatch(setLoading())
         Axios({
             url: `${header.url}/gap/details/patient/${ipppatient}`,
-            // headers:{
-            //     crossorigin : 'anonymous'
-            // }
+            timeout: header.timeout
         })
             .then(({ data: { rows } }) => {
                 dispatch(setCurrentPatient(rows[0]))
@@ -108,6 +77,7 @@ export function thunkAddPatient(data) {
     return async (dispatch) => {
         Axios({
             url: `${header.url}/gap/add/patient`,
+            timeout: header.timeout,
             method: "POST",
             data: data,
             headers: { "content-type": "application/x-www-form-urlencoded", },
@@ -118,13 +88,14 @@ export function thunkAddPatient(data) {
     }
 }
 
-export function thunkModifPatient(data,ipppatient) {
+export function thunkModifPatient(data, ipppatient) {
     return async (dispatch) => {
         Axios({
             url: `${header.url}/gap/update/patient/${ipppatient}`,
             method: "POST",
             data: data,
             headers: { "content-type": "application/x-www-form-urlencoded", },
+            timeout : header.timeout
         }).then(({ data: { rows } }) => {
             dispatch(thunkListPatient())
             dispatch(setModalModif(false))
@@ -135,7 +106,8 @@ export function thunkModifPatient(data,ipppatient) {
 export function thunkDeletePatient(ipppatient) {
     return async (dispatch) => {
         Axios({
-            url: `${header.url}/gap/delete/patient/${ipppatient}`
+            url: `${header.url}/gap/delete/patient/${ipppatient}`,
+            timeout : header.timeout,
         })
             .then(({ data: { rows } }) => {
                 dispatch(thunkListPatient())

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
 import GlobalContext from "../../../global/context";
-
+import { separate } from "../../../global/functions";
 import {
   thunkListFacturesAttentes,
   thunkEncaisserFactures,
@@ -76,11 +76,6 @@ const AttenteFacture = ({
     "Patient",
     "Type de sejour",
     "Auteur",
-    "Montant Total",
-    "Part ASSU",
-    "Reste ASSU",
-    "Part Patient",
-    "Reste Patient",
   ]
 
   const global = useContext(GlobalContext);
@@ -138,7 +133,14 @@ const AttenteFacture = ({
       ) : (
           <table className="col-12 table-sm table-sm table-hover table-striped">
             <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-              <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+              <tr>
+                {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                {["Montant Total",
+                  "Part ASSU",
+                  "Reste ASSU",
+                  "Part Patient",
+                  "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+              </tr>
             </thead>
             <tbody>
               {listFacturesAttentes.map(
@@ -151,13 +153,13 @@ const AttenteFacture = ({
                     <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
                     <td>{typesejour}</td>
                     <td>{auteurfacture}</td>
-                    <td>{montanttotalfacture} FCFA</td>
-                    <td>{partassurancefacture} FCFA</td>
-                    <td>{resteassurancefacture} FCFA</td>
-                    <td >{partpatientfacture} FCFA</td>
-                    <td className={`font-weight-bold ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
-                      {restepatientfacture} FCFA
-                      </td>
+                    <td className="text-right">{separate(montanttotalfacture)}</td>
+                    <td className="text-right">{separate(partassurancefacture)}</td>
+                    <td className="text-right">{separate(resteassurancefacture)}</td>
+                    <td className="text-right">{separate(partpatientfacture)}</td>
+                    <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
+                      {separate(restepatientfacture)}
+                    </td>
                   </tr>
                 )
               )}
@@ -183,35 +185,28 @@ const AttenteFacture = ({
           <div className="row">
             <div className="col-12">
               <div className="row mx-1">
-                <div className="col-6 p-0">
-                  <small><b>Patient : </b>{currentFacture.civilitepatient}{" "} {currentFacture.nompatient}{" "} {currentFacture.prenomspatient}<br /></small>
+                <div className="col p-0">
+                  <small><b>Patient : </b>{currentFacture.civilitepatient}{" "} {currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                  <small>
+                    <b>Montant Total</b> :{" "} {separate(currentFacture.montanttotalfacture)} FCFA
+                  </small><br />
+                  <small>
+                    <b>Part du patient</b> :{" "} {separate(currentFacture.partpatientfacture)} FCFA
+                  </small><br />
                   <small>
                     <b>Reste à payer</b> :{" "}
-                    <span
-                      className={
-                        currentFacture.restefacture < 0 &&
-                        "flash animated infinite red-text font-weight-bold"
-                      }
-                    >
-                      {currentFacture.restepatientfacture} FCFA
+                    <span className={currentFacture.restefacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                      {separate(currentFacture.restepatientfacture)} FCFA
                     </span>
-                  </small>
-                  <br />
+                  </small><br />
                   {currentFacture.numerocompte !== null && (
                     <>
                       <hr className="bg-light" />
-                      <small>
-                        <b>N° compte : </b> {currentFacture.numerocompte}{" "}
-                      </small>
-                      <br />
-                      <small>
-                        <b>Solde : </b> {currentFacture.montantcompte}
-                        {" FCFA"}
-                      </small>{" "}
+                      <small><b>N° compte : </b> {currentFacture.numerocompte}</small><br />
+                      <small><b>Solde : </b> {separate(currentFacture.montantcompte)} FCFA</small>
                     </>
                   )}
                 </div>
-                <div className="col-6 text-right"></div>
               </div>
               {currentFacture.restepatientfacture !== 0 && (
                 <>
@@ -256,7 +251,6 @@ const AttenteFacture = ({
                       variant="filled"
                       size="small"
                       type="number"
-                      max={10}
                       label="Montant recu"
                       value={inputs.montantrecu}
                       onChange={setmontant}
@@ -268,7 +262,6 @@ const AttenteFacture = ({
                   </div>
                 </>
               )}
-
             </div>
           </div>
         </DialogContent>
@@ -277,16 +270,9 @@ const AttenteFacture = ({
             variant="contained"
             className={`mb-2 ${projection && "red text-white"}`}
             startIcon={<DesktopWindowsIcon />}
-            onClick={() => {
-              project();
-            }}
-            style={{
-              textTransform: "none",
-              fontSize: "13px",
-            }}
-          >
-            projeter
-          </Button>
+            onClick={() => { project(); }}
+            style={{ textTransform: "none", fontSize: "13px", }}
+          >projeter</Button>
           <Button
             variant="contained"
             className="mb-2"
@@ -302,7 +288,11 @@ const AttenteFacture = ({
           {currentFacture.restepatientfacture !== 0 && <Button
             variant="contained"
             className="mb-2"
-            disabled={inputs.modepaiement.trim() === "" || inputs.montantrecu.trim() === ""}
+            disabled={
+              inputs.modepaiement.trim() === "" ||
+              inputs.montantrecu.trim() === "" ||
+              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.restepatientfacture)
+            }
             onClick={() => sendData(currentFacture.numerofacture)}
             startIcon={<CheckCircleOutlineIcon />}
             style={{

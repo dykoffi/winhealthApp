@@ -60,7 +60,8 @@ const DocFoot = ({ url }) => (
 
 const DownloadLink = ({
   code,
-  facture
+  facture,
+  showPDF
 }) => {
   const [url, seturl] = useState(null);
   useEffect(() => {
@@ -84,16 +85,13 @@ const DownloadLink = ({
             ) : (
                 <div className="pr-4">
                   <Button
-                    href={url}
-                    size='small'
-                    target='blank'
                     variant="contained"
-                    // onClick={}
+                    onClick={() => showPDF(url)}
                     startIcon={<PrintIcon />}
                     className="red text-white "
                     style={{
                       textTransform: "none",
-                      fontSize: "11px",
+                      fontSize: "13px",
                     }}
                   >
                     Imprimer les factures non reçues
@@ -135,7 +133,7 @@ const Facture = ({
                 </View>
               </View> */}
               <View style={{ ...styles.content, fontSize: 9 }}>
-                <Text style={{textAlign:'center'}}>
+                <Text style={{ textAlign: 'center' }}>
                   Veuillez trouver en annexe les factures mentionnées ci-dessous dont la reception n'a pas été effectuée.
                 </Text>
               </View>

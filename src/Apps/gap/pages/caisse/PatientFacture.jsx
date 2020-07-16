@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
 import GlobalContext from "../../../global/context";
+import { separate } from "../../../global/functions";
+
 import { TextField, Chip, Avatar, Dialog, DialogTitle, DialogContent, FormControl, InputLabel, Select, MenuItem, Button, DialogActions } from "@material-ui/core";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -64,11 +66,6 @@ const FacturePatient = ({
     "Patient",
     "Type de sejour",
     "Auteur",
-    "Montant Total",
-    "Part ASSU",
-    "Reste ASSU",
-    "Part Patient",
-    "Reste Patient",
   ]
 
   const global = useContext(GlobalContext);
@@ -199,11 +196,11 @@ const FacturePatient = ({
                 <ul className="list-group rounded-0" id="list-tab" role="tablist">
                   <li className="list-group-item d-flex justify-content-between align-items-center">
                     <small className="font-weight-bold">Montant total</small>
-                    <span className="badge badge-pill badge-success">{stats.montantTotal} FCFA</span>
+                    <span className="badge badge-pill badge-success">{separate(stats.montantTotal)} FCFA</span>
                   </li>
                   <li className="list-group-item d-flex justify-content-between align-items-center">
                     <small className="font-weight-bold">Reste à payer</small>
-                    <span className="badge badge-danger badge-pill">{stats.reste} FCFA</span>
+                    <span className="badge badge-danger badge-pill">{separate(stats.reste)} FCFA</span>
                   </li>
                 </ul>
                 {
@@ -248,7 +245,14 @@ const FacturePatient = ({
           <>
             <table className="col-10 table-sm table-sm table-hover table-striped">
               <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                <tr>
+                  {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                  {["Montant Total",
+                    "Part ASSU",
+                    "Reste ASSU",
+                    "Part Patient",
+                    "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+                </tr>
               </thead>
               <tbody>
                 {listFacturesPatient.map(
@@ -263,11 +267,13 @@ const FacturePatient = ({
                       <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
                       <td>{typesejour}</td>
                       <td>{auteurfacture}</td>
-                      <td>{montanttotalfacture} FCFA</td>
-                      <td>{partassurancefacture} FCFA</td>
-                      <td>{resteassurancefacture} FCFA</td>
-                      <td >{partpatientfacture} FCFA</td>
-                      <td className={`font-weight-bold ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>{restepatientfacture} FCFA</td>
+                      <td className="text-right">{separate(montanttotalfacture)}</td>
+                      <td className="text-right">{separate(partassurancefacture)}</td>
+                      <td className="text-right">{separate(resteassurancefacture)}</td>
+                      <td className="text-right">{separate(partpatientfacture)}</td>
+                      <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
+                        {separate(restepatientfacture)}
+                      </td>
                     </tr>
                   )
                 )}
@@ -277,8 +283,9 @@ const FacturePatient = ({
         )
       }
       <Dialog
-          transitionDuration={0}
-          open={showModal}
+        disableBackdropClick
+        transitionDuration={0}
+        open={showModal}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -293,31 +300,25 @@ const FacturePatient = ({
           <div className="row">
             <div className="col-12">
               <div className="row mx-1">
-                <div className="col-12 p-0">
-                  <small><b>Patient : </b>{currentFacture.civilitepatient}{" "} {currentFacture.nompatient}{" "} {currentFacture.prenomspatient}<br /></small>
+                <div className="col p-0">
+                  <small><b>Patient : </b>{currentFacture.civilitepatient}{" "} {currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                  <small>
+                    <b>Montant Total</b> :{" "} {separate(currentFacture.montanttotalfacture)} FCFA
+                  </small><br />
+                  <small>
+                    <b>Part du patient</b> :{" "} {separate(currentFacture.partpatientfacture)} FCFA
+                  </small><br />
                   <small>
                     <b>Reste à payer</b> :{" "}
-                    <span
-                      className={
-                        currentFacture.restepatientfacture < 0 &&
-                        "flash animated infinite red-text font-weight-bold"
-                      }
-                    >
-                      {currentFacture.restepatientfacture} FCFA
+                    <span className={currentFacture.restefacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                      {separate(currentFacture.restepatientfacture)} FCFA
                     </span>
-                  </small>
-                  <br />
+                  </small><br />
                   {currentFacture.numerocompte !== null && (
                     <>
                       <hr className="bg-light" />
-                      <small>
-                        <b>N° compte : </b> {currentFacture.numerocompte}{" "}
-                      </small>
-                      <br />
-                      <small>
-                        <b>Solde : </b> {currentFacture.montantcompte}
-                        {" FCFA"}
-                      </small>{" "}
+                      <small><b>N° compte : </b> {currentFacture.numerocompte}</small><br />
+                      <small><b>Solde : </b> {separate(currentFacture.montantcompte)} FCFA</small>
                     </>
                   )}
                 </div>
@@ -397,7 +398,11 @@ const FacturePatient = ({
           {currentFacture.restepatientfacture !== 0 && <Button
             variant="contained"
             className="mb-2"
-            disabled={inputs.modepaiement.trim() === "" || inputs.montantrecu.trim() === ""}
+            disabled={
+              inputs.modepaiement.trim() === "" ||
+              inputs.montantrecu.trim() === "" ||
+              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.restepatientfacture)
+            }
             onClick={() => sendData(currentFacture.numerofacture)}
             startIcon={<CheckCircleOutlineIcon />}
             style={{
@@ -412,9 +417,10 @@ const FacturePatient = ({
         </DialogActions>
       </Dialog>
       <Dialog
+        disableBackdropClick
         open={modalAllfacture}
-          transitionDuration={0}
-          onClose={() => { setModalAllfacture(false) }}
+        transitionDuration={0}
+        onClose={() => { setModalAllfacture(false) }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth={true}
@@ -431,21 +437,20 @@ const FacturePatient = ({
                 <div className="col-12 p-0">
                   <small><b>Patient : </b>{currentPatient.civilitepatient}{" "} {currentPatient.nompatient}{" "} {currentPatient.prenomspatient}</small><br />
                   <small>
+                    <b>Montant Total</b> :{" "} {separate(stats.montantTotal)} FCFA
+                  </small><br />
+                  <small>
                     <b>Reste à payer</b> :{" "}
-                    <span
-                      className={
-                        stats.reste < 0 &&
-                        "flash animated infinite red-text font-weight-bold"
-                      }
-                    >
-                      {stats.reste} FCFA
+                    <span className={stats.reste < 0 && "flash animated infinite red-text font-weight-bold"}>
+                      {separate(stats.reste)} FCFA
                     </span>
                   </small>
                   {compte.numerocompte !== null && (
                     <>
+                      <hr className="bg-light" />
                       <div className="col-12 p-0 mb-2">
                         <small><b>N° compte : </b> {compte.numerocompte}{" "}</small><br />
-                        <small><b>Solde : </b> {compte.solde}{" FCFA"}</small>{" "}
+                        <small><b>Solde : </b> {separate(compte.solde)}{" FCFA"}</small>{" "}
                       </div>
                     </>
                   )}
@@ -453,7 +458,10 @@ const FacturePatient = ({
                 <br />
                 <table className="col-12 table-sm table-sm table-hover table-active">
                   <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                    <tr>{["N°", "N° facture", "Date", "Part patient", "Montant restant"].map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                    <tr>
+                      {["N°", "N° facture", "Date"].map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                      {["Part patient", "Montant restant"].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+                    </tr>
                   </thead>
                   <tbody>
                     {stats.factureImpaye.map(({ numerofacture, datefacture, heurefacture, partpatientfacture, restepatientfacture }, i) => (
@@ -461,8 +469,8 @@ const FacturePatient = ({
                         <td>{i + 1}</td>
                         <td>{numerofacture}</td>
                         <td>{datefacture} {heurefacture}</td>
-                        <td>{partpatientfacture}</td>
-                        <td className="font-weight-bold">{restepatientfacture}</td>
+                        <td className="text-right">{separate(partpatientfacture)}</td>
+                        <td className="font-weight-bold text-right">{separate(restepatientfacture)}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -136,7 +136,6 @@ export function thunkListFacturesPatient(patient) {
             rows ? dispatch(setListFacturesPatient(rows)) : dispatch(setListFacturesPatient([]))
             dispatch(setCurrentPatient(patient))
             dispatch(setCategorieFactures("tous"))
-
         })
     }
 }

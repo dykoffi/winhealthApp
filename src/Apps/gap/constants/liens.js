@@ -7,7 +7,7 @@ export const navMenu = [
     },
     {
         title: 'Admission',
-        icon: 'action-dashboard',
+        icon: 'av-recent-actors',
         path: '/gap/admission'
     },
     {
@@ -22,11 +22,25 @@ export const navMenu = [
         path: "/gap/assurance"
 
     },
-    
-    // {
-    //     title: 'Parametres',
-    //     icon: 'action-settings',
-    //     path: "/gap/admission/addPatient"
+    {
 
-    // }
+        title: 'Ventilation Assurance',
+        icon: 'action-assignment-returned',
+        path: "/gap/stats"
+
+    },
+    {
+
+        title: 'Statistiques',
+        icon: 'action-assessment',
+        path: "/gap/stats"
+
+    },
+    {
+
+        title: 'Parametres',
+        icon: 'action-settings',
+        path: "/gap/settings"
+
+    }
 ]
