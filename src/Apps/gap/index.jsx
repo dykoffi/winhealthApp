@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { Cookies } from "react-cookie";
 import { Route } from "react-router-dom";
 
-import { navMenu } from "./constants/liens";
+import navMenu from "./constants/liens";
 import { Pages } from "./constants/pages";
 import Navbar from "../../containers/Sidebar/";
 

@@ -109,6 +109,9 @@ const Bordereau = ({
         nomassurance: "",
         nomgarant: "",
         typeSejour: "",
+        montanttotal: 0,
+        partAssurance: 0,
+        partPatient: 0,
         debutDateString: moment().format('DD-MM-YYYY'),
         finDateString: moment().format('DD-MM-YYYY'),
         limiteDateString: moment().format('DD-MM-YYYY'),
@@ -122,6 +125,9 @@ const Bordereau = ({
             nomassurance: "",
             nomgarant: "",
             typeSejour: "",
+            montanttotal: 0,
+            partAssurance: 0,
+            partPatient: 0,
             debutDateString: moment().format('DD-MM-YYYY'),
             finDateString: moment().format('DD-MM-YYYY'),
             limiteDateString: moment().format('DD-MM-YYYY'),
@@ -133,6 +139,28 @@ const Bordereau = ({
         setListFacturesByAssurance([])
         settousSelectionner(false)
     };
+    async function setAllMontant() {
+        let list = listFacturesByAssurance
+            .filter(facture => facture.statutfactures === 'valide')
+            .filter(facture => listFacturesValides.includes(facture.numerofacture))
+        if (list.length !== 0) {
+            console.log(list.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv),);
+            setinput({
+                ...inputs,
+                montanttotal: list.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv),
+                partAssurance: list.map(facture => facture.partassurancefacture).reduce((acc, curv) => acc + curv),
+                partPatient: list.map(facture => facture.partpatientfacture).reduce((acc, curv) => acc + curv),
+            })
+        } else {
+            console.log(list);
+            setinput({
+                ...inputs,
+                montanttotal: 0,
+                partAssurance: 0,
+                partPatient: 0
+            })
+        }
+    }
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function setlimiteDate(value) { setinput({ ...inputs, limiteDate: value, limiteDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
@@ -149,7 +177,7 @@ const Bordereau = ({
     function showPDF(url) { seturlPDF(url); setpdf(true) }
     function statutbordereauTab(statut) {
         switch (statut) {
-            case "tous": return ['Création', 'Rejeté', 'Validé', 'Décharge', 'Envoie']
+            case "tous": return ['Création', 'Rejeté', 'Décharge', 'Envoie']
             case "creation": return ['Création']
             case "rejete": return ['Rejeté']
             case "decharge": return ['Décharge']
@@ -166,7 +194,10 @@ const Bordereau = ({
         "Date d'envoie",
         "Date limite",
         "Status du bordereau",
-        "Nombre de facture"
+        "Nombre de facture",
+        "Montant total",
+        "Part Assurance",
+        "Part Patient",
     ]
     const columns = [
         "N°",
@@ -324,7 +355,7 @@ const Bordereau = ({
                             {listBordereaux.filter(bordereau => value.trim() === "" || RegExp(value, 'i').test(bordereau.numerobordereau))
                                 .filter(bordereau => statutbordereauTab(typeBordereaux).includes(bordereau.statutbordereau))
                                 .map(
-                                    ({ numerobordereau, datecreationbordereau, gestionnairebordereau, datelimitebordereau, organismebordereau, typesejourbordereau, statutbordereau, nbfacture }, i) => (
+                                    ({ numerobordereau, datecreationbordereau, gestionnairebordereau, datelimitebordereau, organismebordereau, typesejourbordereau, statutbordereau, nbfacture, montanttotal, partassurance, partpatient }, i) => (
                                         <tr
                                             key={i}
                                             style={{ cursor: "pointer" }}
@@ -342,6 +373,9 @@ const Bordereau = ({
                                                     statutbordereau === "Décharge" ? "blue-text" :
                                                         statutbordereau === "Envoie" ? "green-text" : ""}`}>{statutbordereau}</td>
                                             <td>{nbfacture}</td>
+                                            <td>{separate(montanttotal)}</td>
+                                            <td>{separate(partassurance)}</td>
+                                            <td>{separate(partpatient)}</td>
                                         </tr>
                                     )
                                 )}
@@ -551,7 +585,28 @@ const Bordereau = ({
                     <Button
                         variant="contained"
                         onClick={() => {
-                            thunkAddBordereau({ ...inputs, factures: listFacturesValides })
+                            let list = listFacturesByAssurance
+                                .filter(facture => facture.statutfactures === 'valide')
+                                .filter(facture => listFacturesValides.includes(facture.numerofacture))
+                            if (list.length !== 0) {
+                                thunkAddBordereau(
+                                    {
+                                        ...inputs,
+                                        montanttotal: list.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv),
+                                        partAssurance: list.map(facture => facture.partassurancefacture).reduce((acc, curv) => acc + curv),
+                                        partPatient: list.map(facture => facture.partpatientfacture).reduce((acc, curv) => acc + curv),
+                                        factures: listFacturesValides
+                                    })
+                            } else {
+                                thunkAddBordereau(
+                                    {
+                                        ...inputs,
+                                        montanttotal: 0,
+                                        partAssurance: 0,
+                                        partPatient: 0,
+                                        factures: listFacturesValides
+                                    })
+                            }
                             handleClose()
                         }}
                         disabled={listFacturesValides.length === 0}
@@ -577,7 +632,6 @@ const Bordereau = ({
                 aria-describedby="alert-dialog-description"
                 fullWidth={true}
                 maxWidth="lg"
-                fullScreen
                 onEntered={() => { setstatutbordereau(currentBordereau[0].statutbordereau) }}
             >
                 <DialogTitle className="text-center text-secondary" id="alert-dialog-title">

@@ -146,7 +146,7 @@ const DossiersPatient = ({
       numeroPEC: "",
       taux: 0
     })
-    //setOpen(false);
+    setOpen(false);
   }
   useEffect(() => {
     Axios({ url: `${header.url}/gap/list/actes` }).then(({ data: { rows } }) => {

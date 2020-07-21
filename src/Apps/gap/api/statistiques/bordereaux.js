@@ -61,77 +61,15 @@ const borderauReducer = (state = initState, action) => {
     }
 }
 
-export function thunkListFacturesByAssurances({ nomassurance, nomgarant, debutDateString, finDateString, typeSejour }) {
+export function thunkListFacturesByAssurances({ nomassurance, nomgarant, debutDateString, finDateString, typeSejour, statutBordereau }) {
     return async (dispatch) => {
+        dispatch(setLoading(true))
         Axios({
             method: "GET",
-            url: `${header.url}/gap/list/factures/${nomassurance}/${nomgarant}/${debutDateString}/${finDateString}/${typeSejour}`
-        }).then(({ data: { rows } }) => { rows ? dispatch(setListFacturesByAssurance(rows)) : dispatch(setListFacturesByAssurance([])) })
-    }
-}
-
-export function thunkSendFacturesRecues(data) {
-    return async (dispatch) => {
-        Axios({
-            method: "POST",
-            url: `${header.url}/gap/add/factures_recues`,
-            data: data,
-            headers: { "content-type": "application/x-www-form-urlencoded", }
-        }).then(() => { dispatch(thunkListFactures()) })
-    }
-}
-
-export function thunkSendFacturesValides(data) {
-    return async (dispatch) => {
-        Axios({
-            method: "POST",
-            url: `${header.url}/gap/add/factures_valides`,
-            data: data,
-            headers: { "content-type": "application/x-www-form-urlencoded", }
-        }).then(() => { dispatch(thunkListFactures()) })
-    }
-}
-
-export function thunkDeleteFacturesRecues(numeroFacture) {
-    return async (dispatch) => {
-        Axios({ url: `${header.url}/gap/retrait/facture_recue/${numeroFacture}` }).then(() => {
-            dispatch(thunkListFactures())
-            dispatch(setShowDetailsFacture(false))
-        })
-    }
-}
-
-export function thunkDeleteFacturesValides(numeroFacture) {
-    return async (dispatch) => {
-        Axios({ url: `${header.url}/gap/retrait/facture_valide/${numeroFacture}` }).then(() => {
-            dispatch(thunkListFactures())
-            dispatch(setShowDetailsFacture(false))
-        })
-    }
-}
-
-//bordereaux
-export function thunkAddBordereau(data) {
-    return async (dispatch) => {
-        Axios({
-            method: "POST",
-            url: `${header.url}/gap/add/bordereau`,
-            data: data,
-            headers: { "content-type": "application/x-www-form-urlencoded", }
-        }).then(() => { dispatch(thunkListBorderaux()) })
-    }
-}
-
-export function thunkUpdateBordereau(data, numeroBordereau) {
-    return async (dispatch) => {
-        Axios({
-            method: "POST",
-            url: `${header.url}/gap/update/statut_bordereau/${numeroBordereau}`,
-            data: data,
-            headers: { "content-type": "application/x-www-form-urlencoded", }
-        }).then(() => {
-            dispatch(setShowModal(false))
-            dispatch(thunkListBorderaux())
+            url: `${header.url}/gap/list/bordereaux/${nomassurance}/${nomgarant}/${debutDateString}/${finDateString}/${typeSejour}`
+        }).then(({ data: { rows } }) => {
+            rows ? dispatch(setListFacturesByAssurance(rows)) : dispatch(setListFacturesByAssurance([]))
+            dispatch(setLoading(false))
         })
     }
 }
@@ -151,16 +89,6 @@ export function thunkDetailsBorderau(numeroBordereau) {
     }
 }
 
-export function thunkTypeBordereaux(type) {
-    return async (dispatch) => {
-        dispatch(setLoading(true))
-        Axios({ url: `${header.url}/gap/list/bordereaux/${type}` }).then(({ data: { rows } }) => {
-            dispatch(setCurrentBordereau(rows))
-            dispatch(setLoading(false))
-        })
-    }
-
-}
 
 //factures
 export function thunkListFactures() {

@@ -1,5 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { connect } from "react-redux";
+import Chart from 'chart.js'
+import { schemeSet3, schemeCategory10 } from 'd3'
 import GlobalContext, { Info } from "../../../global/context";
 import moment from 'moment'
 import BordereauDoc from '../../documents/bordereau'
@@ -9,21 +11,15 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     thunkListFacturesByAssurances,
-    thunkAddBordereau,
-    setListFacturesValides,
-    setListFacturesByAssurance,
-    thunkDeleteFacturesValides,
     thunkListFactures,
     thunkDetailsFacture,
     setShowModal,
     thunkDetailsBorderau,
     thunkListBorderaux,
     setLoading,
-    thunkDeleteFacturesRecues,
     setShowDetailsFacture,
-    thunkUpdateBordereau,
     setTypeBordereaux
-} from "../../api/assurance/bordereaux";
+} from "../../api/statistiques/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -67,8 +63,6 @@ const Input = withStyles({
 const Bordereau = ({
     thunkListFacturesByAssurances,
     thunkListBorderaux,
-    thunkAddBordereau,
-    thunkDeleteFacturesValides,
     listBordereaux,
     listFacturesByAssurance,
     listFacturesValides,
@@ -80,22 +74,30 @@ const Bordereau = ({
     loading,
     setLoading,
     currentFacture,
-    thunkUpdateBordereau,
     showDetailsFacture,
     setShowDetailsFacture,
     setListFacturesByAssurance,
     setTypeBordereaux,
     typeBordereaux
 }) => {
+    const canvasbar = useRef(null)
+    const canvasline = useRef(null)
+    const canvaspie = useRef(null)
     const [value, setValue] = useState("");
     const [value2, setValue2] = useState("");
     const [tousSelectionner, settousSelectionner] = useState("");
     const [pdf, setpdf] = useState(false);
     const [urlPDF, seturlPDF] = useState(false);
     const [modal, setmodal] = useState(false);
-    const [cie, setcie] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [statutbordereau, setstatutbordereau] = useState(null)
+
+    //charts
+    const [pie, setpie] = useState(null)
+    const [line, setline] = useState(null)
+    const [bar, setbar] = useState(null)
+
+
     const [inputModifs, setinputModif] = useState({
         gestionnaire: "",
         organisme: "",
@@ -106,39 +108,40 @@ const Bordereau = ({
         taux: "",
     })
     const [inputs, setinput] = useState({
-        nomassurance: "",
-        nomgarant: "",
-        typeSejour: "",
-        debutDateString: moment().format('DD-MM-YYYY'),
-        finDateString: moment().format('DD-MM-YYYY'),
-        limiteDateString: moment().format('DD-MM-YYYY'),
-        debutDate: new Date(),
-        finDate: new Date(),
-        limiteDate: new Date(),
+        nomassurance: "Tous",
+        nomgarant: "Tous",
+        typeSejour: "Tous",
+        statutBordereau: "tous",
+        debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
+        finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
+        debutDate: new Date("01/01/2020"),
+        finDate: new Date("12/31/2020"),
     });
     const handleClose = () => {
         setmodal(false);
         setinput({
-            nomassurance: "",
-            nomgarant: "",
-            typeSejour: "",
-            debutDateString: moment().format('DD-MM-YYYY'),
-            finDateString: moment().format('DD-MM-YYYY'),
-            limiteDateString: moment().format('DD-MM-YYYY'),
-            debutDate: new Date(),
-            finDate: new Date(),
-            limiteDate: new Date(),
+            nomassurance: "Tous",
+            nomgarant: "Tous",
+            typeSejour: "Tous",
+            statutBordereau: "tous",
+            debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
+            finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
+            debutDate: new Date("01/01/2020"),
+            finDate: new Date("12/31/2020"),
         });
         setListFacturesValides([])
         setListFacturesByAssurance([])
         settousSelectionner(false)
     };
+
+
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
-    function setlimiteDate(value) { setinput({ ...inputs, limiteDate: value, limiteDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
+    function setstatut(value) { setinput({ ...inputs, statutBordereau: value }) }
     function setassurance(value) { setinput({ ...inputs, nomassurance: value }) }
     function setgarant(value) { setinput({ ...inputs, nomgarant: value }) }
+    function setgestionnaire(value) { setinputModif({ ...inputModifs, gestionnaire: value }); }
     function setgestionnaire(value) { setinputModif({ ...inputModifs, gestionnaire: value }); }
     function setorganisme(value) { setinputModif({ ...inputModifs, organisme: value }); }
     function setbeneficiaire({ target: { value } }) { setinputModif({ ...inputModifs, beneficiaire: value }); }
@@ -166,7 +169,10 @@ const Bordereau = ({
         "Date d'envoie",
         "Date limite",
         "Status du bordereau",
-        "Nombre de facture"
+        "Nombre de facture",
+        "Montant total",
+        "Part Assurance",
+        "Part Patient",
     ]
     const columns = [
         "N°",
@@ -184,20 +190,239 @@ const Bordereau = ({
     ]
     const global = useContext(GlobalContext);
     useEffect(() => {
+        thunkListFacturesByAssurances(inputs)
+        thunkListFacturesByAssurances(inputs)
         thunkListBorderaux()
         Axios({ url: `${header.url}/gap/list/assurances`, }).then(({ data: { rows } }) => {
-            const Assurance = [];
-            rows.forEach(({ idassurance, nomassurance }) => { Assurance.push({ value: idassurance, label: nomassurance }); });
-            setListAssurance([{ value: "Tous", label: "Tous" }, ...Assurance]);
+            const Assurances = [];
+            rows.forEach(({ idassurance, nomassurance }) => { Assurances.push({ value: idassurance, label: nomassurance }); });
+            setListAssurance(Assurances);
         });
     }, []);
     useEffect(() => {
-        setListFacturesValides([])
         setLoading(false)
     }, [inputs.nomassurance, inputs.typeSejour])
+    useEffect(() => {
+
+        const charLine = canvasline.current.getContext("2d");
+        const charBar = canvasbar.current.getContext("2d");
+        const charPie = canvaspie.current.getContext("2d");
+
+        bar !== null && bar.destroy()
+        setbar(new Chart(charBar, {
+            type: "bar",
+            data: {
+                //Bring in data
+                labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soin"],
+                datasets: listAssurances.map(
+                    (assurance, i) => {
+
+                        return {
+                            label: assurance.label,
+                            data: [
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Consultation").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Hospitalisation").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Urgence").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Biologie").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Imagerie").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Soin").length,
+                            ],
+                            borderColor: 'transparent',
+                            backgroundColor: schemeCategory10[i]
+                        }
+                    }
+                )
+            },
+            options: {
+                //Customize chart options
+            }
+        }))
+
+        //PIE
+        const nbEnvoie = listBordereaux.filter(b => b.statutbordereau === "Envoie").length
+        const nbDecharge = listBordereaux.filter(b => b.statutbordereau === "Décharge").length
+        const nbRejete = listBordereaux.filter(b => b.statutbordereau === "Rejeté").length
+        const nbEncaisse = listBordereaux.filter(b => b.statutbordereau === "Encaisse").length
+        pie !== null && pie.destroy()
+        setpie(new Chart(charPie, {
+            type: "doughnut",
+            data: {
+                labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté"],
+                datasets: [
+                    {
+                        data: [nbEnvoie, nbDecharge, nbEncaisse, nbRejete], backgroundColor: [
+                            schemeSet3[0],
+                            schemeSet3[1],
+                            schemeSet3[2],
+                            schemeSet3[3],
+                        ],
+                        borderWidth: 0
+                    },
+                ]
+            },
+            options: {
+                //Customize chart options
+            }
+        }))
+
+        //LINE
+        line !== null && line.destroy()
+        setline(new Chart(charLine, {
+            type: "line",
+            data: {
+                //Bring in data
+                labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté"],
+                datasets: listAssurances.map(
+                    (assurance, i) => {
+
+                        return {
+                            label: assurance.label,
+                            data: [
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Envoie").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Décharge").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Encaissé").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Rejeté").length,
+                            ],
+                            backgroundColor: 'transparent',
+                            borderColor: schemeCategory10[i]
+                        }
+                    }
+                )
+            },
+            options: {
+                //Customize chart options
+            }
+        }))
+    }, [listBordereaux, listAssurances])
+
     return (
         <div className="Facturesvalides row p-2">
-            <div className="col-12">
+            <div className="col-12 mb-2">
+                <div className="row mb-2 d-flex justify-content-center">
+                    <Autocomplete
+                        size="small"
+                        className="col p-0"
+                        id="AssuranceList"
+                        defaultValue={{ value: "Tous", label: "Tous" }}
+                        options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
+                        onChange={(event, newValue) => {
+                            newValue && setassurance(newValue.label)
+                            newValue && inputs.typeSejour.trim() !== "" &&
+                                inputs.nomgarant.trim() !== "" &&
+                                thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
+                        }}
+                        getOptionLabel={(option) => option.label}
+                        filterSelectedOptions
+                        renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                        renderInput={(params) => (<TextField {...params} variant="outlined" label="Gestionnaire" placeholder="Ajouter ..." />)}
+                    />
+                    <Autocomplete
+                        size="small"
+                        className="col p-0 mx-2"
+                        defaultValue={{ value: "Tous", label: "Tous" }}
+                        options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
+                        onChange={(event, newValue) => {
+                            newValue && setgarant(newValue.label)
+                            newValue && inputs.typeSejour.trim() !== "" &&
+                                inputs.nomassurance.trim() !== "" &&
+                                thunkListFacturesByAssurances({ ...inputs, nomgarant: newValue.label })
+                        }}
+                        getOptionLabel={(option) => option.label}
+                        filterSelectedOptions
+                        renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                        renderInput={(params) => (<TextField {...params} variant="outlined" label="Garant" placeholder="Selectionner ..." />)}
+                    />
+                    <FormControl variant="outlined" size="small" className="col">
+                        <InputLabel id="typesejour-label">Type de sejour </InputLabel>
+                        <Select
+                            labelId="typesejour-label"
+                            defaultValue={"Tous"}
+                            id="typesejour"
+                            onChange={({ target: { value } }) => {
+                                settype(value)
+                                inputs.nomassurance.trim() !== "" &&
+                                    inputs.nomgarant.trim() !== "" &&
+                                    thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
+                            }}
+                            label="Type de sejour "
+                            style={{ fontSize: "12px" }}
+                        >
+                            <MenuItem style={{ fontSize: "12px" }} value={"Tous"}>Tous</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"Imagerie"}>Imagerie</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"Hospitalisation"}>Hospitalisation</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl variant="outlined" size="small" className="col ml-2">
+                        <InputLabel id="statutbordereau-label">Statut du borderau</InputLabel>
+                        <Select
+                            labelId="statutbordereau-label"
+                            id="statutbordereau"
+                            defaultValue={inputs.statutBordereau}
+                            onChange={({ target: { value } }) => {
+                                inputs.nomassurance.trim() !== "" &&
+                                    inputs.nomgarant.trim() !== "" &&
+                                    setstatut(value)
+
+                            }}
+                            label="Type de sejour "
+                            style={{ fontSize: "12px" }}
+                        >
+                            <MenuItem style={{ fontSize: "12px" }} value={"tous"}>Tous</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"envoie"}>Envoie</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"decharge"}>Décharge</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"rejete"}>Rejet</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"creation"}>Création</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <small className="mx-2">Du</small>
+                    <div className="col">
+                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
+                            <KeyboardDatePicker id="datedebut" defaultValue={new Date("01/01/2020")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
+                                (date) => {
+                                    setdebutDate(date)
+                                    thunkListFacturesByAssurances({
+                                        ...inputs,
+                                        debutDate: date,
+                                        debutDateString: moment(date.toString()).format('DD-MM-YYYY')
+                                    })
+                                }
+                            } />
+                        </MuiPickersUtilsProvider>
+                    </div>
+                    <small className="mx-2">Au</small>
+                    <div className="col">
+                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
+                            <KeyboardDatePicker id="datefin" defaultValue={new Date("12/31/2020")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
+                                (date) => {
+                                    setfinDate(date)
+                                    thunkListFacturesByAssurances({
+                                        ...inputs,
+                                        finDate: date,
+                                        finDateString: moment(date.toString()).format('DD-MM-YYYY')
+                                    })
+                                }} />
+                        </MuiPickersUtilsProvider>
+                    </div>
+                </div>
+            </div>
+            <div className="col-12 mb-2 p-0 stats">
+                <div className="row">
+                    <div className="d-flex justify-content-center align-items-center col-4">
+                        <canvas ref={canvasbar}></canvas>
+                    </div>
+                    <div className="d-flex justify-content-center align-items-center col-4">
+                        <canvas ref={canvasline}></canvas>
+                    </div>
+                    <div className="d-flex justify-content-center align-items-center col-4">
+                        <canvas ref={canvaspie}></canvas>
+                    </div>
+                </div>
+            </div>
+            <div className="col-12 mb-2">
                 <div className="row">
                     <TextField
                         className="col-2"
@@ -227,346 +452,48 @@ const Bordereau = ({
                                     className="white-text"
                                     style={{ backgroundColor: global.theme.primary }}
                                 >
-                                    {listBordereaux.filter(bordereau => value.trim() === "" || RegExp(value, 'i').test(bordereau.numerobordereau)).length}
+                                    {listFacturesByAssurance.filter(bordereau => value.trim() === "" || RegExp(value, 'i').test(bordereau.numerobordereau))
+                                        .filter(bordereau => statutbordereauTab(inputs.statutBordereau).includes(bordereau.statutbordereau)).length}
                                 </Avatar>
                             }
                         />
                     </div>
-                    <div className="col d-flex justify-content-end p-0">
-                        <Button
-                            variant="contained"
-                            onClick={() => setmodal(true)}
-                            startIcon={<AddIcon />}
-                            style={{
-                                textTransform: "none",
-                                backgroundColor: global.theme.primary,
-                                color: "white",
-                                fontSize: "11px",
-                            }}
-                        >
-                            Ajouter un borderau
-                        </Button>
-                    </div>
                 </div>
             </div>
-            <div className="col-2 p-0 my-2">
-                <div className="row">
-                    <div className="col-12">
-                        <ul className="list-group rounded-0" id="list-tab" role="tablist">
-                            <li
-                                onClick={() => {
-                                    listBordereaux.filter(b => statutbordereauTab("tous").includes(b.statutbordereau)).length !== 0 &&
-                                        setTypeBordereaux("tous")
-                                }}
-                                style={{ cursor: listBordereaux.filter(b => statutbordereauTab("tous").includes(b.statutbordereau)).length === 0 ? "default" : "pointer" }}
-                                className={`
-                                        list-group-item d-flex justify-content-between align-items-center
-                                        ${typeBordereaux === "tous" ? "bgcolor-primary text-white" : "text-secondary"}
-                            `}>
-                                <small>Tous les bordereaux</small>
-                                <span className="badge badge-light badge-pill">{listBordereaux.filter(b => statutbordereauTab("tous").includes(b.statutbordereau)).length}</span>
-                            </li>
-                            <li
-                                onClick={() => {
-                                    listBordereaux.filter(b => statutbordereauTab("creation").includes(b.statutbordereau)).length !== 0 &&
-                                        setTypeBordereaux("creation")
-                                }}
-                                style={{ cursor: listBordereaux.filter(b => statutbordereauTab("creation").includes(b.statutbordereau)).length === 0 ? "default" : "pointer" }}
-                                className={`
-                                        list-group-item d-flex justify-content-between align-items-center
-                                        ${typeBordereaux === "creation" ? "bgcolor-primary text-white" : "text-secondary"}
-                                `}
-                            ><small>Bordereaus en Création</small><span className="badge badge-light badge-pill">{listBordereaux.filter(b => b.statutbordereau === "Création").length}</span></li>
-                            <li
-                                onClick={() => {
-                                    listBordereaux.filter(b => statutbordereauTab("envoie").includes(b.statutbordereau)).length !== 0 &&
-                                        setTypeBordereaux("envoie")
-                                }}
-                                style={{ cursor: listBordereaux.filter(b => statutbordereauTab("envoie").includes(b.statutbordereau)).length === 0 ? "default" : "pointer" }}
-                                className={`
-                                        list-group-item d-flex justify-content-between align-items-center
-                                        ${typeBordereaux === "envoie" ? "bgcolor-primary text-white" : "text-secondary"}
-                                `}
-                            ><small>Bordereaus envoyés</small><span className="badge badge-light badge-pill">{listBordereaux.filter(b => b.statutbordereau === "Envoie").length}</span></li>
-                            <li
-                                onClick={() => {
-                                    listBordereaux.filter(b => statutbordereauTab("decharge").includes(b.statutbordereau)).length !== 0 &&
-                                        setTypeBordereaux("decharge")
-                                }}
-                                style={{ cursor: listBordereaux.filter(b => statutbordereauTab("decharge").includes(b.statutbordereau)).length === 0 ? "default" : "pointer" }}
-                                className={`
-                                         list-group-item d-flex justify-content-between align-items-center
-                                         ${typeBordereaux === "decharge" ? "bgcolor-primary text-white" : "text-secondary"}
-                                 `}
-                            ><small>Bordereaux déchargés</small><span className="badge badge-light badge-pill">{listBordereaux.filter(b => b.statutbordereau === "Décharge").length}</span></li>
-                            <li
-                                onClick={() => {
-                                    listBordereaux.filter(b => statutbordereauTab("rejete").includes(b.statutbordereau)).length !== 0 &&
-                                        setTypeBordereaux("rejete")
-                                }}
-                                style={{ cursor: listBordereaux.filter(b => statutbordereauTab("rejete").includes(b.statutbordereau)).length === 0 ? "default" : "pointer" }}
-                                className={`
-                                         list-group-item d-flex justify-content-between align-items-center
-                                         ${typeBordereaux === "rejete" ? "bgcolor-primary text-white" : "text-secondary"}
-                                 `}
-                            ><small>Bordereaux rejetés</small><span className="badge badge-light badge-pill">{listBordereaux.filter(b => b.statutbordereau === "Rejeté").length}</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div className="col-10 pl-4 my-2">
-                <div className="row">
-                    <table className="table-sm col-12 table-hover table-striped">
-                        <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                            <tr>{columnsBordereau.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
-                        </thead>
-                        <tbody>
-                            {listBordereaux.filter(bordereau => value.trim() === "" || RegExp(value, 'i').test(bordereau.numerobordereau))
-                                .filter(bordereau => statutbordereauTab(typeBordereaux).includes(bordereau.statutbordereau))
-                                .map(
-                                    ({ numerobordereau, datecreationbordereau, gestionnairebordereau, datelimitebordereau, organismebordereau, typesejourbordereau, statutbordereau, nbfacture }, i) => (
-                                        <tr
-                                            key={i}
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => { thunkDetailsBorderau(numerobordereau) }}
-                                        >
-                                            <td>{i + 1}</td>
-                                            <td className="font-weight-bold">{numerobordereau}</td>
-                                            <td className="font-weight-bold">{gestionnairebordereau}</td>
-                                            <td className="font-weight-bold">{organismebordereau}</td>
-                                            <td className="font-weight-bold">{typesejourbordereau}</td>
-                                            <td>{datecreationbordereau}</td>
-                                            <td>{datelimitebordereau}</td>
-                                            <td className={`font-weight-bold ${
-                                                statutbordereau === 'Rejeté' ? "red-text animated infinite flash" :
-                                                    statutbordereau === "Décharge" ? "blue-text" :
-                                                        statutbordereau === "Envoie" ? "green-text" : ""}`}>{statutbordereau}</td>
-                                            <td>{nbfacture}</td>
-                                        </tr>
-                                    )
-                                )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <Dialog
-                open={modal}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                disableBackdropClick
-                transitionDuration={0}
-                fullWidth={true}
-                style={{ minHeight: "60vh" }}
-                maxWidth="lg"
-            >
-                <DialogTitle
-                    className="text-center text-secondary"
-                    id="alert-dialog-title"
-                ><b>Ajouter un nouveau bordereau</b></DialogTitle>
-                <DialogContent>
-                    <div className="col-12">
-                        <div className="row mb-2 d-flex justify-content-center">
-                            <Autocomplete
-                                size="small"
-                                className="col-2 p-0"
-                                id="AssuranceList"
-                                options={listAssurances}
-                                onChange={(event, newValue) => {
-                                    newValue && setassurance(newValue.label)
-                                    newValue && inputs.typeSejour.trim() !== "" &&
-                                        inputs.nomgarant.trim() !== "" &&
-                                        thunkListFacturesByAssurances({ ...inputs, nomassurance: newValue.label })
-                                }}
-                                getOptionLabel={(option) => option.label}
-                                filterSelectedOptions
-                                renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Gestionnaire" placeholder="Ajouter ..." />)}
-                            />
-                            <Autocomplete
-                                size="small"
-                                className="col-2 p-0 mx-2"
-                                options={listAssurances}
-                                onChange={(event, newValue) => {
-                                    newValue && setgarant(newValue.label)
-                                    newValue && inputs.typeSejour.trim() !== "" &&
-                                        inputs.nomassurance.trim() !== "" &&
-                                        thunkListFacturesByAssurances({ ...inputs, nomgarant: newValue.label })
-                                }}
-                                getOptionLabel={(option) => option.label}
-                                filterSelectedOptions
-                                renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Garant" placeholder="Selectionner ..." />)}
-                            />
-                            <FormControl variant="outlined" size="small" className="col-2">
-                                <InputLabel id="typesejour-label">Type de sejour </InputLabel>
-                                <Select
-                                    labelId="typesejour-label"
-                                    id="typesejour"
-                                    onChange={({ target: { value } }) => {
-                                        settype(value)
-                                        inputs.nomassurance.trim() !== "" &&
-                                            inputs.nomgarant.trim() !== "" &&
-                                            thunkListFacturesByAssurances({ ...inputs, typeSejour: value })
-                                    }}
-                                    label="Type de sejour "
-                                    style={{ fontSize: "12px" }}
-                                >
-                                    <MenuItem style={{ fontSize: "12px" }} value={"Tous"}>Tous</MenuItem>
-                                    <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
-                                    <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
-                                    <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
-                                    <MenuItem style={{ fontSize: "12px" }} value={"Imagerie"}>Imagerie</MenuItem>
-                                    <MenuItem style={{ fontSize: "12px" }} value={"hospitalisation"}>Hospitalisation</MenuItem>
-                                    <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <small className="mx-2">Du</small>
-                            <div className="col-2">
-                                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datedebut" value={inputs.debutDate} format="dd/MM/yyyy" onChange={
-                                        (date) => {
-                                            setdebutDate(date)
-                                            thunkListFacturesByAssurances({
-                                                ...inputs,
-                                                debutDate: date,
-                                                debutDateString: moment(date.toString()).format('DD-MM-YYYY')
-                                            })
-                                        }
-                                    } />
-                                </MuiPickersUtilsProvider>
-                            </div>
-                            <small className="mx-2">Au</small>
-                            <div className="col-2">
-                                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datefin" value={inputs.finDate} format="dd/MM/yyyy" onChange={
-                                        (date) => {
-                                            setfinDate(date)
-                                            thunkListFacturesByAssurances({
-                                                ...inputs,
-                                                finDate: date,
-                                                finDateString: moment(date.toString()).format('DD-MM-YYYY')
-                                            })
-                                        }} />
-                                </MuiPickersUtilsProvider>
-                            </div>
-                        </div>
-                    </div>
-                    <table className="table-sm col-12 table-hover table-striped my-3">
-                        <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                            {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
-                            {["Montant Total",
-                                "Part Assu",
-                                "Reste assurance",
-                                "Part patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
-                        </thead>
-                        <tbody>
-                            {listFacturesByAssurance.filter(facture => facture.statutfactures === 'valide').map(
-                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
-                                    <tr
-                                        key={i}
-                                        className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => {
-                                            if (listFacturesValides.includes(numerofacture)) {
-                                                listFacturesValides.splice(listFacturesValides.indexOf(numerofacture), 1)
-                                                setListFacturesValides([...listFacturesValides])
-                                                settousSelectionner(false)
-                                            } else {
-                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfactures === 'valide').length) {
-                                                    settousSelectionner(true)
-                                                }
-                                                setListFacturesValides([...listFacturesValides, numerofacture])
-                                            }
-                                        }} >
-                                        <td>{i + 1}</td>
-                                        <td>{numerofacture}</td>
-                                        <td>{datefacture}</td>
-                                        <td>{heurefacture}</td>
-                                        <td className="font-weight-bold">{gestionnaire}</td>
-                                        <td className="font-weight-bold">{organisme}</td>
-                                        <td className="font-weight-bold">{typesejour}</td>
-                                        <td className="font-weight-bold">{numeropec}</td>
-                                        <td className="font-weight-bold">{matriculeassure}</td>
-                                        <td className="font-weight-bold">{taux}%</td>
-                                        <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
-                                        <td className="font-weight-bold">{assureprinc}</td>
-                                        <td className="text-right">{separate(montanttotalfacture)}</td>
-                                        <td className="font-weight-bold text-right">{separate(partassurancefacture)}</td>
-                                        <td className="font-weight-bold text-right">{separate(resteassurancefacture)}</td>
-                                        <td className="text-right">{separate(partpatientfacture)}</td>
-                                    </tr>
-                                )
-                            )}
-                        </tbody>
-                    </table>
-                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'valide').length !== 0 &&
-                        <>
-                            <div onClick={() => {
-                                if (tousSelectionner) {
-                                    setListFacturesValides([])
-                                    settousSelectionner(false)
-                                } else {
-                                    setListFacturesValides(
-                                        listFacturesByAssurance
-                                            .filter(facture => facture.statutfactures === 'valide')
-                                            .map(facture => facture.numerofacture)
-                                    )
-                                    settousSelectionner(true)
-                                }
-                            }} style={{ display: "inline" }}>
-                                <Chip
-
-                                    className={`mr-2 ${tousSelectionner ? "bgcolor-secondaryDark text-white font-weight-bold" : ""}`}
+            <table className="table-sm col-12 table-hover table-striped">
+                <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+                    <tr>{columnsBordereau.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                </thead>
+                <tbody>
+                    {listFacturesByAssurance.filter(bordereau => value.trim() === "" || RegExp(value, 'i').test(bordereau.numerobordereau))
+                        .filter(bordereau => statutbordereauTab(inputs.statutBordereau).includes(bordereau.statutbordereau))
+                        .map(
+                            ({ numerobordereau, datecreationbordereau, gestionnairebordereau, datelimitebordereau, organismebordereau, typesejourbordereau, statutbordereau, nbfacture, montanttotal, partassurance, partpatient }, i) => (
+                                <tr
+                                    key={i}
                                     style={{ cursor: "pointer" }}
-                                    label="Tous selectionner"
-                                />
-                            </div>
-                            <Chip
-                                label="Sélectionnée(s)"
-                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > {listFacturesValides.length} </Avatar>}
-                            />
-                            <div className="col-12 p-0 mt-2 justify-content-end d-flex">
-                                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datelimite" label="Date limite de depot" inputVariant="filled" value={inputs.limiteDate} format="dd/MM/yyyy" onChange={
-                                        (date) => { setlimiteDate(date) }
-                                    } />
-                                </MuiPickersUtilsProvider>
-                            </div>
-                        </>
-                    }
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="contained"
-                        onClick={handleClose}
-                        startIcon={<CancelIcon />}
-                        style={{
-                            textTransform: "none",
-                            fontSize: "11px",
-                        }}
-                    >
-                        Annuler
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            thunkAddBordereau({ ...inputs, factures: listFacturesValides })
-                            handleClose()
-                        }}
-                        disabled={listFacturesValides.length === 0}
-                        startIcon={<ListAltIcon />}
-                        style={{
-                            textTransform: "none",
-                            backgroundColor: global.theme.primary,
-                            color: "white",
-                            fontSize: "11px",
-                        }}
-                    >
-                        Generer le bordereau
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                                    onClick={() => { thunkDetailsBorderau(numerobordereau) }}
+                                >
+                                    <td>{i + 1}</td>
+                                    <td className="font-weight-bold">{numerobordereau}</td>
+                                    <td className="font-weight-bold">{gestionnairebordereau}</td>
+                                    <td className="font-weight-bold">{organismebordereau}</td>
+                                    <td className="font-weight-bold">{typesejourbordereau}</td>
+                                    <td>{datecreationbordereau}</td>
+                                    <td>{datelimitebordereau}</td>
+                                    <td className={`font-weight-bold ${
+                                        statutbordereau === 'Rejeté' ? "red-text animated infinite flash" :
+                                            statutbordereau === "Décharge" ? "blue-text" :
+                                                statutbordereau === "Envoie" ? "green-text" : ""}`}>{statutbordereau}</td>
+                                    <td>{nbfacture}</td>
+                                    <td>{separate(montanttotal)}</td>
+                                    <td>{separate(partassurance)}</td>
+                                    <td>{separate(partpatient)}</td>
+                                </tr>
+                            )
+                        )}
+                </tbody>
+            </table>
             <Dialog
                 TransitionComponent={Transition}
                 open={showModal}
@@ -577,7 +504,6 @@ const Bordereau = ({
                 aria-describedby="alert-dialog-description"
                 fullWidth={true}
                 maxWidth="lg"
-                fullScreen
                 onEntered={() => { setstatutbordereau(currentBordereau[0].statutbordereau) }}
             >
                 <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
@@ -637,37 +563,6 @@ const Bordereau = ({
                                         </Avatar>
                                     }
                                 />
-                                <div className="col p-0 d-flex justify-content-end">
-                                    <FormControl variant="outlined" size="small" className="col-3">
-                                        <InputLabel id="statutbordereau-label">Statut du bordereau  </InputLabel>
-                                        <Select
-                                            labelId="statutbordereau-label"
-                                            id="statutbordereau"
-                                            defaultValue={currentBordereau[0].statutbordereau}
-                                            onChange={({ target: { value } }) => { setstatutbordereau(value) }}
-                                            label="Statut du bordereau "
-                                            style={{ fontSize: "12px" }}
-                                        >
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Création"}>Création</MenuItem>
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Envoie"}>Envoie</MenuItem>
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Décharge"}>Décharge réçue</MenuItem>
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Rejeté"}>Rejeté</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                    <Button
-                                        variant="contained"
-                                        className="text-white ml-3"
-                                        startIcon={<CheckCircleOutlineIcon />}
-                                        onClick={() => {
-                                            thunkUpdateBordereau({ statut: statutbordereau }, currentBordereau[0].numerobordereau)
-                                        }}
-                                        style={{
-                                            textTransform: "none",
-                                            fontSize: "13px",
-                                            backgroundColor: global.theme.primary
-                                        }}
-                                    >Valider</Button>
-                                </div>
                             </div>
                         </div>
                         <table className="table-sm col-12 table-hover table-striped my-3">
@@ -756,21 +651,6 @@ const Bordereau = ({
                                 </tr>
                             </tbody>
                         </table>
-                        <div className="col-12 d-flex justify-content-center mt-4">
-                            <ReportProblemOutlinedIcon className="bg-warning mr-2" />
-                            <small className="font-weight-bold">
-                                Le retrait et la modification de la facture sont des actions sans confirmation et irréversibles</small>
-                        </div>
-                        <div onClick={() => {
-                            return cie ? setcie(false) : setcie(true)
-                        }} style={{ display: "inline" }}>
-                            <Chip
-                                className={`mr-2 ${cie ? "bgcolor-secondaryDark text-white font-weight-bold" : ""}`}
-                                style={{ cursor: "pointer" }}
-                                label="Factures CIE/SODECI"
-                            />
-                        </div>
-
                     </div>
                 </DialogContent>
                 <DialogActions>
@@ -784,17 +664,7 @@ const Bordereau = ({
                             fontSize: "13px",
                         }}
                     >Fermer</Button>
-                    <BordereauDoc showPDF={showPDF} code={``} bordereau={currentBordereau} cie={cie} />
-                    <Button
-                        variant="contained"
-                        className="mb-2 red text-white ml-3"
-                        startIcon={<DeleteOutlineIcon />}
-                        onClick={() => { thunkDeleteFacturesValides(currentBordereau.numerofacture) }}
-                        style={{
-                            textTransform: "none",
-                            fontSize: "13px",
-                        }}
-                    >Supprimer</Button>
+                    {/* <BordereauDoc showPDF={showPDF} code={``} bordereau={currentBordereau} cie={cie} /> */}
                 </DialogActions>
             </Dialog>
             <Dialog
@@ -997,7 +867,9 @@ const Bordereau = ({
                         variant="contained"
                         className="mb-2 red text-white"
                         startIcon={<DeleteOutlineIcon />}
-                        onClick={() => { thunkDeleteFacturesRecues(currentFacture.numerofacture) }}
+                        onClick={() => {
+                            // thunkDeleteFacturesRecues(currentFacture.numerofacture)
+                        }}
                         style={{
                             textTransform: "none",
                             fontSize: "13px",
@@ -1058,19 +930,12 @@ const mapStatToProps = state => {
     }
 }
 const BordereauConnected = connect(mapStatToProps, {
-    thunkAddBordereau,
     thunkListBorderaux,
-    thunkAddBordereau,
     thunkListFacturesByAssurances,
-    thunkDeleteFacturesValides,
-    setListFacturesValides,
-    setListFacturesByAssurance,
     setShowModal,
     thunkDetailsBorderau,
     setLoading,
-    thunkUpdateBordereau,
     thunkDetailsFacture,
-    thunkDeleteFacturesRecues,
     setShowDetailsFacture,
     setTypeBordereaux
 })(Bordereau)

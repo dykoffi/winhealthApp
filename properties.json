@@ -1,0 +1,21 @@
+{
+    "nomapp": "GAP",
+    "functions": [
+        {
+            "name": "Accueil",
+            "subfunctions": []
+        },
+        {
+            "name": "Admission",
+            "subfunctions": []
+        },
+        {
+            "name": "Caisse",
+            "subfunctions": []
+        },
+        {
+            "name": "Ventilation Assurance",
+            "subfunctions": []
+        }
+    ]
+}
