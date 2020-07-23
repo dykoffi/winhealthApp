@@ -13,7 +13,8 @@ import {
     thunkDeleteFacturesValides,
     thunkListFactures,
     setShowDetailsFacture,
-    thunkDetailsFacture
+    thunkDetailsFacture,
+    setLoading
 } from "../../api/assurance/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
@@ -33,12 +34,15 @@ import {
     Select,
     Button,
     MenuItem,
+    Snackbar,
+    Slide,
 } from "@material-ui/core";
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { separate } from "../../../global/functions";
-
+import Alert from "@material-ui/lab/Alert";
+const Transition = React.forwardRef(function Transition(props, ref) { return <Slide direction="up" ref={ref} {...props} />; });
 const Facturesvalides = ({
     thunkListFacturesByAssurances,
     thunkListFactures,
@@ -52,6 +56,8 @@ const Facturesvalides = ({
     showDetailsFacture,
     thunkDetailsFacture,
     setShowDetailsFacture,
+    setLoading,
+    loading,
     setListFacturesByAssurance
 }) => {
     const [value, setValue] = useState("");
@@ -59,25 +65,25 @@ const Facturesvalides = ({
     const [modal, setmodal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [inputs, setinput] = useState({
-        nomassurance: "",
-        nomgarant: "",
-        typeSejour: "",
-        debutDateString: moment().format('DD-MM-YYYY'),
-        finDateString: moment().format('DD-MM-YYYY'),
-        debutDate: new Date(),
-        finDate: new Date()
+        nomassurance: "Tous",
+        nomgarant: "Tous",
+        typeSejour: "Tous",
+        debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
+        finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
+        debutDate: new Date("01/01/2020"),
+        finDate: new Date("12/31/2020"),
     });
 
     const handleClose = () => {
         setmodal(false);
         setinput({
-            nomassurance: "",
-            nomgarant: "",
-            typeSejour: "",
-            debutDateString: moment().format('DD-MM-YYYY'),
-            finDateString: moment().format('DD-MM-YYYY'),
-            debutDate: new Date(),
-            finDate: new Date()
+            nomassurance: "Tous",
+            nomgarant: "Tous",
+            typeSejour: "Tous",
+            debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
+            finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
+            debutDate: new Date("01/01/2020"),
+            finDate: new Date("12/31/2020"),
         });
         setListFacturesValides([])
         setListFacturesByAssurance([])
@@ -114,7 +120,9 @@ const Facturesvalides = ({
             setListAssurance([{ value: "Tous", label: "Tous" }, ...Assurance]);
         });
     }, []);
-
+    useEffect(() => {
+        settousSelectionner(false)
+    }, [listFacturesByAssurance])
     useEffect(() => {
         setListFacturesValides([])
     }, [inputs.nomassurance, inputs.typeSejour])
@@ -185,9 +193,10 @@ const Facturesvalides = ({
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures }, i) => (
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures, erreurfacture }, i) => (
                             <tr
                                 key={i}
+                                className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
                                 style={{ cursor: statutfactures === 'valide' ? "pointer" : "default" }}
                                 onClick={() => statutfactures === 'valide' ? thunkDetailsFacture(numerofacture) : null}
                             >
@@ -213,15 +222,19 @@ const Facturesvalides = ({
                 </tbody>
             </table>
             <Dialog
+                TransitionComponent={Transition}
                 open={modal}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 disableBackdropClick
-                transitionDuration={0}
+                transitionDuration={350}
                 fullWidth={true}
                 style={{ minHeight: "60vh" }}
                 maxWidth="lg"
+                onEntering={() => {
+                    thunkListFacturesByAssurances(inputs)
+                }}
             >
                 <DialogTitle
                     className="text-center text-secondary"
@@ -236,6 +249,7 @@ const Facturesvalides = ({
                                 size="small"
                                 className="col-2 p-0"
                                 id="AssuranceList"
+                                defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
@@ -251,6 +265,7 @@ const Facturesvalides = ({
                             <Autocomplete
                                 size="small"
                                 className="col-2 p-0 mx-2"
+                                defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setgarant(newValue.label)
@@ -267,6 +282,7 @@ const Facturesvalides = ({
                                 <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                                 <Select
                                     labelId="typesejour-label"
+                                    defaultValue="Tous"
                                     id="typesejour"
                                     onChange={({ target: { value } }) => {
                                         settype(value)
@@ -289,7 +305,7 @@ const Facturesvalides = ({
                             <small className="mx-2">Du</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datedebut" value={inputs.debutDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datedebut" defaultValue={new Date("01/01/2020")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setdebutDate(date)
                                             thunkListFacturesByAssurances({
@@ -304,7 +320,7 @@ const Facturesvalides = ({
                             <small className="mx-2">Au</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datefin" value={inputs.finDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datefin" defaultValue={new Date("12/31/2020")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setfinDate(date)
                                             thunkListFacturesByAssurances({
@@ -328,8 +344,8 @@ const Facturesvalides = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').map(
-                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                            {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu' && facture.erreurfacture === "").map(
+                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture }, i) => (
                                     <tr
                                         key={i}
                                         className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
@@ -367,7 +383,7 @@ const Facturesvalides = ({
                             )}
                         </tbody>
                     </table>
-                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').length !== 0 &&
+                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu' && facture.erreurfacture === "").length !== 0 &&
                         <>
                             <div onClick={() => {
                                 if (tousSelectionner) {
@@ -445,7 +461,7 @@ const Facturesvalides = ({
                     <div className="row">
                         <div className="col-12">
                             <div className="row mx-1">
-                                <div className="col-6 p-0">
+                                <div className="col-12 p-0">
                                     <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
                                     <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
                                     <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
@@ -461,7 +477,6 @@ const Facturesvalides = ({
                                         </>
                                     )}
                                 </div>
-                                <div className="col-6 text-right"></div>
                             </div>
                             <div className="col-12 d-flex justify-content-center mt-4">
                                 <ReportProblemOutlinedIcon className="bg-warning mr-2" />
@@ -486,7 +501,7 @@ const Facturesvalides = ({
                     </Button>
                     <Button
                         variant="contained"
-                        className="mb-2 red text-white"
+                        className="mb-2 bg-danger text-white"
                         startIcon={<DeleteOutlineIcon />}
                         onClick={() => { thunkDeleteFacturesValides(currentFacture.numerofacture) }}
                         style={{
@@ -498,13 +513,18 @@ const Facturesvalides = ({
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={loading} onClose={() => setLoading(false)}>
+                <Alert variant='standard' severity="info" >
+                    Chargement ...
+                </Alert>
+            </Snackbar>
         </div>
     );
 };
 
 const mapStatToProps = state => {
-    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture } } = state
-    return { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, }
+    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, loading } } = state
+    return { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, loading }
 }
-const FacturesvalidesConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDeleteFacturesValides, setListFacturesValides, setListFacturesByAssurance, setShowDetailsFacture, thunkDetailsFacture })(Facturesvalides)
+const FacturesvalidesConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDeleteFacturesValides, setListFacturesValides, setListFacturesByAssurance, setShowDetailsFacture, thunkDetailsFacture, setLoading })(Facturesvalides)
 export default FacturesvalidesConnected;

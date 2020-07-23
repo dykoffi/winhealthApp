@@ -21,13 +21,14 @@ const SET_CURRENT_FACTURE = "SET_CURRENT_FACTURE"
 const SET_CURRENT_PATIENT = "SET_CURRENT_PATIENT"
 const SET_SHOW_MODAL = "SET_SHOW_MODAL"
 
-const setCurrentFacture = (data) => ({ type: SET_CURRENT_FACTURE, currentFacture: data })
 const setCategorieFactures = (categorie) => ({ type: SET_CATEGORIE_FACTURES, categorieFactures: categorie })
-export const setCurrentPatient = (data) => ({ type: SET_CURRENT_PATIENT, currentPatient: data })
+const setListFactures = (data) => ({ type: SET_LIST_FACTURES, listFactures: data })
 const setListFacturesAttentes = (data) => ({ type: SET_LIST_FACTURES_ATTENTES, listFacturesAttentes: data })
 const setListFacturesPatient = (data) => ({ type: SET_LIST_FACTURES_PATIENT, listFacturesPatient: data })
 
 export const setShowModal = (bool) => ({ type: SET_SHOW_MODAL, showModal: bool })
+export const setCurrentPatient = (data) => ({ type: SET_CURRENT_PATIENT, currentPatient: data })
+export const setCurrentFacture = (data) => ({ type: SET_CURRENT_FACTURE, currentFacture: data })
 
 //le reducer
 const factureReducer = (state = initState, action) => {
@@ -53,7 +54,13 @@ const factureReducer = (state = initState, action) => {
 
 //LISTER TOUTES LES FACTURES
 export function thunkListFactures() {
-    return async (dispatch) => { Axios({ url: `${header.url}/gap/list/factures` }).then(({ data: { rows } }) => { dispatch(setListFacturesAttentes(rows)) }) }
+    return async (dispatch) => {
+        Axios({ url: `${header.url}/gap/list/factures` })
+            .then(({ data: { rows } }) => {
+                console.log(rows);
+                dispatch(setListFactures(rows))
+            })
+    }
 }
 
 //AVOIR DES DETAILS SUR FACTURE
@@ -83,7 +90,7 @@ export function thunkEncaisserFactures(numeroFacture, data) {
         })
     }
 }
-
+//ENCAISSER TOUTES LES FACTURES
 export function thunkEncaisserAllFactures(fg) {
     return async (dispatch, getState) => {
         const { factureReducer } = getState()
@@ -160,4 +167,19 @@ export function thunkListFacturesImpayeesPatient(patient) {
     }
 }
 
+
+export function thunkAddAvoirFacture(numeroFacture, data) {
+    return async (dispatch, getState) => {
+        const { factureReducer } = getState()
+        Axios({
+            method: "POST",
+            url: `${header.url}/gap/add/facture_avoir/${numeroFacture}`,
+            data: data,
+            headers: { "content-type": "application/x-www-form-urlencoded", }
+        }).then(({ data: { rows } }) => {
+            dispatch(thunkListFactures())
+            dispatch(setShowModal(false))
+        })
+    }
+}
 export default factureReducer

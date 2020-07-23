@@ -17,7 +17,6 @@ const Assurance = ({
 }) => {
   useEffect(() => {
     sendTitle("Assurances");
-   
   });
 
   return (

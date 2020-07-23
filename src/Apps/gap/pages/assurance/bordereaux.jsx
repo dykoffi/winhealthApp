@@ -14,7 +14,9 @@ import {
     setListFacturesByAssurance,
     thunkDeleteFacturesValides,
     thunkListFactures,
+    thunkModifyFacture,
     thunkDetailsFacture,
+    thunkCommentFacture,
     setShowModal,
     thunkDetailsBorderau,
     thunkListBorderaux,
@@ -22,7 +24,9 @@ import {
     thunkDeleteFacturesRecues,
     setShowDetailsFacture,
     thunkUpdateBordereau,
-    setTypeBordereaux
+    setTypeBordereaux,
+    thunkReportFacture,
+    setShowCommentFacture
 } from "../../api/assurance/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
@@ -65,7 +69,9 @@ const Input = withStyles({
     },
 })(TextField);
 const Bordereau = ({
+    thunkDetailsFacture,
     thunkListFacturesByAssurances,
+    thunkModifyFacture,
     thunkListBorderaux,
     thunkAddBordereau,
     thunkDeleteFacturesValides,
@@ -74,9 +80,12 @@ const Bordereau = ({
     listFacturesValides,
     setListFacturesValides,
     currentBordereau,
-    showModal,
     thunkDetailsBorderau,
+    thunkCommentFacture,
+    showModal,
     setShowModal,
+    showCommentFacture,
+    setShowCommentFacture,
     loading,
     setLoading,
     currentFacture,
@@ -85,10 +94,12 @@ const Bordereau = ({
     setShowDetailsFacture,
     setListFacturesByAssurance,
     setTypeBordereaux,
+    thunkReportFacture,
     typeBordereaux
 }) => {
     const [value, setValue] = useState("");
     const [value2, setValue2] = useState("");
+    const [commentaire, setCommentaire] = useState("");
     const [tousSelectionner, settousSelectionner] = useState("");
     const [pdf, setpdf] = useState(false);
     const [urlPDF, seturlPDF] = useState(false);
@@ -104,6 +115,10 @@ const Bordereau = ({
         assurePrinc: "",
         numeroPEC: "",
         taux: "",
+    })
+    const [inputComment, setinputComment] = useState({
+        erreur: "",
+        comment: ""
     })
     const [inputs, setinput] = useState({
         nomassurance: "",
@@ -384,12 +399,12 @@ const Bordereau = ({
                 </div>
             </div>
             <Dialog
+                TransitionComponent={Transition}
                 open={modal}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 disableBackdropClick
-                transitionDuration={0}
                 fullWidth={true}
                 style={{ minHeight: "60vh" }}
                 maxWidth="lg"
@@ -625,7 +640,10 @@ const Bordereau = ({
             <Dialog
                 TransitionComponent={Transition}
                 open={showModal}
-                onClose={() => { setShowModal(false) }}
+                onClose={() => {
+                    setShowModal(false)
+                    setcie(false)
+                }}
                 disableBackdropClick
                 disableEscapeKeyDown
                 aria-labelledby="alert-dialog-title"
@@ -702,18 +720,30 @@ const Bordereau = ({
                                             label="Statut du bordereau "
                                             style={{ fontSize: "12px" }}
                                         >
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Création"}>Création</MenuItem>
                                             <MenuItem style={{ fontSize: "12px" }} value={"Envoie"}>Envoie</MenuItem>
                                             <MenuItem style={{ fontSize: "12px" }} value={"Décharge"}>Décharge réçue</MenuItem>
                                             <MenuItem style={{ fontSize: "12px" }} value={"Rejeté"}>Rejeté</MenuItem>
                                         </Select>
                                     </FormControl>
+                                    <TextField
+                                        style={{ fontSize: "12px" }}
+                                        className="col-5 mx-3"
+                                        variant="outlined"
+                                        size="small"
+                                        // multiline
+                                        label="Commentaire"
+                                        defaultValue={currentBordereau[0].commentairebordereau}
+                                        onChange={({ target: { value } }) => {
+                                            let v = value
+                                            setCommentaire(v)
+                                        }}
+                                    />
                                     <Button
                                         variant="contained"
-                                        className="text-white ml-3"
+                                        className="text-white"
                                         startIcon={<CheckCircleOutlineIcon />}
                                         onClick={() => {
-                                            thunkUpdateBordereau({ statut: statutbordereau }, currentBordereau[0].numerobordereau)
+                                            thunkUpdateBordereau({ statut: statutbordereau, commentaire: commentaire }, currentBordereau[0].numerobordereau)
                                         }}
                                         style={{
                                             textTransform: "none",
@@ -755,11 +785,16 @@ const Bordereau = ({
                             </thead>
                             <tbody>
                                 {currentBordereau.filter(bordereau => value2.trim() === "" || RegExp(value2, 'i').test(bordereau.numerofacture)).map(
-                                    ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                                    ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture, commentairefacture }, i) => (
                                         <tr
                                             key={numerofacture}
                                             style={{ cursor: "pointer" }}
-                                            onClick={() => { thunkDetailsFacture(numerofacture) }}
+                                            className={erreurfacture === "warning" ? "bg-warning" : ""}
+                                            onClick={() => {
+                                                erreurfacture.trim() === "" ?
+                                                    thunkCommentFacture(numerofacture) :
+                                                    thunkDetailsFacture(numerofacture)
+                                            }}
                                         >
                                             <td>{i + 1}</td>
                                             <td>{numerofacture}</td>
@@ -831,17 +866,26 @@ const Bordereau = ({
                     <Button
                         variant="contained"
                         className="mb-2"
+                        disabled={
+                            (currentBordereau.filter(b => b.erreurfacture === "warning").length === 0 && currentBordereau[0].statutbordereau === "Rejeté") ||
+                            (currentBordereau.filter(b => b.erreurfacture === "warning").length !== 0 && currentBordereau[0].statutbordereau !== "Rejeté")
+                        }
                         startIcon={<CancelIcon />}
-                        onClick={() => { setShowModal(false) }}
+                        onClick={() => {
+                            setShowModal(false)
+                            setcie(false)
+                        }}
                         style={{
                             textTransform: "none",
                             fontSize: "13px",
                         }}
                     >Fermer</Button>
-                    <BordereauDoc showPDF={showPDF} code={``} bordereau={currentBordereau} cie={cie} />
+                    {currentBordereau.filter(b => b.erreurfacture === "warning").length === 0 && currentBordereau[0].statutbordereau !== "Rejeté" &&
+                        <BordereauDoc showPDF={showPDF} code={``} bordereau={currentBordereau} cie={cie} />
+                    }
                     <Button
                         variant="contained"
-                        className="mb-2 red text-white ml-3"
+                        className="mb-2 bg-danger text-white ml-3"
                         startIcon={<DeleteOutlineIcon />}
                         onClick={() => { thunkDeleteFacturesValides(currentBordereau.numerofacture) }}
                         style={{
@@ -865,13 +909,120 @@ const Bordereau = ({
                 <object data={urlPDF} className="col-12" height={700} type="application/pdf"></object>
             </Dialog>
             <Dialog
+                open={showCommentFacture}
+                onClose={() => {
+                    setShowCommentFacture(false)
+                    setinputComment({ erreur: "", comment: "", })
+                }}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+                onEntered={() =>
+                    setinputComment({ erreur: currentFacture.erreurfacture, comment: currentFacture.commentairefacture, })
+                }
+                maxWidth="xs"
+                transitionDuration={0}
+            >
+                <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
+                    <b>Facture N° {currentFacture.numerofacture}</b>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="row mx-1">
+                                <div className="col-12 p-0">
+                                    <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                                    <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
+                                    <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
+                                    <hr className="bg-light" />
+                                    {currentFacture.gestionnaire !== "" && (
+                                        <>
+                                            <small><b>Montant total : </b> {separate(currentFacture.montanttotalfacture)} FCFA</small><br />
+                                            <small><b>Part Assurance : </b> {separate(currentFacture.partassurancefacture)} FCFA</small><br />
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="row mx-1 my-3">
+                                <TextField
+                                    style={{ fontSize: "12px" }}
+                                    className="col-12"
+                                    variant="outlined"
+                                    size="small"
+                                    multiline
+                                    rows={4}
+                                    label="Commentaire"
+                                    defaultValue={currentFacture.commentairefacture}
+                                    onChange={({ target: { value } }) => {
+                                        let v = value
+                                        setinputComment({ ...inputComment, comment: v })
+                                    }}
+                                />
+                            </div>
+                            <div className="col-12 d-flex justify-content-center">
+                                <ReportProblemOutlinedIcon className="bg-warning mr-2" />
+                                <small className="font-weight-bold">
+                                    Le retrait et la modification de la facture sont des actions sans confirmation et irréversibles
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        className="mb-2"
+                        startIcon={<CancelIcon />}
+                        onClick={() => { setShowCommentFacture(false) }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="mb-2 bg-danger text-white"
+                        startIcon={<DeleteOutlineIcon />}
+                        disabled={inputComment.comment.trim() === ""}
+                        onClick={() => {
+                            thunkReportFacture(currentFacture.numerofacture, { ...inputComment, erreur: "refuse" })
+                        }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Retirer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="mb-2 bg-warning"
+                        onClick={() => { }}
+                        startIcon={<EditIcon />}
+                        disabled={inputComment.comment.trim() === ""}
+                        onClick={() => {
+                            thunkReportFacture(currentFacture.numerofacture, { ...inputComment, erreur: "warning" })
+                        }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Signaler
+                </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
                 open={showDetailsFacture}
                 onClose={() => { setShowDetailsFacture(false) }}
                 disableBackdropClick
                 disableEscapeKeyDown
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                transitionDuration={0}
                 fullWidth={true}
                 onEntered={() =>
                     setinputModif({
@@ -893,25 +1044,28 @@ const Bordereau = ({
                     <div className="row">
                         <div className="col-12">
                             <div className="row mx-1">
-                                <div className="col-6 p-0">
+                                <div className="col-12 p-0">
                                     <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
                                     <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
                                     <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
                                     <hr className="bg-light" />
                                     {currentFacture.gestionnaire !== "" && (
                                         <>
-                                            <small><b>Montant total : </b> {currentFacture.montanttotalfacture} FCFA</small><br />
-                                            <small><b>Part Assurance : </b> {currentFacture.partassurancefacture} FCFA</small><br />
+                                            <small><b>Montant total : </b> {separate(currentFacture.montanttotalfacture)} FCFA</small><br />
+                                            <small><b>Part Assurance : </b> {separate(currentFacture.partassurancefacture)} FCFA</small><br />
                                         </>
                                     )}
                                 </div>
-                                <div className="col-6 text-right"></div>
+                            </div>
+                            <div className="row mx-1 my-3 bg-warning p-2">
+                                <pre>{currentFacture.commentairefacture}</pre>
                             </div>
                             <div className="row mx-1 my-3">
                                 <Autocomplete
                                     size="small"
                                     className="col p-0"
                                     id="assurancesList"
+                                    disabled
                                     options={listAssurances}
                                     defaultValue={{ value: currentFacture.idassurance, label: currentFacture.gestionnaire }}
                                     onChange={(event, newValue) => { setgestionnaire(newValue.label); }}
@@ -921,6 +1075,7 @@ const Bordereau = ({
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
+
                                             variant="outlined"
                                             label="Gestionnaire"
                                             placeholder="Ajouter ..."
@@ -929,6 +1084,7 @@ const Bordereau = ({
                                 />
                                 <Autocomplete
                                     size="small"
+                                    disabled
                                     className="col p-0 ml-2"
                                     id="assurancesList"
                                     defaultValue={{ value: currentFacture.idassurance, label: currentFacture.organisme }}
@@ -1049,9 +1205,9 @@ const Bordereau = ({
                     </Button>
                     <Button
                         variant="contained"
-                        className="mb-2 red text-white"
+                        className="mb-2 bg-danger text-white"
                         startIcon={<DeleteOutlineIcon />}
-                        onClick={() => { thunkDeleteFacturesRecues(currentFacture.numerofacture) }}
+                        onClick={() => { thunkReportFacture(currentFacture.numerofacture, { ...inputComment, erreur: "refuse" }) }}
                         style={{
                             textTransform: "none",
                             fontSize: "13px",
@@ -1064,9 +1220,9 @@ const Bordereau = ({
                         className="mb-2"
                         onClick={() => { }}
                         startIcon={<EditIcon />}
-                        // onClick={() => {
-                        //     thunkModifyFacture(currentFacture.numerosejour, inputModifs)
-                        // }}
+                        onClick={() => {
+                            thunkModifyFacture(currentFacture.numerosejour, inputModifs)
+                        }}
                         style={{
                             textTransform: "none",
                             backgroundColor: global.theme.primary,
@@ -1097,7 +1253,8 @@ const mapStatToProps = state => {
         loading,
         currentFacture,
         showDetailsFacture,
-        typeBordereaux } } = state
+        typeBordereaux,
+        showCommentFacture } } = state
     return {
         listFacturesByAssurance,
         listFacturesValides,
@@ -1108,24 +1265,29 @@ const mapStatToProps = state => {
         loading,
         currentFacture,
         showDetailsFacture,
-        typeBordereaux
+        typeBordereaux,
+        showCommentFacture
     }
 }
 const BordereauConnected = connect(mapStatToProps, {
     thunkAddBordereau,
     thunkListBorderaux,
     thunkAddBordereau,
+    thunkModifyFacture,
     thunkListFacturesByAssurances,
     thunkDeleteFacturesValides,
     setListFacturesValides,
     setListFacturesByAssurance,
     setShowModal,
+    setShowCommentFacture,
     thunkDetailsBorderau,
     setLoading,
     thunkUpdateBordereau,
     thunkDetailsFacture,
     thunkDeleteFacturesRecues,
     setShowDetailsFacture,
+    thunkCommentFacture,
+    thunkReportFacture,
     setTypeBordereaux
 })(Bordereau)
 export default BordereauConnected;

@@ -51,26 +51,26 @@ const navMenu = [
         icon: 'action-account-child',
         path: "/gap/assurance"
     },
-    {
-        title: 'Ventilation Assurance',
-        icon: 'action-assignment-returned',
-        path: "/gap/stats"
-    },
+    // {
+    //     title: 'Ventilation Assurance',
+    //     icon: 'action-assignment-returned',
+    //     path: "/gap/stats"
+    // },
     {
         title: 'Statistiques',
         icon: 'action-assessment',
         path: "/gap/statistiques"
     },
-    {
-        title: 'Parametres',
-        icon: 'action-settings',
-        path: "/gap/settings"
-    },
-    {
-        title: 'Info',
-        icon: 'action-info-outline',
-        path: "/gap/settings"
-    }
+    // {
+    //     title: 'Parametres',
+    //     icon: 'action-settings',
+    //     path: "/gap/settings"
+    // },
+    // {
+    //     title: 'Info',
+    //     icon: 'action-info-outline',
+    //     path: "/gap/settings"
+    // }
 ]
 const functions = props.functions.map(f => f.name)
 

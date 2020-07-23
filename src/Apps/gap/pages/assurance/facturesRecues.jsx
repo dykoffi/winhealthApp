@@ -14,7 +14,8 @@ import {
     setListFacturesByAssurance,
     thunkDetailsFacture,
     thunkListFactures,
-    setShowDetailsFacture
+    setShowDetailsFacture,
+    setLoading
 } from "../../api/assurance/bordereaux";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -38,12 +39,14 @@ import {
     Button,
     MenuItem,
     withStyles,
+    Snackbar,
 } from "@material-ui/core";
 import Axios from "axios";
 import GlobalContext, { Info } from "../../../global/context";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { separate } from "../../../global/functions";
+import Alert from "@material-ui/lab/Alert";
 
 const Input = withStyles({
     root: {
@@ -79,6 +82,8 @@ const FacturesRecues = ({
     showDetailsFacture,
     thunkDetailsFacture,
     setShowDetailsFacture,
+    setLoading,
+    loading,
     setListFacturesByAssurance
 }) => {
 
@@ -99,13 +104,13 @@ const FacturesRecues = ({
         taux: "",
     })
     const [inputs, setinput] = useState({
-        nomassurance: "",
-        nomgarant: "",
-        typeSejour: "",
-        debutDateString: moment().format('DD-MM-YYYY'),
-        finDateString: moment().format('DD-MM-YYYY'),
-        debutDate: new Date(),
-        finDate: new Date()
+        nomassurance: "Tous",
+        nomgarant: "Tous",
+        typeSejour: "Tous",
+        debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
+        finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
+        debutDate: new Date("01/01/2020"),
+        finDate: new Date("12/31/2020"),
     });
 
     const handleClose = () => {
@@ -114,10 +119,10 @@ const FacturesRecues = ({
             nomassurance: "",
             nomgarant: "",
             typeSejour: "",
-            debutDateString: moment().format('DD-MM-YYYY'),
-            finDateString: moment().format('DD-MM-YYYY'),
-            debutDate: new Date(),
-            finDate: new Date()
+            debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
+            finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
+            debutDate: new Date("01/01/2020"),
+            finDate: new Date("12/31/2020"),
         });
         setListFacturesRecues([])
         setListFacturesByAssurance([])
@@ -240,9 +245,10 @@ const FacturesRecues = ({
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures }, i) => (
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures, erreurfacture }, i) => (
                             <tr
                                 key={i}
+                                className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
                                 style={{ cursor: statutfactures === 'recu' ? "pointer" : "default" }}
                                 onClick={() => { statutfactures === 'recu' && thunkDetailsFacture(numerofacture) }}
                             >
@@ -277,6 +283,9 @@ const FacturesRecues = ({
                 fullWidth={true}
                 style={{ minHeight: "60vh" }}
                 maxWidth="lg"
+                onEntered={() => {
+                    thunkListFacturesByAssurances(inputs)
+                }}
             >
                 <DialogTitle
                     className="text-center text-secondary"
@@ -291,6 +300,7 @@ const FacturesRecues = ({
                                 size="small"
                                 className="col-2 p-0"
                                 id="AssuranceList"
+                                defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
@@ -306,6 +316,7 @@ const FacturesRecues = ({
                             <Autocomplete
                                 size="small"
                                 className="col-2 p-0 mx-2"
+                                defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
                                 onChange={(event, newValue) => {
                                     newValue && setgarant(newValue.label)
@@ -321,6 +332,7 @@ const FacturesRecues = ({
                             <FormControl variant="outlined" size="small" className="col-2">
                                 <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                                 <Select
+                                    defaultValue="Tous"
                                     labelId="typesejour-label"
                                     id="typesejour"
                                     onChange={({ target: { value } }) => {
@@ -344,7 +356,7 @@ const FacturesRecues = ({
                             <small className="mx-2">Du</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datedebut" value={inputs.debutDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datedebut" value={inputs.debutDate} defaultValue={new Date("01/01/2020")} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setdebutDate(date)
                                             thunkListFacturesByAssurances({
@@ -359,7 +371,7 @@ const FacturesRecues = ({
                             <small className="mx-2">Au</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datefin" value={inputs.finDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datefin" value={inputs.finDate} defaultValue={new Date("12/31/2020")} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setfinDate(date)
                                             thunkListFacturesByAssurances({
@@ -512,7 +524,7 @@ const FacturesRecues = ({
                     <div className="row">
                         <div className="col-12">
                             <div className="row mx-1">
-                                <div className="col-6 p-0">
+                                <div className="col-12 p-0">
                                     <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
                                     <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
                                     <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
@@ -524,8 +536,10 @@ const FacturesRecues = ({
                                         </>
                                     )}
                                 </div>
-                                <div className="col-6 text-right"></div>
                             </div>
+                            {currentFacture.commentairefacture && currentFacture.commentairefacture.trim() !== "" && <div className="row mx-1 my-3 bg-danger p-2">
+                                <pre className="text-white">{currentFacture.commentairefacture}</pre>
+                            </div>}
                             <div className="row mx-1 my-3">
                                 <Autocomplete
                                     size="small"
@@ -667,7 +681,7 @@ const FacturesRecues = ({
                     </Button>
                     <Button
                         variant="contained"
-                        className="mb-2 red text-white"
+                        className="mb-2 bg-danger text-white"
                         startIcon={<DeleteOutlineIcon />}
                         onClick={() => { thunkDeleteFacturesRecues(currentFacture.numerofacture) }}
                         style={{
@@ -709,13 +723,18 @@ const FacturesRecues = ({
             >
                 <object data={urlPDF} className="col-12" height={700} type="application/pdf"></object>
             </Dialog>
+            <Snackbar open={loading} onClose={() => setLoading(false)}>
+                <Alert variant='standard' severity="info" >
+                    Chargement ...
+                </Alert>
+            </Snackbar>
         </div>
     );
 };
 
 const mapStatToProps = state => {
-    const { bordereauReducer: { listFacturesByAssurance, listFacturesRecues, listFactures, showDetailsFacture, currentFacture } } = state
-    return { listFacturesByAssurance, listFacturesRecues, listFactures, showDetailsFacture, currentFacture }
+    const { bordereauReducer: { listFacturesByAssurance, listFacturesRecues, listFactures, showDetailsFacture, currentFacture, loading } } = state
+    return { listFacturesByAssurance, listFacturesRecues, listFactures, showDetailsFacture, currentFacture, loading }
 }
-const FacturesRecuesConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture, thunkDeleteFacturesRecues, thunkModifyFacture, setListFacturesRecues, setListFacturesByAssurance, setShowDetailsFacture })(FacturesRecues)
+const FacturesRecuesConnected = connect(mapStatToProps, { thunkSendFacturesRecues, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDetailsFacture, thunkDeleteFacturesRecues, thunkModifyFacture, setListFacturesRecues, setListFacturesByAssurance, setShowDetailsFacture, setLoading })(FacturesRecues)
 export default FacturesRecuesConnected;

@@ -31,7 +31,6 @@ const props = {
 
 const functionP = "Assurance"
 const subfunctions = props.functions.filter(f => f.name === functionP).flatMap(f => f.subfunctions).map(f => f.target)
-console.log(subfunctions)
 const Onglets = [
     { target: "listeAssurances", title: "Listes des assurances", icon: 'action-assignment' },
     { target: "facturesRecues", title: "Factures recues", icon: 'file-file-download ' },

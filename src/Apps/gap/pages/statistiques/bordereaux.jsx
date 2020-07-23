@@ -228,7 +228,7 @@ const Bordereau = ({
                                 listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Soin").length,
                             ],
                             borderColor: 'transparent',
-                            backgroundColor: schemeCategory10[i]
+                            backgroundColor: schemeSet3[i]
                         }
                     }
                 )
@@ -274,7 +274,6 @@ const Bordereau = ({
                 labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté"],
                 datasets: listAssurances.map(
                     (assurance, i) => {
-
                         return {
                             label: assurance.label,
                             data: [
@@ -284,7 +283,7 @@ const Bordereau = ({
                                 listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Rejeté").length,
                             ],
                             backgroundColor: 'transparent',
-                            borderColor: schemeCategory10[i]
+                            borderColor: schemeSet3[i]
                         }
                     }
                 )
@@ -596,11 +595,12 @@ const Bordereau = ({
                             </thead>
                             <tbody>
                                 {currentBordereau.filter(bordereau => value2.trim() === "" || RegExp(value2, 'i').test(bordereau.numerofacture)).map(
-                                    ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                                    ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture, commentairefacture }, i) => (
                                         <tr
                                             key={numerofacture}
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => { thunkDetailsFacture(numerofacture) }}
+                                            style={{cursor:"default"}}
+                                            className={erreurfacture === "warning" ? "bg-warning" : ""}
+                                            title={commentairefacture}
                                         >
                                             <td>{i + 1}</td>
                                             <td>{numerofacture}</td>
