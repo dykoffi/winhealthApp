@@ -28,8 +28,20 @@ import {
   Select,
   Button,
   MenuItem,
+  Input,
 } from "@material-ui/core";
+import InputMask from "react-input-mask";
 
+const InputContact = (props) => (
+  <InputMask
+    mask="(225) 99 999 999"
+    permanent={[0, 1, 2, 3, 4, 5]}
+    value={props.value}
+    onChange={props.onChange}
+  >
+    {(inputProps) => <Input type="tel" {...props} />}
+  </InputMask>
+)
 
 const Assurance = ({
   thunkAddAssurance,
@@ -264,18 +276,20 @@ const Assurance = ({
                 />
               </div>
               <div className="row my-3 mx-1">
-                <TextField
+                <InputContact
                   className="col mr-2"
                   variant="standard"
                   size="small"
-                  label="Téléphone"
+                  label="Telephone"
+                  value={inputs.telephone}
                   onChange={settelephone}
                 />
-                <TextField
-                  className="col"
+                <InputContact
+                  className="col mr-2"
                   variant="standard"
                   size="small"
                   label="Fax"
+                  value={inputs.fax}
                   onChange={setfax}
                 />
               </div>
@@ -407,20 +421,20 @@ const Assurance = ({
                 />
               </div>
               <div className="row my-3 mx-1">
-                <TextField
+                <InputContact
                   className="col mr-2"
                   variant="standard"
                   size="small"
-                  defaultValue={currentAssurance.codeassurance}
-                  label="Téléphone"
+                  label="Telephone"
+                  value={inputs.telephone}
                   onChange={settelephone}
                 />
-                <TextField
-                  className="col"
+                <InputContact
+                  className="col mr-2"
                   variant="standard"
                   size="small"
                   label="Fax"
-                  defaultValue={currentAssurance.faxassurance}
+                  value={inputs.fax}
                   onChange={setfax}
                 />
               </div>

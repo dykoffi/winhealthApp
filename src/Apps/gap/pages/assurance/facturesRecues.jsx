@@ -40,6 +40,7 @@ import {
     MenuItem,
     withStyles,
     Snackbar,
+    Slide,
 } from "@material-ui/core";
 import Axios from "axios";
 import GlobalContext, { Info } from "../../../global/context";
@@ -47,7 +48,7 @@ import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { separate } from "../../../global/functions";
 import Alert from "@material-ui/lab/Alert";
-
+const Transition = React.forwardRef(function Transition(props, ref) { return <Slide direction="up" ref={ref} {...props} />; });
 const Input = withStyles({
     root: {
         "& label.Mui-focused": {
@@ -116,9 +117,9 @@ const FacturesRecues = ({
     const handleClose = () => {
         setmodal(false);
         setinput({
-            nomassurance: "",
-            nomgarant: "",
-            typeSejour: "",
+            nomassurance: "Tous",
+            nomgarant: "Tous",
+            typeSejour: "Tous",
             debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
             finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
             debutDate: new Date("01/01/2020"),
@@ -206,15 +207,15 @@ const FacturesRecues = ({
                                     className="white-text"
                                     style={{ backgroundColor: global.theme.primary }}
                                 >
-                                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
+                                    {listFactures.filter(facture => facture.statutfacture === 'recu' || facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
                                 </Avatar>
                             }
                         />
                     </div>
                     <div className="col d-flex justify-content-end p-0">
                         {
-                            listFactures.filter(facture => facture.statutfactures === 'attente').length !== 0 &&
-                            <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={listFactures.filter(facture => facture.statutfactures === 'attente')} />
+                            listFactures.filter(facture => facture.statutfacture === 'attente').length !== 0 &&
+                            <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={listFactures.filter(facture => facture.statutfacture === 'attente')} />
                         }
                         <Button
                             size='small'
@@ -244,13 +245,13 @@ const FacturesRecues = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {listFactures.filter(facture => facture.statutfactures === 'recu' || facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures, erreurfacture }, i) => (
+                    {listFactures.filter(facture => facture.statutfacture === 'recu' || facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfacture, erreurfacture }, i) => (
                             <tr
                                 key={i}
                                 className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
-                                style={{ cursor: statutfactures === 'recu' ? "pointer" : "default" }}
-                                onClick={() => { statutfactures === 'recu' && thunkDetailsFacture(numerofacture) }}
+                                style={{ cursor: statutfacture === 'recu' ? "pointer" : "default" }}
+                                onClick={() => { statutfacture === 'recu' && thunkDetailsFacture(numerofacture) }}
                             >
                                 <td>{i + 1}</td>
                                 <td>{numerofacture}</td>
@@ -274,16 +275,17 @@ const FacturesRecues = ({
                 </tbody>
             </table>
             <Dialog
+                TransitionComponent={Transition}
                 open={modal}
                 disableBackdropClick
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                transitionDuration={0}
+                transitionDuration={350}
                 fullWidth={true}
                 style={{ minHeight: "60vh" }}
                 maxWidth="lg"
-                onEntered={() => {
+                onEnter={() => {
                     thunkListFacturesByAssurances(inputs)
                 }}
             >
@@ -395,7 +397,7 @@ const FacturesRecues = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').map(
+                            {listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').map(
                                 ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
@@ -407,7 +409,7 @@ const FacturesRecues = ({
                                                 setListFacturesRecues([...listFacturesRecues])
                                                 settousSelectionner(false)
                                             } else {
-                                                if ([...listFacturesRecues, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').length) {
+                                                if ([...listFacturesRecues, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').length) {
                                                     settousSelectionner(true)
                                                 }
                                                 setListFacturesRecues([...listFacturesRecues, numerofacture])
@@ -435,7 +437,7 @@ const FacturesRecues = ({
                             )}
                         </tbody>
                     </table>
-                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'attente').length !== 0 &&
+                    {listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length !== 0 &&
                         <>
                             <div onClick={() => {
                                 if (tousSelectionner) {
@@ -444,7 +446,7 @@ const FacturesRecues = ({
                                 } else {
                                     setListFacturesRecues(
                                         listFacturesByAssurance
-                                            .filter(facture => facture.statutfactures === 'attente')
+                                            .filter(facture => facture.statutfacture === 'attente')
                                             .map(facture => facture.numerofacture)
                                     )
                                     settousSelectionner(true)

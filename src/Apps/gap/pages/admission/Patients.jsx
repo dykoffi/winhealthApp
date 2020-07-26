@@ -3,27 +3,18 @@ import TablePatients from "../../containers/admission/TableListPatients";
 import { connect } from "react-redux";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
-const Patients = ({ loading }) => {
+import Alert from "@material-ui/lab/Alert";
+import { setLoading } from '../../api/admission/patients'
+const Patients = ({ loading, setLoading }) => {
   return (
     <div className="row p-2 Patients mt-2">
       <div className="col-12">
         <TablePatients />
       </div>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        open={loading}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="standard"
-          severity="info"
-        >
-          Recherche de patients ...
-          </MuiAlert>
+      <Snackbar open={loading} onClose={() => setLoading(false)}>
+        <Alert variant='standard' severity="info" >
+          Chargement ...
+                </Alert>
       </Snackbar>
     </div>
   );
@@ -36,5 +27,5 @@ const mapStateToProp = (state) => {
   return { loading };
 };
 
-const PatientConnected = connect(mapStateToProp)(Patients);
+const PatientConnected = connect(mapStateToProp, { setLoading })(Patients);
 export default PatientConnected;

@@ -159,7 +159,7 @@ const Facturesvalides = ({
                                     className="white-text"
                                     style={{ backgroundColor: global.theme.primary }}
                                 >
-                                    {listFactures.filter(facture => facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
+                                    {listFactures.filter(facture => facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
                                 </Avatar>
                             }
                         />
@@ -192,13 +192,13 @@ const Facturesvalides = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {listFactures.filter(facture => facture.statutfactures === 'valide' || facture.statutfactures === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfactures, erreurfacture }, i) => (
+                    {listFactures.filter(facture => facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfacture, erreurfacture }, i) => (
                             <tr
                                 key={i}
                                 className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
-                                style={{ cursor: statutfactures === 'valide' ? "pointer" : "default" }}
-                                onClick={() => statutfactures === 'valide' ? thunkDetailsFacture(numerofacture) : null}
+                                style={{ cursor: statutfacture === 'valide' ? "pointer" : "default" }}
+                                onClick={() => statutfacture === 'valide' ? thunkDetailsFacture(numerofacture) : null}
                             >
                                 <td>{i + 1}</td>
                                 <td>{numerofacture}</td>
@@ -344,7 +344,7 @@ const Facturesvalides = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu' && facture.erreurfacture === "").map(
+                            {listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").map(
                                 ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture }, i) => (
                                     <tr
                                         key={i}
@@ -356,7 +356,7 @@ const Facturesvalides = ({
                                                 setListFacturesValides([...listFacturesValides])
                                                 settousSelectionner(false)
                                             } else {
-                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu').length) {
+                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu').length) {
                                                     settousSelectionner(true)
                                                 }
                                                 setListFacturesValides([...listFacturesValides, numerofacture])
@@ -383,7 +383,7 @@ const Facturesvalides = ({
                             )}
                         </tbody>
                     </table>
-                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'recu' && facture.erreurfacture === "").length !== 0 &&
+                    {listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length !== 0 &&
                         <>
                             <div onClick={() => {
                                 if (tousSelectionner) {
@@ -392,7 +392,7 @@ const Facturesvalides = ({
                                 } else {
                                     setListFacturesValides(
                                         listFacturesByAssurance
-                                            .filter(facture => facture.statutfactures === 'recu')
+                                            .filter(facture => facture.statutfacture === 'recu')
                                             .map(facture => facture.numerofacture)
                                     )
                                     settousSelectionner(true)

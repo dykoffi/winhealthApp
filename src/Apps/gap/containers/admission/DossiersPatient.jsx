@@ -442,178 +442,126 @@ const DossiersPatient = ({
                     )}
                   />
                 </div>
-                <div style={{ display: "inline" }} onClick={() => {
-                  if (assure) {
-                    setassure(false)
-                  } else {
-                    setassure(true)
-                  }
-                }}>
-                  <Chip
-                    className={`mr-2 ${assure ? "bgcolor-secondaryDark text-white font-weight-bold" : ""}`}
-                    style={{ cursor: "pointer" }}
-                    label="Patient assuré"
+                <div className="row mx-1 my-3">
+                  <Autocomplete
+                    size="small"
+                    className="col p-0"
+                    id="assurancesList"
+                    options={listAssurances}
+                    onChange={(event, newValue) => { newValue ? setgestionnaire(newValue.label) : setgestionnaire("") }}
+                    getOptionLabel={(option) => option.label}
+                    filterSelectedOptions
+                    renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Gestionnaire"
+                        placeholder="Ajouter ..."
+                      />
+                    )}
+                  />
+                  <Autocomplete
+                    size="small"
+                    className="col p-0 ml-2"
+                    id="assurancesList"
+                    options={listAssurances}
+                    disabled={inputs.gestionnaire.trim() === ""}
+                    onChange={(event, newValue) => { newValue ? setorganisme(newValue.label) : setorganisme("") }}
+                    getOptionLabel={(option) => option.label}
+                    filterSelectedOptions
+                    renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Organisme"
+                        placeholder="Ajouter ..."
+                      />
+                    )}
                   />
                 </div>
-                {assure &&
-                  <>
-                    <div className="row mx-1 my-3">
-                      <Autocomplete
-                        size="small"
-                        className="col p-0"
-                        id="assurancesList"
-                        options={listAssurances}
-                        onChange={(event, newValue) => { newValue ? setgestionnaire(newValue.label) : setgestionnaire("") }}
-                        getOptionLabel={(option) => option.label}
-                        filterSelectedOptions
-                        renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            variant="outlined"
-                            label="Gestionnaire"
-                            placeholder="Ajouter ..."
-                          />
-                        )}
-                      />
-                      <Autocomplete
-                        size="small"
-                        className="col p-0 ml-2"
-                        id="assurancesList"
-                        options={listAssurances}
-                        disabled={inputs.gestionnaire.trim() === ""}
-                        onChange={(event, newValue) => { newValue ? setorganisme(newValue.label) : setorganisme("") }}
-                        getOptionLabel={(option) => option.label}
-                        filterSelectedOptions
-                        renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            variant="outlined"
-                            label="Organisme"
-                            placeholder="Ajouter ..."
-                          />
-                        )}
-                      />
-                    </div>
-                    <div className="row mx-1 my-3">
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        className="col"
-                      >
-                        <InputLabel id="assurance-label">Bénéficiaire</InputLabel>
-                        <Select
-                          disabled={inputs.organisme.trim() === ""}
-                          labelId="assurance-label"
-                          id="assurance"
-                          label="Bénéficiaire"
-                          onChange={setbeneficiaire}
-                          style={{ fontSize: "12px" }}
-                        >
-                          <MenuItem style={{ fontSize: "12px" }} value={"assuré"}>L'assuré</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={"enfant"}>L'enfant</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={"conjoint(e)"}>Le/La conjoint(e)</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={"ayant droit"}>L'ayant droit</MenuItem>
-                        </Select>
-                      </FormControl>
-                      <Input
-                        disabled={inputs.beneficiaire.trim() === ""}
-                        className="col-7 ml-2"
-                        variant="outlined"
-                        size="small"
-                        defaultValue=" "
-                        label="Identité de l'Assuré"
-                        value={inputs.beneficiaire === 'assuré' ? currentSejour.nompatient + " " + currentSejour.prenomspatient : inputs.assurePrinc}
-                        onChange={setassurePrinc}
-                      />
-                    </div>
-                    <div className="row mx-1 my-2">
-                      <Input
-                        className="col-4"
-                        variant="outlined"
-                        size="small"
-                        label="Matricule"
-                        onChange={setmatriculeAssure}
-                        disabled={inputs.assurePrinc.trim() === ""}
-                      />
-                      <Input
-                        className="col-4 mx-2"
-                        variant="outlined"
-                        size="small"
-                        label="N° PEC"
-                        onChange={setnumeroPEC}
-                        disabled={inputs.gestionnaire.trim() === ""}
-                      />
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        className="col"
-                      >
-                        <InputLabel id="assurance-label">Taux</InputLabel>
-                        <Select
-                          labelId="assurance-label"
-                          id="assurance"
-                          label="Taux"
-                          disabled={inputs.gestionnaire.trim() === ""}
-                          onChange={settaux}
-                          style={{ fontSize: "11px" }}
-                        >
-                          <MenuItem style={{ fontSize: "12px" }} value={0}>0%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={30}>30%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={40}>40%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={50}>50%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={60}>60%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={70}>70%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={75}>75%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={80}>80%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={85}>85%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={90}>90%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={95}>95%</MenuItem>
-                          <MenuItem style={{ fontSize: "12px" }} value={100}>100%</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </div>
-                  </>
-                }
+                <div className="row mx-1 my-3">
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="col"
+                  >
+                    <InputLabel id="assurance-label">Bénéficiaire</InputLabel>
+                    <Select
+                      disabled={inputs.organisme.trim() === ""}
+                      labelId="assurance-label"
+                      id="assurance"
+                      label="Bénéficiaire"
+                      onChange={setbeneficiaire}
+                      style={{ fontSize: "12px" }}
+                    >
+                      <MenuItem style={{ fontSize: "12px" }} value={"assuré"}>L'assuré</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"enfant"}>L'enfant</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"conjoint(e)"}>Le/La conjoint(e)</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"ayant droit"}>L'ayant droit</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Input
+                    disabled={inputs.beneficiaire.trim() === ""}
+                    className="col-7 ml-2"
+                    variant="outlined"
+                    size="small"
+                    defaultValue=" "
+                    label="Identité de l'Assuré"
+                    value={inputs.beneficiaire === 'assuré' ? currentSejour.nompatient + " " + currentSejour.prenomspatient : inputs.assurePrinc}
+                    onChange={setassurePrinc}
+                  />
+                </div>
+                <div className="row mx-1 my-2">
+                  <Input
+                    className="col-4"
+                    variant="outlined"
+                    size="small"
+                    label="Matricule"
+                    onChange={setmatriculeAssure}
+                    disabled={inputs.assurePrinc.trim() === ""}
+                  />
+                  <Input
+                    className="col-4 mx-2"
+                    variant="outlined"
+                    size="small"
+                    label="N° PEC"
+                    onChange={setnumeroPEC}
+                    disabled={inputs.gestionnaire.trim() === ""}
+                  />
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="col"
+                  >
+                    <InputLabel id="assurance-label">Taux</InputLabel>
+                    <Select
+                      labelId="assurance-label"
+                      id="assurance"
+                      label="Taux"
+                      disabled={inputs.gestionnaire.trim() === ""}
+                      onChange={settaux}
+                      style={{ fontSize: "11px" }}
+                    >
+                      <MenuItem style={{ fontSize: "12px" }} value={0}>0%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={30}>30%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={40}>40%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={50}>50%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={60}>60%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={70}>70%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={75}>75%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={80}>80%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={85}>85%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={90}>90%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={95}>95%</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={100}>100%</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
               </div>
-              <table className="col-12 table-sm mx-1 my-2">
-                <thead className="p-2" style={{ backgroundColor: global.theme.primary }}>
-                  <tr className="p-2">{columnsDetails.map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
-                </thead>
-                <tbody>
-                  {
-                    listActesDef.map(({
-                      idActe,
-                      codeActe,
-                      prixU,
-                      plafondAssu,
-                      qte,
-                      prixT,
-                      tauxAssu,
-                      partAssu,
-                      partPatient,
-                      partTiers }, i) => (
-                        <tr key={codeActe} id={codeActe}>
-                          <td> <Input size="small" disabled value={listActesDef[i].codeActe} /></td>
-                          <td> <Input size="small" disabled value={listActesDef[i].prixU} /></td>
-                          <td> <Input size="small" defaultValue={listActesDef[i].plafondAssu} onChange={(ev) => { }} /></td>
-                          <td> <Input size="small" defaultValue={listActesDef[i].qte} onChange={(ev) => {
-                            listActesDef[i].qte = ev.target.value
-                            listActesDef[i].prixT = ev.target.value * listActesDef[i].prixU
-                            setListActesDef(listActesDef)
-                          }} /></td>
-                          <td><Input size="small" value={listActesDef[i].prixT} /></td>
-                          <td> <Input size="small" disabled defaultValue="15000" /></td>
-                          <td> <Input className="text-center" size="small" disabled defaultValue="15000" /></td>
-                          <td> <Input size="small" /></td>
-                        </tr>
-                      ))
-                  }
-                </tbody>
-              </table>
             </div>
           </DialogContent>
           <DialogActions>
@@ -623,8 +571,7 @@ const DossiersPatient = ({
               startIcon={<CancelIcon />}
               onClick={handleClose}
               style={{ textTransform: "none", fontSize: "11px", }}
-            >
-              Annuler
+            >Annuler
             </Button>
             <Button
               variant="contained"

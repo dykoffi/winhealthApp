@@ -21,7 +21,6 @@ import GlobalContext, { Info } from "../../../global/context";
 
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import AddIcon from '@material-ui/icons/Add'
-import GetAppIcon from '@material-ui/icons/GetApp';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -148,7 +147,6 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
   function setcontactpersonnesure({ target: { value } }) { setinput({ ...inputs, contactpersonnesure: value }); }
   function setqualitepersonnesure({ target: { value } }) { setinput({ ...inputs, qualitepersonnesure: value }); }
 
-  function researching({ target: { value } }) { setvalue(value); thunkSearchPatient(value.trim()); }
   const handleClose = () => {
     setinput({
       nom: "",
@@ -240,7 +238,21 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             variant="outlined"
             size="small"
             label="Rechercher un patient"
-            onChange={(ev) => researching(ev)}
+            value={value}
+            onChange={({ target: { value } }) => {
+              let v = value
+                .replace("*", "")
+                .replace("+", "")
+                .replace("-", "")
+                .replace("/", "")
+                .replace("~", "")
+                .replace("~", "")
+                .replace(")", "")
+                .replace("(", "")
+                .replace("=", "")
+              setvalue(v);
+              thunkSearchPatient(v.trim());
+            }}
           />
           <div className="col">
             <Chip
@@ -259,23 +271,9 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                 textTransform: "none",
                 fontSize: "11px",
               }}
-              className={scanQR ? "red white-text" : ""}
+              className={scanQR ? "bg-danger white-text" : ""}
             >
               Scanner le code QR
-            </Button>
-            <Button
-              className="mx-2"
-              variant="contained"
-              startIcon={<GetAppIcon />}
-              // onClick={() => { setOpen(true); }}
-              style={{
-                textTransform: "none",
-                backgroundColor: global.theme.secondaryDark,
-                color: "white",
-                fontSize: "11px",
-              }}
-            >
-              Import CSV
             </Button>
             <Button
               variant="contained"
@@ -287,6 +285,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                 color: "white",
                 fontSize: "11px",
               }}
+              className="ml-2"
             >
               Ajouter un patient
             </Button>
@@ -329,6 +328,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
               </table>
             )}
         </div>
+        {/* Popup pour la creéation d'un patient */}
         <Dialog
           disableBackdropClick
           open={modalAdd}
@@ -670,6 +670,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             </Button>
           </DialogActions>
         </Dialog>
+        {/* Popup pour modifier un patient */}
         <Dialog
           disableBackdropClick
           open={modalModif}
@@ -1074,7 +1075,8 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
             </Button>
           </DialogActions>
         </Dialog>
-        {
+
+        { //Scanner un qr code pour avoir le dossier du patient
           scanQR && !modalModif && !modalAdd && <div style={{ position: "fixed", zIndex: "10001", right: "0.5cm", bottom: "0.5cm" }}
             className="bg-light col-2 d-flex p-0 flex-column border justify-content-center text-center align-items-center">
             <img src={qr} height={125} width={125} alt="" className="animated infinite flash" />
@@ -1093,11 +1095,8 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkModifPatient
                 }
               }}
             />
-            {/* {result === "false" && <Alert severity="error">Erreur</Alert>}
-          {result === "true" && <Alert severity="success">Transaction reussie</Alert>} */}
           </div>
         }
-
       </div>
     </div>
   );

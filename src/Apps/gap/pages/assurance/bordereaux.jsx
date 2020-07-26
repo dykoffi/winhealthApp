@@ -156,7 +156,7 @@ const Bordereau = ({
     };
     async function setAllMontant() {
         let list = listFacturesByAssurance
-            .filter(facture => facture.statutfactures === 'valide')
+            .filter(facture => facture.statutfacture === 'valide')
             .filter(facture => listFacturesValides.includes(facture.numerofacture))
         if (list.length !== 0) {
             console.log(list.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv),);
@@ -510,7 +510,7 @@ const Bordereau = ({
                                 "Part patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
                         </thead>
                         <tbody>
-                            {listFacturesByAssurance.filter(facture => facture.statutfactures === 'valide').map(
+                            {listFacturesByAssurance.filter(facture => facture.statutfacture === 'valide').map(
                                 ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
@@ -522,7 +522,7 @@ const Bordereau = ({
                                                 setListFacturesValides([...listFacturesValides])
                                                 settousSelectionner(false)
                                             } else {
-                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfactures === 'valide').length) {
+                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'valide').length) {
                                                     settousSelectionner(true)
                                                 }
                                                 setListFacturesValides([...listFacturesValides, numerofacture])
@@ -549,7 +549,7 @@ const Bordereau = ({
                             )}
                         </tbody>
                     </table>
-                    {listFacturesByAssurance.filter(facture => facture.statutfactures === 'valide').length !== 0 &&
+                    {listFacturesByAssurance.filter(facture => facture.statutfacture === 'valide').length !== 0 &&
                         <>
                             <div onClick={() => {
                                 if (tousSelectionner) {
@@ -558,7 +558,7 @@ const Bordereau = ({
                                 } else {
                                     setListFacturesValides(
                                         listFacturesByAssurance
-                                            .filter(facture => facture.statutfactures === 'valide')
+                                            .filter(facture => facture.statutfacture === 'valide')
                                             .map(facture => facture.numerofacture)
                                     )
                                     settousSelectionner(true)
@@ -601,7 +601,7 @@ const Bordereau = ({
                         variant="contained"
                         onClick={() => {
                             let list = listFacturesByAssurance
-                                .filter(facture => facture.statutfactures === 'valide')
+                                .filter(facture => facture.statutfacture === 'valide')
                                 .filter(facture => listFacturesValides.includes(facture.numerofacture))
                             if (list.length !== 0) {
                                 thunkAddBordereau(

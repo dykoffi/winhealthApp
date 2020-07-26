@@ -1,7 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import QR from "qrcode.react";
-
 const DetailsPatient = ({ currentPatient }) => {
   return (
     <div className="DetailsPatient bgcolor-primary text-white row p-3 border-left">
@@ -17,16 +15,6 @@ const DetailsPatient = ({ currentPatient }) => {
         <small>Nom et prenoms :{" "}<b>{currentPatient.nompersonnesurepatient}{" "}{currentPatient.prenomspersonnesurepatient}</b></small><br />
         <small>Qualité : <b>{currentPatient.qualitepersonnesurepatient}</b></small><br />
         <small>Contact : <b>{currentPatient.contactpersonnesurepatient}</b></small><br />
-      </div>
-      <div className="col d-flex justify-content-end">
-        <QR
-          value={currentPatient.ipppatient}
-          size={120}
-          fgColor="#ffffff"
-          bgColor='#0a7ec2e5'
-          style={{ transform: "scale(0.8)" }}
-          includeMargin={true}
-        />
       </div>
     </div>
   );

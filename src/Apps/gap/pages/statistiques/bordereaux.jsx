@@ -50,6 +50,9 @@ import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { separate } from "../../../global/functions";
+import { useSpeechSynthesis } from 'react-speech-kit';
+import useSpeechRecognition from "react-speech-kit/dist/useSpeechRecognition";
+
 const Transition = React.forwardRef(function Transition(props, ref) { return <Slide direction="up" ref={ref} {...props} />; });
 function PaperComponent(props) { return (<div className="row" {...props} ></div>); }
 function Alert(props) { return <MuiAlert elevation={6} variant="filled" {...props} />; }
@@ -97,6 +100,8 @@ const Bordereau = ({
     const [line, setline] = useState(null)
     const [bar, setbar] = useState(null)
 
+    //speech
+    const { speak } = useSpeechSynthesis();
 
     const [inputModifs, setinputModif] = useState({
         gestionnaire: "",
@@ -293,9 +298,32 @@ const Bordereau = ({
             }
         }))
     }, [listBordereaux, listAssurances])
+    // const { listen, listening, stop } = useSpeechRecognition({
+    //     onResult: (result) => {
+    //         sets(result)
+    //         if (result.match(/statistiques de ascoma/)) {
+    //             speak({ text: "Il n'existe aucune données statistiques, enregistrées avec ascoma. La seule données enregistrée, est celle de sounou assurance. Voulez vous l'afficher?" })
+    //         }
+    //         if (result.match(/ok/)) {
+    //             stop()
+    //             setstats(true)
+    //         }
+    //     },
+    // });
+    // const [s, sets] = useState("")
+    // const [stats, setstats] = useState(false)
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         speak({ text: "Bienvenue Monsieur Koffi sur les statistiques de winhealth. Que voulez vous faire ?" })
+    //         listen()
+    //     }, 1000);
+
+    // }, [listBordereaux])
+
 
     return (
         <div className="Facturesvalides row p-2">
+
             <div className="col-12 mb-2">
                 <div className="row mb-2 d-flex justify-content-center">
                     <Autocomplete
@@ -598,7 +626,7 @@ const Bordereau = ({
                                     ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture, commentairefacture }, i) => (
                                         <tr
                                             key={numerofacture}
-                                            style={{cursor:"default"}}
+                                            style={{ cursor: "default" }}
                                             className={erreurfacture === "warning" ? "bg-warning" : ""}
                                             title={commentairefacture}
                                         >
@@ -901,6 +929,11 @@ const Bordereau = ({
                     Chargement ...
                 </Alert>
             </Snackbar>
+            {/* <Snackbar open={true} onClose={() => setLoading(false)}>
+                <Alert variant='standard' severity="info" >
+                    {s}
+                </Alert>
+            </Snackbar> */}
         </div >
     );
 };

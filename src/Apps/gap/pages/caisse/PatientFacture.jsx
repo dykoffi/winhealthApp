@@ -236,12 +236,14 @@ const FacturePatient = ({
           </div>
         </>)
       }
-      {listFacturesPatient.length === 0 ? (
-        <div className="col-12 text-secondary text-center">
-          <h6 className="text-center lead">Aucune Patient sélectionné</h6>
-          <small>Veuillez en sélectionner un dans la liste déroulante</small>
-        </div>
-      ) : (
+      {listFacturesPatient
+        .filter(facture => facture.typefacture === 'original')
+        .length === 0 ? (
+          <div className="col-12 text-secondary text-center">
+            <h6 className="text-center lead">Aucune Patient sélectionné</h6>
+            <small>Veuillez en sélectionner un dans la liste déroulante</small>
+          </div>
+        ) : (
           <>
             <table className="col-10 table-sm table-sm table-hover table-striped">
               <thead style={{ backgroundColor: global.theme.secondaryDark }}>
@@ -255,28 +257,30 @@ const FacturePatient = ({
                 </tr>
               </thead>
               <tbody>
-                {listFacturesPatient.map(
-                  ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
-                    <tr key={i} style={{ cursor: "pointer" }}
-                      onClick={() => handleClickOpen(numerofacture)}
-                    >
-                      <td className="font-weight-bold">{i + 1}</td>
-                      <td className="font-weight-bold">{numerofacture}</td>
-                      <td>{datefacture}</td>
-                      <td>{heurefacture}</td>
-                      <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                      <td>{typesejour}</td>
-                      <td>{auteurfacture}</td>
-                      <td className="text-right">{separate(montanttotalfacture)}</td>
-                      <td className="text-right">{separate(partassurancefacture)}</td>
-                      <td className="text-right">{separate(resteassurancefacture)}</td>
-                      <td className="text-right">{separate(partpatientfacture)}</td>
-                      <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
-                        {separate(restepatientfacture)}
-                      </td>
-                    </tr>
-                  )
-                )}
+                {listFacturesPatient
+                  .filter(facture => facture.typefacture === 'original')
+                  .map(
+                    ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
+                      <tr key={i} style={{ cursor: "pointer" }}
+                        onClick={() => handleClickOpen(numerofacture)}
+                      >
+                        <td className="font-weight-bold">{i + 1}</td>
+                        <td className="font-weight-bold">{numerofacture}</td>
+                        <td>{datefacture}</td>
+                        <td>{heurefacture}</td>
+                        <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                        <td>{typesejour}</td>
+                        <td>{auteurfacture}</td>
+                        <td className="text-right">{separate(montanttotalfacture)}</td>
+                        <td className="text-right">{separate(partassurancefacture)}</td>
+                        <td className="text-right">{separate(resteassurancefacture)}</td>
+                        <td className="text-right">{separate(partpatientfacture)}</td>
+                        <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
+                          {separate(restepatientfacture)}
+                        </td>
+                      </tr>
+                    )
+                  )}
               </tbody>
             </table>
           </>

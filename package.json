@@ -4,8 +4,8 @@
   "private": true,
   "description": "Altea Winhealth App SIH",
   "author": {
-    "email": "koffiedy@gmail.com",
     "name": "Edy Koffi",
+    "email": "koffiedy@gmail.com",
     "url": "https://www.linkedin.com/in/edy-koffi-948494192/"
   },
   "contributors": [
@@ -60,6 +60,7 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "react-speech-kit": "^3.0.1",
     "react-text-mask": "^5.4.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",

@@ -88,7 +88,7 @@ const DownloadLink = ({
                     variant="contained"
                     onClick={() => showPDF(url)}
                     startIcon={<PrintIcon />}
-                    className="red text-white "
+                    className="bg-danger text-white "
                     style={{
                       textTransform: "none",
                       fontSize: "13px",
