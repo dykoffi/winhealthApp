@@ -285,6 +285,7 @@ export function thunkReportFacture(numeroFacture, data) {
         }).then(() => {
             switch (getState().pageReducer.currentPage) {
                 case "bordereaux":
+                    dispatch(thunkListBorderaux())
                     dispatch(thunkDetailsBorderau(getState().bordereauReducer.currentBordereau[0].numerobordereau));
                     dispatch(setShowCommentFacture(false));
                     dispatch(setLoading(false));

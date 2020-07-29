@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../../static/images/logoms2.jpg";
+import { Info } from "../../global/context";
 import QR from "qrcode.react";
 import {
   Page,
   Text,
   View,
   Document,
-  PDFDownloadLink,
+  BlobProvider,
   Image,
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
 import PrintIcon from "@material-ui/icons/Print";
 import { header } from "../../global/apiQuery";
-import { IconButton } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
+import { Button } from "@material-ui/core";
 
 Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
 Font.register({ family: "Roboto-Bold", src: `${header.local}/fonts/Roboto-Bold.ttf`, });
@@ -61,6 +61,7 @@ const DocFoot = ({ url }) => (
 
 const DownloadLink = ({
   code,
+  showPDF,
   sejour
 }) => {
   const [url, seturl] = useState(null);
@@ -75,7 +76,7 @@ const DownloadLink = ({
     <div className="row">
       <QR value={code} id="img" fgColor="#696969" includeMargin={true} style={{ display: "none" }} />
       {url && (
-        <PDFDownloadLink
+        <BlobProvider
           document={
             <Facture
               url={url}
@@ -109,14 +110,19 @@ const DownloadLink = ({
             loading ? (
               <small>...</small>
             ) : (
-                <>
-                  <IconButton aria-label="print" size="small" href={url} target="blank">
-                    <PrintIcon />
-                  </IconButton>
-                </>
+                <Button
+                  variant="contained"
+                  className="mb-2 mx-4 col"
+                  startIcon={<PrintIcon />}
+                  onClick={() => showPDF(url)}
+                  style={{
+                    textTransform: "none",
+                    fontSize: "11px",
+                  }}
+                >Imprimer la facture</Button>
               )
           }
-        </PDFDownloadLink>
+        </BlobProvider>
       )
       }
     </div >

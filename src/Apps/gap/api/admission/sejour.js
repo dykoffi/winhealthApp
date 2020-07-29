@@ -31,7 +31,6 @@ export function thunkListSejour(patient) {
         dispatch(setLoadingSejour())
         Axios({
             url: `${header.url}/gap/list/sejours/${patient}`,
-            timeout: header.timeout,
         })
             .then(({ data: { rows } }) => {
                 dispatch(setListSejour(rows))
@@ -48,7 +47,6 @@ export function thunkAddSejour(data, patient) {
             url: `${header.url}/gap/add/sejour/${patient}`,
             data: { ...data, ...user },
             headers: { "content-type": "application/x-www-form-urlencoded", },
-            timeout: header.timeout,
         })
             .then(() => {
                 socket.emit("facture_nouvelle")
@@ -65,7 +63,6 @@ export function thunkAddControle(numeroSejour, data, patient) {
             url: `${header.url}/gap/add/controle/${numeroSejour}`,
             data: { ...data },
             headers: { "content-type": "application/x-www-form-urlencoded", },
-            timeout: header.timeout,
         })
             .then(() => {
                 socket.emit("facture_nouvelle")
@@ -80,7 +77,6 @@ export function thunkDetailsSejour(numeroSejour) {
         dispatch(setLoadingSejour())
         Axios({
             url: `${header.url}/gap/details/sejour/${numeroSejour}`,
-            timeout: header.timeout,
         })
             .then(({ data: { rows } }) => {
                 rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
@@ -94,7 +90,6 @@ export function thunkCurrentFacture(patient) {
         dispatch(setLoadingSejour())
         Axios({
             url: `${header.url}/gap/imprimer/facture/${patient}`,
-            timeout: header.timeout,
         })
             .then(({ data: { rows } }) => {
                 rows[0] ? dispatch(currentSejour ? thunkDetailsSejour(currentSejour.numerosejour) : thunkDetailsSejour(rows[0].numerosejour)) : dispatch(setCurrentSejour(null))

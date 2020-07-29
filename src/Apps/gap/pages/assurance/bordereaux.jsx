@@ -6,7 +6,6 @@ import BordereauDoc from '../../documents/bordereau'
 import DateFnsUtils from "@date-io/date-fns";
 import frLocale from "date-fns/locale/fr";
 import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
 import {
     thunkListFacturesByAssurances,
     thunkAddBordereau,
@@ -33,7 +32,6 @@ import CancelIcon from "@material-ui/icons/CancelOutlined";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import PrintIcon from '@material-ui/icons/Print';
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit';
 import ListAltIcon from '@material-ui/icons/ListAlt';
@@ -237,6 +235,9 @@ const Bordereau = ({
             setListAssurance([{ value: "Tous", label: "Tous" }, ...Assurance]);
         });
     }, []);
+    useEffect(() => {
+        settousSelectionner(false)
+    }, [listFacturesByAssurance])
     useEffect(() => {
         setListFacturesValides([])
         setLoading(false)

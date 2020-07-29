@@ -66,11 +66,10 @@ export function thunkDetailsPatient(ipppatient) {
         dispatch(setLoading(true))
         Axios({
             url: `${header.url}/gap/details/patient/${ipppatient}`,
-            timeout: header.timeout
         })
             .then(({ data: { rows } }) => {
                 dispatch(setCurrentPatient(rows[0]))
-                dispatch(setModalModif(true))
+                dispatch(setCurrentPage("dossiersPatient"))
                 dispatch(setLoading(false))
             })
     }
@@ -81,7 +80,6 @@ export function thunkAddPatient(data) {
         dispatch(setLoading(true))
         Axios({
             url: `${header.url}/gap/add/patient`,
-            timeout: header.timeout,
             method: "POST",
             data: data,
             headers: { "content-type": "application/x-www-form-urlencoded", },
@@ -101,9 +99,9 @@ export function thunkModifPatient(data, ipppatient) {
             method: "POST",
             data: data,
             headers: { "content-type": "application/x-www-form-urlencoded", },
-            timeout: header.timeout
         }).then(({ data: { rows } }) => {
             dispatch(thunkListPatient())
+            dispatch(thunkDetailsPatient(ipppatient))
             dispatch(setModalModif(false))
             dispatch(setLoading(false))
         });
@@ -115,7 +113,6 @@ export function thunkDeletePatient(ipppatient) {
         dispatch(setLoading(true))
         Axios({
             url: `${header.url}/gap/delete/patient/${ipppatient}`,
-            timeout: header.timeout,
         })
             .then(({ data: { rows } }) => {
                 dispatch(thunkListPatient())

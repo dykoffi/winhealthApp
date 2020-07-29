@@ -108,10 +108,10 @@ const FacturesRecues = ({
         nomassurance: "Tous",
         nomgarant: "Tous",
         typeSejour: "Tous",
-        debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
-        finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
-        debutDate: new Date("01/01/2020"),
-        finDate: new Date("12/31/2020"),
+        debutDateString: moment("2020-01-01").format('DD-MM-YYYY'),
+        finDateString: moment("2020-12-31").format('DD-MM-YYYY'),
+        debutDate: new Date("2020-01-01"),
+        finDate: new Date("2020-12-31"),
     });
 
     const handleClose = () => {
@@ -120,10 +120,10 @@ const FacturesRecues = ({
             nomassurance: "Tous",
             nomgarant: "Tous",
             typeSejour: "Tous",
-            debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
-            finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
-            debutDate: new Date("01/01/2020"),
-            finDate: new Date("12/31/2020"),
+            debutDateString: moment("2020-01-01").format('DD-MM-YYYY'),
+            finDateString: moment("2020-12-31").format('DD-MM-YYYY'),
+            debutDate: new Date("2020-01-01"),
+            finDate: new Date("2020-12-31"),
         });
         setListFacturesRecues([])
         setListFacturesByAssurance([])
@@ -170,7 +170,9 @@ const FacturesRecues = ({
             setListAssurance(Assurance);
         });
     }, []);
-
+    useEffect(() => {
+        settousSelectionner(false)
+    }, [listFacturesByAssurance])
     useEffect(() => {
         setListFacturesRecues([])
     }, [inputs.nomassurance, inputs.typeSejour])
@@ -214,8 +216,8 @@ const FacturesRecues = ({
                     </div>
                     <div className="col d-flex justify-content-end p-0">
                         {
-                            listFactures.filter(facture => facture.statutfacture === 'attente').length !== 0 &&
-                            <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={listFactures.filter(facture => facture.statutfacture === 'attente')} />
+                            listFactures.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length !== 0 &&
+                            <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={listFactures.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original')} />
                         }
                         <Button
                             size='small'
@@ -228,9 +230,7 @@ const FacturesRecues = ({
                                 color: "white",
                                 fontSize: "11px",
                             }}
-                        >
-                            Nouvelles factures recues
-                        </Button>
+                        >Nouvelles factures recues</Button>
                     </div>
                 </div>
             </div>
@@ -301,7 +301,7 @@ const FacturesRecues = ({
                             <Autocomplete
                                 size="small"
                                 className="col-2 p-0"
-                                id="AssuranceList"
+                                id="AssuranceList1"
                                 defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
                                 onChange={(event, newValue) => {
@@ -317,6 +317,7 @@ const FacturesRecues = ({
                             />
                             <Autocomplete
                                 size="small"
+                                id="AssuranceList2"
                                 className="col-2 p-0 mx-2"
                                 defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
@@ -358,7 +359,7 @@ const FacturesRecues = ({
                             <small className="mx-2">Du</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datedebut" value={inputs.debutDate} defaultValue={new Date("01/01/2020")} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datedebut" value={inputs.debutDate} defaultValue={new Date("2020-01-01")} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setdebutDate(date)
                                             thunkListFacturesByAssurances({
@@ -373,7 +374,7 @@ const FacturesRecues = ({
                             <small className="mx-2">Au</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datefin" value={inputs.finDate} defaultValue={new Date("12/31/2020")} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datefin" value={inputs.finDate} defaultValue={new Date("2020-12-31")} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setfinDate(date)
                                             thunkListFacturesByAssurances({
@@ -546,7 +547,7 @@ const FacturesRecues = ({
                                 <Autocomplete
                                     size="small"
                                     className="col p-0"
-                                    id="assurancesList"
+                                    id="assurancesList1"
                                     options={listAssurances}
                                     defaultValue={{ value: currentFacture.idassurance, label: currentFacture.gestionnaire }}
                                     onChange={(event, newValue) => { setgestionnaire(newValue.label); }}
@@ -565,7 +566,7 @@ const FacturesRecues = ({
                                 <Autocomplete
                                     size="small"
                                     className="col p-0 ml-2"
-                                    id="assurancesList"
+                                    id="assurancesList2"
                                     defaultValue={{ value: currentFacture.idassurance, label: currentFacture.organisme }}
                                     options={listAssurances}
                                     onChange={(event, newValue) => { setorganisme(newValue.label); }}

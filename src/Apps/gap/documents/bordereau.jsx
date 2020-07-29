@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import logo from "../../../static/images/logoms2.jpg";
-import QR from "qrcode.react";
 import {
   Page,
   Text,
   View,
   Document,
-  PDFDownloadLink,
   BlobProvider,
   Image,
   StyleSheet,
@@ -46,11 +44,8 @@ const DocHead = ({ etablissement }) => (
   </View>
 );
 
-const DocFoot = ({ url }) => (
+const DocFoot = () => (
   <View style={{ flex: "auto", display: "flex", flexDirection: "row", alignItems: "center", padding: 10 }}>
-    {/* <View style={{ flex: "auto", }}>
-      <Image src={url} style={{ height: "2.5cm", width: "2.5cm" }} />
-    </View> */}
     <View style={{ flex: "auto", fontSize: 7, paddingLeft: 5, color: "grey", lineHeight: 1.5, }}>
       <Text>Fait à Abidjan le 25 juin 2019</Text>
       <Text>par Audrey Bogui</Text>
@@ -61,154 +56,132 @@ const DocFoot = ({ url }) => (
 );
 
 const DownloadLink = ({
-  code,
   bordereau,
   showPDF,
   cie
 }) => {
-  const [url, seturl] = useState(null);
-  useEffect(() => {
-    const canvas = document.getElementById("img");
-    const pngUrl = canvas
-      .toDataURL("image/png")
-      .replace("image/png", "image/octet-stream");
-    seturl(pngUrl);
-  }, []);
   return (
     <div className="row">
-      <QR value={code} id="img" fgColor="#696969" includeMargin={true} style={{ display: "none" }} />
-      {url && (
-        <BlobProvider document={<Facture url={url} bordereau={bordereau} cie={cie} />}>
-          {({ blob, url, loading, error }) =>
-            loading ? (
-              <small>...</small>
-            ) : (
-                <div className="pr-3">
-                  <Button
-                    variant="contained"
-                    className="mb-2 white-text mx-2 col"
-                    startIcon={<PrintIcon />}
-                    onClick={() => showPDF(url)}
-                    style={{
-                      textTransform: "none",
-                      fontSize: "13px",
-                      backgroundColor: Info.theme.primary
-                    }}
-                  >
-                    Imprimer le bordereau {cie && "(CIE)"}
-                  </Button>
-                </div>
-              )
-          }
-        </BlobProvider>
-      )
-      }
+
+      <BlobProvider document={<Facture bordereau={bordereau} cie={cie} />}>
+        {({ blob, url, loading, error }) =>
+          loading ? (
+            <small>...</small>
+          ) : (
+              <div className="pr-3">
+                <Button
+                  variant="contained"
+                  className="mb-2 white-text mx-2 col"
+                  startIcon={<PrintIcon />}
+                  onClick={() => showPDF(url)}
+                  style={{
+                    textTransform: "none",
+                    fontSize: "13px",
+                    backgroundColor: Info.theme.primary
+                  }}
+                >Imprimer le bordereau {cie && "(CIE)"}</Button>
+              </div>
+            )
+        }
+      </BlobProvider>
     </div >
   );
 };
 
-const Facture = ({
-  url,
-  bordereau,
-  cie
-}) => {
+const Facture = ({ bordereau, cie }) => {
   return (
-    <>
-      {url && (
-        <Document>
-          <Page size="A4" style={{ padding: 0, display: "flex", flexDirection: "column", }}>
-            <DocHead />
-            <View style={{ flex: "10", display: "flex", fontSize: 12, }}>
-              <Text style={{ ...styles.title, backgroundColor: "white", textAlign: "center", marginBottom: 10, marginTop: 10, fontSize: 17 }}>
-                Bordereau de factures N° {bordereau[0].numerobordereau}
-              </Text>
-              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View style={{ ...styles.content, justifyContent: 'flex-start' }}>
-                  <View style={{ ...styles.l, fontSize: 9 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau[0].gestionnairebordereau}</Text><Text> / {bordereau[0].organismebordereau}</Text></View>
-                  <View style={{ ...styles.l, fontSize: 8 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau.length} facture(s)</Text></View>
-                </View>
-                <View style={styles.content}>
-                  <View style={{ ...styles.l, fontSize: 9 }}><Text>Date : {bordereau[0].datecreationbordereau}</Text></View>
-                  <View style={{ ...styles.l, fontSize: 9 }}><Text>Heure : {bordereau[0].heurecreationbordereau}</Text></View>
-                  <View style={{ ...styles.l, fontSize: 8 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau[0].typesejourbordereau}</Text></View>
-                </View>
-              </View>
-              <View style={{ ...styles.content, fontSize: 9 }}>
-                <Text>
-                  Veuillez trouver en annexe les factures mentionnées ci-dessous dont le règlement devra nous parvenir, avec votre amabilité.
-                  Rappelez s'il vous plaît la référence du relevé au règlement.
+    <Document>
+      <Page size="A4" style={{ padding: 0, display: "flex", flexDirection: "column", }}>
+        <DocHead />
+        <View style={{ flex: "10", display: "flex", fontSize: 12, }}>
+          <Text style={{ ...styles.title, backgroundColor: "white", textAlign: "center", marginBottom: 10, marginTop: 10, fontSize: 17 }}>
+            Bordereau de factures N° {bordereau[0].numerobordereau}
+          </Text>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ ...styles.content, justifyContent: 'flex-start' }}>
+              <View style={{ ...styles.l, fontSize: 9 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau[0].gestionnairebordereau}</Text><Text> / {bordereau[0].organismebordereau}</Text></View>
+              <View style={{ ...styles.l, fontSize: 8 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau.length} facture(s)</Text></View>
+            </View>
+            <View style={styles.content}>
+              <View style={{ ...styles.l, fontSize: 9 }}><Text>Date : {bordereau[0].datecreationbordereau}</Text></View>
+              <View style={{ ...styles.l, fontSize: 9 }}><Text>Heure : {bordereau[0].heurecreationbordereau}</Text></View>
+              <View style={{ ...styles.l, fontSize: 8 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau[0].typesejourbordereau}</Text></View>
+            </View>
+          </View>
+          <View style={{ ...styles.content, fontSize: 9 }}>
+            <Text>
+              Veuillez trouver en annexe les factures mentionnées ci-dessous dont le règlement devra nous parvenir, avec votre amabilité.
+              Rappelez s'il vous plaît la référence du relevé au règlement.
                 </Text>
-              </View>
-              <View style={{ display: "flex", flex: 1, flexDirection: "column", }}>
-                <View style={{ ...styles.content, flex: 1, display: 'flex', flexDirection: 'column', }}>
-                  <View style={{ ...styles.l, justifyContent: 'space-between', flexFlow: 'row wrap', alignItems: 'stretch' }}>
-                    <View style={styles.column}>
-                      <Text style={styles.tr}>Date</Text>
-                      {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.datefacture}</Text>)}
-                    </View>
-                    {cie ?
-                      <View style={styles.column}>
-                        <Text style={styles.tr}>Nom et prenom de l'agent</Text>
-                        {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.assureprinc}</Text>)}
-                      </View>
-                      :
-                      <View style={styles.column}>
-                        <Text style={styles.tr}>Nom et prénom du patient</Text>
-                        {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.nompatient} {bordereau.prenomspatient}</Text>)}
-                      </View>
-                    }
-                    <View style={styles.column}>
-                      <Text style={styles.tr}>N° Facture</Text>
-                      {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.numerofacture}</Text>)}
-                    </View>
-                    <View style={styles.column}>
-                      <Text style={styles.tr}>N° BON</Text>
-                      {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.numeropec}</Text>)}
-                    </View>
-                    {cie ?
-                      <View style={styles.column}>
-                        <Text style={styles.tr}>Nom et prénom du patient</Text>
-                        {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.nompatient} {bordereau.prenomspatient}</Text>)}
-                      </View>
-                      :
-                      <View style={styles.column}>
-                        <Text style={styles.tr}>Nom et prenom du medecin</Text>
-                        {bordereau.map(bordereau => <Text style={{ ...styles.line }}>Audrey Bogui</Text>)}
-                      </View>
-                    }
-                    <View style={styles.column}>
-                      <Text style={styles.tr}>Matricule</Text>
-                      {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.matriculeassure}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>TOTAL</Text>
-                    </View>
-                    <View style={styles.column}>
-                      <Text style={styles.tr}>Montant facturé</Text>
-                      {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.montanttotalfacture}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.montanttotalfacture).reduce((acc, curv) => acc + curv)}</Text>
-                    </View>
-                    <View style={styles.column}>
-                      <Text style={styles.tr}>Part Patient</Text>
-                      {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.partpatientfacture}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partpatientfacture).reduce((acc, curv) => acc + curv)}</Text>
-                    </View>
-                    <View style={styles.column}>
-                      <Text style={styles.tr}>Net à payer</Text>
-                      {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.partassurancefacture}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partassurancefacture).reduce((acc, curv) => acc + curv)}</Text>
-                    </View>
-                  </View>
-                  <View>
-                    <Text>Arrêté le présent relevé à la somme de : </Text>
-                    <Text>trois cent soixante-treize mille cinq cents francs CFA</Text>
-                  </View>
+          </View>
+          <View style={{ display: "flex", flex: 1, flexDirection: "column", }}>
+            <View style={{ ...styles.content, flex: 1, display: 'flex', flexDirection: 'column', }}>
+              <View style={{ ...styles.l, justifyContent: 'space-between', flexFlow: 'row wrap', alignItems: 'stretch' }}>
+                <View style={styles.column}>
+                  <Text style={styles.tr}>Date</Text>
+                  {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.datefacture}</Text>)}
                 </View>
+                {cie ?
+                  <View style={styles.column}>
+                    <Text style={styles.tr}>Nom et prenom de l'agent</Text>
+                    {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.assureprinc}</Text>)}
+                  </View>
+                  :
+                  <View style={styles.column}>
+                    <Text style={styles.tr}>Nom et prénom du patient</Text>
+                    {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.nompatient} {bordereau.prenomspatient}</Text>)}
+                  </View>
+                }
+                <View style={styles.column}>
+                  <Text style={styles.tr}>N° Facture</Text>
+                  {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.numerofacture}</Text>)}
+                </View>
+                <View style={styles.column}>
+                  <Text style={styles.tr}>N° BON</Text>
+                  {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.numeropec}</Text>)}
+                </View>
+                {cie ?
+                  <View style={styles.column}>
+                    <Text style={styles.tr}>Nom et prénom du patient</Text>
+                    {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.nompatient} {bordereau.prenomspatient}</Text>)}
+                  </View>
+                  :
+                  <View style={styles.column}>
+                    <Text style={styles.tr}>Nom et prenom du medecin</Text>
+                    {bordereau.map(bordereau => <Text style={{ ...styles.line }}>Audrey Bogui</Text>)}
+                  </View>
+                }
+                <View style={styles.column}>
+                  <Text style={styles.tr}>Matricule</Text>
+                  {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.matriculeassure}</Text>)}
+                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>TOTAL</Text>
+                </View>
+                <View style={styles.column}>
+                  <Text style={styles.tr}>Montant facturé</Text>
+                  {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.montanttotalfacture}</Text>)}
+                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.montanttotalfacture).reduce((acc, curv) => acc + curv)}</Text>
+                </View>
+                <View style={styles.column}>
+                  <Text style={styles.tr}>Part Patient</Text>
+                  {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.partpatientfacture}</Text>)}
+                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partpatientfacture).reduce((acc, curv) => acc + curv)}</Text>
+                </View>
+                <View style={styles.column}>
+                  <Text style={styles.tr}>Net à payer</Text>
+                  {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.partassurancefacture}</Text>)}
+                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partassurancefacture).reduce((acc, curv) => acc + curv)}</Text>
+                </View>
+              </View>
+              <View>
+                <Text>Arrêté le présent relevé à la somme de : </Text>
+                <Text>trois cent soixante-treize mille cinq cents francs CFA</Text>
               </View>
             </View>
-            <DocFoot url={url} />
-          </Page>
-        </Document>
-      )}
-    </>
+          </View>
+        </View>
+        <DocFoot />
+      </Page>
+    </Document>
   );
 };
 

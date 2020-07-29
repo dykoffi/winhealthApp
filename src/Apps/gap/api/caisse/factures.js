@@ -57,7 +57,6 @@ export function thunkListFactures() {
     return async (dispatch) => {
         Axios({ url: `${header.url}/gap/list/factures` })
             .then(({ data: { rows } }) => {
-                console.log(rows);
                 dispatch(setListFactures(rows))
             })
     }

@@ -9,21 +9,18 @@ import Axios from "axios";
 
 const Gap = () => {
   const [result, setresult] = useState(null)
-  const [url, seturl] = useState(null)
   const [facture, setfacture] = useState(null)
   useEffect(() => {
     socket.on("project_facture", (facture) => {
-      console.log(facture);
       setfacture(facture)
     })
-
   }, [])
   return (
     <div className="col-12 page grey darken-4" id="qr">
       {
         !facture ? (
           <div className="row d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-            <img src={logo} className="infinite animated pulse" alt="" style={{height:150}} />
+            <img src={logo} className="infinite animated pulse" alt="" style={{ height: 150 }} />
           </div>
         ) : (
             <div className="row">
