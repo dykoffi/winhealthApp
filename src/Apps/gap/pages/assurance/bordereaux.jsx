@@ -882,7 +882,7 @@ const Bordereau = ({
                         }}
                     >Fermer</Button>
                     {currentBordereau.filter(b => b.erreurfacture === "warning").length === 0 && currentBordereau[0].statutbordereau !== "Rejeté" &&
-                        <BordereauDoc showPDF={showPDF} code={``} bordereau={currentBordereau} cie={cie} />
+                        <BordereauDoc showPDF={showPDF} bordereau={currentBordereau} cie={cie} />
                     }
                     <Button
                         variant="contained"

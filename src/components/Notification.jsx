@@ -16,7 +16,7 @@ const Notification = ({ title, cancel, valid, children }) => {
             onClick={() => cancel()}
             className="btn-sm btn btn-light mr-1"
           >
-            Plus tard
+            Fermer
           </button>
         )}
         {valid && (

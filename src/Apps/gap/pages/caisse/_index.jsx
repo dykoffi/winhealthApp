@@ -7,7 +7,7 @@ import Notif from "../../../../components/Notification";
 
 //import des action creators
 import { setCurrentPage, setNotification } from "../../api/caisse/pages";
-import { socket } from "../../../global/apiQuery";
+import { socket, header } from "../../../global/apiQuery";
 import { Snackbar } from "@material-ui/core";
 
 const Caisse = ({
@@ -19,8 +19,8 @@ const Caisse = ({
 }) => {
   useEffect(() => {
     sendTitle("Caisse");
-    const son = new Audio("../../../../static/son.mp3");
     socket.on("facture_nouvelle", () => {
+      let son = new Audio(`${header.url}/son.mp3`);
       son.play();
       setNotification(true);
     });

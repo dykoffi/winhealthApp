@@ -314,7 +314,7 @@ const Bordereau = ({
     // const [stats, setstats] = useState(false)
     // useEffect(() => {
     //     setTimeout(() => {
-    //         speak({ text: "Bienvenue Monsieur Koffi sur les statistiques de winhealth. Que voulez vous faire ?" })
+    //         speak({ text: "Bienvenue Monsieur, sur les statistiques de winhealth. Que voulez vous faire ?" })
     //         listen()
     //     }, 1000);
 

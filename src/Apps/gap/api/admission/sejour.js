@@ -5,23 +5,26 @@ import { Info } from "../../../global/context"
 const initState = {
     listSejour: [],
     currentSejour: null,
+    currentFacture: null,
     detailsSejour: null,
     loadingSejour: false
 }
 const SET_LIST_SEJOUR = "SET_LIST_SEJOUR"
 const SET_CURRENT_SEJOUR = "SET_CURRENT_SEJOUR"
+const SET_CURRENT_FACTURE = "SET_CURRENT_FACTURE"
 const SET_DETAILS_SEJOUR = "SET_DETAILS_SEJOUR"
 const SET_LOADING_SEJOUR = "SET_LOADING_SEJOUR"
-const setListSejour = (data) => ({ type: SET_LIST_SEJOUR, loadingSejour: false, listSejour: data })
-const setCurrentSejour = (sejour) => ({ type: SET_CURRENT_SEJOUR, currentSejour: sejour, loadingSejour: false })
-const setDetailsSejour = (sejour) => ({ type: SET_DETAILS_SEJOUR, detailsSejour: sejour, loadingSejour: false })
-const setLoadingSejour = () => ({ type: SET_LOADING_SEJOUR, loadingSejour: true })
+const setListSejour = (data) => ({ type: SET_LIST_SEJOUR, listSejour: data })
+const setCurrentSejour = (sejour) => ({ type: SET_CURRENT_SEJOUR, currentSejour: sejour })
+const setCurrentFacture = (facture) => ({ type: SET_CURRENT_FACTURE, currentFacture: facture })
+const setLoadingSejour = () => ({ type: SET_LOADING_SEJOUR })
 const sejourReducer = (state = initState, action) => {
     switch (action.type) {
-        case SET_LIST_SEJOUR: return { ...state, listSejour: action.listSejour, loadingSejour: action.loadingSejour }
-        case SET_DETAILS_SEJOUR: return { ...state, detailsSejour: action.detailsSejour, loadingSejour: action.loadingSejour }
+        case SET_LIST_SEJOUR: return { ...state, listSejour: action.listSejour }
+        case SET_DETAILS_SEJOUR: return { ...state, detailsSejour: action.detailsSejour }
         case SET_LOADING_SEJOUR: return { ...state, loadingSejour: action.loadingSejour }
-        case SET_CURRENT_SEJOUR: return { ...state, currentSejour: action.currentSejour, loadingSejour: action.loadingSejour }
+        case SET_CURRENT_SEJOUR: return { ...state, currentSejour: action.currentSejour }
+        case SET_CURRENT_FACTURE: return { ...state, currentFacture: action.currentFacture }
         default: return state
     }
 }
@@ -51,7 +54,6 @@ export function thunkAddSejour(data, patient) {
             .then(() => {
                 socket.emit("facture_nouvelle")
                 dispatch(thunkListSejour(patient))
-                dispatch(thunkCurrentFacture(patient))
             })
     }
 }
@@ -67,7 +69,6 @@ export function thunkAddControle(numeroSejour, data, patient) {
             .then(() => {
                 socket.emit("facture_nouvelle")
                 dispatch(thunkListSejour(patient))
-                dispatch(thunkCurrentFacture(patient))
             })
     }
 }
@@ -79,20 +80,13 @@ export function thunkDetailsSejour(numeroSejour) {
             url: `${header.url}/gap/details/sejour/${numeroSejour}`,
         })
             .then(({ data: { rows } }) => {
-                rows[0] ? dispatch(setCurrentSejour(rows[0])) : dispatch(setCurrentSejour(null))
-            })
-    }
-}
-
-export function thunkCurrentFacture(patient) {
-    return async (dispatch, getState) => {
-        const { sejourReducer: { currentSejour } } = getState()
-        dispatch(setLoadingSejour())
-        Axios({
-            url: `${header.url}/gap/imprimer/facture/${patient}`,
-        })
-            .then(({ data: { rows } }) => {
-                rows[0] ? dispatch(currentSejour ? thunkDetailsSejour(currentSejour.numerosejour) : thunkDetailsSejour(rows[0].numerosejour)) : dispatch(setCurrentSejour(null))
+                if (rows[0]) {
+                    dispatch(setCurrentSejour(rows[0]))
+                    dispatch(setCurrentFacture(rows))
+                } else {
+                    dispatch(setCurrentSejour(null))
+                    dispatch(setCurrentFacture(null))
+                }
             })
     }
 }

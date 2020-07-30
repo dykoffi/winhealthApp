@@ -288,7 +288,7 @@ export function thunkReportFacture(numeroFacture, data) {
                     dispatch(thunkListBorderaux())
                     dispatch(thunkDetailsBorderau(getState().bordereauReducer.currentBordereau[0].numerobordereau));
                     dispatch(setShowCommentFacture(false));
-                    dispatch(setLoading(false));
+                    dispatch(setShowDetailsFacture(false))
                     break;
                 case "facturesValides":
                     dispatch(thunkListFactures())

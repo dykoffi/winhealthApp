@@ -62,7 +62,7 @@ const DocFoot = ({ url }) => (
 const DownloadLink = ({
   code,
   showPDF,
-  sejour
+  facture
 }) => {
   const [url, seturl] = useState(null);
   useEffect(() => {
@@ -79,29 +79,8 @@ const DownloadLink = ({
         <BlobProvider
           document={
             <Facture
-              url={url}
-              nompatient={sejour.nompatient}
-              prenomspatient={sejour.prenomspatient}
-              datenaissancepatient={sejour.datenaissancepatient}
-              ipppatient={sejour.ipppatient}
-              lieunaissancepatient={sejour.lieunaissancepatient}
-              habitationpatient={sejour.habitationpatient}
-              numerofacture={sejour.numerofacture}
-              datefacture={sejour.datefacture}
-              heurefacture={sejour.heurefacture}
-              auteurfacture={sejour.auteurfacture}
-              datedebutsejour={sejour.datedebutsejour}
-              datefinsejour={sejour.datefinsejour}
-              heuredebutsejour={sejour.heuredebutsejour}
-              heurefinsejour={sejour.heurefinsejour}
-              typesejour={sejour.typesejour}
-              libelleacte={sejour.libelleacte}
-              prixacte={sejour.prixacte}
-              gestionnaire={sejour.gestionnaire}
-              organisme={sejour.organisme}
-              taux={sejour.taux}
-              assureprinc={sejour.assureprinc}
-              numerosejour={sejour.numerosejour}
+              facture={facture}
+              url={code}
             />
           }
           fileName="somename.pdf"
@@ -130,35 +109,8 @@ const DownloadLink = ({
 };
 
 const Facture = ({
-  //patient
-  nompatient,
-  prenomspatient,
-  datenaissancepatient,
-  ipppatient,
-  lieunaissancepatient,
-  habitationpatient,
-  url,
-  //facture
-  numerofacture,
-  datefacture,
-  heurefacture,
-  auteurfacture,
-  //sejour
-  datedebutsejour,
-  datefinsejour,
-  heuredebutsejour,
-  heurefinsejour,
-  typesejour,
-  numerosejour,
-  //acte
-  libelleacte,
-  prixacte,
-
-  //assurance
-  gestionnaire,
-  organisme,
-  taux,
-  assureprinc
+  facture,
+  url
 }) => {
   return (
     <>
@@ -169,32 +121,32 @@ const Facture = ({
             <View style={{ flex: "auto", display: "flex", flexDirection: 'row', justifyContent: "space-around", fontSize: 12, }}>
               <View style={styles.content}>
                 <Text style={styles.title}>PATIENT(E)</Text>
-                <View style={styles.l}><Text>IPP : </Text><Text>{ipppatient}</Text></View>
-                <View style={styles.l}><Text>NOM : </Text><Text>{nompatient} {prenomspatient}</Text></View>
-                <View style={styles.l}><Text>NAISSANCE :  </Text><Text>{datenaissancepatient} à {lieunaissancepatient}</Text></View>
-                <View style={styles.l}><Text>DOMICILE : </Text><Text>{habitationpatient}</Text></View>
+                <View style={styles.l}><Text>IPP : </Text><Text>{facture[0].ipppatient}</Text></View>
+                <View style={styles.l}><Text>NOM : </Text><Text>{facture[0].nompatient} {facture[0].prenomspatient}</Text></View>
+                <View style={styles.l}><Text>NAISSANCE :  </Text><Text>{facture[0].datenaissancepatient} à {facture[0].lieunaissancepatient}</Text></View>
+                <View style={styles.l}><Text>DOMICILE : </Text><Text>{facture[0].habitationpatient}</Text></View>
               </View>
               <View style={styles.content}>
-                <Text style={styles.title}>SEJOUR DU {datedebutsejour === datefinsejour ? datedebutsejour : <>{datedebutsejour} AU {datefinsejour}</>}</Text>
-                <View style={styles.l}><Text>N° DE SEJOUR : </Text><Text>{numerosejour}</Text></View>
-                <View style={styles.l}><Text>ENTRÉ(E) À :  </Text><Text>{heuredebutsejour}</Text></View>
-                <View style={styles.l}><Text>SORTI(E) À :  </Text><Text>{heurefinsejour}</Text></View>
-                <View style={styles.l}><Text>TYPE DE SEJOUR : </Text><Text>{typesejour}</Text></View>
+                <Text style={styles.title}>SEJOUR DU {facture[0].datedebutsejour === facture[0].datefinsejour ? facture[0].datedebutsejour : <>{facture[0].datedebutsejour} AU {facture[0].datefinsejour}</>}</Text>
+                <View style={styles.l}><Text>N° DE SEJOUR : </Text><Text>{facture[0].numerosejour}</Text></View>
+                <View style={styles.l}><Text>ENTRÉ(E) À :  </Text><Text>{facture[0].heuredebutsejour}</Text></View>
+                <View style={styles.l}><Text>SORTI(E) À :  </Text><Text>{facture[0].heurefinsejour}</Text></View>
+                <View style={styles.l}><Text>TYPE DE SEJOUR : </Text><Text>{facture[0].typesejour}</Text></View>
               </View>
-              {gestionnaire.trim() !== "" &&
+              {facture[0].gestionnaire.trim() !== "" &&
                 <View style={styles.content}>
                   <Text style={styles.title}>ASSURANCE</Text>
-                  <View style={styles.l}><Text>Gestionnaire : </Text><Text>{gestionnaire}</Text></View>
-                  <View style={styles.l}><Text>Organisme : </Text><Text>{organisme}</Text></View>
-                  <View style={styles.l}><Text>Assure Princ :  </Text><Text>{assureprinc}</Text></View>
-                  <View style={styles.l}><Text>Exonération : </Text><Text>{taux}%</Text></View>
+                  <View style={styles.l}><Text>Gestionnaire : </Text><Text>{facture[0].gestionnaire}</Text></View>
+                  <View style={styles.l}><Text>Organisme : </Text><Text>{facture[0].organisme}</Text></View>
+                  <View style={styles.l}><Text>Assure Princ :  </Text><Text>{facture[0].assureprinc}</Text></View>
+                  <View style={styles.l}><Text>Exonération : </Text><Text>{facture[0].taux}%</Text></View>
                 </View>
               }
 
             </View>
             <View style={{ flex: "10", display: "flex", fontSize: 12, }}>
               <Text style={{ ...styles.title, backgroundColor: "white", textAlign: "center", marginBottom: 10, marginTop: 10, fontSize: 14 }}>
-                FACTURE N° {numerofacture} DU {datefacture}
+                FACTURE N° {facture[0].numerofacture} DU {facture[0].datefacture}
               </Text>
               <View style={{ display: "flex", flex: 1, flexDirection: "column" }}>
                 <View style={{ ...styles.content, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
@@ -210,14 +162,22 @@ const Facture = ({
                     <Text>Part Patient</Text>
                     <Text>Total</Text>
                   </View>
+                  {
+                    facture.map((f, i) =>
+                      <View style={styles.l}>
+                        <Text>{f.libelleacte}</Text>
+                        <Text>{f.prixacte} FCFA</Text>
+                      </View>
+                    )
+                  }
                   <View style={styles.l}>
-                    <Text>{libelleacte}</Text>
-                    <Text>{prixacte} FCFA</Text>
+                    <Text>{facture[0].libelleacte}</Text>
+                    <Text>{facture[0].prixacte} FCFA</Text>
                   </View>
                 </View>
                 <View style={{ ...styles.l, fontSize: 15, marginBottom: 25, backgroundColor: "#fafafa", padding: 15, flex: 'auto' }}>
                   <Text>TOTAL </Text>
-                  <Text style={{ fontFamily: "Roboto-Bold", }}>{prixacte} FCFA</Text>
+                  <Text style={{ fontFamily: "Roboto-Bold", }}>{facture[0].montanttotalfacture} FCFA</Text>
                 </View>
               </View>
             </View>

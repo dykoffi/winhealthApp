@@ -193,8 +193,9 @@ const Facturesvalides = ({
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfacture, erreurfacture }, i) => (
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfacture, erreurfacture, commentairefacture }, i) => (
                             <tr
+                                title={commentairefacture}
                                 key={i}
                                 className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
                                 style={{ cursor: statutfacture === 'valide' ? "pointer" : "default" }}

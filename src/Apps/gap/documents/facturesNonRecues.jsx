@@ -23,6 +23,7 @@ const DocHead = ({ etablissement }) => (
       flex: "auto",
       display: "flex",
       paddingBottom: 8,
+      padding:20,
       flexDirection: "row",
     }}
   >
@@ -88,7 +89,7 @@ const DownloadLink = ({
 const Facture = ({ facture }) => {
   return (
     <Document>
-      <Page size="A4" style={{ padding: 20, display: "flex", flexDirection: "column", }}>
+      <Page size="A4" style={{padding: 0,display: "flex", flexDirection: "column", }}>
         <DocHead />
         <View style={{ flex: "10", display: "flex", fontSize: 12, }}>
           <Text style={{ ...styles.title, backgroundColor: "white", textAlign: "center", marginBottom: 10, marginTop: 10, fontSize: 17 }}>
@@ -96,7 +97,7 @@ const Facture = ({ facture }) => {
               </Text>
           <View style={{ ...styles.content, fontSize: 9 }}>
             <Text style={{ textAlign: 'center' }}>
-              Veuillez trouver en annexe les factures mentionnées ci-dessous dont la reception n'a pas été effectuée.
+              Veuillez trouver ci-dessous les factures dont la reception n'a pas été effectuée.
                 </Text>
           </View>
           <View style={{ display: "flex", flex: 1, flexDirection: "column", }}>

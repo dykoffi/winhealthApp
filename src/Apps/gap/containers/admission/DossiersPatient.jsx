@@ -19,7 +19,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { header } from "../../../global/apiQuery";
 import GlobalContext, { Info } from "../../../global/context";
-import { thunkAddSejour, thunkCurrentFacture, thunkDetailsSejour, thunkListSejour } from "../../api/admission/sejour";
+import { thunkAddSejour, thunkDetailsSejour, thunkListSejour } from "../../api/admission/sejour";
 import Facture from "../../documents/Facture";
 function PaperComponent(props) { return (<div className="row" {...props} ></div>); }
 const Input = withStyles({
@@ -41,10 +41,10 @@ const DossiersPatient = ({
   thunkListSejour,
   thunkAddSejour,
   thunkDetailsSejour,
-  thunkCurrentFacture,
   currentPatient,
   listSejour,
   currentSejour,
+  currentFacture
 }) => {
   moment.locales("fr");
   const global = useContext(GlobalContext);
@@ -84,7 +84,7 @@ const DossiersPatient = ({
   });
 
   const columns = [
-    "N° Sejour",
+    "N° Séjour",
     "Date et heure de début",
     "Date et heure de fin",
     "Type de séjour",
@@ -128,11 +128,11 @@ const DossiersPatient = ({
   function setgestionnaire(value) { setinput({ ...inputs, gestionnaire: value }); }
   function setorganisme(value) { setinput({ ...inputs, organisme: value }); }
   function setbeneficiaire({ target: { value } }) {
-    alert(value)
     if (value === "assuré") {
-      setassurePrinc({ target: { value: currentPatient.nompatient + " " + currentPatient.prenomspatient } });
+      setinput({ ...inputs, beneficiaire: value, assurePrinc: `${currentPatient.nompatient} ${currentPatient.prenomspatient}` })
+    } else {
+      setinput({ ...inputs, beneficiaire: value });
     }
-    setinput({ ...inputs, beneficiaire: value });
   }
   function setassurePrinc({ target: { value } }) { setinput({ ...inputs, assurePrinc: value }); }
   function setmatriculeAssure({ target: { value } }) { setinput({ ...inputs, matriculeAssure: value }); }
@@ -180,7 +180,6 @@ const DossiersPatient = ({
   }, []);
   useEffect(() => {
     thunkListSejour(currentPatient.iddossier);
-    thunkCurrentFacture(currentPatient.iddossier)
   },
     [currentPatient.iddossier]);
   return (
@@ -192,7 +191,7 @@ const DossiersPatient = ({
               <div className="row" style={{ fontSize: "14.5px" }}>
                 <div className="col-3">
                   <h6>Sejour</h6>
-                  <small><b>N° du sejour :</b> {currentSejour.numerosejour}</small><br />
+                  <small><b>N° du séjour :</b> {currentSejour.numerosejour}</small><br />
                   <small><b>Date de debut :</b> {currentSejour.datedebutsejour}{" "}{currentSejour.heuredebutsejour}</small><br />
                   <small><b>Date de fin :</b> {currentSejour.datefinsejour}{" "}{currentSejour.heurefinsejour}</small><br />
                   <small><b>Type du séjour :</b> {currentSejour.typesejour}</small>
@@ -215,7 +214,7 @@ const DossiersPatient = ({
                 }
                 <div className="col d-flex align-items-end justify-content-end">
                   <div className="row">
-                    <Facture sejour={currentSejour} showPDF={showPDF} code={``} />
+                    <Facture facture={currentFacture} showPDF={showPDF} code={`WINHEALTH`} />
                     {/* {2 - currentSejour.nbcontrole > 0 && (
                       <Button
                         variant="contained"
@@ -241,7 +240,7 @@ const DossiersPatient = ({
             className="col-2 mr-1"
             variant="outlined"
             size="small"
-            label="Rechercher un sejour"
+            label="Rechercher un séjour"
           />
           <Chip
             className="mx-1"
@@ -250,9 +249,7 @@ const DossiersPatient = ({
               <Avatar
                 className="white-text"
                 style={{ backgroundColor: global.theme.primary }}
-              >
-                {listSejour.length}
-              </Avatar>
+              >{listSejour.length}</Avatar>
             }
           />
           <div className="col d-flex justify-content-end p-0">
@@ -281,7 +278,7 @@ const DossiersPatient = ({
               key={i}
               style={{ cursor: "pointer" }}
               onClick={() => thunkDetailsSejour(numerosejour)}
-              className={currentSejour && currentSejour.idsejour === idsejour && "bgcolor-primary font-weight-bold white-text"}
+              className={currentSejour && currentSejour.idsejour === idsejour ? "bgcolor-primary font-weight-bold white-text" : ""}
             >
               <td>{numerosejour}</td>
               <td>{datedebutsejour} {heuredebutsejour}</td>
@@ -304,14 +301,14 @@ const DossiersPatient = ({
           maxWidth="md"
         >
           <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
-            <b>Ajouter un nouveau sejour</b>
+            <b>Ajouter un nouveau séjour</b>
           </DialogTitle>
           <DialogContent>
             <div className="row">
               <div className="col-12">
                 <div className="row mx-1 my-2">
                   <div className="col">
-                    <small className="font-weight-bold">Debut du sejour</small>
+                    <small className="font-weight-bold">Debut du séjour</small>
                     <MuiPickersUtilsProvider
                       utils={DateFnsUtils}
                       locale={frLocale}
@@ -337,7 +334,7 @@ const DossiersPatient = ({
                     </MuiPickersUtilsProvider>
                   </div>
                   <div className="col">
-                    <small className="font-weight-bold">Fin du sejour</small>
+                    <small className="font-weight-bold">Fin du séjour</small>
                     <MuiPickersUtilsProvider
                       utils={DateFnsUtils}
                       locale={frLocale}
@@ -363,14 +360,14 @@ const DossiersPatient = ({
                     </MuiPickersUtilsProvider>
                   </div>
                   <div className="col">
-                    <small className="font-weight-bold">Informations du sejour</small>
+                    <small className="font-weight-bold">Informations du séjour</small>
                     <FormControl variant="outlined" size="small" className="col-12 mt-3 mb-1">
-                      <InputLabel id="typesejour-label">Type de sejour</InputLabel>
+                      <InputLabel id="typesejour-label">Type de séjour</InputLabel>
                       <Select
                         labelId="typesejour-label"
                         id="typesejour"
                         onChange={settype}
-                        label="Type de sejour"
+                        label="Type de séjour"
                         style={{ fontSize: "12px" }}
                       >
                         <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
@@ -392,7 +389,7 @@ const DossiersPatient = ({
                         labelId="typesejour-label"
                         id="typesejour"
                         onChange={setmedecin}
-                        label="Type de sejour"
+                        label="Type de séjour"
                         style={{ fontSize: "12px" }}
                       >
                         <MenuItem style={{ fontSize: "12px" }} value={"KOFFI Edy"}>KOFFI Edy</MenuItem>
@@ -403,130 +400,6 @@ const DossiersPatient = ({
                     </FormControl>
                   </div>
                 </div>
-                {/* <div className="row my-3 mx-1">
-                  <Autocomplete
-                    multiple
-                    size="small"
-                    className="col-12 p-0"
-                    id="actesList"
-                    options={listActes}
-                    onChange={(event, newValue) => {
-                      newValue && setActes(newValue.map((elt) => elt.value));
-                    }}
-                    getOptionLabel={(option) => `(${option.value}) ${option.label}`}
-                    filterSelectedOptions
-                    renderOption={(option) => (<>
-                      <small style={{ fontSize: "12px" }}>{option.label}</small>
-                    </>)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Actes"
-                        placeholder="Ajouter ..."
-                      />
-                    )}
-                  />
-                </div> */}
-                <table className="col-12 table-sm mx-1 mt-2">
-                  <thead className="p-2" style={{ backgroundColor: global.theme.primary }}>
-                    <tr className="p-2">{[
-                      "Code",
-                      "Prix U",
-                      "Plafond Assu",
-                      "Qte",
-                      "Prix T",
-                      ""
-                    ].map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
-                  </thead>
-                  <tbody>
-                    {listActesDef.map((actes, i) =>
-                      <tr key={i} >
-                        <td className="col-7">
-                          <Autocomplete
-                            size="small"
-                            className="col p-0"
-                            id="actesList"
-                            options={listActes}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                let listTemp = [...listActesDef]
-                                listTemp[i] =
-                                  [
-                                    newValue.codeacte, //codeActe
-                                    newValue.prixacte,//prixUnitaire
-                                    newValue.prixacte,//plafondAssurance
-                                    1,//quantite
-                                    newValue.prixacte//prixTotal
-                                  ]
-                                setListActesDef(listTemp)
-                              }
-                            }}
-                            getOptionLabel={(acte) => `(${acte.codeacte}) ${acte.libelleacte}`}
-                            filterSelectedOptions
-                            renderOption={(acte) => (<>
-                              <small style={{ fontSize: "12px" }}>{acte.libelleacte}</small>
-                            </>)}
-                            renderInput={(params) => (
-                              <Input
-                                className="col"
-                                {...params}
-                                placeholder="acte ..."
-                              />
-                            )}
-                          />
-                        </td>
-                        <td> <Input type="number" value={listActesDef[i][1]} disabled size="small" /></td>
-                        <td> <Input type="number" value={listActesDef[i][2]} onChange={({ target: { value } }) => {
-                          let listTemp = [...listActesDef]
-                          listTemp[i][2] = value
-                          setListActesDef(listTemp)
-                        }} size="small" /></td>
-                        <td> <Input type="number" value={listActesDef[i][3]} onChange={({ target: { value } }) => {
-                          let listTemp = [...listActesDef]
-                          listTemp[i][3] = value
-                          listTemp[i][4] = value * listActesDef[i][1]
-                          setListActesDef(listTemp)
-                        }} size="small" /></td>
-                        <td> <Input disabled value={listActesDef[i][4]} size="small" /></td>
-                        <td>
-                          {i === listActesDef.length - 1 &&
-                            (<IconButton size="small" aria-label="delete" title={i} onClick={() => {
-                              let listTemp = [...listActesDef]
-                              listTemp.splice(i, 1)
-                              setListActesDef(listTemp)
-                            }}>
-                              <DeleteOutlineIcon />
-                            </IconButton>)
-                          }
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-                <div className="col-12 d-flex p-0 mt-2 justify-content-end">
-                  <Button
-                    size="small"
-                    variant="contained"
-                    className="mb-2"
-                    startIcon={<AddIcon />}
-                    onClick={() => {
-                      setListActesDef(
-                        [...listActesDef, [
-                          "", //codeActe
-                          0,//prixUnitaire
-                          0,//plafondAssurance
-                          1,//quantite
-                          0//prixTotal
-                        ]]
-                      )
-                    }}
-                    style={{
-                      textTransform: "none", fontSize: "11px", backgroundColor: global.theme.primary,
-                      fontSize: "11px",
-                      color: "white",
-                    }}
-                  >Ajouter</Button></div>
                 <small className="font-weight-bold">Informations pour patient assuré</small>
                 <div className="row mx-1 my-3">
                   <Autocomplete
@@ -647,7 +520,105 @@ const DossiersPatient = ({
                     disabled={inputs.assurePrinc.trim() === ""}
                   />
                 </div>
-
+                <table className="col-12 table-sm mx-1 mt-2">
+                  <thead className="p-2" style={{ backgroundColor: global.theme.primary }}>
+                    <tr className="p-2">{[
+                      "Code",
+                      "Prix U",
+                      "Plafond Assu",
+                      "Qte",
+                      "Prix T",
+                      ""
+                    ].map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
+                  </thead>
+                  <tbody>
+                    {listActesDef.map((actes, i) =>
+                      <tr key={i} >
+                        <td className="col-7">
+                          <Autocomplete
+                            size="small"
+                            className="col p-0"
+                            id="actesList"
+                            options={listActes}
+                            onChange={(event, newValue) => {
+                              if (newValue) {
+                                let listTemp = [...listActesDef]
+                                listTemp[i] =
+                                  [
+                                    newValue.codeacte, //codeActe
+                                    newValue.prixacte,//prixUnitaire
+                                    newValue.prixacte,//plafondAssurance
+                                    1,//quantite
+                                    newValue.prixacte//prixTotal
+                                  ]
+                                setListActesDef(listTemp)
+                              }
+                            }}
+                            getOptionLabel={(acte) => `(${acte.codeacte}) ${acte.libelleacte}`}
+                            filterSelectedOptions
+                            renderOption={(acte) => (<>
+                              <small style={{ fontSize: "12px" }}>{acte.libelleacte}</small>
+                            </>)}
+                            renderInput={(params) => (
+                              <Input
+                                className="col"
+                                {...params}
+                                placeholder="acte ..."
+                              />
+                            )}
+                          />
+                        </td>
+                        <td> <Input type="number" value={listActesDef[i][1]} disabled size="small" /></td>
+                        <td> <Input type="number" value={listActesDef[i][2]} onChange={({ target: { value } }) => {
+                          let listTemp = [...listActesDef]
+                          listTemp[i][2] = value
+                          setListActesDef(listTemp)
+                        }} size="small" /></td>
+                        <td> <Input type="number" value={listActesDef[i][3]} onChange={({ target: { value } }) => {
+                          let listTemp = [...listActesDef]
+                          listTemp[i][3] = value
+                          listTemp[i][4] = value * listActesDef[i][1]
+                          setListActesDef(listTemp)
+                        }} size="small" /></td>
+                        <td> <Input disabled value={listActesDef[i][4]} size="small" /></td>
+                        <td>
+                          {i === listActesDef.length - 1 &&
+                            (<IconButton size="small" aria-label="delete" title={i} onClick={() => {
+                              let listTemp = [...listActesDef]
+                              listTemp.splice(i, 1)
+                              setListActesDef(listTemp)
+                            }}>
+                              <DeleteOutlineIcon />
+                            </IconButton>)
+                          }
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+                <div className="col-12 d-flex p-0 mt-2 justify-content-end">
+                  <Button
+                    size="small"
+                    variant="contained"
+                    className="mb-2"
+                    startIcon={<AddIcon />}
+                    onClick={() => {
+                      setListActesDef(
+                        [...listActesDef, [
+                          "", //codeActe
+                          0,//prixUnitaire
+                          0,//plafondAssurance
+                          1,//quantite
+                          0//prixTotal
+                        ]]
+                      )
+                    }}
+                    style={{
+                      textTransform: "none", fontSize: "11px", backgroundColor: global.theme.primary,
+                      fontSize: "11px",
+                      color: "white",
+                    }}
+                  >Ajouter</Button></div>
               </div>
             </div>
           </DialogContent>
@@ -803,15 +774,14 @@ const mapStatetoProps = (state) => {
     PatientReducer: { currentPatient },
   } = state;
   const {
-    sejourReducer: { listSejour, currentSejour },
+    sejourReducer: { listSejour, currentSejour, currentFacture },
   } = state;
-  return { currentPatient, listSejour, currentSejour };
+  return { currentPatient, listSejour, currentSejour, currentFacture };
 };
 const DossiersPatientConnected = connect(mapStatetoProps, {
   thunkListSejour,
   thunkAddSejour,
   thunkDetailsSejour,
-  thunkCurrentFacture,
 })(DossiersPatient);
 
 export default DossiersPatientConnected;

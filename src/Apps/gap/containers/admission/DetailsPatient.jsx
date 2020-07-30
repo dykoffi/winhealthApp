@@ -7,6 +7,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import frLocale from "date-fns/locale/fr";
 import InputMask from "react-input-mask";
+import EditIcon from '@material-ui/icons/Edit';
 import { connect } from "react-redux";
 import {
   setModalModif, thunkDeletePatient, thunkModifPatient
@@ -149,11 +150,11 @@ const DetailsPatient = ({ currentPatient, thunkModifPatient, thunkDeletePatient,
         <small>Contact : <b>{currentPatient.contactpersonnesurepatient}</b></small><br />
       </div>
       <div className="col d-flex justify-content-end align-items-end">
-        <IconButton className="mx-2 bg-light" size="small" aria-label="delete" onClick={() => { }}>
+        {/* <IconButton className="mx-2 bg-light" size="small" aria-label="delete" onClick={() => { }}>
           <DeleteOutlineIcon />
-        </IconButton>
+        </IconButton> */}
         <IconButton className="mx-2 bg-light" size="small" aria-label="delete" onClick={() => { setModalModif(true) }}>
-          <CheckCircleOutlineIcon />
+          <EditIcon />
         </IconButton>
       </div>
       <Dialog
@@ -508,7 +509,7 @@ const DetailsPatient = ({ currentPatient, thunkModifPatient, thunkDeletePatient,
           >
             Annuler
             </Button>
-          <Button
+          {/* <Button
             variant="contained"
             className="mb-2 bg-danger text-white"
             startIcon={<DeleteOutlineIcon />}
@@ -522,7 +523,7 @@ const DetailsPatient = ({ currentPatient, thunkModifPatient, thunkDeletePatient,
             }}
           >
             Supprimer
-          </Button>
+          </Button> */}
           <Button
             variant="contained"
             className="mb-2"
