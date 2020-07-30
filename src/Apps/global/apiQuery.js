@@ -6,7 +6,7 @@ const pdfhostprod = "192.168.16.211:3001"
 
 export const header = {
     timeout: 1000,
-    url: process.env.NODE_ENV === 'production' ? `https://${apihostprod}` : `https://${apihosttest}`,
+    url: process.env.NODE_ENV === 'production' ? `http://${apihostprod}` : `http://${apihosttest}`,
     local: process.env.NODE_ENV === 'production' ? `https://${pdfhostprod}` : `http://${pdfhosttest}`,
 }
-export const socket = process.env.NODE_ENV === 'production' ? io(`https://${apihostprod}`) : io(`https://${apihosttest}`)
+export const socket = process.env.NODE_ENV === 'production' ? io(`http://${apihostprod}`) : io(`http://${apihosttest}`)
