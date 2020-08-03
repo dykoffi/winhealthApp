@@ -5,8 +5,6 @@ import { header } from "../../global/apiQuery";
 const Accueil = ({ sendTitle }) => {
   useEffect(() => {
     sendTitle("GAP Accueil");
-    const audio = new Audio(`${header.url}/son.mp3`);
-    audio.play();
   });
   return (
     <div

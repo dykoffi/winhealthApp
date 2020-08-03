@@ -175,7 +175,7 @@ const FacturesRecues = ({
     }, [listFacturesByAssurance])
     useEffect(() => {
         setListFacturesRecues([])
-    }, [inputs.nomassurance, inputs.typeSejour])
+    }, [inputs.nomassurance, inputs.typeSejour, inputs.nomgarant, inputs.debutDate, inputs.finDate])
 
     return (
         <div className="FacturesRecues row p-2">
@@ -462,7 +462,9 @@ const FacturesRecues = ({
                             </div>
                             <Chip
                                 label="Sélectionnée(s)"
-                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > {listFacturesRecues.length} </Avatar>}
+                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > 
+                                {listFacturesRecues.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length}
+                                </Avatar>}
                             />
                         </>
                     }

@@ -241,7 +241,7 @@ const Bordereau = ({
     useEffect(() => {
         setListFacturesValides([])
         setLoading(false)
-    }, [inputs.nomassurance, inputs.typeSejour])
+    }, [inputs.nomassurance, inputs.typeSejour, inputs.nomgarant, inputs.debutDate, inputs.finDate])
     return (
         <div className="Facturesvalides row p-2">
             <div className="col-12">
@@ -682,7 +682,7 @@ const Bordereau = ({
                                     className="col-2"
                                     variant="outlined"
                                     size="small"
-                                    label="Rechercher un borderau"
+                                    label="Rechercher une facture"
                                     value={value2}
                                     onChange={({ target: { value } }) => {
                                         let v = value

@@ -48,7 +48,6 @@ const FacturePatient = ({
     reste: 0,
     factureImpaye: []
   })
-  const [ipp, setipp] = useState();
   const [listPatients, setListPatients] = useState([]);
   const [modalAllfacture, setModalAllfacture] = useState(false)
   const [compte, setcompte] = useState({ numerocompte: "", solde: "" })

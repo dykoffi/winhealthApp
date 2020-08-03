@@ -17,7 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
-import { socket, header } from "../../../global/apiQuery";
+import { header } from "../../../global/apiQuery";
 import {
   TextField,
   Avatar,
@@ -55,7 +55,7 @@ const AvoirFacture = ({
     setinput({ commentaire: "", montant: "", facture: "" })
     setCurrentFacture({})
   };
-  function setmontant({ target: { value } }) { setinput({ ...inputs, montant: value }); }
+  function setmontant(value) { setinput({ ...inputs, montant: value }); }
   function setfacture(value) { setinput({ ...inputs, facture: value }); }
   function setcommentaire({ target: { value } }) { setinput({ ...inputs, commentaire: value }); }
 
@@ -228,8 +228,17 @@ const AvoirFacture = ({
                       id="FactureList"
                       options={listImpFactures}
                       onChange={(event, newValue) => {
-                        newValue && setfacture(newValue.numero)
-                        newValue && thunkDetailsFacture(newValue.numero)
+                        if (newValue) {
+                          setfacture(newValue.numero)
+                          thunkDetailsFacture(newValue.numero)
+                        }
+                        else {
+                          setCurrentFacture({})
+                          setinput({ montant: "", facture: "", commentairefacture: "" })
+                        }
+
+
+
                       }}
                       getOptionLabel={(option) => option.numero}
                       filterSelectedOptions
@@ -244,7 +253,19 @@ const AvoirFacture = ({
                       label="Montant"
                       defaultValue={currentFacture.restepatientfacture}
                       value={inputs.montant}
-                      onChange={setmontant}
+                      onChange={({ target: { value } }) => {
+                        let v = value
+                          .replace("*", "")
+                          .replace("+", "")
+                          .replace("-", "")
+                          .replace("/", "")
+                          .replace("~", "")
+                          .replace("~", "")
+                          .replace(")", "")
+                          .replace("(", "")
+                          .replace("=", "")
+                        setmontant(v)
+                      }}
                     />
                   </div>
                   <div className="row my-3 mx-1">
@@ -287,7 +308,8 @@ const AvoirFacture = ({
             className="mb-2"
             disabled={
               inputs.montant.trim() === "" ||
-              parseInt(inputs.montant.trim()) > parseInt(currentFacture.restepatientfacture)
+              parseInt(inputs.montant.trim()) > parseInt(currentFacture.restepatientfacture) ||
+              inputs.facture.trim() === ""
             }
             onClick={() => thunkAddAvoirFacture(currentFacture.numerofacture, inputs)}
             startIcon={<CheckCircleOutlineIcon />}

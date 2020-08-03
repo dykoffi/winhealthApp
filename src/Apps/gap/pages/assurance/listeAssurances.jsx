@@ -39,7 +39,7 @@ const InputContact = (props) => (
     value={props.value}
     onChange={props.onChange}
   >
-    {(inputProps) => <Input type="tel" {...props} />}
+    {(inputProps) => <TextField variant="outlined" type="tel" {...props} />}
   </InputMask>
 )
 
@@ -95,7 +95,20 @@ const Assurance = ({
       site_web: "",
     });
   };
-  const CloseDetailsModal = () => { setShowModalDetails(false); };
+  const CloseDetailsModal = () => {
+    setShowModalDetails(false);
+    setinput({
+      nom: "",
+      code: "",
+      type: "",
+      adresse: "",
+      telephone: "",
+      fax: "",
+      mail: "",
+      site_web: "",
+    });
+
+  };
   function sendData(data) { thunkAddAssurance(data); handleClose(); }
   function setnom({ target: { value } }) { setinput({ ...inputs, nom: value }); }
   function setcode({ target: { value } }) { setinput({ ...inputs, code: value }); }
@@ -211,6 +224,7 @@ const Assurance = ({
           </table>
         )}
       <Dialog
+        disableBackdropClick
         open={showModal}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -231,21 +245,21 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Nom"
                   onChange={setnom}
                 />
                 <TextField
                   className="col"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Code"
                   onChange={setcode}
                 />
               </div>
               <div className="row my-3 mx-1">
-                <FormControl variant="standard" size="small" className="col">
+                <FormControl variant="outlined" size="small" className="col">
                   <InputLabel id="typeAssurance-label">
                     Type d'assurance
                   </InputLabel>
@@ -269,7 +283,7 @@ const Assurance = ({
                 </FormControl>
                 <TextField
                   className="col-6 ml-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Adresse"
                   onChange={setadresse}
@@ -278,7 +292,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <InputContact
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Telephone"
                   value={inputs.telephone}
@@ -286,7 +300,7 @@ const Assurance = ({
                 />
                 <InputContact
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Fax"
                   value={inputs.fax}
@@ -296,14 +310,14 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Mail"
                   onChange={setmail}
                 />
                 <TextField
                   className="col"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Site web"
                   onChange={setsite_web}
@@ -347,6 +361,7 @@ const Assurance = ({
         </DialogActions>
       </Dialog>
       <Dialog
+        disableBackdropClick
         open={showModalDetails}
         onClose={CloseDetailsModal}
         onEntered={() =>
@@ -379,7 +394,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Nom"
                   defaultValue={currentAssurance.nomassurance}
@@ -387,7 +402,7 @@ const Assurance = ({
                 />
                 <TextField
                   className="col"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Code"
                   defaultValue={currentAssurance.codeassurance}
@@ -395,7 +410,7 @@ const Assurance = ({
                 />
               </div>
               <div className="row my-3 mx-1">
-                <FormControl variant="standard" size="small" className="col">
+                <FormControl variant="outlined" size="small" className="col">
                   <InputLabel id="typeAssurance-label">
                     Type d'assurance
                   </InputLabel>
@@ -413,7 +428,7 @@ const Assurance = ({
                 </FormControl>
                 <TextField
                   className="col-6 ml-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Adresse"
                   defaultValue={currentAssurance.localassurance}
@@ -423,7 +438,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <InputContact
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Telephone"
                   value={inputs.telephone}
@@ -431,7 +446,7 @@ const Assurance = ({
                 />
                 <InputContact
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Fax"
                   value={inputs.fax}
@@ -441,7 +456,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Mail"
                   defaultValue={currentAssurance.mailassurance}
@@ -449,7 +464,7 @@ const Assurance = ({
                 />
                 <TextField
                   className="col"
-                  variant="standard"
+                  variant="outlined"
                   size="small"
                   label="Site web"
                   defaultValue={currentAssurance.siteassurance}

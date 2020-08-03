@@ -68,10 +68,10 @@ const Facturesvalides = ({
         nomassurance: "Tous",
         nomgarant: "Tous",
         typeSejour: "Tous",
-        debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
-        finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
-        debutDate: new Date("01/01/2020"),
-        finDate: new Date("12/31/2020"),
+        debutDateString: moment("2020-01-01").format('DD-MM-YYYY'),
+        finDateString: moment("2020-12-31").format('DD-MM-YYYY'),
+        debutDate: new Date("2020-01-01"),
+        finDate: new Date("2020-12-31"),
     });
 
     const handleClose = () => {
@@ -80,10 +80,10 @@ const Facturesvalides = ({
             nomassurance: "Tous",
             nomgarant: "Tous",
             typeSejour: "Tous",
-            debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
-            finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
-            debutDate: new Date("01/01/2020"),
-            finDate: new Date("12/31/2020"),
+            debutDateString: moment("2020-01-01").format('DD-MM-YYYY'),
+            finDateString: moment("2020-12-31").format('DD-MM-YYYY'),
+            debutDate: new Date("2020-01-01"),
+            finDate: new Date("2020-12-31"),
         });
         setListFacturesValides([])
         setListFacturesByAssurance([])
@@ -125,7 +125,7 @@ const Facturesvalides = ({
     }, [listFacturesByAssurance])
     useEffect(() => {
         setListFacturesValides([])
-    }, [inputs.nomassurance, inputs.typeSejour])
+    }, [inputs.nomassurance, inputs.typeSejour, inputs.nomgarant, inputs.debutDate, inputs.finDate])
 
     return (
         <div className="Facturesvalides row p-2">
@@ -306,7 +306,7 @@ const Facturesvalides = ({
                             <small className="mx-2">Du</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datedebut" defaultValue={new Date("01/01/2020")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datedebut" defaultValue={new Date("2020-01-01")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setdebutDate(date)
                                             thunkListFacturesByAssurances({
@@ -321,7 +321,7 @@ const Facturesvalides = ({
                             <small className="mx-2">Au</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datefin" defaultValue={new Date("12/31/2020")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker id="datefin" defaultValue={new Date("2020-12-31")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setfinDate(date)
                                             thunkListFacturesByAssurances({

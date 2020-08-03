@@ -32,11 +32,11 @@ const sejourReducer = (state = initState, action) => {
 export function thunkListSejour(patient) {
     return async (dispatch) => {
         dispatch(setLoadingSejour())
-        Axios({
-            url: `${header.url}/gap/list/sejours/${patient}`,
-        })
+        Axios({ url: `${header.url}/gap/list/sejours/${patient}`, })
             .then(({ data: { rows } }) => {
                 dispatch(setListSejour(rows))
+                rows[0] && dispatch(thunkDetailsSejour(rows[0].numerosejour))
+
             })
     }
 }

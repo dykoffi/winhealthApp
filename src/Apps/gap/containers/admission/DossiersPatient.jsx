@@ -89,6 +89,7 @@ const DossiersPatient = ({
     "Date et heure de fin",
     "Type de séjour",
     "Statut du séjour",
+    "Medecin"
   ]
 
   const handleClickOpen = () => { setDisabled(false); setOpen(true); }
@@ -273,7 +274,7 @@ const DossiersPatient = ({
           <tr>{columns.map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
         </thead>
         <tbody>
-          {listSejour.map(({ datedebutsejour, datefinsejour, heuredebutsejour, heurefinsejour, typesejour, statussejour, idsejour, numerosejour, }, i) => (
+          {listSejour.map(({ datedebutsejour, datefinsejour, heuredebutsejour, heurefinsejour, typesejour, statussejour, idsejour, numerosejour, medecinsejour }, i) => (
             <tr
               key={i}
               style={{ cursor: "pointer" }}
@@ -285,6 +286,7 @@ const DossiersPatient = ({
               <td>{datefinsejour} {heurefinsejour}</td>
               <td>{typesejour}</td>
               <td>{statussejour}</td>
+              <td>{medecinsejour}</td>
             </tr>
           ))}
         </tbody>

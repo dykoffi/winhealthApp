@@ -273,7 +273,7 @@ const Bordereau = ({
         //LINE
         line !== null && line.destroy()
         setline(new Chart(charLine, {
-            type: "line",
+            type: "horizontalBar",
             data: {
                 //Bring in data
                 labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté"],
@@ -287,8 +287,8 @@ const Bordereau = ({
                                 listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Encaissé").length,
                                 listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Rejeté").length,
                             ],
-                            backgroundColor: 'transparent',
-                            borderColor: schemeSet3[i]
+                            borderColor: 'transparent',
+                            backgroundColor: schemeSet3[i]
                         }
                     }
                 )
@@ -562,7 +562,7 @@ const Bordereau = ({
                                     className="col-2"
                                     variant="outlined"
                                     size="small"
-                                    label="Rechercher un borderau"
+                                    label="Rechercher une facture"
                                     value={value2}
                                     onChange={({ target: { value } }) => {
                                         let v = value
