@@ -11,7 +11,7 @@ export const Info = {
         secondaryDark: "#87ac0f"
     },
     user: cookies.get("user", { path: "/" }),
-    permissions: user.permissions ? JSON.parse(cookies.get("user", { path: "/" }).permissionsprofil) : null
+    permissions: user?.permissionsprofil ? JSON.parse(cookies.get("user", { path: "/" }).permissionsprofil) : null
 }
 
 const GlobalContext = createContext(Info);
