@@ -291,483 +291,492 @@ const DossiersPatient = ({
           ))}
         </tbody>
       </table>
-      <div className="col-12 mt-4">
-        <Dialog
-          disableBackdropClick
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          fullWidth={true}
-          transitionDuration={0}
-          maxWidth="md"
-        >
-          <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
-            <b>Ajouter un nouveau séjour</b>
-          </DialogTitle>
-          <DialogContent>
-            <div className="row">
-              <div className="col-12">
-                <div className="row mx-1 my-2">
-                  <div className="col">
-                    <small className="font-weight-bold">Debut du séjour</small>
-                    <MuiPickersUtilsProvider
-                      utils={DateFnsUtils}
-                      locale={frLocale}
-                    >
-                      <KeyboardDatePicker
-                        label="Date de début"
-                        id="datedebut"
-                        format="dd MMMM yyyy"
-                        autoOk
-                        value={inputs.debutDate}
-                        onChange={setdebutDate}
-                        className="m-1 col"
-                      />
-                      <KeyboardTimePicker
-                        id="heuredebut"
-                        label="Heure de début"
-                        ampm={false}
-                        autoOk
-                        value={inputs.DebutHeure}
-                        onChange={setDebutHeure}
-                        className="m-1 col"
-                      />
-                    </MuiPickersUtilsProvider>
-                  </div>
-                  <div className="col">
-                    <small className="font-weight-bold">Fin du séjour</small>
-                    <MuiPickersUtilsProvider
-                      utils={DateFnsUtils}
-                      locale={frLocale}
-                    >
-                      <KeyboardDatePicker
-                        id="datefin"
-                        label="Date de fin"
-                        format="dd MMMM yyyy"
-                        autoOk
-                        value={inputs.finDate}
-                        onChange={setfinDate}
-                        className="m-1 col"
-                      />
-                      <KeyboardTimePicker
-                        label="Heure de fin"
-                        autoOk
-                        ampm={false}
-                        id="heurefin"
-                        value={inputs.finHeure}
-                        onChange={setfinHeure}
-                        className="m-1 col"
-                      />
-                    </MuiPickersUtilsProvider>
-                  </div>
-                  <div className="col">
-                    <small className="font-weight-bold">Informations du séjour</small>
-                    <FormControl variant="outlined" size="small" className="col-12 mt-3 mb-1">
-                      <InputLabel id="typesejour-label">Type de séjour</InputLabel>
-                      <Select
-                        labelId="typesejour-label"
-                        id="typesejour"
-                        onChange={settype}
-                        label="Type de séjour"
-                        style={{ fontSize: "12px" }}
-                      >
-                        <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"Imagerie"}>Imagerie</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"hospitalisation"}>Hospitalisation</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <FormControl
-                      variant="outlined"
-                      size="small"
-                      className="col-12 mt-2"
-                    >
-                      <InputLabel id="typesejour-label">Médecin</InputLabel>
-                      <Select
-                        required
-                        labelId="typesejour-label"
-                        id="typesejour"
-                        onChange={setmedecin}
-                        label="Type de séjour"
-                        style={{ fontSize: "12px" }}
-                      >
-                        <MenuItem style={{ fontSize: "12px" }} value={"KOFFI Edy"}>KOFFI Edy</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"N'DONGO Abdoulaye"}>N'DONGO Abdoulaye</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"GBADJE Wilfried"}>GBADJE Wilfried</MenuItem>
-                        <MenuItem style={{ fontSize: "12px" }} value={"ZAKI Audrey"}>ZAKI Audrey</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </div>
-                </div>
-                <small className="font-weight-bold">Informations pour patient assuré</small>
-                <div className="row mx-1 my-3">
-                  <Autocomplete
-                    size="small"
-                    className="col p-0"
-                    id="assurancesList"
-                    options={listAssurances}
-                    onChange={(event, newValue) => { newValue ? setgestionnaire(newValue.label) : setgestionnaire("") }}
-                    getOptionLabel={(option) => option.label}
-                    filterSelectedOptions
-                    renderOption={(option) => (<>
-                      <small style={{ fontSize: "12px" }}>{option.label}</small>
-                    </>)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Gestionnaire"
-                        placeholder="Ajouter ..."
-                      />
-                    )}
-                  />
-                  <Autocomplete
-                    size="small"
-                    className="col p-0 mx-2"
-                    id="assurancesList"
-                    options={listAssurances}
-                    disabled={inputs.gestionnaire.trim() === ""}
-                    onChange={(event, newValue) => { newValue ? setorganisme(newValue.label) : setorganisme("") }}
-                    getOptionLabel={(option) => option.label}
-                    filterSelectedOptions
-                    renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Organisme"
-                        placeholder="Ajouter ..."
-                      />
-                    )}
-                  />
-                  <FormControl
-                    variant="outlined"
-                    size="small"
-                    className="col-3"
-                  >
-                    <InputLabel id="assurance-label">Taux</InputLabel>
-                    <Select
-                      labelId="assurance-label"
-                      id="assurance"
-                      label="Taux"
-                      disabled={inputs.gestionnaire.trim() === ""}
-                      onChange={settaux}
-                      style={{ fontSize: "11px" }}
-                    >
-                      <MenuItem style={{ fontSize: "12px" }} value={0}>0%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={30}>30%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={40}>40%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={50}>50%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={60}>60%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={70}>70%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={75}>75%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={80}>80%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={85}>85%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={90}>90%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={95}>95%</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={100}>100%</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                <div className="row mx-1 my-3">
-                  <FormControl
-                    variant="outlined"
-                    size="small"
-                    className="col"
-                  >
-                    <InputLabel id="assurance-label">Bénéficiaire</InputLabel>
-                    <Select
-                      disabled={inputs.organisme.trim() === ""}
-                      labelId="assurance-label"
-                      id="assurance"
-                      label="Bénéficiaire"
-                      onChange={setbeneficiaire}
-                      style={{ fontSize: "12px" }}
-                    >
-                      <MenuItem style={{ fontSize: "12px" }} value={"assuré"}>L'assuré</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"enfant"}>L'enfant</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"conjoint(e)"}>Le/La conjoint(e)</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"ayant droit"}>L'ayant droit</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <Input
-                    disabled={inputs.beneficiaire.trim() === ""}
-                    className="col-4 ml-2"
-                    variant="outlined"
-                    size="small"
-                    defaultValue=" "
-                    label="Identité de l'Assuré"
-                    value={inputs.assurePrinc}
-                    onChange={setassurePrinc}
-                  />
-                  <Input
-                    className="col mx-2"
-                    variant="outlined"
-                    size="small"
-                    label="Matricule"
-                    onChange={setmatriculeAssure}
-                    disabled={inputs.assurePrinc.trim() === ""}
-                  />
-                  <Input
-                    className="col"
-                    variant="outlined"
-                    size="small"
-                    label="N° PEC"
-                    onChange={setnumeroPEC}
-                    disabled={inputs.assurePrinc.trim() === ""}
-                  />
-                </div>
-                <table className="col-12 table-sm mx-1 mt-2">
-                  <thead className="p-2" style={{ backgroundColor: global.theme.primary }}>
-                    <tr className="p-2">{[
-                      "Code",
-                      "Prix U",
-                      "Plafond Assu",
-                      "Qte",
-                      "Prix T",
-                      ""
-                    ].map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
-                  </thead>
-                  <tbody>
-                    {listActesDef.map((actes, i) =>
-                      <tr key={i} >
-                        <td className="col-7">
-                          <Autocomplete
-                            size="small"
-                            className="col p-0"
-                            id="actesList"
-                            options={listActes}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                let listTemp = [...listActesDef]
-                                listTemp[i] =
-                                  [
-                                    newValue.codeacte, //codeActe
-                                    newValue.prixacte,//prixUnitaire
-                                    newValue.prixacte,//plafondAssurance
-                                    1,//quantite
-                                    newValue.prixacte//prixTotal
-                                  ]
-                                setListActesDef(listTemp)
-                              }
-                            }}
-                            getOptionLabel={(acte) => `(${acte.codeacte}) ${acte.libelleacte}`}
-                            filterSelectedOptions
-                            renderOption={(acte) => (<>
-                              <small style={{ fontSize: "12px" }}>{acte.libelleacte}</small>
-                            </>)}
-                            renderInput={(params) => (
-                              <Input
-                                className="col"
-                                {...params}
-                                placeholder="acte ..."
-                              />
-                            )}
-                          />
-                        </td>
-                        <td> <Input type="number" value={listActesDef[i][1]} disabled size="small" /></td>
-                        <td> <Input type="number" value={listActesDef[i][2]} onChange={({ target: { value } }) => {
-                          let listTemp = [...listActesDef]
-                          listTemp[i][2] = value
-                          setListActesDef(listTemp)
-                        }} size="small" /></td>
-                        <td> <Input type="number" value={listActesDef[i][3]} onChange={({ target: { value } }) => {
-                          let listTemp = [...listActesDef]
-                          listTemp[i][3] = value
-                          listTemp[i][4] = value * listActesDef[i][1]
-                          setListActesDef(listTemp)
-                        }} size="small" /></td>
-                        <td> <Input disabled value={listActesDef[i][4]} size="small" /></td>
-                        <td>
-                          {i === listActesDef.length - 1 &&
-                            (<IconButton size="small" aria-label="delete" title={i} onClick={() => {
-                              let listTemp = [...listActesDef]
-                              listTemp.splice(i, 1)
-                              setListActesDef(listTemp)
-                            }}>
-                              <DeleteOutlineIcon />
-                            </IconButton>)
-                          }
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-                <div className="col-12 d-flex p-0 mt-2 justify-content-end">
-                  <Button
-                    size="small"
-                    variant="contained"
-                    className="mb-2"
-                    startIcon={<AddIcon />}
-                    onClick={() => {
-                      setListActesDef(
-                        [...listActesDef, [
-                          "", //codeActe
-                          0,//prixUnitaire
-                          0,//plafondAssurance
-                          1,//quantite
-                          0//prixTotal
-                        ]]
-                      )
-                    }}
-                    style={{
-                      textTransform: "none", fontSize: "11px", backgroundColor: global.theme.primary,
-                      fontSize: "11px",
-                      color: "white",
-                    }}
-                  >Ajouter</Button></div>
-              </div>
-            </div>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              className="mb-2"
-              startIcon={<CancelIcon />}
-              onClick={handleClose}
-              style={{ textTransform: "none", fontSize: "11px", }}
-            >Annuler</Button>
-            <Button
-              variant="contained"
-              className="mb-2"
-              onClick={() => {
-                console.log(listActesDef)
-                setDisabled(true);
-                sendDTata();
-              }}
-              disabled={
-                disabled ||
-                inputs.type.trim() === "" ||
-                inputs.medecin === "" ||
-                listActesDef.filter(acte => acte[4] === 0).length !== 0 ||
-                (inputs.gestionnaire.trim() !== "" && (
-                  inputs.organisme.trim() === "" ||
-                  inputs.taux.toString().trim() === "" ||
-                  inputs.beneficiaire.trim() === "" ||
-                  inputs.assurePrinc.trim() === "" ||
-                  inputs.numeroPEC.trim() === ""
-                ))
-
-              }
-              startIcon={<ChromeReaderModeIcon />}
-              style={{
-                textTransform: "none",
-                backgroundColor: global.theme.primary,
-                fontSize: "11px",
-                color: "white",
-              }}
-            >Generer la facture</Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          open={openControle}
-          onClose={closeControle}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          fullWidth={true}
-          maxWidth="xs"
-        >
-          <DialogTitle className="text-center" id="alert-dialog-title">
-            <small className="font-weight-bold">
-              Ajouter un nouveau Controle
-            </small>
-          </DialogTitle>
-          <DialogContent>
-            <div className="row">
-              <div className="col-12">
-                <div className="row mx-1 my-2">
+      <Dialog
+        disableBackdropClick
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth={true}
+        transitionDuration={0}
+        maxWidth="md"
+      >
+        <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
+          <b>Ajouter un nouveau séjour</b>
+        </DialogTitle>
+        <DialogContent>
+          <div className="row">
+            <div className="col-12">
+              <div className="row mx-1 my-2">
+                <div className="col">
+                  <small className="font-weight-bold">Debut du séjour</small>
                   <MuiPickersUtilsProvider
                     utils={DateFnsUtils}
                     locale={frLocale}
                   >
                     <KeyboardDatePicker
+                      label="Date de début"
                       id="datedebut"
-                      format="dd/MM/yyyy"
+                      format="dd MMMM yyyy"
+                      autoOk
                       value={inputs.debutDate}
                       onChange={setdebutDate}
                       className="m-1 col"
                     />
                     <KeyboardTimePicker
                       id="heuredebut"
+                      label="Heure de début"
                       ampm={false}
+                      autoOk
                       value={inputs.DebutHeure}
                       onChange={setDebutHeure}
                       className="m-1 col"
                     />
                   </MuiPickersUtilsProvider>
                 </div>
-                <div className="row mx-1 my-2">
+                <div className="col">
+                  <small className="font-weight-bold">Fin du séjour</small>
                   <MuiPickersUtilsProvider
                     utils={DateFnsUtils}
                     locale={frLocale}
                   >
                     <KeyboardDatePicker
                       id="datefin"
-                      format="dd/MM/yyyy"
+                      label="Date de fin"
+                      format="dd MMMM yyyy"
+                      autoOk
                       value={inputs.finDate}
                       onChange={setfinDate}
                       className="m-1 col"
                     />
                     <KeyboardTimePicker
+                      label="Heure de fin"
+                      autoOk
+                      ampm={false}
                       id="heurefin"
                       value={inputs.finHeure}
-                      ampm={false}
                       onChange={setfinHeure}
                       className="m-1 col"
                     />
                   </MuiPickersUtilsProvider>
                 </div>
+                <div className="col">
+                  <small className="font-weight-bold">Informations du séjour</small>
+                  <FormControl variant="outlined" size="small" className="col-12 mt-3 mb-1">
+                    <InputLabel id="typesejour-label">Type de séjour</InputLabel>
+                    <Select
+                      labelId="typesejour-label"
+                      id="typesejour"
+                      onChange={settype}
+                      label="Type de séjour"
+                      style={{ fontSize: "12px" }}
+                    >
+                      <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Imagerie"}>Imagerie</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"hospitalisation"}>Hospitalisation</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="col-12 mt-2"
+                  >
+                    <InputLabel id="typesejour-label">Médecin</InputLabel>
+                    <Select
+                      required
+                      labelId="typesejour-label"
+                      id="typesejour"
+                      onChange={setmedecin}
+                      label="Type de séjour"
+                      style={{ fontSize: "12px" }}
+                    >
+                      <MenuItem style={{ fontSize: "12px" }} value={"KOFFI Edy"}>KOFFI Edy</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"N'DONGO Abdoulaye"}>N'DONGO Abdoulaye</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"GBADJE Wilfried"}>GBADJE Wilfried</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"ZAKI Audrey"}>ZAKI Audrey</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+              <small className="font-weight-bold">Informations pour patient assuré</small>
+              <div className="row mx-1 my-3">
+                <Autocomplete
+                  size="small"
+                  className="col p-0"
+                  id="assurancesList"
+                  options={listAssurances}
+                  onChange={(event, newValue) => { newValue ? setgestionnaire(newValue.label) : setgestionnaire("") }}
+                  getOptionLabel={(option) => option.label}
+                  filterSelectedOptions
+                  renderOption={(option) => (<>
+                    <small style={{ fontSize: "12px" }}>{option.label}</small>
+                  </>)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Gestionnaire"
+                      placeholder="Ajouter ..."
+                    />
+                  )}
+                />
+                <Autocomplete
+                  size="small"
+                  className="col p-0 mx-2"
+                  id="assurancesList"
+                  options={listAssurances}
+                  disabled={inputs.gestionnaire.trim() === ""}
+                  onChange={(event, newValue) => { newValue ? setorganisme(newValue.label) : setorganisme("") }}
+                  getOptionLabel={(option) => option.label}
+                  filterSelectedOptions
+                  renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Organisme"
+                      placeholder="Ajouter ..."
+                    />
+                  )}
+                />
+                <FormControl
+                  variant="outlined"
+                  size="small"
+                  className="col-3"
+                >
+                  <InputLabel id="assurance-label">Taux</InputLabel>
+                  <Select
+                    labelId="assurance-label"
+                    id="assurance"
+                    label="Taux"
+                    disabled={inputs.gestionnaire.trim() === ""}
+                    onChange={settaux}
+                    style={{ fontSize: "11px" }}
+                  >
+                    <MenuItem style={{ fontSize: "12px" }} value={0}>0%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={30}>30%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={40}>40%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={50}>50%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={60}>60%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={70}>70%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={75}>75%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={80}>80%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={85}>85%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={90}>90%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={95}>95%</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={100}>100%</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="row mx-1 my-3">
+                <FormControl
+                  variant="outlined"
+                  size="small"
+                  className="col"
+                >
+                  <InputLabel id="assurance-label">Bénéficiaire</InputLabel>
+                  <Select
+                    disabled={inputs.organisme.trim() === ""}
+                    labelId="assurance-label"
+                    id="assurance"
+                    label="Bénéficiaire"
+                    onChange={setbeneficiaire}
+                    style={{ fontSize: "12px" }}
+                  >
+                    <MenuItem style={{ fontSize: "12px" }} value={"assuré"}>L'assuré</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={"enfant"}>L'enfant</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={"conjoint(e)"}>Le/La conjoint(e)</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={"ayant droit"}>L'ayant droit</MenuItem>
+                  </Select>
+                </FormControl>
+                <Input
+                  disabled={inputs.beneficiaire.trim() === ""}
+                  className="col-4 ml-2"
+                  variant="outlined"
+                  size="small"
+                  defaultValue=" "
+                  label="Identité de l'Assuré"
+                  value={inputs.assurePrinc}
+                  onChange={setassurePrinc}
+                />
+                <Input
+                  className="col mx-2"
+                  variant="outlined"
+                  size="small"
+                  label="Matricule"
+                  onChange={setmatriculeAssure}
+                  disabled={inputs.assurePrinc.trim() === ""}
+                />
+                <Input
+                  className="col"
+                  variant="outlined"
+                  size="small"
+                  label="N° PEC"
+                  onChange={setnumeroPEC}
+                  disabled={inputs.assurePrinc.trim() === ""}
+                />
+              </div>
+              <table className="col-12 table-sm mx-1 mt-2">
+                <thead>
+                  <tr className="p-2 row" style={{ backgroundColor: global.theme.primary }}>
+                    <th className="white-text col" >Code</th>
+                    <th className="white-text col-2" >Prix U</th>
+                    <th className="white-text col-2" >Plafond Assu</th>
+                    <th className="white-text col-1" >Qte</th>
+                    <th className="white-text col-2" >Prix T</th>
+                    <th className="transparent-text col-auto" > <DeleteOutlineIcon /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listActesDef.map((actes, i) =>
+                    <tr className="row" key={i} >
+                      <td className="col">
+                        <Autocomplete
+                          size="small"
+                          className="p-0"
+                          id="actesList"
+                          options={listActes}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              let listTemp = [...listActesDef]
+                              listTemp[i] =
+                                [
+                                  newValue.codeacte, //codeActe
+                                  newValue.prixacte,//prixUnitaire
+                                  newValue.prixacte,//plafondAssurance
+                                  1,//quantite
+                                  newValue.prixacte//prixTotal
+                                ]
+                              setListActesDef(listTemp)
+                            } else {
+                              let listTemp = [...listActesDef]
+                              listTemp[i] =
+                                [
+                                  "", //codeActe
+                                  0,//prixUnitaire
+                                  0,//plafondAssurance
+                                  1,//quantite
+                                  0//prixTotal
+                                ]
+                              setListActesDef(listTemp)
+                            }
+                          }}
+                          getOptionLabel={(acte) => `(${acte.codeacte}) ${acte.libelleacte}`}
+                          filterSelectedOptions
+                          renderOption={(acte) => (<>
+                            <small style={{ fontSize: "12px" }}>{acte.libelleacte}</small>
+                          </>)}
+                          renderInput={(params) => (
+                            <Input
+                              className="col"
+                              {...params}
+                              placeholder="acte ..."
+                            />
+                          )}
+                        />
+                      </td>
+                      <td className="col-2"> <Input type="number" value={listActesDef[i][1]} disabled size="small" /></td>
+                      <td className="col-2"> <Input type="number" value={listActesDef[i][2]} onChange={({ target: { value } }) => {
+                        let listTemp = [...listActesDef]
+                        listTemp[i][2] = value
+                        setListActesDef(listTemp)
+                      }} size="small" /></td>
+                      <td className="col-1"> <Input type="number" value={listActesDef[i][3]} onChange={({ target: { value } }) => {
+                        let listTemp = [...listActesDef]
+                        listTemp[i][3] = value
+                        listTemp[i][4] = value * listActesDef[i][1]
+                        setListActesDef(listTemp)
+                      }} size="small" /></td>
+                      <td className="col-2"> <Input disabled value={listActesDef[i][4]} size="small" /></td>
+                      <td className="col-auto">
+                        {i === listActesDef.length - 1 &&
+                          (<IconButton size="small" aria-label="delete" onClick={() => {
+                            let listTemp = [...listActesDef]
+                            listTemp.splice(i, 1)
+                            setListActesDef(listTemp)
+                          }}>
+                            <DeleteOutlineIcon />
+                          </IconButton>)
+                        }
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              <div className="col-12 d-flex p-0 mt-2 justify-content-end">
+                <Button
+                  size="small"
+                  variant="contained"
+                  className="mb-2"
+                  startIcon={<AddIcon />}
+                  onClick={() => {
+                    setListActesDef(
+                      [...listActesDef, [
+                        "", //codeActe
+                        0,//prixUnitaire
+                        0,//plafondAssurance
+                        1,//quantite
+                        0//prixTotal
+                      ]]
+                    )
+                  }}
+                  style={{
+                    textTransform: "none", fontSize: "11px", backgroundColor: global.theme.primary,
+                    fontSize: "11px",
+                    color: "white",
+                  }}
+                >Ajouter</Button></div>
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            className="mb-2"
+            startIcon={<CancelIcon />}
+            onClick={handleClose}
+            style={{ textTransform: "none", fontSize: "11px", }}
+          >Annuler</Button>
+          <Button
+            variant="contained"
+            className="mb-2"
+            onClick={() => {
+              console.log(listActesDef)
+              setDisabled(true);
+              sendDTata();
+            }}
+            disabled={
+              disabled ||
+              inputs.type.trim() === "" ||
+              inputs.medecin === "" ||
+              listActesDef.filter(acte => acte[4] === 0).length !== 0 ||
+              (inputs.gestionnaire.trim() !== "" && (
+                inputs.organisme.trim() === "" ||
+                inputs.taux.toString().trim() === "" ||
+                inputs.beneficiaire.trim() === "" ||
+                inputs.assurePrinc.trim() === "" ||
+                inputs.numeroPEC.trim() === ""
+              ))
+
+            }
+            startIcon={<ChromeReaderModeIcon />}
+            style={{
+              textTransform: "none",
+              backgroundColor: global.theme.primary,
+              fontSize: "11px",
+              color: "white",
+            }}
+          >Generer la facture</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openControle}
+        onClose={closeControle}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth={true}
+        maxWidth="xs"
+      >
+        <DialogTitle className="text-center" id="alert-dialog-title">
+          <small className="font-weight-bold">
+            Ajouter un nouveau Controle
+            </small>
+        </DialogTitle>
+        <DialogContent>
+          <div className="row">
+            <div className="col-12">
+              <div className="row mx-1 my-2">
+                <MuiPickersUtilsProvider
+                  utils={DateFnsUtils}
+                  locale={frLocale}
+                >
+                  <KeyboardDatePicker
+                    id="datedebut"
+                    format="dd/MM/yyyy"
+                    value={inputs.debutDate}
+                    onChange={setdebutDate}
+                    className="m-1 col"
+                  />
+                  <KeyboardTimePicker
+                    id="heuredebut"
+                    ampm={false}
+                    value={inputs.DebutHeure}
+                    onChange={setDebutHeure}
+                    className="m-1 col"
+                  />
+                </MuiPickersUtilsProvider>
+              </div>
+              <div className="row mx-1 my-2">
+                <MuiPickersUtilsProvider
+                  utils={DateFnsUtils}
+                  locale={frLocale}
+                >
+                  <KeyboardDatePicker
+                    id="datefin"
+                    format="dd/MM/yyyy"
+                    value={inputs.finDate}
+                    onChange={setfinDate}
+                    className="m-1 col"
+                  />
+                  <KeyboardTimePicker
+                    id="heurefin"
+                    value={inputs.finHeure}
+                    ampm={false}
+                    onChange={setfinHeure}
+                    className="m-1 col"
+                  />
+                </MuiPickersUtilsProvider>
               </div>
             </div>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              className="mb-2 bg-light"
-              startIcon={<CancelIcon />}
-              onClick={handleClose}
-              style={{
-                textTransform: "none",
-                fontSize: "11px",
-              }}
-            >
-              Annuler
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            className="mb-2 bg-light"
+            startIcon={<CancelIcon />}
+            onClick={handleClose}
+            style={{
+              textTransform: "none",
+              fontSize: "11px",
+            }}
+          >
+            Annuler
             </Button>
-            <Button
-              variant="contained"
-              className="mb-2"
-              onClick={sendDTata}
-              startIcon={<CheckCircleOutlineIcon />}
-              style={{
-                textTransform: "none",
-                backgroundColor: global.theme.primary,
-                color: "white",
-                fontSize: "11px",
-              }}
-            >
-              Valider
+          <Button
+            variant="contained"
+            className="mb-2"
+            onClick={sendDTata}
+            startIcon={<CheckCircleOutlineIcon />}
+            style={{
+              textTransform: "none",
+              backgroundColor: global.theme.primary,
+              color: "white",
+              fontSize: "11px",
+            }}
+          >
+            Valider
             </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          open={pdf}
-          onClose={() => setpdf(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          fullWidth={true}
-          style={{ overflowX: 'hidden' }}
-          maxWidth="md"
-          scroll={'body'}
-          PaperComponent={PaperComponent}
-        >
-          <object data={urlPDF} className="col-12" height={700} type="application/pdf"></object>
-        </Dialog>
-      </div>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={pdf}
+        onClose={() => setpdf(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth={true}
+        style={{ overflowX: 'hidden' }}
+        maxWidth="md"
+        scroll={'body'}
+        PaperComponent={PaperComponent}
+      >
+        <object data={urlPDF} className="col-12" height={700} type="application/pdf"></object>
+      </Dialog>
     </div >
   );
 };

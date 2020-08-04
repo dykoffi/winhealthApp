@@ -13,7 +13,7 @@ const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
 
   return (
     <div className="Admission row">
-      <section className="col-12 px-3 bg-light">
+      <section className="col-12">
         <Onglet
           links={Listonglets}
           currentPage={currentPage}

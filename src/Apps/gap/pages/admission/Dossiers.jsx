@@ -8,7 +8,7 @@ const Dossiers = ({ currentPatient }) => {
     <div className="Dossiers row">
       {currentPatient.iddossier ? (
         <>
-          <section className="col-12">
+          <section className="col-12 p-0">
             <DetailsPatient />
           </section>
           <section className="col-12 p-3">

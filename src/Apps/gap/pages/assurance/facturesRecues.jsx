@@ -215,10 +215,6 @@ const FacturesRecues = ({
                         />
                     </div>
                     <div className="col d-flex justify-content-end p-0">
-                        {
-                            listFactures.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length !== 0 &&
-                            <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={listFactures.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original')} />
-                        }
                         <Button
                             size='small'
                             variant="contained"
@@ -246,9 +242,9 @@ const FacturesRecues = ({
                 </thead>
                 <tbody>
                     {listFactures.filter(facture => facture.statutfacture === 'recu' || facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
-                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfacture, erreurfacture,commentairefacture }, i) => (
+                        ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfacture, erreurfacture, commentairefacture }, i) => (
                             <tr
-                            title={commentairefacture}
+                                title={commentairefacture}
                                 key={i}
                                 className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
                                 style={{ cursor: statutfacture === 'recu' ? "pointer" : "default" }}
@@ -462,8 +458,8 @@ const FacturesRecues = ({
                             </div>
                             <Chip
                                 label="Sélectionnée(s)"
-                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > 
-                                {listFacturesRecues.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length}
+                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} >
+                                    {listFacturesRecues.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length}
                                 </Avatar>}
                             />
                         </>
@@ -471,6 +467,18 @@ const FacturesRecues = ({
 
                 </DialogContent>
                 <DialogActions>
+                    {
+                        listFacturesByAssurance.filter(
+                            facture => facture.statutfacture === 'attente' &&
+                                facture.typefacture === 'original' &&
+                                !listFacturesRecues.includes(facture.numerofacture)
+                        ).length !== 0 &&
+                        <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={
+                            listFactures.filter(facture => facture.statutfacture === 'attente' &&
+                                facture.typefacture === 'original' &&
+                                !listFacturesRecues.includes(facture.numerofacture)
+                            )} />
+                    }
                     <Button
                         variant="contained"
                         onClick={handleClose}

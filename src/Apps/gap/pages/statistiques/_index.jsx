@@ -19,16 +19,11 @@ const Statistiques = ({
 }) => {
   useEffect(() => {
     sendTitle("Statistiques");
-    const son = new Audio("../../../../static/son.mp3");
-    socket.on("facture_nouvelle", () => {
-      son.play();
-      setNotification(true);
-    });
   });
 
   return (
     <div className="Statistiques row">
-      <section className="col-12 px-3 bg-light">
+      <section className="col-12">
         <Onglet
           links={Listonglets}
           currentPage={currentPage}

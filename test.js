@@ -22,5 +22,6 @@
 //     console.log(index + ': ' + ctol(index));
 // }
 
-const forward =  require('http-port-forward')
-forward(8001,8000)
+const table = {["edykoffi"]:"creation"}
+let e = "edykoffi"
+console.log(table[e]);

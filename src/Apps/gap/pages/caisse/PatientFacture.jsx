@@ -347,6 +347,7 @@ const FacturePatient = ({
                           <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                         </Select>
                       ) : (
                           <Select
@@ -361,6 +362,7 @@ const FacturePatient = ({
                             <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                           </Select>
                         )}
                     </FormControl>
@@ -372,7 +374,19 @@ const FacturePatient = ({
                       max={10}
                       label="Montant recu"
                       value={inputs.montantrecu}
-                      onChange={setmontant}
+                      onChange={({ target: { value } }) => {
+                        let v = value
+                          .replace("*", "")
+                          .replace("+", "")
+                          .replace("-", "")
+                          .replace("/", "")
+                          .replace("~", "")
+                          .replace("~", "")
+                          .replace(")", "")
+                          .replace("(", "")
+                          .replace("=", "")
+                        setmontant({ target: { value: v } })
+                      }}
                     />
                   </div>
                   <div className="col-12 d-flex">
@@ -494,30 +508,11 @@ const FacturePatient = ({
                           label="Mode de paiement"
                           style={{ fontSize: "13px" }}
                         >
-                          <MenuItem style={{ fontSize: "13px" }} value={"Compte"}>
-                            Compte
-                        </MenuItem>
-                          <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
-                            Chèque
-                        </MenuItem>
-                          <MenuItem
-                            style={{ fontSize: "13px" }}
-                            value={"Espèces"}
-                          >
-                            Espèces
-                        </MenuItem>
-                          <MenuItem
-                            style={{ fontSize: "13px" }}
-                            value={"Électronique"}
-                          >
-                            Électronique
-                        </MenuItem>
-                          <MenuItem
-                            style={{ fontSize: "13px" }}
-                            value={"Mobile money"}
-                          >
-                            Mobile money
-                        </MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Compte"}>Compte</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
                         </Select>
                       ) : (
                           <Select
@@ -528,27 +523,10 @@ const FacturePatient = ({
                             label="Mode de paiement"
                             style={{ fontSize: "13px" }}
                           >
-                            <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>
-                              Chèque
-                        </MenuItem>
-                            <MenuItem
-                              style={{ fontSize: "13px" }}
-                              value={"Espèces"}
-                            >
-                              Espèces
-                        </MenuItem>
-                            <MenuItem
-                              style={{ fontSize: "13px" }}
-                              value={"Électronique"}
-                            >
-                              Électronique
-                        </MenuItem>
-                            <MenuItem
-                              style={{ fontSize: "13px" }}
-                              value={"Mobile money"}
-                            >
-                              Mobile money
-                        </MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
                           </Select>
                         )}
                     </FormControl>

@@ -8,15 +8,11 @@ const Onglet = ({ links, currentPage, setCurrentPage }) => {
       {links.map(({ title, icon, target }, i) => (
         <div
           key={i}
-          onClick={() => {
-            setCurrentPage(target);
-          }}
-          style={{
-            cursor: "pointer",
-          }}
+          onClick={() => { setCurrentPage(target); }}
+          style={{ cursor: "pointer", }}
           className={`px-3 text-center onglet py-2 ${
             currentPage === target ? "white text-secondary actifOnglet" : "text-secondary"
-          } `}
+            } `}
         >
           <i className={`mdi-${icon} mr-2`}></i>
           {title}

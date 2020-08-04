@@ -55,7 +55,7 @@ const AttenteFacture = ({
     setinput({ modepaiement: "", montantrecu: "", })
   };
   function setmode({ target: { value } }) { setinput({ ...inputs, modepaiement: value }); }
-  function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
+  function setmontant(value) { setinput({ ...inputs, montantrecu: value }); }
   function project() {
     socket.emit("project_facture", currentFacture)
     projection ? setprojection(false) : setprojection(true);
@@ -239,6 +239,7 @@ const AttenteFacture = ({
                           <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                         </Select>
                       ) : (
                           <Select
@@ -253,6 +254,7 @@ const AttenteFacture = ({
                             <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
+                            <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                           </Select>
                         )}
                     </FormControl>
@@ -263,7 +265,19 @@ const AttenteFacture = ({
                       type="number"
                       label="Montant recu"
                       value={inputs.montantrecu}
-                      onChange={setmontant}
+                      onChange={({ target: { value } }) => {
+                        let v = value
+                          .replace("*", "")
+                          .replace("+", "")
+                          .replace("-", "")
+                          .replace("/", "")
+                          .replace("~", "")
+                          .replace("~", "")
+                          .replace(")", "")
+                          .replace("(", "")
+                          .replace("=", "")
+                        setmontant(v)
+                      }}
                     />
                   </div>
                   <div className="col-12 d-flex">

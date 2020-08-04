@@ -339,7 +339,19 @@ const AttenteFacture = ({
                   size="small"
                   label="Montant"
                   value={inputs.montant}
-                  onChange={setmontant}
+                  onChange={({ target: { value } }) => {
+                    let v = value
+                      .replace("*", "")
+                      .replace("+", "")
+                      .replace("-", "")
+                      .replace("/", "")
+                      .replace("~", "")
+                      .replace("~", "")
+                      .replace(")", "")
+                      .replace("(", "")
+                      .replace("=", "")
+                    setmontant({ target: { value: v } })
+                  }}
                 />
               </div>
             </div>
