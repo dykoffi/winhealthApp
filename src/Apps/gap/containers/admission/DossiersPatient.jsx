@@ -54,6 +54,7 @@ const DossiersPatient = ({
   const [disabled, setDisabled] = useState(true);
   const [openControle, setOpenControle] = useState(false);
   const [listActes, setListActe] = useState([]);
+  const [value, setValue] = useState("");
   const [actes, setActes] = useState([]);
   const [listAssurances, setListAssurances] = useState([]);
   const [listActesDef, setListActesDef] = useState([
@@ -241,7 +242,21 @@ const DossiersPatient = ({
             className="col-2 mr-1"
             variant="outlined"
             size="small"
+            value={value}
             label="Rechercher un séjour"
+            onChange={({ target: { value } }) => {
+              let v = value
+                .replace("*", "")
+                .replace("+", "")
+                .replace("-", "")
+                .replace("/", "")
+                .replace("~", "")
+                .replace("~", "")
+                .replace(")", "")
+                .replace("(", "")
+                .replace("=", "")
+              setValue(v)
+            }}
           />
           <Chip
             className="mx-1"
@@ -274,21 +289,23 @@ const DossiersPatient = ({
           <tr>{columns.map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
         </thead>
         <tbody>
-          {listSejour.map(({ datedebutsejour, datefinsejour, heuredebutsejour, heurefinsejour, typesejour, statussejour, idsejour, numerosejour, medecinsejour }, i) => (
-            <tr
-              key={i}
-              style={{ cursor: "pointer" }}
-              onClick={() => thunkDetailsSejour(numerosejour)}
-              className={currentSejour && currentSejour.idsejour === idsejour ? "bgcolor-primary font-weight-bold white-text" : ""}
-            >
-              <td>{numerosejour}</td>
-              <td>{datedebutsejour} {heuredebutsejour}</td>
-              <td>{datefinsejour} {heurefinsejour}</td>
-              <td>{typesejour}</td>
-              <td>{statussejour}</td>
-              <td>{medecinsejour}</td>
-            </tr>
-          ))}
+          {listSejour
+            .filter(sejour => value.trim() === "" || RegExp(value, 'i').test(sejour.numerosejour))
+            .map(({ datedebutsejour, datefinsejour, heuredebutsejour, heurefinsejour, typesejour, statussejour, idsejour, numerosejour, medecinsejour }, i) => (
+              <tr
+                key={i}
+                style={{ cursor: "pointer" }}
+                onClick={() => thunkDetailsSejour(numerosejour)}
+                className={currentSejour && currentSejour.idsejour === idsejour ? "bgcolor-primary font-weight-bold white-text" : ""}
+              >
+                <td>{numerosejour}</td>
+                <td>{datedebutsejour} {heuredebutsejour}</td>
+                <td>{datefinsejour} {heurefinsejour}</td>
+                <td>{typesejour}</td>
+                <td>{statussejour}</td>
+                <td>{medecinsejour}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
       <Dialog

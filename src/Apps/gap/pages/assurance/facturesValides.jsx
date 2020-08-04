@@ -173,7 +173,7 @@ const Facturesvalides = ({
                                 textTransform: "none",
                                 backgroundColor: global.theme.primary,
                                 color: "white",
-                                fontSize: "11px",
+                                fontSize: "12px",
                             }}
                         >
                             Valider des factures
@@ -408,7 +408,8 @@ const Facturesvalides = ({
                             </div>
                             <Chip
                                 label="Sélectionnée(s)"
-                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > {listFacturesValides.length} </Avatar>}
+                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} >
+                                    {listFacturesValides.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length} </Avatar>}
                             />
                         </>
                     }
@@ -420,7 +421,7 @@ const Facturesvalides = ({
                         startIcon={<CancelIcon />}
                         style={{
                             textTransform: "none",
-                            fontSize: "11px",
+                            fontSize: "12px",
                         }}
                     >
                         Annuler
@@ -437,7 +438,7 @@ const Facturesvalides = ({
                             textTransform: "none",
                             backgroundColor: global.theme.primary,
                             color: "white",
-                            fontSize: "11px",
+                            fontSize: "12px",
                         }}
                     >
                         Valider les factures
@@ -495,7 +496,7 @@ const Facturesvalides = ({
                         onClick={() => { setShowDetailsFacture(false) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Annuler
@@ -507,7 +508,7 @@ const Facturesvalides = ({
                         onClick={() => { thunkDeleteFacturesValides(currentFacture.numerofacture) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Retirer

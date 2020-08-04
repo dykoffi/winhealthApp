@@ -70,9 +70,6 @@ const Topbar = ({ toggleFullscreen, title, fullscreen, user }) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem style={{ fontSize: "13px" }} onClick={handleClose}>
-            Notification
-          </MenuItem>
           <MenuItem style={{ fontSize: "13px" }} onClick={deconnexionUser}>
             Déconnexion
           </MenuItem>

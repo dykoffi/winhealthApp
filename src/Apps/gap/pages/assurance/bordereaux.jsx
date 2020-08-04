@@ -288,7 +288,7 @@ const Bordereau = ({
                                 textTransform: "none",
                                 backgroundColor: global.theme.primary,
                                 color: "white",
-                                fontSize: "11px",
+                                fontSize: "12px",
                             }}
                         >
                             Ajouter un borderau
@@ -593,7 +593,7 @@ const Bordereau = ({
                         startIcon={<CancelIcon />}
                         style={{
                             textTransform: "none",
-                            fontSize: "11px",
+                            fontSize: "12px",
                         }}
                     >
                         Annuler
@@ -631,7 +631,7 @@ const Bordereau = ({
                             textTransform: "none",
                             backgroundColor: global.theme.primary,
                             color: "white",
-                            fontSize: "11px",
+                            fontSize: "12px",
                         }}
                     >
                         Generer le bordereau
@@ -748,7 +748,7 @@ const Bordereau = ({
                                         }}
                                         style={{
                                             textTransform: "none",
-                                            fontSize: "13px",
+                                            fontSize: "12px",
                                             backgroundColor: global.theme.primary
                                         }}
                                     >Valider</Button>
@@ -878,7 +878,7 @@ const Bordereau = ({
                         }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >Fermer</Button>
                     {currentBordereau.filter(b => b.erreurfacture === "warning").length === 0 && currentBordereau[0].statutbordereau !== "Rejeté" &&
@@ -891,7 +891,7 @@ const Bordereau = ({
                         onClick={() => { thunkDeleteFacturesValides(currentBordereau.numerofacture) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >Supprimer</Button>
                 </DialogActions>
@@ -979,7 +979,7 @@ const Bordereau = ({
                         onClick={() => { setShowCommentFacture(false) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Annuler
@@ -994,7 +994,7 @@ const Bordereau = ({
                         }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Retirer
@@ -1010,7 +1010,7 @@ const Bordereau = ({
                         }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Signaler
@@ -1164,7 +1164,7 @@ const Bordereau = ({
                                         label="Taux"
                                         defaultValue={currentFacture.taux}
                                         onChange={settaux}
-                                        style={{ fontSize: "11px" }}
+                                        style={{ fontSize: "12px" }}
                                     >
                                         <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
                                         <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
@@ -1199,7 +1199,7 @@ const Bordereau = ({
                         onClick={() => { setShowDetailsFacture(false) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Annuler
@@ -1211,7 +1211,7 @@ const Bordereau = ({
                         onClick={() => { thunkReportFacture(currentFacture.numerofacture, { ...inputComment, erreur: "refuse" }) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Retirer
@@ -1228,7 +1228,7 @@ const Bordereau = ({
                             textTransform: "none",
                             backgroundColor: global.theme.primary,
                             color: "white",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Valider la modification

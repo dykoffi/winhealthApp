@@ -292,11 +292,11 @@ const AttenteFacture = ({
               <small> <b>N° compte : {" "} </b>{currentCompte.numerocompte}</small><br />
               <small> <b>Solde : {" "} </b>{separate(currentCompte.montantcompte)} FCFA</small><br />
               <div className="row my-3 mx-1">
-                <FormControl variant="outlined" size="small" className="col-12">
-                  <InputLabel id="typesejour-label">Type</InputLabel>
+                <FormControl variant="filled" size="small" className="col-12">
+                  <InputLabel id="typetransaction-label">Type</InputLabel>
                   <Select
-                    labelId="typesejour-label"
-                    id="typesejour"
+                    labelId="typetransaction-label"
+                    id="typetransaction"
                     value={inputs.type}
                     onChange={settype}
                     variant="filled"
@@ -310,13 +310,11 @@ const AttenteFacture = ({
               </div>
               <div className="row my-3 mx-1">
                 <FormControl
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   className="col mr-2"
                 >
-                  <InputLabel id="typesejour-label">
-                    Mode de paiement
-                  </InputLabel>
+                  <InputLabel id="typesejour-label">Mode de paiement</InputLabel>
                   <Select
                     labelId="typesejour-label"
                     id="typesejour"

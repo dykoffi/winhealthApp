@@ -224,7 +224,7 @@ const FacturesRecues = ({
                                 textTransform: "none",
                                 backgroundColor: global.theme.primary,
                                 color: "white",
-                                fontSize: "11px",
+                                fontSize: "12px",
                             }}
                         >Nouvelles factures recues</Button>
                     </div>
@@ -485,7 +485,7 @@ const FacturesRecues = ({
                         startIcon={<CancelIcon />}
                         style={{
                             textTransform: "none",
-                            fontSize: "11px",
+                            fontSize: "12px",
                         }}
                     >
                         Annuler
@@ -502,7 +502,7 @@ const FacturesRecues = ({
                             textTransform: "none",
                             backgroundColor: global.theme.primary,
                             color: "white",
-                            fontSize: "11px",
+                            fontSize: "12px",
                         }}
                     >
                         Valider
@@ -654,7 +654,7 @@ const FacturesRecues = ({
                                         label="Taux"
                                         defaultValue={currentFacture.taux}
                                         onChange={settaux}
-                                        style={{ fontSize: "11px" }}
+                                        style={{ fontSize: "12px" }}
                                     >
                                         <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
                                         <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
@@ -688,7 +688,7 @@ const FacturesRecues = ({
                         onClick={() => { setShowDetailsFacture(false) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Annuler
@@ -700,7 +700,7 @@ const FacturesRecues = ({
                         onClick={() => { thunkDeleteFacturesRecues(currentFacture.numerofacture) }}
                         style={{
                             textTransform: "none",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Retirer
@@ -717,7 +717,7 @@ const FacturesRecues = ({
                             textTransform: "none",
                             backgroundColor: global.theme.primary,
                             color: "white",
-                            fontSize: "13px",
+                            fontSize: "12px",
                         }}
                     >
                         Valider la modification

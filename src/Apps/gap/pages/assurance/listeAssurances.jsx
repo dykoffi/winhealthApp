@@ -181,7 +181,7 @@ const Assurance = ({
                 textTransform: "none",
                 backgroundColor: global.theme.primary,
                 color: "white",
-                fontSize: "11px",
+                fontSize: "12px",
               }}
             >
               Ajouter une assurance
@@ -268,15 +268,15 @@ const Assurance = ({
                     id="typeAssurance"
                     onChange={settype}
                     label="Type d'assurance"
-                    style={{ fontSize: "11px" }}
+                    style={{ fontSize: "12px" }}
                   >
                     <MenuItem
-                      style={{ fontSize: "11px" }}
+                      style={{ fontSize: "12px" }}
                       value={"Gestionnaire"}
                     >
                       Gestionnaire
                     </MenuItem>
-                    <MenuItem style={{ fontSize: "11px" }} value={"Organisme"}>
+                    <MenuItem style={{ fontSize: "12px" }} value={"Organisme"}>
                       Organisme
                     </MenuItem>
                   </Select>
@@ -299,7 +299,7 @@ const Assurance = ({
                   onChange={settelephone}
                 />
                 <InputContact
-                  className="col mr-2"
+                  className="col"
                   variant="outlined"
                   size="small"
                   label="Fax"
@@ -338,7 +338,7 @@ const Assurance = ({
             onClick={handleClose}
             style={{
               textTransform: "none",
-              fontSize: "11px",
+              fontSize: "12px",
             }}
           >
             Annuler
@@ -353,7 +353,7 @@ const Assurance = ({
               textTransform: "none",
               backgroundColor: global.theme.primary,
               color: "white",
-              fontSize: "11px",
+              fontSize: "12px",
             }}
           >
             Valider
@@ -420,10 +420,10 @@ const Assurance = ({
                     onChange={settype}
                     defaultValue={currentAssurance.typeassurance}
                     label="Type d'assurance"
-                    style={{ fontSize: "11px" }}
+                    style={{ fontSize: "12px" }}
                   >
-                    <MenuItem style={{ fontSize: "11px" }} value={"Gestionnaire"}>Gestionnaire</MenuItem>
-                    <MenuItem style={{ fontSize: "11px" }} value={"Organisme"}>Organisme</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={"Gestionnaire"}>Gestionnaire</MenuItem>
+                    <MenuItem style={{ fontSize: "12px" }} value={"Organisme"}>Organisme</MenuItem>
                   </Select>
                 </FormControl>
                 <TextField
@@ -445,7 +445,7 @@ const Assurance = ({
                   onChange={settelephone}
                 />
                 <InputContact
-                  className="col mr-2"
+                  className="col"
                   variant="outlined"
                   size="small"
                   label="Fax"
@@ -486,7 +486,7 @@ const Assurance = ({
             onClick={CloseDetailsModal}
             style={{
               textTransform: "none",
-              fontSize: "11px",
+              fontSize: "12px",
             }}
           >
             Annuler
@@ -498,7 +498,7 @@ const Assurance = ({
             onClick={() => { thunkDeleteAssurance(currentAssurance.idassurance) }}
             style={{
               textTransform: "none",
-              fontSize: "11px",
+              fontSize: "12px",
             }}
           >
             Supprimer
@@ -512,7 +512,7 @@ const Assurance = ({
               textTransform: "none",
               backgroundColor: global.theme.primary,
               color: "white",
-              fontSize: "11px",
+              fontSize: "12px",
             }}
           >
             Valider la modification
