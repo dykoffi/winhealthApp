@@ -1002,7 +1002,6 @@ const Bordereau = ({
                     <Button
                         variant="contained"
                         className="mb-2 bg-warning"
-                        onClick={() => { }}
                         startIcon={<EditIcon />}
                         disabled={inputComment.comment.trim() === ""}
                         onClick={() => {

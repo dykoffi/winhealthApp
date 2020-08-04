@@ -14,12 +14,16 @@ import {
     thunkListFactures,
     setShowDetailsFacture,
     thunkDetailsFacture,
+    setShowCommentFacture,
+    thunkReportFacture,
+    thunkCommentFacture,
     setLoading
 } from "../../api/assurance/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import EditIcon from '@material-ui/icons/Edit';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import {
     TextField,
@@ -58,12 +62,20 @@ const Facturesvalides = ({
     setShowDetailsFacture,
     setLoading,
     loading,
-    setListFacturesByAssurance
+    setListFacturesByAssurance,
+    setShowCommentFacture,
+    showCommentFacture,
+    thunkCommentFacture,
+    thunkReportFacture
 }) => {
     const [value, setValue] = useState("");
     const [tousSelectionner, settousSelectionner] = useState("");
     const [modal, setmodal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
+    const [inputComment, setinputComment] = useState({
+        erreur: "",
+        comment: ""
+    })
     const [inputs, setinput] = useState({
         nomassurance: "Tous",
         nomgarant: "Tous",
@@ -357,10 +369,7 @@ const Facturesvalides = ({
                                                 setListFacturesValides([...listFacturesValides])
                                                 settousSelectionner(false)
                                             } else {
-                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu').length) {
-                                                    settousSelectionner(true)
-                                                }
-                                                setListFacturesValides([...listFacturesValides, numerofacture])
+                                                thunkCommentFacture(numerofacture)
                                             }
                                         }} >
                                         <td>{i + 1}</td>
@@ -515,6 +524,113 @@ const Facturesvalides = ({
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                open={showCommentFacture}
+                onClose={() => {
+                    setShowCommentFacture(false)
+                    setinputComment({ erreur: "", comment: "", })
+                }}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+                onEntered={() =>
+                    setinputComment({ erreur: currentFacture.erreurfacture, comment: currentFacture.commentairefacture, })
+                }
+                maxWidth="xs"
+                transitionDuration={0}
+            >
+                <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
+                    <b>Facture N° {currentFacture.numerofacture}</b>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="row mx-1">
+                                <div className="col-12 p-0">
+                                    <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                                    <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
+                                    <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
+                                    <hr className="bg-light" />
+                                    {currentFacture.gestionnaire !== "" && (
+                                        <>
+                                            <small><b>Montant total : </b> {separate(currentFacture.montanttotalfacture)} FCFA</small><br />
+                                            <small><b>Part Assurance : </b> {separate(currentFacture.partassurancefacture)} FCFA</small><br />
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="row mx-1 my-3">
+                                <TextField
+                                    style={{ fontSize: "12px" }}
+                                    className="col-12"
+                                    variant="outlined"
+                                    size="small"
+                                    multiline
+                                    rows={4}
+                                    label="Commentaire"
+                                    defaultValue={currentFacture.commentairefacture}
+                                    onChange={({ target: { value } }) => {
+                                        let v = value
+                                        setinputComment({ ...inputComment, comment: v })
+                                    }}
+                                />
+                            </div>
+                            <div className="col-12 d-flex justify-content-center">
+                                <ReportProblemOutlinedIcon className="bg-warning mr-2" />
+                                <small className="font-weight-bold">
+                                    Le retrait et la modification de la facture sont des actions sans confirmation et irréversibles
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        className="mb-2"
+                        startIcon={<CancelIcon />}
+                        onClick={() => { setShowCommentFacture(false) }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "12px",
+                        }}
+                    >Fermer</Button>
+                    <Button
+                        variant="contained"
+                        className="mb-2 bg-warning"
+                        startIcon={<EditIcon />}
+                        disabled={inputComment.comment.trim() === ""}
+                        onClick={() => {
+                            thunkReportFacture(currentFacture.numerofacture, { ...inputComment, erreur: "warning" })
+                        }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "12px",
+                        }}
+                    >Signaler</Button>
+                    <Button
+                        className="mb-2"
+                        variant="contained"
+                        onClick={() => {
+                            if ([...listFacturesValides, currentFacture.numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu').length) {
+                                settousSelectionner(true)
+                            }
+                            setListFacturesValides([...listFacturesValides, currentFacture.numerofacture])
+                        }}
+                        disabled={listFacturesValides.length === 0}
+                        startIcon={<AssignmentTurnedInIcon />}
+                        style={{
+                            textTransform: "none",
+                            backgroundColor: global.theme.secondaryDark,
+                            color: "white",
+                            fontSize: "12px",
+                        }}
+                    >Facture conforme</Button>
+                </DialogActions>
+            </Dialog>
+
             <Snackbar open={loading} onClose={() => setLoading(false)}>
                 <Alert variant='standard' severity="info" >
                     Chargement ...
@@ -525,8 +641,8 @@ const Facturesvalides = ({
 };
 
 const mapStatToProps = state => {
-    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, loading } } = state
-    return { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, loading }
+    const { bordereauReducer: { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, loading, showCommentFacture } } = state
+    return { listFacturesByAssurance, listFacturesValides, listFactures, currentFacture, showDetailsFacture, loading, showCommentFacture }
 }
-const FacturesvalidesConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDeleteFacturesValides, setListFacturesValides, setListFacturesByAssurance, setShowDetailsFacture, thunkDetailsFacture, setLoading })(Facturesvalides)
+const FacturesvalidesConnected = connect(mapStatToProps, { thunkSendFacturesValides, thunkListFactures, thunkAddBordereau, thunkListFacturesByAssurances, thunkDeleteFacturesValides, setListFacturesValides, thunkReportFacture, setListFacturesByAssurance, setShowCommentFacture, setShowDetailsFacture, thunkDetailsFacture, setLoading, thunkCommentFacture })(Facturesvalides)
 export default FacturesvalidesConnected;
