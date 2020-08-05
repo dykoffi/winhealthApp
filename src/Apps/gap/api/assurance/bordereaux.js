@@ -157,6 +157,23 @@ export function thunkAddBordereau(data) {
     }
 }
 
+//bordereaux
+export function thunkDelBordereau(data) {
+    return async (dispatch) => {
+        dispatch(setLoading(true))
+        Axios({
+            method: "POST",
+            url: `${header.url}/gap/delete/bordereau`,
+            data: data,
+            headers: { "content-type": "application/x-www-form-urlencoded", }
+        }).then(() => {
+            dispatch(thunkListBorderaux())
+            dispatch(setLoading(false))
+            dispatch(setShowModal(false))
+        })
+    }
+}
+
 export function thunkUpdateBordereau(data, numeroBordereau) {
     return async (dispatch) => {
         dispatch(setLoading(true))

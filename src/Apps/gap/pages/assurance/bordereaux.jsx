@@ -25,6 +25,7 @@ import {
     thunkUpdateBordereau,
     setTypeBordereaux,
     thunkReportFacture,
+    thunkDelBordereau,
     setShowCommentFacture
 } from "../../api/assurance/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -93,6 +94,7 @@ const Bordereau = ({
     setListFacturesByAssurance,
     setTypeBordereaux,
     thunkReportFacture,
+    thunkDelBordereau,
     typeBordereaux
 }) => {
     const [value, setValue] = useState("");
@@ -757,24 +759,21 @@ const Bordereau = ({
                         </div>
                         <table className="table-sm col-12 table-hover table-striped my-3">
                             <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                                <tr>{
-                                    [
-                                        "N°",
-                                        "N°facture",
-                                        "Date",
-                                        "Heure",
-                                        "Gestionnaire",
-                                        "Organisme",
-                                        "Type de sejour",
-                                        "N° PEC",
-                                        "Matricule Assuré",
-                                        "Taux",
-                                        "Patient",
-                                        "Assuré Princ",
+                                <tr>{[
+                                    "N°",
+                                    "N°facture",
+                                    "Date",
+                                    "Heure",
+                                    "Gestionnaire",
+                                    "Organisme",
+                                    "Type de sejour",
+                                    "N° PEC",
+                                    "Matricule Assuré",
+                                    "Taux",
+                                    "Patient",
+                                    "Assuré Princ",
 
-                                    ].map((col, i) => (<th className="white-text" key={i}>{col}</th>))
-
-                                }
+                                ].map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
                                     {
                                         ["Montant Total",
                                             "Part Assu",
@@ -789,6 +788,7 @@ const Bordereau = ({
                                     ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture, commentairefacture }, i) => (
                                         <tr
                                             key={numerofacture}
+                                            title={commentairefacture}
                                             style={{ cursor: "pointer" }}
                                             className={erreurfacture === "warning" ? "bg-warning" : ""}
                                             onClick={() => {
@@ -826,8 +826,7 @@ const Bordereau = ({
                                             separate(currentBordereau.filter(bordereau => value2.trim() === "" || RegExp(value2, 'i').test(bordereau.numerofacture)).map(bordereau => bordereau.montanttotalfacture).reduce((acc, curv) => acc + curv))}
                                     </td>
                                     <td className="text-white font-weight-bold text-right bgcolor-primary">
-                                        {
-                                            currentBordereau.filter(bordereau => value2.trim() === "" || RegExp(value2, 'i').test(bordereau.numerofacture)).length !== 0
+                                        {currentBordereau.filter(bordereau => value2.trim() === "" || RegExp(value2, 'i').test(bordereau.numerofacture)).length !== 0
                                             &&
                                             separate(currentBordereau.filter(bordereau => value2.trim() === "" || RegExp(value2, 'i').test(bordereau.numerofacture)).map(bordereau => bordereau.partassurancefacture).reduce((acc, curv) => acc + curv))}
                                     </td>
@@ -860,7 +859,6 @@ const Bordereau = ({
                                 label="Factures CIE/SODECI"
                             />
                         </div>
-
                     </div>
                 </DialogContent>
                 <DialogActions>
@@ -888,7 +886,13 @@ const Bordereau = ({
                         variant="contained"
                         className="mb-2 bg-danger text-white ml-3"
                         startIcon={<DeleteOutlineIcon />}
-                        onClick={() => { thunkDeleteFacturesValides(currentBordereau.numerofacture) }}
+                        onClick={() => {
+                            thunkDelBordereau(
+                                {
+                                    numerobordereau: currentBordereau[0].numerobordereau,
+                                    factures: currentBordereau.map(facture => facture.numerofacture)
+                                })
+                        }}
                         style={{
                             textTransform: "none",
                             fontSize: "12px",
@@ -1288,6 +1292,7 @@ const BordereauConnected = connect(mapStatToProps, {
     setShowDetailsFacture,
     thunkCommentFacture,
     thunkReportFacture,
+    thunkDelBordereau,
     setTypeBordereaux
 })(Bordereau)
 export default BordereauConnected;

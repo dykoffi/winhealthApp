@@ -21,6 +21,11 @@ import {
 } from "../../api/assurance/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
+
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import EditIcon from '@material-ui/icons/Edit';
@@ -69,13 +74,22 @@ const Facturesvalides = ({
     thunkReportFacture
 }) => {
     const [value, setValue] = useState("");
-    const [tousSelectionner, settousSelectionner] = useState("");
     const [modal, setmodal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [inputComment, setinputComment] = useState({
         erreur: "",
         comment: ""
     })
+    const [check, setcheck] = useState({
+        gestionnaire: false,
+        organisme: false,
+        noBon: false,
+        assurePrinc: false,
+        montantTotal: false,
+        partAssurance: false,
+        tauxAssurance: false
+    });
+
     const [inputs, setinput] = useState({
         nomassurance: "Tous",
         nomgarant: "Tous",
@@ -99,7 +113,6 @@ const Facturesvalides = ({
         });
         setListFacturesValides([])
         setListFacturesByAssurance([])
-        settousSelectionner(false)
     };
 
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
@@ -123,7 +136,6 @@ const Facturesvalides = ({
         "Assuré Princ",
     ]
     const global = useContext(GlobalContext);
-
     useEffect(() => {
         thunkListFactures()
         Axios({ url: `${header.url}/gap/list/assurances`, }).then(({ data: { rows } }) => {
@@ -132,9 +144,6 @@ const Facturesvalides = ({
             setListAssurance([{ value: "Tous", label: "Tous" }, ...Assurance]);
         });
     }, []);
-    useEffect(() => {
-        settousSelectionner(false)
-    }, [listFacturesByAssurance])
     useEffect(() => {
         setListFacturesValides([])
     }, [inputs.nomassurance, inputs.typeSejour, inputs.nomgarant, inputs.debutDate, inputs.finDate])
@@ -187,9 +196,7 @@ const Facturesvalides = ({
                                 color: "white",
                                 fontSize: "12px",
                             }}
-                        >
-                            Valider des factures
-                        </Button>
+                        >Valider des factures</Button>
                     </div>
                 </div>
             </div>
@@ -358,7 +365,7 @@ const Facturesvalides = ({
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").map(
-                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture }, i) => (
+                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture, statutfacture }, i) => (
                                     <tr
                                         key={i}
                                         className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
@@ -367,7 +374,6 @@ const Facturesvalides = ({
                                             if (listFacturesValides.includes(numerofacture)) {
                                                 listFacturesValides.splice(listFacturesValides.indexOf(numerofacture), 1)
                                                 setListFacturesValides([...listFacturesValides])
-                                                settousSelectionner(false)
                                             } else {
                                                 thunkCommentFacture(numerofacture)
                                             }
@@ -394,33 +400,11 @@ const Facturesvalides = ({
                         </tbody>
                     </table>
                     {listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length !== 0 &&
-                        <>
-                            <div onClick={() => {
-                                if (tousSelectionner) {
-                                    setListFacturesValides([])
-                                    settousSelectionner(false)
-                                } else {
-                                    setListFacturesValides(
-                                        listFacturesByAssurance
-                                            .filter(facture => facture.statutfacture === 'recu')
-                                            .map(facture => facture.numerofacture)
-                                    )
-                                    settousSelectionner(true)
-                                }
-                            }} style={{ display: "inline" }}>
-                                <Chip
-
-                                    className={`mr-2 ${tousSelectionner ? "bgcolor-secondaryDark text-white font-weight-bold" : ""}`}
-                                    style={{ cursor: "pointer" }}
-                                    label="Tous selectionner"
-                                />
-                            </div>
-                            <Chip
-                                label="Sélectionnée(s)"
-                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} >
-                                    {listFacturesValides.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length} </Avatar>}
-                            />
-                        </>
+                        <Chip
+                            label="Sélectionnée(s)"
+                            avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} >
+                                {listFacturesValides.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length} </Avatar>}
+                        />
                     }
                 </DialogContent>
                 <DialogActions>
@@ -548,18 +532,34 @@ const Facturesvalides = ({
                     <div className="row">
                         <div className="col-12">
                             <div className="row mx-1">
-                                <div className="col-12 p-0">
-                                    <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
-                                    <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
-                                    <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
-                                    <hr className="bg-light" />
-                                    {currentFacture.gestionnaire !== "" && (
-                                        <>
-                                            <small><b>Montant total : </b> {separate(currentFacture.montanttotalfacture)} FCFA</small><br />
-                                            <small><b>Part Assurance : </b> {separate(currentFacture.partassurancefacture)} FCFA</small><br />
-                                        </>
-                                    )}
-                                </div>
+                                <FormControlLabel className="col-12 p-0 m-0" control={<Checkbox checked={check.gestionnaire} onChange={({ target: { checked } }) => {
+                                    setcheck({ ...check, gestionnaire: checked })
+                                }} />}
+                                    label={<small>Gestionnaire : <b>{currentFacture.gestionnaire}</b></small>} />
+                                <FormControlLabel className="col-12 p-0 m-0" control={<Checkbox checked={check.organisme} onChange={({ target: { checked } }) => {
+                                    setcheck({ ...check, organisme: checked })
+                                }} />}
+                                    label={<small>Organisme : <b>{currentFacture.organisme}</b></small>} />
+                                <FormControlLabel className="col-12 p-0 m-0" control={<Checkbox checked={check.noBon} onChange={({ target: { checked } }) => {
+                                    setcheck({ ...check, noBon: checked })
+                                }} />}
+                                    label={<small>N° de Bon : <b>{currentFacture.numeropec}</b></small>} />
+                                <FormControlLabel className="col-12 p-0 m-0" control={<Checkbox checked={check.assurePrinc} onChange={({ target: { checked } }) => {
+                                    setcheck({ ...check, assurePrinc: checked })
+                                }} />}
+                                    label={<small>Assuré principal : <b>{currentFacture.assureprinc}</b></small>} />
+                                <FormControlLabel className="col-12 p-0 m-0" control={<Checkbox checked={check.montantTotal} onChange={({ target: { checked } }) => {
+                                    setcheck({ ...check, montantTotal: checked })
+                                }} />}
+                                    label={<small>Montant Total : <b>{separate(currentFacture.montanttotalfacture)} FCFA</b></small>} />
+                                <FormControlLabel className="col-12 p-0 m-0" control={<Checkbox checked={check.tauxAssurance} onChange={({ target: { checked } }) => {
+                                    setcheck({ ...check, tauxAssurance: checked })
+                                }} />}
+                                    label={<small>Taux : <b>{currentFacture.taux}%</b></small>} />
+                                <FormControlLabel className="col-12 p-0 m-0" control={<Checkbox checked={check.partAssurance} onChange={({ target: { checked } }) => {
+                                    setcheck({ ...check, partAssurance: checked })
+                                }} />}
+                                    label={<small>Part Assurance : <b>{separate(currentFacture.partassurancefacture)} FCFA</b></small>} />
                             </div>
                             <div className="row mx-1 my-3">
                                 <TextField
@@ -579,9 +579,7 @@ const Facturesvalides = ({
                             </div>
                             <div className="col-12 d-flex justify-content-center">
                                 <ReportProblemOutlinedIcon className="bg-warning mr-2" />
-                                <small className="font-weight-bold">
-                                    Le retrait et la modification de la facture sont des actions sans confirmation et irréversibles
-                                </small>
+                                <small className="font-weight-bold">Veuillez vérifier toutes les informations avant de valider la facture</small>
                             </div>
                         </div>
                     </div>
@@ -591,7 +589,18 @@ const Facturesvalides = ({
                         variant="contained"
                         className="mb-2"
                         startIcon={<CancelIcon />}
-                        onClick={() => { setShowCommentFacture(false) }}
+                        onClick={() => {
+                            setShowCommentFacture(false)
+                            setcheck({
+                                gestionnaire: false,
+                                organisme: false,
+                                noBon: false,
+                                assurePrinc: false,
+                                montantTotal: false,
+                                partAssurance: false,
+                                tauxAssurance: false
+                            })
+                        }}
                         style={{
                             textTransform: "none",
                             fontSize: "12px",
@@ -614,12 +623,19 @@ const Facturesvalides = ({
                         className="mb-2"
                         variant="contained"
                         onClick={() => {
-                            if ([...listFacturesValides, currentFacture.numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu').length) {
-                                settousSelectionner(true)
-                            }
                             setListFacturesValides([...listFacturesValides, currentFacture.numerofacture])
+                            setShowCommentFacture(false)
+                            setcheck({
+                                gestionnaire: false,
+                                organisme: false,
+                                noBon: false,
+                                assurePrinc: false,
+                                montantTotal: false,
+                                partAssurance: false,
+                                tauxAssurance: false
+                            })
                         }}
-                        disabled={listFacturesValides.length === 0}
+                        disabled={[...Object.keys(check)].filter(c => check[c] === false).length !== 0}
                         startIcon={<AssignmentTurnedInIcon />}
                         style={{
                             textTransform: "none",
@@ -630,13 +646,12 @@ const Facturesvalides = ({
                     >Facture conforme</Button>
                 </DialogActions>
             </Dialog>
-
             <Snackbar open={loading} onClose={() => setLoading(false)}>
                 <Alert variant='standard' severity="info" >
                     Chargement ...
                 </Alert>
             </Snackbar>
-        </div>
+        </div >
     );
 };
 
