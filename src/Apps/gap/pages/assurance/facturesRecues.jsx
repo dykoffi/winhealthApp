@@ -395,7 +395,7 @@ const FacturesRecues = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').map(
+                            {listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').map(
                                 ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
@@ -435,7 +435,7 @@ const FacturesRecues = ({
                             )}
                         </tbody>
                     </table>
-                    {listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length !== 0 &&
+                    {listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').length !== 0 &&
                         <>
                             <div onClick={() => {
                                 if (tousSelectionner) {
@@ -459,7 +459,7 @@ const FacturesRecues = ({
                             <Chip
                                 label="Sélectionnée(s)"
                                 avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} >
-                                    {listFacturesRecues.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente' && facture.typefacture === 'original').length}
+                                    {listFacturesRecues.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').length}
                                 </Avatar>}
                             />
                         </>
@@ -470,12 +470,10 @@ const FacturesRecues = ({
                     {
                         listFacturesByAssurance.filter(
                             facture => facture.statutfacture === 'attente' &&
-                                facture.typefacture === 'original' &&
                                 !listFacturesRecues.includes(facture.numerofacture)
                         ).length !== 0 &&
                         <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={
                             listFactures.filter(facture => facture.statutfacture === 'attente' &&
-                                facture.typefacture === 'original' &&
                                 !listFacturesRecues.includes(facture.numerofacture)
                             )} />
                     }

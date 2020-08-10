@@ -104,6 +104,7 @@ const Bordereau = ({
     const [pdf, setpdf] = useState(false);
     const [urlPDF, seturlPDF] = useState(false);
     const [modal, setmodal] = useState(false);
+    const [modalUpdate, setmodalUpdate] = useState(false);
     const [cie, setcie] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [statutbordereau, setstatutbordereau] = useState(null)
@@ -116,10 +117,7 @@ const Bordereau = ({
         numeroPEC: "",
         taux: "",
     })
-    const [inputComment, setinputComment] = useState({
-        erreur: "",
-        comment: ""
-    })
+    const [inputComment, setinputComment] = useState({ erreur: "", comment: "" })
     const [inputs, setinput] = useState({
         nomassurance: "",
         nomgarant: "",
@@ -245,7 +243,7 @@ const Bordereau = ({
         setLoading(false)
     }, [inputs.nomassurance, inputs.typeSejour, inputs.nomgarant, inputs.debutDate, inputs.finDate])
     return (
-        <div className="Facturesvalides row p-2">
+        <div className="Bordereau row p-2">
             <div className="col-12">
                 <div className="row">
                     <TextField
@@ -641,8 +639,8 @@ const Bordereau = ({
                 </DialogActions>
             </Dialog>
             <Dialog
-                TransitionComponent={Transition}
                 open={showModal}
+                TransitionComponent={Transition}
                 onClose={() => {
                     setShowModal(false)
                     setcie(false)
@@ -712,48 +710,18 @@ const Bordereau = ({
                                         </Avatar>
                                     }
                                 />
-                                <div className="col p-0 d-flex justify-content-end">
-                                    <FormControl variant="outlined" size="small" className="col-3">
-                                        <InputLabel id="statutbordereau-label">Statut du bordereau  </InputLabel>
-                                        <Select
-                                            labelId="statutbordereau-label"
-                                            id="statutbordereau"
-                                            defaultValue={currentBordereau[0].statutbordereau}
-                                            onChange={({ target: { value } }) => { setstatutbordereau(value) }}
-                                            label="Statut du bordereau "
-                                            style={{ fontSize: "12px" }}
-                                        >
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Envoie"}>Envoie</MenuItem>
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Décharge"}>Décharge réçue</MenuItem>
-                                            <MenuItem style={{ fontSize: "12px" }} value={"Rejeté"}>Rejeté</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                    <TextField
-                                        style={{ fontSize: "12px" }}
-                                        className="col-5 mx-3"
-                                        variant="outlined"
-                                        size="small"
-                                        // multiline
-                                        label="Commentaire"
-                                        defaultValue={currentBordereau[0].commentairebordereau}
-                                        onChange={({ target: { value } }) => {
-                                            let v = value
-                                            setCommentaire(v)
-                                        }}
-                                    />
+                                <div className="col d-flex justify-content-end p-0">
                                     <Button
                                         variant="contained"
                                         className="text-white"
-                                        startIcon={<CheckCircleOutlineIcon />}
-                                        onClick={() => {
-                                            thunkUpdateBordereau({ statut: statutbordereau, commentaire: commentaire }, currentBordereau[0].numerobordereau)
-                                        }}
+                                        startIcon={<EditIcon />}
                                         style={{
                                             textTransform: "none",
                                             fontSize: "12px",
                                             backgroundColor: global.theme.primary
                                         }}
-                                    >Valider</Button>
+                                        onClick={() => { setmodalUpdate(true) }}
+                                    >Modifier</Button>
                                 </div>
                             </div>
                         </div>
@@ -985,9 +953,7 @@ const Bordereau = ({
                             textTransform: "none",
                             fontSize: "12px",
                         }}
-                    >
-                        Annuler
-                    </Button>
+                    >Annuler</Button>
                     <Button
                         variant="contained"
                         className="mb-2 bg-danger text-white"
@@ -1000,9 +966,7 @@ const Bordereau = ({
                             textTransform: "none",
                             fontSize: "12px",
                         }}
-                    >
-                        Retirer
-                    </Button>
+                    >Retirer</Button>
                     <Button
                         variant="contained"
                         className="mb-2 bg-warning"
@@ -1015,9 +979,7 @@ const Bordereau = ({
                             textTransform: "none",
                             fontSize: "12px",
                         }}
-                    >
-                        Signaler
-                </Button>
+                    >Signaler</Button>
                 </DialogActions>
             </Dialog>
             <Dialog
@@ -1236,6 +1198,82 @@ const Bordereau = ({
                     >
                         Valider la modification
                 </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={modalUpdate}
+                onClose={() => { setmodalUpdate(false) }}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+                maxWidth="xs"
+                transitionDuration={0}
+            >
+                <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
+                    <b>Modification de bordereau</b>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="row mx-1">
+                                <FormControl variant="outlined" size="small" className="col">
+                                    <InputLabel id="statutbordereau-label">Statut du bordereau  </InputLabel>
+                                    <Select
+                                        labelId="statutbordereau-label"
+                                        id="statutbordereau"
+                                        defaultValue={currentBordereau[0].statutbordereau}
+                                        onChange={({ target: { value } }) => { setstatutbordereau(value) }}
+                                        label="Statut du bordereau "
+                                        style={{ fontSize: "12px" }}
+                                    >
+                                        <MenuItem style={{ fontSize: "12px" }} value={"Envoie"}>Envoie</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={"Décharge"}>Décharge réçue</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={"Rejeté"}>Rejeté</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="row mx-1 my-3">
+                                <TextField
+                                    style={{ fontSize: "12px" }}
+                                    className="col "
+                                    variant="outlined"
+                                    size="small"
+                                    // multiline
+                                    label="Commentaire"
+                                    defaultValue={currentBordereau[0].commentairebordereau}
+                                    onChange={({ target: { value } }) => { setCommentaire(value) }}
+                                />
+                            </div>
+
+                        </div>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        startIcon={<CancelIcon />}
+                        onClick={() => { setmodalUpdate(false) }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "12px",
+                        }}
+                    >Annuler</Button>
+                    <Button
+                        variant="contained"
+                        className="text-white"
+                        startIcon={<CheckCircleOutlineIcon />}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "12px",
+                            backgroundColor: global.theme.primary
+                        }}
+                        onClick={() => {
+                            thunkUpdateBordereau({ statut: statutbordereau, commentaire: commentaire }, currentBordereau[0].numerobordereau)
+                            setmodalUpdate(false)
+                        }}
+                    >Valider</Button>
                 </DialogActions>
             </Dialog>
             <Snackbar open={loading} onClose={() => setLoading(false)}>

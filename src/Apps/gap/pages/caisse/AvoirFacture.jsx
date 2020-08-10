@@ -73,7 +73,7 @@ const AvoirFacture = ({
   useEffect(() => {
     thunkListFactures();
     setCurrentFacture({})
-    Axios({ url: `${header.url}/gap/list/factures`, }).then(({ data: { rows } }) => {
+    Axios({ url: `${header.url}/gap/list/factures_avoir`, }).then(({ data: { rows } }) => {
       const Factures = [];
       rows
         .filter(facture => facture.restepatientfacture !== 0 && facture.parentfacture.trim() === "" && facture.typefacture === "original")

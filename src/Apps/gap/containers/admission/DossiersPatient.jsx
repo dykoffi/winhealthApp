@@ -334,7 +334,7 @@ const DossiersPatient = ({
                     <KeyboardDatePicker
                       label="Date de début"
                       id="datedebut"
-                      format="dd MMMM yyyy"
+                      format="dd/MM/yyyy"
                       autoOk
                       value={inputs.debutDate}
                       onChange={setdebutDate}
@@ -360,7 +360,7 @@ const DossiersPatient = ({
                     <KeyboardDatePicker
                       id="datefin"
                       label="Date de fin"
-                      format="dd MMMM yyyy"
+                      format="dd/MM/yyyy"
                       autoOk
                       value={inputs.finDate}
                       onChange={setfinDate}

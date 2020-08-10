@@ -123,7 +123,6 @@ const AttenteFacture = ({
                 .replace("(", "")
                 .replace("=", "")
               setValue(v)
-              thunkSearchCompte(v.trim())
             }}
           />
           <div className="col-2">
@@ -172,18 +171,20 @@ const AttenteFacture = ({
               <tr>{columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
             </thead>
             <tbody>
-              {listComptes.map(
-                ({ numerocompte, datecompte, heurecompte, nompatient, prenomspatient, civilitepatient, montantcompte, }, i) => (
-                  <tr key={i} style={{ cursor: "pointer" }} onClick={() => thunkSetCurrentCompte(numerocompte)} >
-                    <td>{i + 1}</td>
-                    <td className="font-weight-bold">{numerocompte}</td>
-                    <td>{datecompte}</td>
-                    <td>{heurecompte}</td>
-                    <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                    <td className="font-weight-bold">{separate(montantcompte)} FCFA</td>
-                  </tr>
-                )
-              )}
+              {listComptes
+                .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerocompte))
+                .map(
+                  ({ numerocompte, datecompte, heurecompte, nompatient, prenomspatient, civilitepatient, montantcompte, }, i) => (
+                    <tr key={i} style={{ cursor: "pointer" }} onClick={() => thunkSetCurrentCompte(numerocompte)} >
+                      <td>{i + 1}</td>
+                      <td className="font-weight-bold">{numerocompte}</td>
+                      <td>{datecompte}</td>
+                      <td>{heurecompte}</td>
+                      <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                      <td className="font-weight-bold">{separate(montantcompte)} FCFA</td>
+                    </tr>
+                  )
+                )}
             </tbody>
           </table>
         )}

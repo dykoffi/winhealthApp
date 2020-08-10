@@ -175,7 +175,7 @@ export function thunkDelBordereau(data) {
 }
 
 export function thunkUpdateBordereau(data, numeroBordereau) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         dispatch(setLoading(true))
         Axios({
             method: "POST",
@@ -183,7 +183,7 @@ export function thunkUpdateBordereau(data, numeroBordereau) {
             data: data,
             headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(() => {
-            dispatch(setShowModal(false))
+            dispatch(thunkDetailsBorderau(getState().bordereauReducer.currentBordereau[0].numerobordereau))
             dispatch(thunkListBorderaux())
             dispatch(setLoading(false))
         })
@@ -319,5 +319,4 @@ export function thunkReportFacture(numeroFacture, data) {
         })
     }
 }
-
 export default borderauReducer

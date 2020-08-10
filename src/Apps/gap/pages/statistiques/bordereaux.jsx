@@ -221,7 +221,6 @@ const Bordereau = ({
                 labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soin"],
                 datasets: listAssurances.map(
                     (assurance, i) => {
-
                         return {
                             label: assurance.label,
                             data: [
@@ -323,7 +322,6 @@ const Bordereau = ({
 
     return (
         <div className="Facturesvalides row p-2">
-
             <div className="col-12 mb-2">
                 <div className="row mb-2 d-flex justify-content-center">
                     <Autocomplete
@@ -449,6 +447,31 @@ const Bordereau = ({
                     </div>
                 </div>
             </div>
+            <table className="table-sm col-12 table-hover table-striped mb-2">
+                <thead style={{ backgroundColor: global.theme.primary }}>
+                    <tr>{["Assurance", "Nombre bordereaux", "Nombre Facture", "Montant total", "Payés", "Impayés"].map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                </thead>
+                <tbody>
+                    {
+                        listAssurances
+                            .filter(assurance => listBordereaux.map(bordereau => bordereau.gestionnairebordereau).includes(assurance.label))
+                            .map((assurance, i) =>
+                                <tr>
+                                    <td>{assurance.label}</td>
+                                    <td>{listBordereaux.filter(bordereau => bordereau.gestionnairebordereau === assurance.label).length}</td>
+                                    <td>{listBordereaux.filter(bordereau => bordereau.gestionnairebordereau === assurance.label).length}</td>
+                                    <td>{
+                                        listBordereaux
+                                            .filter(bordereau => bordereau.gestionnairebordereau === assurance.label)
+                                            ?.map(bordereau => bordereau.montanttotal)
+                                            ?.reduce((acc, curv) => acc + curv)
+                                    }</td>
+                                </tr>
+                            )
+                    }
+                </tbody>
+            </table>
+
             <div className="col-12 mb-2">
                 <div className="row">
                     <TextField

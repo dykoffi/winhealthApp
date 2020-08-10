@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
+import moment from 'moment'
 import GlobalContext from "../../../global/context";
 import { separate } from "../../../global/functions";
 import {
@@ -10,6 +11,7 @@ import {
   thunkDetailsFacture,
   setShowModal,
 } from "../../api/caisse/factures";
+import frLocale from "date-fns/locale/fr";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
@@ -29,6 +31,8 @@ import {
   Button,
   MenuItem,
 } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 const AttenteFacture = ({
   listFacturesAttentes,
@@ -42,7 +46,13 @@ const AttenteFacture = ({
   setShowModal,
 }) => {
   const [projection, setprojection] = useState(false)
-  const [value, setValue] = useState("");
+  const [value, setvalue] = useState("")
+  const [searchinfos, setsearchinfos] = useState({
+    numeroFacture: "",
+    statutFacture: "attente",
+    debutFacture: new Date(),
+    finFacture: new Date()
+  });
   const [inputs, setinput] = useState({
     modepaiement: "",
     montantrecu: "",
@@ -114,68 +124,49 @@ const AttenteFacture = ({
                 .replace(")", "")
                 .replace("(", "")
                 .replace("=", "")
-              setValue(v)
-              thunkSearchFacture(v.trim())
+                .trim()
+              setvalue(v)
+              thunkSearchFacture(v)
             }}
           />
-          <div className="col">
-            <Chip
-              label="Facture(s)"
-              avatar={
-                <Avatar
-                  className="white-text"
-                  style={{ backgroundColor: global.theme.primary }}
-                >
-                  {listFacturesAttentes.length}
-                </Avatar>
-              }
-            />
-          </div>
         </div>
       </div>
-      {listFacturesAttentes.length === 0 ? (
-        <div className="col-12 text-secondary text-center">
-          <h6 className="text-center lead">Aucune facture en attente</h6>
-          <small>
-            Les factures sont générées lors de l'ajout d'un séjour
-          </small>
-        </div>
-      ) : (
-          <table className="col-12 table-sm table-sm table-hover table-striped">
-            <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-              <tr>
-                {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
-                {["Montant Total",
-                  "Part ASSU",
-                  "Reste ASSU",
-                  "Part Patient",
-                  "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
-              </tr>
-            </thead>
-            <tbody>
-              {listFacturesAttentes.map(
-                ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
-                  <tr key={i} style={{ cursor: "pointer" }} onClick={() => handleClickOpen(numerofacture)}>
-                    <td className="font-weight-bold">{i + 1}</td>
-                    <td className="font-weight-bold">{numerofacture}</td>
-                    <td>{datefacture}</td>
-                    <td>{heurefacture}</td>
-                    <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                    <td>{typesejour}</td>
-                    <td>{auteurfacture}</td>
-                    <td className="text-right">{separate(montanttotalfacture)}</td>
-                    <td className="text-right">{separate(partassurancefacture)}</td>
-                    <td className="text-right">{separate(resteassurancefacture)}</td>
-                    <td className="text-right">{separate(partpatientfacture)}</td>
-                    <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
-                      {separate(restepatientfacture)}
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        )}
+
+      <table className="col-12 table-sm table-sm table-hover table-striped">
+        <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+          <tr>
+            {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+            {["Montant Total",
+              "Part ASSU",
+              "Reste ASSU",
+              "Part Patient",
+              "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+          </tr>
+        </thead>
+        <tbody>
+          {listFacturesAttentes
+            .map(
+              ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, statutfacture }, i) => (
+                <tr key={i} style={{ cursor: "pointer" }} onClick={() => handleClickOpen(numerofacture)}>
+                  <td className="font-weight-bold">{i + 1}</td>
+                  <td className="font-weight-bold">{numerofacture}</td>
+                  <td>{datefacture}</td>
+                  <td>{heurefacture}</td>
+                  <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                  <td>{typesejour}</td>
+                  <td>{auteurfacture}</td>
+                  <td className="text-right">{separate(montanttotalfacture)}</td>
+                  <td className="text-right">{separate(partassurancefacture)}</td>
+                  <td className="text-right">{separate(resteassurancefacture)}</td>
+                  <td className="text-right">{separate(partpatientfacture)}</td>
+                  <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
+                    {separate(restepatientfacture)}
+                  </td>
+                </tr>
+              )
+            )}
+        </tbody>
+      </table>
       <Dialog
         open={showModal}
         onClose={handleClose}
@@ -239,7 +230,6 @@ const AttenteFacture = ({
                           <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
-                          <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                         </Select>
                       ) : (
                           <Select
@@ -254,7 +244,6 @@ const AttenteFacture = ({
                             <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                           </Select>
                         )}
                     </FormControl>

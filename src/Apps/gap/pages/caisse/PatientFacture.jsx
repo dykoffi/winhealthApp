@@ -51,6 +51,7 @@ const FacturePatient = ({
   const [listPatients, setListPatients] = useState([]);
   const [modalAllfacture, setModalAllfacture] = useState(false)
   const [compte, setcompte] = useState({ numerocompte: "", solde: "" })
+  const [value, setValue] = useState("");
   const [fg, setfg] = useState([])
   const [inputs, setinput] = useState({
     modepaiement: "",
@@ -129,6 +130,7 @@ const FacturePatient = ({
             size="small"
             className="col-3 p-0"
             id="listpatients"
+            value={currentPatient.nompatient ? currentPatient : listPatients[0]}
             options={listPatients}
             onChange={(event, newValue) => { newValue && thunkListFacturesPatient(newValue) }}
             getOptionLabel={(option) => `(${option.ipppatient}) ${option.nompatient.toUpperCase()} ${option.prenomspatient.toUpperCase()}`}
@@ -152,14 +154,30 @@ const FacturePatient = ({
               />
             )}
           />
+          <TextField
+            className="col-2 ml-2"
+            variant="outlined"
+            size="small"
+            label="Rechercher une facture"
+            value={value}
+            onChange={({ target: { value } }) => {
+              let v = value
+                .replace("*", "")
+                .replace("+", "")
+                .replace("-", "")
+                .replace("/", "")
+                .replace("~", "")
+                .replace("~", "")
+                .replace(")", "")
+                .replace("(", "")
+                .replace("=", "")
+              setValue(v)
+            }}
+          />
         </div>
       </div>
-
       {currentPatient.ipppatient && (
         <>
-          <div className="col-12 p-0 mb-3">
-            <small><b>Patient : </b> {`(${currentPatient.ipppatient}) ${currentPatient.nompatient.toUpperCase()} ${currentPatient.prenomspatient.toUpperCase()}`}</small>
-          </div>
           <div className="col-2 pr-3 p-0">
             <div className="row">
               <div className="col-12">
@@ -236,10 +254,9 @@ const FacturePatient = ({
         </>)
       }
       {listFacturesPatient
-        .filter(facture => facture.typefacture === 'original')
         .length === 0 ? (
           <div className="col-12 text-secondary text-center">
-            <h6 className="text-center lead">Aucune Patient sélectionné</h6>
+            <h6 className="text-center lead">Aucune patient sélectionné</h6>
             <small>Veuillez en sélectionner un dans la liste déroulante</small>
           </div>
         ) : (
@@ -257,7 +274,7 @@ const FacturePatient = ({
               </thead>
               <tbody>
                 {listFacturesPatient
-                  .filter(facture => facture.typefacture === 'original')
+                  .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture))
                   .map(
                     ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
                       <tr key={i} style={{ cursor: "pointer" }}
@@ -580,7 +597,6 @@ const FacturePatient = ({
         </DialogActions>
       </Dialog>
     </div >
-
   );
 };
 

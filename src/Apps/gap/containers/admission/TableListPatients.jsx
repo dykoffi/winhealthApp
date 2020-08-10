@@ -379,7 +379,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
                 <KeyboardDatePicker
                   label="Date de naissance"
                   id="date-picker-dialog"
-                  format="dd MMMM yyyy"
+                  format="dd/MM/yyyy"
                   value={inputs.datenaissance}
                   onChange={setdatenaissance}
                   className="m-1 col-4"
