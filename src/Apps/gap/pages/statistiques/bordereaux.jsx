@@ -251,10 +251,15 @@ const Bordereau = ({
         setpie(new Chart(charPie, {
             type: "doughnut",
             data: {
-                labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté"],
+                labels: ["Envoyé","Décharge","Encaissé", "Rejeté",  ],
                 datasets: [
                     {
-                        data: [nbEnvoie, nbDecharge, nbEncaisse, nbRejete], backgroundColor: [
+                        data: [
+                            nbEnvoie,
+                            nbDecharge,
+                            nbEncaisse,
+                            nbRejete,
+                        ], backgroundColor: [
                             schemeSet3[0],
                             schemeSet3[1],
                             schemeSet3[2],
@@ -275,16 +280,16 @@ const Bordereau = ({
             type: "horizontalBar",
             data: {
                 //Bring in data
-                labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté"],
+                labels: ["Encaissé", "Rejeté", "Décharge", "Envoyé"],
                 datasets: listAssurances.map(
                     (assurance, i) => {
                         return {
                             label: assurance.label,
                             data: [
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Envoie").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Décharge").length,
                                 listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Encaissé").length,
                                 listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Rejeté").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Décharge").length,
+                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Envoie").length,
                             ],
                             borderColor: 'transparent',
                             backgroundColor: schemeSet3[i]

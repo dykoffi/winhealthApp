@@ -654,7 +654,8 @@ const Bordereau = ({
                 onEntered={() => { setstatutbordereau(currentBordereau[0].statutbordereau) }}
             >
                 <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
-                    <b>Bordereau N° {currentBordereau[0].numerobordereau}</b>
+                    <b>Bordereau N° {currentBordereau[0].numerobordereau}</b><br />
+                    {currentBordereau[0].commentairebordereau?.trim() !== '' && <small>"{currentBordereau[0].commentairebordereau}"</small>}
                 </DialogTitle>
                 <DialogContent>
                     <div className="row mx-1">

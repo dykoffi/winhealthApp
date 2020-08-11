@@ -4,7 +4,7 @@ import './onglet.css'
 
 const Onglet = ({ links, currentPage, setCurrentPage }) => {
   return (
-    <div className="row onglets">
+    <div className="row onglets bg-light">
       {links.map(({ title, icon, target }, i) => (
         <div
           key={i}
