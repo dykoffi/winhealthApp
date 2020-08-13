@@ -148,7 +148,7 @@ const Facture = ({ bordereau, cie }) => {
                   :
                   <View style={styles.column}>
                     <Text style={styles.tr}>Nom et prenom du medecin</Text>
-                    {bordereau.map(bordereau => <Text style={{ ...styles.line }}>Audrey Bogui</Text>)}
+                    {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.medecinsejour}</Text>)}
                   </View>
                 }
                 <View style={styles.column}>
