@@ -21,7 +21,16 @@
 // for (let index = 0; index <= 99; index++) {
 //     console.log(index + ': ' + ctol(index));
 // }
+const { execSync } = require('child_process')
+const table = { ["edykoffi"]: "creation" }
+var ok;
+function getIP() {
+    try {
+        let stdout = execSync(`hostname -I`, { stdio: ['pipe', 'pipe', 'ignore'], }).toString(); return stdout.trim();
+    } catch (e) { return ''; }
+}
+ok=getIP()
 
-const table = {["edykoffi"]:"creation"}
-let e = "edykoffi"
-console.log(table[e]);
+console.log(ok);
+// console.log(process.env.nom);
+// console.log(process.env);
