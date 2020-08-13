@@ -56,6 +56,7 @@ const FacturePatient = ({
   const [inputs, setinput] = useState({
     modepaiement: "",
     montantrecu: "",
+    numeroTransaction: ""
   });
 
   const columns = [
@@ -73,6 +74,8 @@ const FacturePatient = ({
   const handleClose = () => { setShowModal(false); setinput({ modepaiement: "", montantrecu: "", }); };
   function setmode({ target: { value } }) { setinput({ ...inputs, modepaiement: value }); }
   function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
+  function setnumeroTransaction({ target: { value } }) { setinput({ ...inputs, numeroTransaction: value }); }
+
 
   function sendGlobalData() {
     fg.push(compte.numerocompte)
@@ -81,6 +84,7 @@ const FacturePatient = ({
     setinput({
       modepaiement: "",
       montantrecu: "",
+      numeroTransaction: ""
     })
   }
   function sendData(numeroFacture) {
@@ -91,6 +95,7 @@ const FacturePatient = ({
     setinput({
       modepaiement: "",
       montantrecu: "",
+      numeroTransaction: ""
     })
   }
   useEffect(() => {
@@ -364,7 +369,6 @@ const FacturePatient = ({
                           <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                           <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
-                          <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                         </Select>
                       ) : (
                           <Select
@@ -379,7 +383,6 @@ const FacturePatient = ({
                             <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
                             <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Remboursement"}>Remboursement</MenuItem>
                           </Select>
                         )}
                     </FormControl>
@@ -388,7 +391,6 @@ const FacturePatient = ({
                       variant="filled"
                       size="small"
                       type="number"
-                      max={10}
                       label="Montant recu"
                       value={inputs.montantrecu}
                       onChange={({ target: { value } }) => {
@@ -405,6 +407,29 @@ const FacturePatient = ({
                         setmontant({ target: { value: v } })
                       }}
                     />
+                    <TextField
+                      className="col-12 mt-2"
+                      variant="filled"
+                      size="small"
+                      type="number"
+                      label="Numero de Transaction"
+                      value={inputs.numeroTransaction}
+                      disabled={!["Chèque","Électronique","Mobile money"].includes(inputs.modepaiement)}
+                      onChange={({ target: { value } }) => {
+                        let v = value
+                          .replace("*", "")
+                          .replace("+", "")
+                          .replace("-", "")
+                          .replace("/", "")
+                          .replace("~", "")
+                          .replace("~", "")
+                          .replace(")", "")
+                          .replace("(", "")
+                          .replace("=", "")
+                          .replace(" ", "")
+                        setnumeroTransaction({ target: { value: v } })
+                      }}
+                    />
                   </div>
                   <div className="col-12 d-flex">
                     <ReportProblemOutlinedIcon className="bg-warning mr-2" />
@@ -412,7 +437,6 @@ const FacturePatient = ({
                   </div>
                 </>
               )}
-
             </div>
           </div>
         </DialogContent>

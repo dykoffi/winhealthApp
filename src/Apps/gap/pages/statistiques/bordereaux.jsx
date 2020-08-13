@@ -219,23 +219,25 @@ const Bordereau = ({
             data: {
                 //Bring in data
                 labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soin"],
-                datasets: listAssurances.map(
-                    (assurance, i) => {
-                        return {
-                            label: assurance.label,
-                            data: [
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Consultation").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Hospitalisation").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Urgence").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Biologie").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Imagerie").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Soin").length,
-                            ],
-                            borderColor: 'transparent',
-                            backgroundColor: schemeSet3[i]
+                datasets: listAssurances
+                    .filter(assurance => listBordereaux.map(bordereau => bordereau.gestionnairebordereau).includes(assurance.label))
+                    .map(
+                        (assurance, i) => {
+                            return {
+                                label: assurance.label,
+                                data: [
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Consultation").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Hospitalisation").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Urgence").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Biologie").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Imagerie").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Soin").length,
+                                ],
+                                borderColor: 'transparent',
+                                backgroundColor: schemeSet3[i]
+                            }
                         }
-                    }
-                )
+                    )
             },
             options: {
                 //Customize chart options
@@ -251,7 +253,7 @@ const Bordereau = ({
         setpie(new Chart(charPie, {
             type: "doughnut",
             data: {
-                labels: ["Envoyé","Décharge","Encaissé", "Rejeté",  ],
+                labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté",],
                 datasets: [
                     {
                         data: [
@@ -281,21 +283,23 @@ const Bordereau = ({
             data: {
                 //Bring in data
                 labels: ["Encaissé", "Rejeté", "Décharge", "Envoyé"],
-                datasets: listAssurances.map(
-                    (assurance, i) => {
-                        return {
-                            label: assurance.label,
-                            data: [
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Encaissé").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Rejeté").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Décharge").length,
-                                listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Envoie").length,
-                            ],
-                            borderColor: 'transparent',
-                            backgroundColor: schemeSet3[i]
+                datasets: listAssurances
+                    .filter(assurance => listBordereaux.map(bordereau => bordereau.gestionnairebordereau).includes(assurance.label))
+                    .map(
+                        (assurance, i) => {
+                            return {
+                                label: assurance.label,
+                                data: [
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Encaissé").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Rejeté").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Décharge").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Envoie").length,
+                                ],
+                                borderColor: 'transparent',
+                                backgroundColor: schemeSet3[i]
+                            }
                         }
-                    }
-                )
+                    )
             },
             options: {
                 //Customize chart options

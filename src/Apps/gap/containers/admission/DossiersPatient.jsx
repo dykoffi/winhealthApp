@@ -89,8 +89,9 @@ const DossiersPatient = ({
     "Date et heure de début",
     "Date et heure de fin",
     "Type de séjour",
+    "Spécialité",
+    "Medecin",
     "Statut du séjour",
-    "Medecin"
   ]
 
   const handleClickOpen = () => { setDisabled(false); setOpen(true); }
@@ -101,6 +102,7 @@ const DossiersPatient = ({
       DebutHeure: new Date(),
       finHeure: new Date(),
       type: "",
+      specialite: "",
       medecin: "",
       gestionnaire: "",
       organisme: "",
@@ -127,6 +129,7 @@ const DossiersPatient = ({
   function setfinHeure(value) { setinput({ ...inputs, finHeure: value }); }
   function settype({ target: { value } }) { setinput({ ...inputs, type: value }); }
   function setmedecin({ target: { value } }) { setinput({ ...inputs, medecin: value }); }
+  function setspecialite({ target: { value } }) { setinput({ ...inputs, specialite: value }); }
   function setgestionnaire(value) { setinput({ ...inputs, gestionnaire: value }); }
   function setorganisme(value) { setinput({ ...inputs, organisme: value }); }
   function setbeneficiaire({ target: { value } }) {
@@ -149,6 +152,7 @@ const DossiersPatient = ({
       DebutHeure: new Date(),
       finHeure: new Date(),
       type: "",
+      specialite: "",
       medecin: "",
       gestionnaire: "",
       organisme: "",
@@ -182,20 +186,19 @@ const DossiersPatient = ({
   }, []);
   useEffect(() => {
     thunkListSejour(currentPatient.iddossier);
-  },
-    [currentPatient.iddossier]);
+  },[currentPatient.iddossier]);
   return (
     <div className="DossiersPatient row px-3">
       {currentSejour !== null && (
         <div className="col-12 white text-secondary mb-2">
-          <div className="row">
+          <div className="row my-2">
             <div className="col-12">
               <div className="row" style={{ fontSize: "14.5px" }}>
                 <div className="col-3">
-                  <h6>Sejour</h6>
-                  <small><b>N° du séjour :</b> {currentSejour.numerosejour}</small><br />
+                  <h6>Sejour ({currentSejour.numerosejour})</h6>
                   <small><b>Date de debut :</b> {currentSejour.datedebutsejour}{" "}{currentSejour.heuredebutsejour}</small><br />
                   <small><b>Date de fin :</b> {currentSejour.datefinsejour}{" "}{currentSejour.heurefinsejour}</small><br />
+                  <small><b>Spécialité :</b> {currentSejour.specialitesejour}</small><br />
                   <small><b>Type du séjour :</b> {currentSejour.typesejour}</small>
                 </div>
                 <div className="col">
@@ -236,7 +239,7 @@ const DossiersPatient = ({
           <hr className="bg-light" />
         </div>
       )}
-      <div className="col-12">
+      <div className="col-12 mt-2">
         <div className="row mb-1">
           <TextField
             className="col-2 mr-1"
@@ -284,14 +287,14 @@ const DossiersPatient = ({
           </div>
         </div>
       </div>
-      <table className="col-12 table-sm table-hover table-striped">
+      <table className="col-12 table-sm mt-2 p-3 table-hover table-striped">
         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
           <tr>{columns.map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
         </thead>
         <tbody>
           {listSejour
             .filter(sejour => value.trim() === "" || RegExp(value, 'i').test(sejour.numerosejour))
-            .map(({ datedebutsejour, datefinsejour, heuredebutsejour, heurefinsejour, typesejour, statussejour, idsejour, numerosejour, medecinsejour }, i) => (
+            .map(({ datedebutsejour, datefinsejour, heuredebutsejour, heurefinsejour, typesejour, statussejour, idsejour, numerosejour, medecinsejour, specialitesejour }, i) => (
               <tr
                 key={i}
                 style={{ cursor: "pointer" }}
@@ -302,8 +305,9 @@ const DossiersPatient = ({
                 <td>{datedebutsejour} {heuredebutsejour}</td>
                 <td>{datefinsejour} {heurefinsejour}</td>
                 <td>{typesejour}</td>
-                <td>{statussejour}</td>
+                <td>{specialitesejour}</td>
                 <td>{medecinsejour}</td>
+                <td>{statussejour}</td>
               </tr>
             ))}
         </tbody>
@@ -325,6 +329,65 @@ const DossiersPatient = ({
           <div className="row">
             <div className="col-12">
               <div className="row mx-1 my-2">
+                <div className="col p-0">
+                  <small className="font-weight-bold">Informations du séjour</small>
+                  <FormControl variant="outlined" size="small" className="col-12 mt-3 mb-1">
+                    <InputLabel id="typesejour-label">Type de séjour</InputLabel>
+                    <Select
+                      labelId="typesejour-label"
+                      id="typesejour"
+                      onChange={settype}
+                      label="Type de séjour"
+                      style={{ fontSize: "12px" }}
+                    >
+                      <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Imagerie"}>Imagerie</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"hospitalisation"}>Hospitalisation</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="col-12 mt-2"
+                  >
+                    <InputLabel id="specialite-label">Spécialité</InputLabel>
+                    <Select
+                      required
+                      labelId="specialite-label"
+                      id="specialite"
+                      onChange={setspecialite}
+                      label="Spécialité"
+                      style={{ fontSize: "12px" }}
+                    >
+                      <MenuItem style={{ fontSize: "12px" }} value={"Pédiatrie"}>Pédiatrie</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Gynécologie"}>Gynécologie</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"Mèdecine générale"}>Mèdecine générale</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    className="col-12 mt-2"
+                  >
+                    <InputLabel id="medecin-label">Médecin</InputLabel>
+                    <Select
+                      required
+                      labelId="medecin-label"
+                      id="medecin"
+                      onChange={setmedecin}
+                      label="Type de séjour"
+                      style={{ fontSize: "12px" }}
+                    >
+                      <MenuItem style={{ fontSize: "12px" }} value={"KOFFI Edy"}>KOFFI Edy</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"N'DONGO Abdoulaye"}>N'DONGO Abdoulaye</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"GBADJE Wilfried"}>GBADJE Wilfried</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"ZAKI Audrey"}>ZAKI Audrey</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
                 <div className="col">
                   <small className="font-weight-bold">Debut du séjour</small>
                   <MuiPickersUtilsProvider
@@ -351,7 +414,7 @@ const DossiersPatient = ({
                     />
                   </MuiPickersUtilsProvider>
                 </div>
-                <div className="col">
+                <div className="col p-0">
                   <small className="font-weight-bold">Fin du séjour</small>
                   <MuiPickersUtilsProvider
                     utils={DateFnsUtils}
@@ -376,46 +439,6 @@ const DossiersPatient = ({
                       className="m-1 col"
                     />
                   </MuiPickersUtilsProvider>
-                </div>
-                <div className="col">
-                  <small className="font-weight-bold">Informations du séjour</small>
-                  <FormControl variant="outlined" size="small" className="col-12 mt-3 mb-1">
-                    <InputLabel id="typesejour-label">Type de séjour</InputLabel>
-                    <Select
-                      labelId="typesejour-label"
-                      id="typesejour"
-                      onChange={settype}
-                      label="Type de séjour"
-                      style={{ fontSize: "12px" }}
-                    >
-                      <MenuItem style={{ fontSize: "12px" }} value={"Consultation"}>Consultation</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"Urgence"}>Urgence</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"Biologie"}>Biologie</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"Imagerie"}>Imagerie</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"hospitalisation"}>Hospitalisation</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl
-                    variant="outlined"
-                    size="small"
-                    className="col-12 mt-2"
-                  >
-                    <InputLabel id="typesejour-label">Médecin</InputLabel>
-                    <Select
-                      required
-                      labelId="typesejour-label"
-                      id="typesejour"
-                      onChange={setmedecin}
-                      label="Type de séjour"
-                      style={{ fontSize: "12px" }}
-                    >
-                      <MenuItem style={{ fontSize: "12px" }} value={"KOFFI Edy"}>KOFFI Edy</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"N'DONGO Abdoulaye"}>N'DONGO Abdoulaye</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"GBADJE Wilfried"}>GBADJE Wilfried</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"ZAKI Audrey"}>ZAKI Audrey</MenuItem>
-                    </Select>
-                  </FormControl>
                 </div>
               </div>
               <small className="font-weight-bold">Informations pour patient assuré</small>
@@ -538,15 +561,14 @@ const DossiersPatient = ({
                   disabled={inputs.assurePrinc.trim() === ""}
                 />
               </div>
-              <table className="col-12 table-sm mx-1 mt-2">
+              <table className="col-12 table-sm p-0 mt-2">
                 <thead>
-                  <tr className="p-2 row" style={{ backgroundColor: global.theme.primary }}>
+                  <tr className="row" style={{ backgroundColor: global.theme.primary }}>
                     <th className="white-text col" >Code</th>
                     <th className="white-text col-2" >Prix U</th>
                     <th className="white-text col-2" >Plafond Assu</th>
                     <th className="white-text col-1" >Qte</th>
                     <th className="white-text col-2" >Prix T</th>
-                    <th className="transparent-text col-auto" > <DeleteOutlineIcon /></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -609,8 +631,7 @@ const DossiersPatient = ({
                         listTemp[i][4] = value * listActesDef[i][1]
                         setListActesDef(listTemp)
                       }} size="small" /></td>
-                      <td className="col-2"> <Input disabled value={listActesDef[i][4]} size="small" /></td>
-                      <td className="col-auto">
+                      <td className="col-2 d-flex flex-row"> <Input disabled value={listActesDef[i][4]} size="small" />
                         {i === listActesDef.length - 1 &&
                           (<IconButton size="small" aria-label="delete" onClick={() => {
                             let listTemp = [...listActesDef]

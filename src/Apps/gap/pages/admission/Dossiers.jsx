@@ -11,7 +11,7 @@ const Dossiers = ({ currentPatient }) => {
           <section className="col-12 p-0">
             <DetailsPatient />
           </section>
-          <section className="col-12 p-3">
+          <section className="col-12 p-0">
             <DossiersPatient />
           </section>
         </>

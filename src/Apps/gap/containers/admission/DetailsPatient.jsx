@@ -153,9 +153,16 @@ const DetailsPatient = ({ currentPatient, thunkModifPatient, thunkDeletePatient,
         {/* <IconButton className="mx-2 bg-light" size="small" aria-label="delete" onClick={() => { }}>
           <DeleteOutlineIcon />
         </IconButton> */}
-        <IconButton className="mx-2 bg-light" size="small" aria-label="delete" onClick={() => { setModalModif(true) }}>
-          <EditIcon />
-        </IconButton>
+        <Button
+          style={{ textTransform: 'none', fontSize: '12px' }}
+          startIcon={<EditIcon />}
+          className="mx-2 bg-light"
+          size="small"
+          aria-label="delete"
+          variant="contained"
+          onClick={() => { setModalModif(true) }}>
+          Modifier
+        </Button>
       </div>
       <Dialog
         disableBackdropClick
