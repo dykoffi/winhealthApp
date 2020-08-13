@@ -1,8 +1,8 @@
 import io from 'socket.io-client';
 const apihostprod = "mail.altea-ci.com:35000"
-const apihosttest = "localhost:8000"
-const pdfhosttest = "localhost:3000"
-const pdfhostprod = "localhost:3000"
+const apihosttest = "192.168.16.211:8000"
+const pdfhosttest = "192.168.16.211:3000"
+const pdfhostprod = "192.168.16.211:3000"
 
 export const header = {
     timeout: 1000,
