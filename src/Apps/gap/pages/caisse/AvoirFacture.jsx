@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import GlobalContext from "../../../global/context";
 import { separate } from "../../../global/functions";
 import {
-  thunkListFactures,
+  thunkListAvoirFactures,
   thunkEncaisserFactures,
   thunkAnnulerFactures,
   thunkSearchFacture,
@@ -33,7 +33,7 @@ import Axios from "axios";
 const AvoirFacture = ({
   currentFacture,
   showModal,
-  thunkListFactures,
+  thunkListAvoirFactures,
   thunkDetailsFacture,
   thunkSearchFacture,
   setShowModal,
@@ -71,9 +71,9 @@ const AvoirFacture = ({
 
   const global = useContext(GlobalContext);
   useEffect(() => {
-    thunkListFactures();
+    thunkListAvoirFactures();
     setCurrentFacture({})
-    Axios({ url: `${header.url}/gap/list/factures_avoir`, }).then(({ data: { rows } }) => {
+    Axios({ url: `${header.url}/gap/list/factures`, }).then(({ data: { rows } }) => {
       const Factures = [];
       rows
         .filter(facture => facture.restepatientfacture !== 0 && facture.parentfacture.trim() === "" && facture.typefacture === "original")
@@ -103,7 +103,6 @@ const AvoirFacture = ({
                 .replace("(", "")
                 .replace("=", "")
               setValue(v)
-              thunkSearchFacture(v.trim())
             }}
           />
           <div className="col">
@@ -114,7 +113,7 @@ const AvoirFacture = ({
                   className="white-text"
                   style={{ backgroundColor: global.theme.primary }}
                 >
-                  {listFactures.filter(facture => facture.typefacture === "avoir").length}
+                  {listFactures.length}
                 </Avatar>
               }
             />
@@ -139,7 +138,7 @@ const AvoirFacture = ({
         </div>
       </div>
       {listFactures
-        .filter(facture => facture.typefacture === "avoir")
+        .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture))
         .length === 0 ? (
           <div className="col-12 text-secondary text-center">
             <h6 className="text-center lead">Aucune facture d'avoir</h6>
@@ -336,7 +335,7 @@ const mapStateToProps = (state) => {
 };
 
 const AvoirFactureConnected = connect(mapStateToProps, {
-  thunkListFactures,
+  thunkListAvoirFactures,
   thunkEncaisserFactures,
   thunkAnnulerFactures,
   thunkSearchFacture,

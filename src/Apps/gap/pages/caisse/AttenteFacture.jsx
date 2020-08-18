@@ -56,24 +56,31 @@ const AttenteFacture = ({
   const [inputs, setinput] = useState({
     modepaiement: "",
     montantrecu: "",
+    numeroTransaction: ""
   });
 
   const handleClickOpen = (numeroFacture) => { thunkDetailsFacture(numeroFacture); };
   const handleClose = () => {
     setprojection(false)
     setShowModal(false)
-    setinput({ modepaiement: "", montantrecu: "", })
+    setinput({
+      modepaiement: "",
+      montantrecu: "",
+      numeroTransaction: ""
+    })
   };
   function setmode({ target: { value } }) { setinput({ ...inputs, modepaiement: value }); }
-  function setmontant(value) { setinput({ ...inputs, montantrecu: value }); }
+  function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
+  function setnumeroTransaction({ target: { value } }) { setinput({ ...inputs, numeroTransaction: value }); }
   function project() {
     socket.emit("project_facture", currentFacture)
     projection ? setprojection(false) : setprojection(true);
   }
-  function sendData(numeroFacture) {
+  function sendData(numeroFacture, patient) {
     thunkEncaisserFactures(numeroFacture, {
       ...inputs,
       compte: currentFacture.numerocompte,
+      patient: patient
     });
     handleClose();
   }
@@ -168,13 +175,12 @@ const AttenteFacture = ({
         </tbody>
       </table>
       <Dialog
+        disableBackdropClick
+        transitionDuration={0}
         open={showModal}
         onClose={handleClose}
-        disableBackdropClick
-        disableEscapeKeyDown
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        transitionDuration={0}
         fullWidth={true}
         maxWidth="xs"
       >
@@ -265,7 +271,27 @@ const AttenteFacture = ({
                           .replace(")", "")
                           .replace("(", "")
                           .replace("=", "")
-                        setmontant(v)
+                        setmontant({ target: { value: v } })
+                      }}
+                    />
+                    <TextField
+                      className="col-12 mt-2"
+                      variant="filled"
+                      size="small"
+                      label="Numero de Transaction"
+                      value={inputs.numeroTransaction}
+                      disabled={!["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement)}
+                      onChange={({ target: { value } }) => {
+                        let v = value
+                          .replace("*", "")
+                          .replace("+", "")
+                          .replace("/", "")
+                          .replace("~", "")
+                          .replace("~", "")
+                          .replace(")", "")
+                          .replace("(", "")
+                          .replace("=", "")
+                        setnumeroTransaction({ target: { value: v } })
                       }}
                     />
                   </div>
@@ -279,13 +305,6 @@ const AttenteFacture = ({
           </div>
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="contained"
-            className={`mb-2 ${projection && "red text-white"}`}
-            startIcon={<DesktopWindowsIcon />}
-            onClick={() => { project(); }}
-            style={{ textTransform: "none", fontSize: "13px", }}
-          >projeter</Button>
           <Button
             variant="contained"
             className="mb-2"
@@ -304,9 +323,11 @@ const AttenteFacture = ({
             disabled={
               inputs.modepaiement.trim() === "" ||
               inputs.montantrecu.trim() === "" ||
-              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.restepatientfacture)
+              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.restepatientfacture) ||
+              (inputs.modepaiement === 'Compte' && parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.montantcompte)) ||
+              (["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement) && inputs.numeroTransaction.trim() === '')
             }
-            onClick={() => sendData(currentFacture.numerofacture)}
+            onClick={() => sendData(currentFacture.numerofacture, currentFacture.nompatient + " " + currentFacture.prenomspatient)}
             startIcon={<CheckCircleOutlineIcon />}
             style={{
               textTransform: "none",

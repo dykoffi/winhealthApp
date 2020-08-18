@@ -95,12 +95,8 @@ const AttenteFacture = ({
     }).then(({ data: { rows } }) => {
       setListPatients(rows);
     });
-
     thunkListComptes();
-    socket.on("facture_nouvelle", () => {
-      thunkListComptes();
-    });
-  }, []);
+  }, [listComptes]);
   return (
     <div className="AttenteFacture row p-2">
       <div className="col-12">
@@ -172,7 +168,7 @@ const AttenteFacture = ({
             </thead>
             <tbody>
               {listComptes
-                .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerocompte))
+                .filter(compte => value.trim() === "" || RegExp(value, 'i').test(compte.numerocompte))
                 .map(
                   ({ numerocompte, datecompte, heurecompte, nompatient, prenomspatient, civilitepatient, montantcompte, }, i) => (
                     <tr key={i} style={{ cursor: "pointer" }} onClick={() => thunkSetCurrentCompte(numerocompte)} >
@@ -189,6 +185,7 @@ const AttenteFacture = ({
           </table>
         )}
       <Dialog
+        disableBackdropClick
         open={openNewCompte}
         onClose={closeNewCompte}
         aria-labelledby="alert-dialog-title"
@@ -206,10 +203,10 @@ const AttenteFacture = ({
         <DialogContent>
           <div className="row">
             <div className="col-12">
-              <div className="row mx-1">
+              <div className="row">
                 <Autocomplete
                   size="small"
-                  className="col-12"
+                  className="col p-0"
                   id="listpatients"
                   options={listPatients}
                   onChange={(event, newValue) => { newValue ? setipp(newValue.ipppatient) : setipp(null) }}
@@ -231,7 +228,7 @@ const AttenteFacture = ({
                     <TextField
                       {...params}
                       label="Patient"
-                      variant="outlined"
+                      variant="filled"
                       placeholder="Rechercher le patient ..."
                     />
                   )}
@@ -292,8 +289,8 @@ const AttenteFacture = ({
               <small> <b>Patient : {" "} </b>{currentCompte.nompatient}{" "}{currentCompte.prenomspatient}</small><br />
               <small> <b>N° compte : {" "} </b>{currentCompte.numerocompte}</small><br />
               <small> <b>Solde : {" "} </b>{separate(currentCompte.montantcompte)} FCFA</small><br />
-              <div className="row my-3 mx-1">
-                <FormControl variant="filled" size="small" className="col-12">
+              <div className="row my-2 mx-1">
+                <FormControl variant="filled" size="small" className="col">
                   <InputLabel id="typetransaction-label">Type</InputLabel>
                   <Select
                     labelId="typetransaction-label"
@@ -309,7 +306,7 @@ const AttenteFacture = ({
                   </Select>
                 </FormControl>
               </div>
-              <div className="row my-3 mx-1">
+              <div className="row my-2 mx-1">
                 <FormControl
                   variant="filled"
                   size="small"
@@ -374,7 +371,13 @@ const AttenteFacture = ({
             className="mb-2"
             onClick={validTransaction}
             startIcon={<CheckCircleOutlineIcon />}
-            disabled={inputs.mode.trim() === "" || inputs.type.trim() === "" || inputs.montant.trim() === ""}
+            disabled={
+              inputs.mode.trim() === "" ||
+              inputs.type.trim() === "" ||
+              inputs.montant.trim() === "" ||
+              (inputs.type === 'Remboursement' && inputs.montant.trim() > currentCompte.montantcompte)
+
+            }
             style={{
               textTransform: "none",
               backgroundColor: global.theme.primary,

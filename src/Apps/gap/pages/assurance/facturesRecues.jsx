@@ -226,7 +226,7 @@ const FacturesRecues = ({
                                 color: "white",
                                 fontSize: "12px",
                             }}
-                        >Nouvelles factures recues</Button>
+                        >Nouvelles factures reçues</Button>
                     </div>
                 </div>
             </div>
@@ -297,7 +297,7 @@ const FacturesRecues = ({
                         <div className="row mb-2 d-flex justify-content-center">
                             <Autocomplete
                                 size="small"
-                                className="col-2 p-0"
+                                className="col p-0"
                                 id="AssuranceList1"
                                 defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
@@ -310,12 +310,12 @@ const FacturesRecues = ({
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
                                 renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Gestionnaire" placeholder="Ajouter ..." />)}
+                                renderInput={(params) => (<TextField {...params} variant="filled" label="Gestionnaire" placeholder="Ajouter ..." />)}
                             />
                             <Autocomplete
                                 size="small"
                                 id="AssuranceList2"
-                                className="col-2 p-0 mx-2"
+                                className="col p-0 mx-2"
                                 defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
                                 onChange={(event, newValue) => {
@@ -327,9 +327,9 @@ const FacturesRecues = ({
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
                                 renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Garant" placeholder="Selectionner ..." />)}
+                                renderInput={(params) => (<TextField {...params} variant="filled" label="Garant" placeholder="Selectionner ..." />)}
                             />
-                            <FormControl variant="outlined" size="small" className="col-2">
+                            <FormControl variant="filled" size="small" className="col">
                                 <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                                 <Select
                                     defaultValue="Tous"
@@ -353,10 +353,9 @@ const FacturesRecues = ({
                                     <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
                                 </Select>
                             </FormControl>
-                            <small className="mx-2">Du</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datedebut" value={inputs.debutDate} defaultValue={new Date("2020-01-01")} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker label='Du' id="datedebut" value={inputs.debutDate} defaultValue={new Date("2020-01-01")} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setdebutDate(date)
                                             thunkListFacturesByAssurances({
@@ -368,10 +367,9 @@ const FacturesRecues = ({
                                     } />
                                 </MuiPickersUtilsProvider>
                             </div>
-                            <small className="mx-2">Au</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datefin" value={inputs.finDate} defaultValue={new Date("2020-12-31")} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker label='Au' id="datefin" value={inputs.finDate} defaultValue={new Date("2020-12-31")} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setfinDate(date)
                                             thunkListFacturesByAssurances({
@@ -566,7 +564,7 @@ const FacturesRecues = ({
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            variant="outlined"
+                                            variant="filled"
                                             label="Gestionnaire"
                                             placeholder="Ajouter ..."
                                         />
@@ -585,7 +583,7 @@ const FacturesRecues = ({
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            variant="outlined"
+                                            variant="filled"
                                             label="Organisme"
                                             placeholder="Ajouter ..."
                                         />
@@ -594,7 +592,7 @@ const FacturesRecues = ({
                             </div>
                             <div className="row mx-1 my-3">
                                 <FormControl
-                                    variant="outlined"
+                                    variant="filled"
                                     size="small"
                                     className="col"
                                 >
@@ -615,7 +613,7 @@ const FacturesRecues = ({
                                 </FormControl>
                                 <Input
                                     className="col-7 ml-2"
-                                    variant="outlined"
+                                    variant="filled"
                                     size="small"
                                     defaultValue=" "
                                     label="Identité de l'Assuré"
@@ -626,7 +624,7 @@ const FacturesRecues = ({
                             <div className="row mx-1 my-2">
                                 <Input
                                     className="col-4"
-                                    variant="outlined"
+                                    variant="filled"
                                     size="small"
                                     label="Matricule"
                                     defaultValue={currentFacture.matriculeassure}
@@ -634,14 +632,14 @@ const FacturesRecues = ({
                                 />
                                 <Input
                                     className="col-4 mx-2"
-                                    variant="outlined"
+                                    variant="filled"
                                     size="small"
                                     label="N° PEC"
                                     defaultValue={currentFacture.numeropec}
                                     onChange={setnumeroPEC}
                                 />
                                 <FormControl
-                                    variant="outlined"
+                                    variant="filled"
                                     size="small"
                                     className="col"
                                 >

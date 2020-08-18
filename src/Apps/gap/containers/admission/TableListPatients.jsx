@@ -35,6 +35,8 @@ import qr from '../../../../static/images/qr2.png'
 import { header } from "../../../global/apiQuery";
 import { MenuItem, InputLabel, FormControl } from "@material-ui/core";
 import Axios from "axios";
+import { listpays } from "../../../global/functions";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const Input = withStyles({
   root: {
@@ -167,7 +169,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
       qualitepersonnesure: "",
     }); setModalAdd(false);
   };
-  
+
   function verifyField() {
     const {
       nom,
@@ -191,7 +193,10 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
     }
   }
 
-  useEffect(() => { thunkListPatient(); }, []);
+  useEffect(() => {
+    thunkListPatient();
+
+  }, []);
   return (
     <div className="row">
       <div className="col-12">
@@ -387,13 +392,25 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
               </MuiPickersUtilsProvider>
             </div>
             <div className="row py-1">
-              <Input
-                className="m-1 col"
-                variant="standard"
+              <Autocomplete
                 size="small"
-                label="Nationalité"
-                value={inputs.nationalite}
-                onChange={setnationalite}
+                className="col p-0 mt-1"
+                id="payslist"
+                options={listpays.map(pays => { return { label: pays } })}
+                onChange={(event, newValue) => { newValue ? setnationalite({ target: { value: newValue.label } }) : setnationalite({ target: { value: "" } }) }}
+                getOptionLabel={(option) => option.label}
+                filterSelectedOptions
+                renderOption={(option) => (<>
+                  <small style={{ fontSize: "12px" }}>{option.label}</small>
+                </>)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    label="Nationalité"
+                    placeholder="Ajouter ..."
+                  />
+                )}
               />
               <Input
                 required
@@ -633,7 +650,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
             </Button>
           </DialogActions>
         </Dialog>
-       { //Scanner un qr code pour avoir le dossier du patient
+        { //Scanner un qr code pour avoir le dossier du patient
           scanQR && !modalModif && !modalAdd && <div style={{ position: "fixed", zIndex: "10001", right: "0.5cm", bottom: "0.5cm" }}
             className="bg-light col-2 d-flex p-0 flex-column border justify-content-center text-center align-items-center">
             <img src={qr} height={125} width={125} alt="" className="animated infinite flash" />
@@ -664,5 +681,5 @@ const mapStateToProp = (state) => {
   const { PatientReducer: { listPatients, modalAdd, currentPatient }, } = state;
   return { listPatients, modalAdd, currentPatient };
 };
-const TableListPatientConnected = connect(mapStateToProp, { thunkListPatient, thunkAddPatient,thunkDetailsPatient, thunkSearchPatient, setModalAdd })(TableListPatient);
+const TableListPatientConnected = connect(mapStateToProp, { thunkListPatient, thunkAddPatient, thunkDetailsPatient, thunkSearchPatient, setModalAdd })(TableListPatient);
 export default TableListPatientConnected;

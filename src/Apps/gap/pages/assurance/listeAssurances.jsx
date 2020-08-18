@@ -39,7 +39,7 @@ const InputContact = (props) => (
     value={props.value}
     onChange={props.onChange}
   >
-    {(inputProps) => <TextField variant="outlined" type="tel" {...props} />}
+    {(inputProps) => <TextField variant="filled" type="tel" {...props} />}
   </InputMask>
 )
 
@@ -245,21 +245,21 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Nom"
                   onChange={setnom}
                 />
                 <TextField
                   className="col"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Code"
                   onChange={setcode}
                 />
               </div>
               <div className="row my-3 mx-1">
-                <FormControl variant="outlined" size="small" className="col">
+                <FormControl variant="filled" size="small" className="col">
                   <InputLabel id="typeAssurance-label">
                     Type d'assurance
                   </InputLabel>
@@ -283,7 +283,7 @@ const Assurance = ({
                 </FormControl>
                 <TextField
                   className="col-6 ml-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Adresse"
                   onChange={setadresse}
@@ -292,7 +292,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <InputContact
                   className="col mr-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Telephone"
                   value={inputs.telephone}
@@ -300,7 +300,7 @@ const Assurance = ({
                 />
                 <InputContact
                   className="col"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Fax"
                   value={inputs.fax}
@@ -310,14 +310,14 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Mail"
                   onChange={setmail}
                 />
                 <TextField
                   className="col"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Site web"
                   onChange={setsite_web}
@@ -394,7 +394,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Nom"
                   defaultValue={currentAssurance.nomassurance}
@@ -402,7 +402,7 @@ const Assurance = ({
                 />
                 <TextField
                   className="col"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Code"
                   defaultValue={currentAssurance.codeassurance}
@@ -410,7 +410,7 @@ const Assurance = ({
                 />
               </div>
               <div className="row my-3 mx-1">
-                <FormControl variant="outlined" size="small" className="col">
+                <FormControl variant="filled" size="small" className="col">
                   <InputLabel id="typeAssurance-label">
                     Type d'assurance
                   </InputLabel>
@@ -428,7 +428,7 @@ const Assurance = ({
                 </FormControl>
                 <TextField
                   className="col-6 ml-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Adresse"
                   defaultValue={currentAssurance.localassurance}
@@ -438,7 +438,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <InputContact
                   className="col mr-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Telephone"
                   value={inputs.telephone}
@@ -446,7 +446,7 @@ const Assurance = ({
                 />
                 <InputContact
                   className="col"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Fax"
                   value={inputs.fax}
@@ -456,7 +456,7 @@ const Assurance = ({
               <div className="row my-3 mx-1">
                 <TextField
                   className="col mr-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Mail"
                   defaultValue={currentAssurance.mailassurance}
@@ -464,7 +464,7 @@ const Assurance = ({
                 />
                 <TextField
                   className="col"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Site web"
                   defaultValue={currentAssurance.siteassurance}

@@ -71,7 +71,14 @@ const FacturePatient = ({
 
   const global = useContext(GlobalContext);
   const handleClickOpen = (numeroFacture) => { thunkDetailsFacture(numeroFacture); };
-  const handleClose = () => { setShowModal(false); setinput({ modepaiement: "", montantrecu: "", }); };
+  const handleClose = () => {
+    setShowModal(false);
+    setinput({
+      modepaiement: "",
+      montantrecu: "",
+      numeroTransaction: ""
+    });
+  };
   function setmode({ target: { value } }) { setinput({ ...inputs, modepaiement: value }); }
   function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
   function setnumeroTransaction({ target: { value } }) { setinput({ ...inputs, numeroTransaction: value }); }
@@ -87,16 +94,13 @@ const FacturePatient = ({
       numeroTransaction: ""
     })
   }
-  function sendData(numeroFacture) {
+  function sendData(numeroFacture, patient) {
     thunkEncaisserFactures(numeroFacture, {
       ...inputs,
       compte: currentFacture.numerocompte,
+      patient: patient
     });
-    setinput({
-      modepaiement: "",
-      montantrecu: "",
-      numeroTransaction: ""
-    })
+    handleClose();
   }
   useEffect(() => {
     Axios({ url: `${header.url}/gap/list/patients`, }).then(({ data: { rows } }) => {
@@ -145,8 +149,7 @@ const FacturePatient = ({
                 <small>
                   ({option.ipppatient}) {option.nompatient}{" "}
                   {option.prenomspatient} né le{" "}
-                  {option.datenaissancepatient} à{" "}
-                  {option.lieunaissancepatient}
+                  {option.datenaissancepatient}
                 </small>
               </>
             )}
@@ -411,22 +414,19 @@ const FacturePatient = ({
                       className="col-12 mt-2"
                       variant="filled"
                       size="small"
-                      type="number"
                       label="Numero de Transaction"
                       value={inputs.numeroTransaction}
-                      disabled={!["Chèque","Électronique","Mobile money"].includes(inputs.modepaiement)}
+                      disabled={!["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement)}
                       onChange={({ target: { value } }) => {
                         let v = value
                           .replace("*", "")
                           .replace("+", "")
-                          .replace("-", "")
                           .replace("/", "")
                           .replace("~", "")
                           .replace("~", "")
                           .replace(")", "")
                           .replace("(", "")
                           .replace("=", "")
-                          .replace(" ", "")
                         setnumeroTransaction({ target: { value: v } })
                       }}
                     />
@@ -459,7 +459,9 @@ const FacturePatient = ({
             disabled={
               inputs.modepaiement.trim() === "" ||
               inputs.montantrecu.trim() === "" ||
-              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.restepatientfacture)
+              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.restepatientfacture) ||
+              (inputs.modepaiement === 'Compte' && parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.montantcompte)) ||
+              (["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement) && inputs.numeroTransaction.trim() === '')
             }
             onClick={() => sendData(currentFacture.numerofacture)}
             startIcon={<CheckCircleOutlineIcon />}
@@ -540,7 +542,7 @@ const FacturePatient = ({
                       <InputLabel id="typesejour-label">
                         Mode de paiement
                     </InputLabel>
-                      {compte.solde > 0 ? (
+                      {compte.solde > 0 && compte.solde > stats.reste ? (
                         <Select
                           labelId="typesejour-label"
                           id="typesejour"

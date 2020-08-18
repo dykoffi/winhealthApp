@@ -266,7 +266,7 @@ export function thunkModifyFacture(numeroSejour, data) {
         dispatch(setLoading(true))
         Axios({
             method: "POST",
-            url: `${header.url}/gap/update/sejour/${numeroSejour}`,
+            url: `${header.url}/gap/update/sejour/${numeroSejour}/${getState().bordereauReducer.currentFacture.numerofacture}`,
             data: data,
             headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(() => {

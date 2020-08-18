@@ -260,14 +260,14 @@ const Facturesvalides = ({
                     className="text-center text-secondary"
                     id="alert-dialog-title"
                 >
-                    <b>Valider des factures conformes</b>
+                    <b>Valider les factures conformes</b>
                 </DialogTitle>
                 <DialogContent>
                     <div className="col-12">
                         <div className="row mb-2 d-flex justify-content-center">
                             <Autocomplete
                                 size="small"
-                                className="col-2 p-0"
+                                className="col p-0"
                                 id="AssuranceList"
                                 defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={listAssurances}
@@ -280,11 +280,11 @@ const Facturesvalides = ({
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
                                 renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Gestionnaire" placeholder="Ajouter ..." />)}
+                                renderInput={(params) => (<TextField {...params} variant="filled" label="Gestionnaire" placeholder="Ajouter ..." />)}
                             />
                             <Autocomplete
                                 size="small"
-                                className="col-2 p-0 mx-2"
+                                className="col p-0 mx-2"
                                 defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
@@ -296,9 +296,9 @@ const Facturesvalides = ({
                                 getOptionLabel={(option) => option.label}
                                 filterSelectedOptions
                                 renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                                renderInput={(params) => (<TextField {...params} variant="outlined" label="Garant" placeholder="Selectionner ..." />)}
+                                renderInput={(params) => (<TextField {...params} variant="filled" label="Garant" placeholder="Selectionner ..." />)}
                             />
-                            <FormControl variant="outlined" size="small" className="col-2">
+                            <FormControl variant="filled" size="small" className="col">
                                 <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                                 <Select
                                     labelId="typesejour-label"
@@ -322,10 +322,9 @@ const Facturesvalides = ({
                                     <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
                                 </Select>
                             </FormControl>
-                            <small className="mx-2">Du</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datedebut" defaultValue={new Date("2020-01-01")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker label='Du' id="datedebut" defaultValue={new Date("2020-01-01")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setdebutDate(date)
                                             thunkListFacturesByAssurances({
@@ -337,10 +336,9 @@ const Facturesvalides = ({
                                     } />
                                 </MuiPickersUtilsProvider>
                             </div>
-                            <small className="mx-2">Au</small>
                             <div className="col-2">
                                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                                    <KeyboardDatePicker id="datefin" defaultValue={new Date("2020-12-31")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
+                                    <KeyboardDatePicker label='Au' id="datefin" defaultValue={new Date("2020-12-31")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
                                         (date) => {
                                             setfinDate(date)
                                             thunkListFacturesByAssurances({
@@ -526,7 +524,8 @@ const Facturesvalides = ({
                 transitionDuration={0}
             >
                 <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
-                    <b>Facture N° {currentFacture.numerofacture}</b>
+                    <b>Facture N° {currentFacture.numerofacture}</b><br/>
+                    <small>Checklist de la vérification de facture</small>
                 </DialogTitle>
                 <DialogContent>
                     <div className="row">

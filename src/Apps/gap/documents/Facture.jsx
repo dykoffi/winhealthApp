@@ -153,18 +153,18 @@ const Facture = ({
 const DocFoot = ({ url, facture }) => (
   <View style={{ flex: "auto", display: "flex", flexDirection: "column", }}>
     <View style={{ flex: 1, fontSize: 8, display: 'flex', marginTop: 7, color: "grey", lineHeight: 1.5, borderBottomColor: 'grey', borderBottomStyle: 'solid', borderBottomWidth: 0.5 }}>
-      <Text style={styles.tr}>COUPON À JOINDRE AU RÈGLEMENT</Text>
+      <Text style={{ ...styles.tr, textAlign: 'center' }}>COUPON À JOINDRE AU RÈGLEMENT</Text>
       <View style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
         <View style={{ flex: 1, padding: 3, display: 'flex', flexDirection: 'column' }}>
           <Text>BANQUE : BGFI BANK </Text>
-          <Text>IBAN   : CI33CI1620100200211010440121 </Text>
-          <Text>BIC    : BGFIABXXX </Text>
+          <Text>IBAN : CI33CI1620100200211010440121 </Text>
+          <Text>BIC : BGFIABXXX </Text>
           <Text>DOMICILE : BGFIBANK</Text>
         </View>
         <View style={{ flex: 1, padding: 3, display: 'flex', flexDirection: 'column' }}>
           <Text>DESTINATAIRE : {facture[0].assureprinc} </Text>
-          <Text>PATIENT   : {facture[0].nompatient} {facture[0].prenomspatient} </Text>
-          <Text>SEJOUR    : N° {facture[0].numerosejour} DU {facture[0].datedebutsejour}
+          <Text>PATIENT : {facture[0].nompatient} {facture[0].prenomspatient} </Text>
+          <Text>SEJOUR  : N° {facture[0].numerosejour} DU {facture[0].datedebutsejour}
             {facture[0].datefinsejour !== facture[0].datedebutsejour ? ' AU ' + facture[0].datefinsejour : ''} </Text>
           <Text>FACTURE : N° {facture[0].numerofacture} DU {facture[0].datefacture}</Text>
           <Text>MONTANT : {separate(facture[0].montanttotalfacture)} F CFA</Text>

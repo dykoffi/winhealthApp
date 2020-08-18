@@ -16,6 +16,8 @@ import GlobalContext, { Info } from "../../../global/context";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import DateFnsUtils from "@date-io/date-fns";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { listpays } from "../../../global/functions";
 
 const Input = withStyles({
   root: {
@@ -290,13 +292,26 @@ const DetailsPatient = ({ currentPatient, thunkModifPatient, thunkDeletePatient,
 
           </div>
           <div className="row py-1">
-            <Input
-              className="m-1 col"
-              variant="standard"
+            <Autocomplete
               size="small"
-              label="Nationalité"
-              value={inputs.nationalite}
-              onChange={setnationalite}
+              className="col p-0 mt-1"
+              id="payslist"
+              defaultValue={{ label: currentPatient.nationalite }}
+              options={listpays.map(pays => { return { label: pays } })}
+              onChange={(event, newValue) => { newValue ? setnationalite({ target: { value: newValue.label } }) : setnationalite({ target: { value: "" } }) }}
+              getOptionLabel={(option) => option.label}
+              filterSelectedOptions
+              renderOption={(option) => (<>
+                <small style={{ fontSize: "12px" }}>{option.label}</small>
+              </>)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label="Nationalité"
+                  placeholder="Ajouter ..."
+                />
+              )}
             />
             <Input
               required

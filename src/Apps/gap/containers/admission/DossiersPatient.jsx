@@ -240,7 +240,7 @@ const DossiersPatient = ({
         </div>
       )}
       <div className="col-12 mt-2">
-        <div className="row mb-1">
+        <div className="row mx-1 mb-1">
           <TextField
             className="col-2 mr-1"
             variant="outlined"
@@ -287,7 +287,7 @@ const DossiersPatient = ({
           </div>
         </div>
       </div>
-      <table className="col-12 table-sm mt-2 p-3 table-hover table-striped">
+      <table className="col-12 table-sm mt-2 table-hover table-striped">
         <thead style={{ backgroundColor: global.theme.secondaryDark }}>
           <tr>{columns.map((col, i) => (<th className="white-text" key={i} >{col}</th>))}</tr>
         </thead>
@@ -328,10 +328,10 @@ const DossiersPatient = ({
         <DialogContent>
           <div className="row">
             <div className="col-12">
-              <div className="row mx-1 my-2">
+              <div className="row my-2">
                 <div className="col p-0">
                   <small className="font-weight-bold">Informations du séjour</small>
-                  <FormControl variant="outlined" size="small" className="col-12 mt-3 mb-1">
+                  <FormControl variant="filled" size="small" className="col-12 mt-3 mb-1">
                     <InputLabel id="typesejour-label">Type de séjour</InputLabel>
                     <Select
                       labelId="typesejour-label"
@@ -349,7 +349,7 @@ const DossiersPatient = ({
                     </Select>
                   </FormControl>
                   <FormControl
-                    variant="outlined"
+                    variant="filled"
                     size="small"
                     className="col-12 mt-2"
                   >
@@ -368,7 +368,7 @@ const DossiersPatient = ({
                     </Select>
                   </FormControl>
                   <FormControl
-                    variant="outlined"
+                    variant="filled"
                     size="small"
                     className="col-12 mt-2"
                   >
@@ -395,22 +395,21 @@ const DossiersPatient = ({
                     locale={frLocale}
                   >
                     <KeyboardDatePicker
+                    
                       label="Date de début"
                       id="datedebut"
                       format="dd/MM/yyyy"
-                      autoOk
                       value={inputs.debutDate}
                       onChange={setdebutDate}
-                      className="m-1 col"
+                      className="mt-3 col"
                     />
                     <KeyboardTimePicker
                       id="heuredebut"
                       label="Heure de début"
                       ampm={false}
-                      autoOk
                       value={inputs.DebutHeure}
                       onChange={setDebutHeure}
-                      className="m-1 col"
+                      className="mt-2 col"
                     />
                   </MuiPickersUtilsProvider>
                 </div>
@@ -427,7 +426,7 @@ const DossiersPatient = ({
                       autoOk
                       value={inputs.finDate}
                       onChange={setfinDate}
-                      className="m-1 col"
+                      className="mt-3 col"
                     />
                     <KeyboardTimePicker
                       label="Heure de fin"
@@ -436,13 +435,13 @@ const DossiersPatient = ({
                       id="heurefin"
                       value={inputs.finHeure}
                       onChange={setfinHeure}
-                      className="m-1 col"
+                      className="mt-2 col"
                     />
                   </MuiPickersUtilsProvider>
                 </div>
               </div>
               <small className="font-weight-bold">Informations pour patient assuré</small>
-              <div className="row mx-1 my-3">
+              <div className="row my-3">
                 <Autocomplete
                   size="small"
                   className="col p-0"
@@ -457,7 +456,7 @@ const DossiersPatient = ({
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      variant="outlined"
+                      variant="filled"
                       label="Gestionnaire"
                       placeholder="Ajouter ..."
                     />
@@ -476,14 +475,14 @@ const DossiersPatient = ({
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      variant="outlined"
+                      variant="filled"
                       label="Organisme"
                       placeholder="Ajouter ..."
                     />
                   )}
                 />
                 <FormControl
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   className="col-3"
                 >
@@ -513,9 +512,9 @@ const DossiersPatient = ({
                   </Select>
                 </FormControl>
               </div>
-              <div className="row mx-1 my-3">
+              <div className="row my-3">
                 <FormControl
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   className="col"
                 >
@@ -537,7 +536,7 @@ const DossiersPatient = ({
                 <Input
                   disabled={inputs.beneficiaire.trim() === ""}
                   className="col-4 ml-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   defaultValue=" "
                   label="Identité de l'Assuré"
@@ -546,7 +545,7 @@ const DossiersPatient = ({
                 />
                 <Input
                   className="col mx-2"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="Matricule"
                   onChange={setmatriculeAssure}
@@ -554,7 +553,7 @@ const DossiersPatient = ({
                 />
                 <Input
                   className="col"
-                  variant="outlined"
+                  variant="filled"
                   size="small"
                   label="N° PEC"
                   onChange={setnumeroPEC}
@@ -692,7 +691,7 @@ const DossiersPatient = ({
               disabled ||
               inputs.type.trim() === "" ||
               inputs.medecin === "" ||
-              listActesDef.filter(acte => acte[4] === 0).length !== 0 ||
+              listActesDef.filter(acte => acte[4] <= 0).length !== 0 ||
               (inputs.gestionnaire.trim() !== "" && (
                 inputs.organisme.trim() === "" ||
                 inputs.taux.toString().trim() === "" ||

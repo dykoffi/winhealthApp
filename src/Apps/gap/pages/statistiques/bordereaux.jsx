@@ -208,7 +208,6 @@ const Bordereau = ({
         setLoading(false)
     }, [inputs.nomassurance, inputs.typeSejour])
     useEffect(() => {
-
         const charLine = canvasline.current.getContext("2d");
         const charBar = canvasbar.current.getContext("2d");
         const charPie = canvaspie.current.getContext("2d");
@@ -218,7 +217,7 @@ const Bordereau = ({
             type: "bar",
             data: {
                 //Bring in data
-                labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soin"],
+                labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soins"],
                 datasets: listAssurances
                     .filter(assurance => listBordereaux.map(bordereau => bordereau.gestionnairebordereau).includes(assurance.label))
                     .map(
@@ -231,7 +230,7 @@ const Bordereau = ({
                                     listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Urgence").length,
                                     listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Biologie").length,
                                     listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Imagerie").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Soin").length,
+                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Soins").length,
                                 ],
                                 borderColor: 'transparent',
                                 backgroundColor: schemeSet3[i]
@@ -245,27 +244,24 @@ const Bordereau = ({
         }))
 
         //PIE
-        const nbEnvoie = listBordereaux.filter(b => b.statutbordereau === "Envoie").length
-        const nbDecharge = listBordereaux.filter(b => b.statutbordereau === "Décharge").length
-        const nbRejete = listBordereaux.filter(b => b.statutbordereau === "Rejeté").length
-        const nbEncaisse = listBordereaux.filter(b => b.statutbordereau === "Encaisse").length
+
         pie !== null && pie.destroy()
         setpie(new Chart(charPie, {
             type: "doughnut",
             data: {
-                labels: ["Envoyé", "Décharge", "Encaissé", "Rejeté",],
+                labels: ["Envoyé", "Décharge", "Rejeté", "Encaissé",],
                 datasets: [
                     {
                         data: [
-                            nbEnvoie,
-                            nbDecharge,
-                            nbEncaisse,
-                            nbRejete,
+                            listBordereaux.filter(b => b.statutbordereau === "Envoie").length,
+                            listBordereaux.filter(b => b.statutbordereau === "Décharge").length,
+                            listBordereaux.filter(b => b.statutbordereau === "Rejeté").length,
+                            listBordereaux.filter(b => b.statutbordereau === "Encaisse").length,
                         ], backgroundColor: [
                             schemeSet3[0],
                             schemeSet3[1],
-                            schemeSet3[2],
                             schemeSet3[3],
+                            schemeSet3[2],
                         ],
                         borderWidth: 0
                     },
@@ -348,7 +344,7 @@ const Bordereau = ({
                         getOptionLabel={(option) => option.label}
                         filterSelectedOptions
                         renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                        renderInput={(params) => (<TextField {...params} variant="outlined" label="Gestionnaire" placeholder="Ajouter ..." />)}
+                        renderInput={(params) => (<TextField {...params} variant="filled" label="Gestionnaire" placeholder="Ajouter ..." />)}
                     />
                     <Autocomplete
                         size="small"
@@ -364,9 +360,9 @@ const Bordereau = ({
                         getOptionLabel={(option) => option.label}
                         filterSelectedOptions
                         renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
-                        renderInput={(params) => (<TextField {...params} variant="outlined" label="Garant" placeholder="Selectionner ..." />)}
+                        renderInput={(params) => (<TextField {...params} variant="filled" label="Garant" placeholder="Selectionner ..." />)}
                     />
-                    <FormControl variant="outlined" size="small" className="col">
+                    <FormControl variant="filled" size="small" className="col">
                         <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                         <Select
                             labelId="typesejour-label"
@@ -390,7 +386,7 @@ const Bordereau = ({
                             <MenuItem style={{ fontSize: "12px" }} value={"Soins"}>Soins</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl variant="outlined" size="small" className="col ml-2">
+                    <FormControl variant="filled" size="small" className="col ml-2">
                         <InputLabel id="statutbordereau-label">Statut du borderau</InputLabel>
                         <Select
                             labelId="statutbordereau-label"
@@ -412,35 +408,30 @@ const Bordereau = ({
                             <MenuItem style={{ fontSize: "12px" }} value={"creation"}>Création</MenuItem>
                         </Select>
                     </FormControl>
-                    <small className="mx-2">Du</small>
-                    <div className="col">
-                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                            <KeyboardDatePicker id="datedebut" defaultValue={new Date("01/01/2020")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
-                                (date) => {
-                                    setdebutDate(date)
-                                    thunkListFacturesByAssurances({
-                                        ...inputs,
-                                        debutDate: date,
-                                        debutDateString: moment(date.toString()).format('DD-MM-YYYY')
-                                    })
-                                }
-                            } />
-                        </MuiPickersUtilsProvider>
-                    </div>
-                    <small className="mx-2">Au</small>
-                    <div className="col">
-                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                            <KeyboardDatePicker id="datefin" defaultValue={new Date("12/31/2020")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
-                                (date) => {
-                                    setfinDate(date)
-                                    thunkListFacturesByAssurances({
-                                        ...inputs,
-                                        finDate: date,
-                                        finDateString: moment(date.toString()).format('DD-MM-YYYY')
-                                    })
-                                }} />
-                        </MuiPickersUtilsProvider>
-                    </div>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
+                        <KeyboardDatePicker className='col mx-2' label='Du' id="datedebut" defaultValue={new Date("01/01/2020")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
+                            (date) => {
+                                setdebutDate(date)
+                                thunkListFacturesByAssurances({
+                                    ...inputs,
+                                    debutDate: date,
+                                    debutDateString: moment(date.toString()).format('DD-MM-YYYY')
+                                })
+                            }
+                        } />
+                    </MuiPickersUtilsProvider>
+
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
+                        <KeyboardDatePicker className='col' label='Au' id="datefin" defaultValue={new Date("12/31/2020")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
+                            (date) => {
+                                setfinDate(date)
+                                thunkListFacturesByAssurances({
+                                    ...inputs,
+                                    finDate: date,
+                                    finDateString: moment(date.toString()).format('DD-MM-YYYY')
+                                })
+                            }} />
+                    </MuiPickersUtilsProvider>
                 </div>
             </div>
             <div className="col-12 mb-2 p-0 stats">
@@ -456,7 +447,7 @@ const Bordereau = ({
                     </div>
                 </div>
             </div>
-            <table className="table-sm col-12 table-hover table-striped mb-2">
+            <table className="table-sm col-12 table-hover mb-2">
                 <thead style={{ backgroundColor: global.theme.primary }}>
                     <tr>{["Assurance", "Nombre bordereaux", "Nombre Facture", "Montant total", "Payés", "Impayés"].map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
                 </thead>

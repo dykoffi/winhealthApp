@@ -14,6 +14,7 @@ import PrintIcon from "@material-ui/icons/Print";
 import { header } from "../../global/apiQuery";
 import { Button } from "@material-ui/core";
 import { Info } from "../../global/context";
+import { NumberToLetter } from "../../global/functions";
 
 Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
 Font.register({ family: "Roboto-Bold", src: `${header.local}/fonts/Roboto-Bold.ttf`, });
@@ -44,49 +45,7 @@ const DocHead = ({ etablissement }) => (
   </View>
 );
 
-const DocFoot = () => (
-  <View style={{ flex: "auto", display: "flex", flexDirection: "row", alignItems: "center", padding: 10 }}>
-    <View style={{ flex: "auto", fontSize: 7, paddingLeft: 5, color: "grey", lineHeight: 1.5, }}>
-      <Text>Fait à Abidjan le 25 juin 2019</Text>
-      <Text>par Audrey Bogui</Text>
-      <Text>Email : info@altea-ci.com</Text>
-      <Text>Site web : www.altea.ci</Text>
-    </View>
-  </View>
-);
 
-const DownloadLink = ({
-  bordereau,
-  showPDF,
-  cie
-}) => {
-  return (
-    <div className="row">
-
-      <BlobProvider document={<Facture bordereau={bordereau} cie={cie} />}>
-        {({ blob, url, loading, error }) =>
-          loading ? (
-            <small>...</small>
-          ) : (
-              <div className="pr-3">
-                <Button
-                  variant="contained"
-                  className="mb-2 white-text mx-2 col"
-                  startIcon={<PrintIcon />}
-                  onClick={() => showPDF(url)}
-                  style={{
-                    textTransform: "none",
-                    fontSize: "13px",
-                    backgroundColor: Info.theme.primary
-                  }}
-                >Imprimer le bordereau {cie && "(CIE)"}</Button>
-              </div>
-            )
-        }
-      </BlobProvider>
-    </div >
-  );
-};
 
 const Facture = ({ bordereau, cie }) => {
   return (
@@ -173,18 +132,57 @@ const Facture = ({ bordereau, cie }) => {
                 </View>
               </View>
               <View>
-                <Text>Arrêté le présent relevé à la somme de : </Text>
-                <Text>trois cent soixante-treize mille cinq cents francs CFA</Text>
+              <Text style={{ fontSize: 8 }}>Certifié exact, la présente facture s'élévant à la somme de {NumberToLetter(bordereau[0].montanttotalfacture)} francs CFA</Text>
               </View>
             </View>
           </View>
         </View>
-        <DocFoot />
+        <DocFoot bordereau={bordereau} />
       </Page>
     </Document>
   );
 };
+const DocFoot = ({ bordereau }) => (
+  <View style={{ flex: "auto", display: "flex", flexDirection: "row", alignItems: "center", padding: 10 }}>
+    <View style={{ flex: 1, justifyContent: 'flex-start', fontSize: 8, marginTop: 7, color: "grey", lineHeight: 1.5, }}>
+      <Text>Fait à Abidjan le {bordereau[0].datecreationbordereau}</Text>
+      <Text>par {bordereau[0].auteurbordereau}</Text>
+    </View>
+  </View>
+);
 
+const DownloadLink = ({
+  bordereau,
+  showPDF,
+  cie
+}) => {
+  return (
+    <div className="row">
+
+      <BlobProvider document={<Facture bordereau={bordereau} cie={cie} />}>
+        {({ blob, url, loading, error }) =>
+          loading ? (
+            <small>...</small>
+          ) : (
+              <div className="pr-3">
+                <Button
+                  variant="contained"
+                  className="mb-2 white-text mx-2 col"
+                  startIcon={<PrintIcon />}
+                  onClick={() => showPDF(url)}
+                  style={{
+                    textTransform: "none",
+                    fontSize: "13px",
+                    backgroundColor: Info.theme.primary
+                  }}
+                >Imprimer le bordereau {cie && "(CIE)"}</Button>
+              </div>
+            )
+        }
+      </BlobProvider>
+    </div >
+  );
+};
 const styles = StyleSheet.create({
   title: {
     fontSize: 12,

@@ -176,9 +176,18 @@ export function thunkAddAvoirFacture(numeroFacture, data) {
             data: data,
             headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(({ data: { rows } }) => {
-            dispatch(thunkListFactures())
+            dispatch(thunkListAvoirFactures())
             dispatch(setShowModal(false))
         })
     }
 }
+
+export function thunkListAvoirFactures() {
+    return async (dispatch) => {
+        Axios({ url: `${header.url}/gap/list/factures_avoir` }).then(({ data: { rows } }) => {
+            rows ? dispatch(setListFactures(rows)) : dispatch(setListFactures([]))
+        })
+    }
+}
+
 export default factureReducer
