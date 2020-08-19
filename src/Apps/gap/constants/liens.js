@@ -33,6 +33,16 @@ const navMenu = [
         icon: 'action-assessment',
         path: "/gap/statistiques"
     },
+    {
+        title: 'Encaissement',
+        icon: 'content-mail',
+        path: "/gap/encaissement_mutuelles"
+    },
+    {
+        title: 'Administration GAP',
+        icon: 'hardware-security',
+        path: "/gap/administration"
+    },
     // {
     //     title: 'Parametres',
     //     icon: 'action-settings',
@@ -46,4 +56,5 @@ const navMenu = [
 ]
 const functions = permissions.functions.map(f => f.name)
 export const navMenuUser = navMenu.filter(menu => functions.includes(menu.title))
-export default navMenuUser
+// export default navMenuUser
+export default navMenu

@@ -242,7 +242,7 @@ const Assurance = ({
         <DialogContent>
           <div className="row">
             <div className="col-12">
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <TextField
                   className="col mr-2"
                   variant="filled"
@@ -258,7 +258,7 @@ const Assurance = ({
                   onChange={setcode}
                 />
               </div>
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <FormControl variant="filled" size="small" className="col">
                   <InputLabel id="typeAssurance-label">
                     Type d'assurance
@@ -289,7 +289,7 @@ const Assurance = ({
                   onChange={setadresse}
                 />
               </div>
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <InputContact
                   className="col mr-2"
                   variant="filled"
@@ -307,7 +307,7 @@ const Assurance = ({
                   onChange={setfax}
                 />
               </div>
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <TextField
                   className="col mr-2"
                   variant="filled"
@@ -323,7 +323,7 @@ const Assurance = ({
                   onChange={setsite_web}
                 />
               </div>
-              <div className="col-12 d-flex">
+              <div className="col-12 d-flex mt-2">
                 <ReportProblemOutlinedIcon className="bg-warning mr-2" />
                 <small className="font-weight-bold">Renseignez tous les champs néccessaires pour la creation d'assuurance</small>
               </div>
@@ -391,7 +391,7 @@ const Assurance = ({
         <DialogContent>
           <div className="row">
             <div className="col-12">
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <TextField
                   className="col mr-2"
                   variant="filled"
@@ -409,7 +409,7 @@ const Assurance = ({
                   onChange={setcode}
                 />
               </div>
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <FormControl variant="filled" size="small" className="col">
                   <InputLabel id="typeAssurance-label">
                     Type d'assurance
@@ -435,7 +435,7 @@ const Assurance = ({
                   onChange={setadresse}
                 />
               </div>
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <InputContact
                   className="col mr-2"
                   variant="filled"
@@ -453,7 +453,7 @@ const Assurance = ({
                   onChange={setfax}
                 />
               </div>
-              <div className="row my-3 mx-1">
+              <div className="row my-2">
                 <TextField
                   className="col mr-2"
                   variant="filled"
@@ -471,7 +471,7 @@ const Assurance = ({
                   onChange={setsite_web}
                 />
               </div>
-              <div className="col-12 d-flex justify-content-center">
+              <div className="col-12 d-flex mt-2 justify-content-center">
                 <ReportProblemOutlinedIcon className="bg-warning mr-2" />
                 <small className="font-weight-bold">La suppression est sans confirmation et irréversible</small>
               </div>

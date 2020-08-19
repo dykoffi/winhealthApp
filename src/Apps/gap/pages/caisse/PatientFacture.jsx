@@ -342,6 +342,16 @@ const FacturePatient = ({
                       {separate(currentFacture.restepatientfacture)} FCFA
                     </span>
                   </small><br />
+                  {currentFacture.parentfacture?.trim() !== '' &&
+                    <>
+                      <small className='blue-text'>
+                        <b>Facture d'avoir</b> :{" "}
+                        <span>
+                          {currentFacture.parentfacture} {' '}({separate(currentFacture.prixavoirfacture)} FCFA)
+                        </span>
+                      </small><br />
+                    </>
+                  }
                   {currentFacture.numerocompte !== null && (
                     <>
                       <hr className="bg-light" />

@@ -4,12 +4,14 @@ import Caisse from '../pages/caisse/_index'
 import Assurance from '../pages/assurance/_index'
 import Accueil from '../pages/Accueil'
 import Statistiques from '../pages/statistiques/_index'
+import Encaissement from '../pages/encaissement/_index'
 
 //chargement des store de chaque application
 import admissionStore from '../api/admission/store'
 import caisseStore from '../api/caisse/store'
 import assuranceStore from '../api/assurance/store'
 import statistiquesStore from '../api/statistiques/store'
+import encaissementStore from '../api/encaissement/store'
 
 
 
@@ -38,6 +40,12 @@ export const Pages = [
         path: "/gap/statistiques",
         Component: Statistiques,
         store: statistiquesStore
+    },
+    {
+        title: "Encaissement",
+        path: "/gap/encaissement_mutuelles",
+        Component: Encaissement,
+        store: encaissementStore
     },
     {
         title: "Acceuil",
