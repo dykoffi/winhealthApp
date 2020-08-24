@@ -214,9 +214,10 @@ const Facturesvalides = ({
                     {listFactures.filter(facture => facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).map(
                         ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, statutfacture, erreurfacture, commentairefacture }, i) => (
                             <tr
+
                                 title={commentairefacture}
                                 key={i}
-                                className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
+                                className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : statutfacture !== 'valide' ? "grey-text" : ""}
                                 style={{ cursor: statutfacture === 'valide' ? "pointer" : "default" }}
                                 onClick={() => statutfacture === 'valide' ? thunkDetailsFacture(numerofacture) : null}
                             >
@@ -524,7 +525,7 @@ const Facturesvalides = ({
                 transitionDuration={0}
             >
                 <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
-                    <b>Facture N° {currentFacture.numerofacture}</b><br/>
+                    <b>Facture N° {currentFacture.numerofacture}</b><br />
                     <small>Checklist de la vérification de facture</small>
                 </DialogTitle>
                 <DialogContent>
@@ -612,6 +613,10 @@ const Facturesvalides = ({
                         disabled={inputComment.comment.trim() === ""}
                         onClick={() => {
                             thunkReportFacture(currentFacture.numerofacture, { ...inputComment, erreur: "warning" })
+                            thunkListFacturesByAssurances(inputs)
+                            setShowCommentFacture(false)
+
+
                         }}
                         style={{
                             textTransform: "none",

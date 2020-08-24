@@ -125,9 +125,9 @@ const Bordereau = ({
         montanttotal: 0,
         partAssurance: 0,
         partPatient: 0,
-        debutDateString: moment().format('DD-MM-YYYY'),
-        finDateString: moment().format('DD-MM-YYYY'),
-        limiteDateString: moment().format('DD-MM-YYYY'),
+        debutDateString: moment().format('YYYY-MM-DD'),
+        finDateString: moment().format('YYYY-MM-DD'),
+        limiteDateString: moment().format('YYYY-MM-DD'),
         debutDate: new Date(),
         finDate: new Date(),
         limiteDate: new Date(),
@@ -141,9 +141,9 @@ const Bordereau = ({
             montanttotal: 0,
             partAssurance: 0,
             partPatient: 0,
-            debutDateString: moment().format('DD-MM-YYYY'),
-            finDateString: moment().format('DD-MM-YYYY'),
-            limiteDateString: moment().format('DD-MM-YYYY'),
+            debutDateString: moment().format('YYYY-MM-DD'),
+            finDateString: moment().format('YYYY-MM-DD'),
+            limiteDateString: moment().format('YYYY-MM-DD'),
             debutDate: new Date(),
             finDate: new Date(),
             limiteDate: new Date(),
@@ -174,9 +174,9 @@ const Bordereau = ({
             })
         }
     }
-    function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
-    function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
-    function setlimiteDate(value) { setinput({ ...inputs, limiteDate: value, limiteDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
+    function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
+    function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
+    function setlimiteDate(value) { setinput({ ...inputs, limiteDate: value, limiteDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
     function settype(value) { setinput({ ...inputs, typeSejour: value }) }
     function setassurance(value) { setinput({ ...inputs, nomassurance: value }) }
     function setgarant(value) { setinput({ ...inputs, nomgarant: value }) }
@@ -376,14 +376,17 @@ const Bordereau = ({
                                             key={i}
                                             style={{ cursor: "pointer" }}
                                             onClick={() => { thunkDetailsBorderau(numerobordereau) }}
+
                                         >
                                             <td>{i + 1}</td>
                                             <td className="font-weight-bold">{numerobordereau}</td>
                                             <td className="font-weight-bold">{gestionnairebordereau}</td>
                                             <td className="font-weight-bold">{organismebordereau}</td>
                                             <td className="font-weight-bold">{typesejourbordereau}</td>
-                                            <td>{datecreationbordereau}</td>
-                                            <td>{datelimitebordereau}</td>
+                                            <td>{moment(datecreationbordereau).format('DD/MM/YYYY')}</td>
+                                            <td title={`reste ${moment(datelimitebordereau).diff(moment(), 'days')} jours`}
+                                                className={moment(datelimitebordereau).subtract(10, 'days') <= moment() && statutbordereau === 'Rejeté' ?
+                                                    'bg-warning' : ''}>{moment(datelimitebordereau).format('DD/MM/YYYY')}</td>
                                             <td className={`font-weight-bold ${
                                                 statutbordereau === 'Rejeté' ? "red-text animated infinite flash" :
                                                     statutbordereau === "Décharge" ? "blue-text" :
@@ -479,7 +482,7 @@ const Bordereau = ({
                                             thunkListFacturesByAssurances({
                                                 ...inputs,
                                                 debutDate: date,
-                                                debutDateString: moment(date.toString()).format('DD-MM-YYYY')
+                                                debutDateString: moment(date.toString()).format('YYYY-MM-DD')
                                             })
                                         }
                                     } />
@@ -493,7 +496,7 @@ const Bordereau = ({
                                             thunkListFacturesByAssurances({
                                                 ...inputs,
                                                 finDate: date,
-                                                finDateString: moment(date.toString()).format('DD-MM-YYYY')
+                                                finDateString: moment(date.toString()).format('YYYY-MM-DD')
                                             })
                                         }} />
                                 </MuiPickersUtilsProvider>

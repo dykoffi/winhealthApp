@@ -55,7 +55,7 @@ const Connexion = () => {
       .then((data) => {
         if (data) {
           //ajouter toujours les path comme options sinon ca ne marchera pas à long terme pour la deconnexion
-          cookies.set("user", data, { expire: 0, path: "/" });
+          cookies.set("user_winhealth", data, { expire: 0, path: "/" });
           cookies.set("currentPage", data.nomapp.toLowerCase(), { expire: 0, path: "/", }); window.location = "/admin";
         } else {
           setloading(false);

@@ -1,6 +1,7 @@
 import Axios from "axios"
 import { header } from "../../../global/apiQuery"
 import { setCurrentPage } from './pages'
+import { Info } from "../../../global/context"
 
 const initState = {
     listPatients: [],
@@ -81,7 +82,7 @@ export function thunkAddPatient(data) {
         Axios({
             url: `${header.url}/gap/add/patient`,
             method: "POST",
-            data: data,
+            data: { ...data, user: Info.user },
             headers: { "content-type": "application/x-www-form-urlencoded", },
         }).then(({ data: { message, rows } }) => {
             dispatch(thunkListPatient())
@@ -97,7 +98,7 @@ export function thunkModifPatient(data, ipppatient) {
         Axios({
             url: `${header.url}/gap/update/patient/${ipppatient}`,
             method: "POST",
-            data: data,
+            data: { ...data, user: Info.user },
             headers: { "content-type": "application/x-www-form-urlencoded", },
         }).then(({ data: { rows } }) => {
             dispatch(thunkListPatient())

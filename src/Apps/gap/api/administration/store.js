@@ -1,10 +1,8 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import pageReducer from './pages'
-import encaissementReducer from './encaissements'
-import ventilationReducer from './ventilations'
+import logsReducer from './logs'
 
-
-const rootReducers = combineReducers({ pageReducer, encaissementReducer, ventilationReducer })
+const rootReducers = combineReducers({ pageReducer, logsReducer })
 
 export default createStore(rootReducers, applyMiddleware(thunk)) 

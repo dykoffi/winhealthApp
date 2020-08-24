@@ -1,5 +1,6 @@
 import Axios from "axios"
 import { header, socket } from "../../../global/apiQuery"
+import { Info } from "../../../global/context"
 
 const initState = {
     listEncaissement: [],
@@ -37,8 +38,8 @@ export function thunkAddEncaissement(data) {
     return async (dispatch) => {
         Axios({
             method: "POST",
-            url: `${header.url}/gap/add/transaction`,
-            data: { ...data },
+            url: `${header.url}/gap/add/encaissement`,
+            data: { ...data, recepteur: Info.user.nomuser + " " + Info.user.prenomsuser },
             headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(({ data: { rows } }) => {
             dispatch(thunkListEncaissement())

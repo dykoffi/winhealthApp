@@ -35,8 +35,7 @@ export function thunkListSejour(patient) {
         Axios({ url: `${header.url}/gap/list/sejours/${patient}`, })
             .then(({ data: { rows } }) => {
                 dispatch(setListSejour(rows))
-                rows[0] && dispatch(thunkDetailsSejour(rows[0].numerosejour))
-
+                rows[0] ? dispatch(thunkDetailsSejour(rows[0].numerosejour)) : setCurrentSejour(null)
             })
     }
 }
@@ -48,7 +47,7 @@ export function thunkAddSejour(data, patient) {
         Axios({
             method: "POST",
             url: `${header.url}/gap/add/sejour/${patient}`,
-            data: { ...data, ...user },
+            data: { ...data, user: user },
             headers: { "content-type": "application/x-www-form-urlencoded", },
         })
             .then(() => {

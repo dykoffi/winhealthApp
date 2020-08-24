@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { connect } from "react-redux";
-import Chart from 'chart.js'
-import { schemeSet3, schemeCategory10 } from 'd3'
 import GlobalContext, { Info } from "../../../global/context";
 import moment from 'moment'
 import BordereauDoc from '../../documents/bordereau'
@@ -19,7 +17,7 @@ import {
     setLoading,
     setShowDetailsFacture,
     setTypeBordereaux
-} from "../../api/statistiques/bordereaux";
+} from "../../api/encaissement/ventilations";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -63,7 +61,7 @@ const Input = withStyles({
         "& .MuiOutlinedInput-root": { "&.Mui-focused fieldset": { borderColor: Info.theme.primary, }, },
     },
 })(TextField);
-const Bordereau = ({
+const Ventilation = ({
     thunkListFacturesByAssurances,
     thunkListBorderaux,
     listBordereaux,
@@ -94,11 +92,6 @@ const Bordereau = ({
     const [modal, setmodal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
     const [statutbordereau, setstatutbordereau] = useState(null)
-
-    //charts
-    const [pie, setpie] = useState(null)
-    const [line, setline] = useState(null)
-    const [bar, setbar] = useState(null)
 
     //speech
     const { speak } = useSpeechSynthesis();
@@ -206,124 +199,7 @@ const Bordereau = ({
     useEffect(() => {
         setLoading(false)
     }, [inputs.nomassurance, inputs.typeSejour])
-    useEffect(() => {
-        const charLine = canvasline.current.getContext("2d");
-        const charBar = canvasbar.current.getContext("2d");
-        const charPie = canvaspie.current.getContext("2d");
-
-        bar !== null && bar.destroy()
-        setbar(new Chart(charBar, {
-            type: "bar",
-            data: {
-                //Bring in data
-                labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soins"],
-                datasets: listAssurances
-                    .filter(assurance => listBordereaux.map(bordereau => bordereau.gestionnairebordereau).includes(assurance.label))
-                    .map(
-                        (assurance, i) => {
-                            return {
-                                label: assurance.label,
-                                data: [
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Consultation").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Hospitalisation").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Urgence").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Biologie").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Imagerie").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.typesejourbordereau === "Soins").length,
-                                ],
-                                borderColor: 'transparent',
-                                backgroundColor: schemeSet3[i]
-                            }
-                        }
-                    )
-            },
-            options: {
-                //Customize chart options
-            }
-        }))
-
-        //PIE
-
-        pie !== null && pie.destroy()
-        setpie(new Chart(charPie, {
-            type: "doughnut",
-            data: {
-                labels: ["Envoyé", "Décharge", "Rejeté", "Encaissé",],
-                datasets: [
-                    {
-                        data: [
-                            listBordereaux.filter(b => b.statutbordereau === "Envoie").length,
-                            listBordereaux.filter(b => b.statutbordereau === "Décharge").length,
-                            listBordereaux.filter(b => b.statutbordereau === "Rejeté").length,
-                            listBordereaux.filter(b => b.statutbordereau === "Encaisse").length,
-                        ], backgroundColor: [
-                            schemeSet3[0],
-                            schemeSet3[1],
-                            schemeSet3[3],
-                            schemeSet3[2],
-                        ],
-                        borderWidth: 0
-                    },
-                ]
-            },
-            options: {
-                //Customize chart options
-            }
-        }))
-
-        //LINE
-        line !== null && line.destroy()
-        setline(new Chart(charLine, {
-            type: "horizontalBar",
-            data: {
-                //Bring in data
-                labels: ["Encaissé", "Rejeté", "Décharge", "Envoyé"],
-                datasets: listAssurances
-                    .filter(assurance => listBordereaux.map(bordereau => bordereau.gestionnairebordereau).includes(assurance.label))
-                    .map(
-                        (assurance, i) => {
-                            return {
-                                label: assurance.label,
-                                data: [
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Encaissé").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Rejeté").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Décharge").length,
-                                    listBordereaux.filter(b => b.gestionnairebordereau === assurance.label && b.statutbordereau === "Envoie").length,
-                                ],
-                                borderColor: 'transparent',
-                                backgroundColor: schemeSet3[i]
-                            }
-                        }
-                    )
-            },
-            options: {
-                //Customize chart options
-            }
-        }))
-    }, [listBordereaux, listAssurances])
-    // const { listen, listening, stop } = useSpeechRecognition({
-    //     onResult: (result) => {
-    //         sets(result)
-    //         if (result.match(/statistiques de ascoma/)) {
-    //             speak({ text: "Il n'existe aucune données statistiques, enregistrées avec ascoma. La seule données enregistrée, est celle de sounou assurance. Voulez vous l'afficher?" })
-    //         }
-    //         if (result.match(/ok/)) {
-    //             stop()
-    //             setstats(true)
-    //         }
-    //     },
-    // });
-    // const [s, sets] = useState("")
-    // const [stats, setstats] = useState(false)
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         speak({ text: "Bienvenue Monsieur, sur les statistiques de winhealth. Que voulez vous faire ?" })
-    //         listen()
-    //     }, 1000);
-
-    // }, [listBordereaux])
-
-
+   
     return (
         <div className="Facturesvalides row p-2">
             <div className="col-12 mb-2">
@@ -404,7 +280,7 @@ const Bordereau = ({
                             <MenuItem style={{ fontSize: "12px" }} value={"envoie"}>Envoie</MenuItem>
                             <MenuItem style={{ fontSize: "12px" }} value={"decharge"}>Décharge</MenuItem>
                             <MenuItem style={{ fontSize: "12px" }} value={"rejete"}>Rejet</MenuItem>
-                            <MenuItem style={{ fontSize: "12px" }} value={"creation"}>Création</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"encaissé"}>Encaissé</MenuItem>
                         </Select>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
@@ -433,22 +309,9 @@ const Bordereau = ({
                     </MuiPickersUtilsProvider>
                 </div>
             </div>
-            <div className="col-12 mb-2 p-0 stats">
-                <div className="row">
-                    <div className="d-flex justify-content-center align-items-center col-4">
-                        <canvas ref={canvasbar}></canvas>
-                    </div>
-                    <div className="d-flex justify-content-center align-items-center col-4">
-                        <canvas ref={canvasline}></canvas>
-                    </div>
-                    <div className="d-flex justify-content-center align-items-center col-4">
-                        <canvas ref={canvaspie}></canvas>
-                    </div>
-                </div>
-            </div>
             <table className="table-sm col-12 table-hover mb-2">
                 <thead style={{ backgroundColor: global.theme.primary }}>
-                    <tr>{["Assurance", "Nombre bordereaux", "Nombre Factures", "Montant total", "Part assurance", "Payés", "Impayés"].map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
+                    <tr>{["Assurance", "Nombre bordereaux", "Nombre Factures", "Montant total","Part assurance", "Payés", "Impayés"].map((col, i) => (<th className="white-text" key={i}>{col}</th>))}</tr>
                 </thead>
                 <tbody>
                     {
@@ -747,6 +610,222 @@ const Bordereau = ({
             >
                 <object data={urlPDF} className="col-12" height={700} type="application/pdf"></object>
             </Dialog>
+            <Dialog
+                open={showDetailsFacture}
+                onClose={() => { setShowDetailsFacture(false) }}
+                disableBackdropClick
+                disableEscapeKeyDown
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                transitionDuration={0}
+                fullWidth={true}
+                onEntered={() =>
+                    setinputModif({
+                        gestionnaire: currentFacture.gestionnaire,
+                        organisme: currentFacture.organisme,
+                        beneficiaire: currentFacture.beneficiaire,
+                        matriculeAssure: currentFacture.matriculeassure,
+                        assurePrinc: currentFacture.assureprinc,
+                        numeroPEC: currentFacture.numeropec,
+                        taux: currentFacture.taux,
+                    })
+                }
+                maxWidth="xs"
+            >
+                <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
+                    <b>Facture N° {currentFacture.numerofacture}</b>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="row mx-1">
+                                <div className="col-6 p-0">
+                                    <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                                    <small><b>Type de sejour : </b>{currentFacture.typesejour}</small><br />
+                                    <small><b>Date : </b>{currentFacture.datefacture} {currentFacture.heurefacture}</small><br />
+                                    <hr className="bg-light" />
+                                    {currentFacture.gestionnaire !== "" && (
+                                        <>
+                                            <small><b>Montant total : </b> {currentFacture.montanttotalfacture} FCFA</small><br />
+                                            <small><b>Part Assurance : </b> {currentFacture.partassurancefacture} FCFA</small><br />
+                                        </>
+                                    )}
+                                </div>
+                                <div className="col-6 text-right"></div>
+                            </div>
+                            <div className="row mx-1 my-3">
+                                <Autocomplete
+                                    size="small"
+                                    className="col p-0"
+                                    id="assurancesList"
+                                    options={listAssurances}
+                                    defaultValue={{ value: currentFacture.idassurance, label: currentFacture.gestionnaire }}
+                                    onChange={(event, newValue) => { setgestionnaire(newValue.label); }}
+                                    getOptionLabel={(option) => option.label}
+                                    filterSelectedOptions
+                                    renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="outlined"
+                                            label="Gestionnaire"
+                                            placeholder="Ajouter ..."
+                                        />
+                                    )}
+                                />
+                                <Autocomplete
+                                    size="small"
+                                    className="col p-0 ml-2"
+                                    id="assurancesList"
+                                    defaultValue={{ value: currentFacture.idassurance, label: currentFacture.organisme }}
+                                    options={listAssurances}
+                                    onChange={(event, newValue) => { setorganisme(newValue.label); }}
+                                    getOptionLabel={(option) => option.label}
+                                    filterSelectedOptions
+                                    renderOption={(option) => (<><small style={{ fontSize: "12px" }}>{option.label}</small></>)}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="outlined"
+                                            label="Organisme"
+                                            placeholder="Ajouter ..."
+                                        />
+                                    )}
+                                />
+                            </div>
+                            <div className="row mx-1 my-3">
+                                <FormControl
+                                    variant="outlined"
+                                    size="small"
+                                    className="col"
+                                >
+                                    <InputLabel id="assurance-label">Bénéficiaire</InputLabel>
+                                    <Select
+                                        labelId="assurance-label"
+                                        id="assurance"
+                                        label="Bénéficiaire"
+                                        onChange={setbeneficiaire}
+                                        defaultValue={currentFacture.beneficiaire}
+                                        style={{ fontSize: "12px" }}
+                                    >
+                                        <MenuItem style={{ fontSize: "12px" }} value={"assuré"}>L'assuré</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={"enfant"}>L'enfant</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={"conjoint(e)"}>Le/La conjoint(e)</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={"ayant droit"}>L'ayant droit</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <Input
+                                    className="col-7 ml-2"
+                                    variant="outlined"
+                                    size="small"
+                                    defaultValue=" "
+                                    label="Identité de l'Assuré"
+                                    defaultValue={currentFacture.assureprinc}
+                                    onChange={setassurePrinc}
+                                />
+                            </div>
+                            <div className="row mx-1 my-2">
+                                <Input
+                                    className="col-4"
+                                    variant="outlined"
+                                    size="small"
+                                    label="Matricule"
+                                    defaultValue={currentFacture.matriculeassure}
+                                    onChange={setmatriculeAssure}
+                                />
+                                <Input
+                                    className="col-4 mx-2"
+                                    variant="outlined"
+                                    size="small"
+                                    label="N° PEC"
+                                    defaultValue={currentFacture.numeropec}
+                                    onChange={setnumeroPEC}
+                                />
+                                <FormControl
+                                    variant="outlined"
+                                    size="small"
+                                    className="col"
+                                >
+                                    <InputLabel id="assurance-label">Taux</InputLabel>
+                                    <Select
+                                        labelId="assurance-label"
+                                        id="assurance"
+                                        label="Taux"
+                                        defaultValue={currentFacture.taux}
+                                        onChange={settaux}
+                                        style={{ fontSize: "11px" }}
+                                    >
+                                        <MenuItem style={{ fontSize: "12px" }} value={10}>10%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={20}>20%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={30}>30%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={40}>40%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={50}>50%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={60}>60%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={70}>70%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={75}>75%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={80}>80%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={85}>85%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={90}>90%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={95}>95%</MenuItem>
+                                        <MenuItem style={{ fontSize: "12px" }} value={100}>100%</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="col-12 d-flex justify-content-center">
+                                <ReportProblemOutlinedIcon className="bg-warning mr-2" />
+                                <small className="font-weight-bold">
+                                    Le retrait et la modification de la facture sont des actions sans confirmation et irréversibles
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        className="mb-2"
+                        startIcon={<CancelIcon />}
+                        onClick={() => { setShowDetailsFacture(false) }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Annuler
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="mb-2 red text-white"
+                        startIcon={<DeleteOutlineIcon />}
+                        onClick={() => {
+                            // thunkDeleteFacturesRecues(currentFacture.numerofacture)
+                        }}
+                        style={{
+                            textTransform: "none",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Retirer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="mb-2"
+                        onClick={() => { }}
+                        startIcon={<EditIcon />}
+                        // onClick={() => {
+                        //     thunkModifyFacture(currentFacture.numerosejour, inputModifs)
+                        // }}
+                        style={{
+                            textTransform: "none",
+                            backgroundColor: global.theme.primary,
+                            color: "white",
+                            fontSize: "13px",
+                        }}
+                    >
+                        Valider la modification
+                </Button>
+                </DialogActions>
+            </Dialog>
             <Snackbar open={loading} onClose={() => setLoading(false)}>
                 <Alert variant='standard' severity="info" >
                     Chargement ...
@@ -761,7 +840,7 @@ const Bordereau = ({
     );
 };
 const mapStatToProps = state => {
-    const { bordereauReducer: {
+    const { ventilationReducer: {
         listFacturesByAssurance,
         listFacturesValides,
         listFactures,
@@ -785,7 +864,7 @@ const mapStatToProps = state => {
         typeBordereaux
     }
 }
-const BordereauConnected = connect(mapStatToProps, {
+const VentilationConnected = connect(mapStatToProps, {
     thunkListBorderaux,
     thunkListFacturesByAssurances,
     setShowModal,
@@ -794,5 +873,5 @@ const BordereauConnected = connect(mapStatToProps, {
     thunkDetailsFacture,
     setShowDetailsFacture,
     setTypeBordereaux
-})(Bordereau)
-export default BordereauConnected;
+})(Ventilation)
+export default VentilationConnected;

@@ -7,9 +7,7 @@ import ThemeContext, { Info } from "./global/context";
 
 //importation des differentes applications
 const Connexion = React.lazy(() => import("./connexion"));
-const Admin = React.lazy(() => import("./admin"));
 const Gap = React.lazy(() => import("./gap"));
-const Dpi = React.lazy(() => import("./dpi"));
 const Qr = React.lazy(() => import("./qr"));
 
 const App = () => {
@@ -19,16 +17,14 @@ const App = () => {
         <Route
           render={(match) => {
             const cookies = new Cookies();
-            return (match.location.pathname === "/qr") ? (<Redirect to="/qr" />) : cookies.get("user", { path: "/" }) ?
+            return (match.location.pathname === "/qr") ? (<Redirect to="/qr" />) : Info.user ?
               (<Redirect to={`/${cookies.get("currentPage", { path: "/" })}/`} />) :
               (<Redirect to="/connexion" />);
           }}
         />
         {/* ces routes representent les differentes application */}
         <Route path="/connexion" component={Connexion} />
-        <Route path="/admin" component={Admin} />
         <Route path="/gap" component={Gap} />
-        <Route path="/dpi" component={Dpi} />
         <Route path="/qr" component={Qr} />
       </ThemeContext.Provider>
     </div>

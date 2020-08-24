@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { Cookies } from 'react-cookie'
 
 const cookies = new Cookies()
-const user = cookies.get("user", { path: "/" })
+const user = cookies.get("user_winhealth", { path: "/" })
 export const Info = {
     theme: {
         primary: "#0a7ec2e5",
@@ -10,8 +10,8 @@ export const Info = {
         secondary: "#97bf0f",
         secondaryDark: "#87ac0f"
     },
-    user: cookies.get("user", { path: "/" }),
-    permissions: user?.permissionsprofil ? JSON.parse(cookies.get("user", { path: "/" }).permissionsprofil) : null
+    user: user,
+    permissions: user?.permissionsprofil ? JSON.parse(user.permissionsprofil) : null
 }
 
 const GlobalContext = createContext(Info);

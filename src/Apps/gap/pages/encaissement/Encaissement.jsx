@@ -52,10 +52,12 @@ const Encaissement = ({
   }
   const [columns] = useState([
     "N°",
-    "Numero de encaissement",
+    "Numero d'encaissement",
+    "Assurance",
+    "Mode de paiement",
     "Date",
     "Heure",
-    "Patient",
+    "Recepteur",
     "Montant",
   ]);
 
@@ -140,17 +142,29 @@ const Encaissement = ({
               {listEncaissement
                 .filter(encaissement => value.trim() === "" || RegExp(value, 'i').test(encaissement.numeroencaissement))
                 .map(
-                  ({ numeroencaissement, dateencaissement, heureencaissement, nompatient, prenomspatient, civilitepatient, montantencaissement, }, i) => (
-                    <tr key={i} style={{ cursor: "pointer" }}>
-                      <td>{i + 1}</td>
-                      <td className="font-weight-bold">{numeroencaissement}</td>
-                      <td>{dateencaissement}</td>
-                      <td>{heureencaissement}</td>
-                      <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                      <td className="font-weight-bold">{separate(montantencaissement)} FCFA</td>
-                    </tr>
+                  ({ numeroencaissement, dateencaissement, heureencaissement, modepaiementencaissement, assuranceencaissement, recepteurencaissement, montantencaissement, }, i) => (
+                    <>
+                      <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td className="font-weight-bold">{numeroencaissement}</td>
+                        <td>{assuranceencaissement}</td>
+                        <td>{modepaiementencaissement}</td>
+                        <td>{dateencaissement}</td>
+                        <td>{heureencaissement}</td>
+                        <td className="font-weight-bold">{recepteurencaissement}</td>
+                        <td className="font-weight-bold">{separate(montantencaissement)}</td>
+                      </tr>
+
+                    </>
                   )
                 )}
+              <tr className='white'>
+                <td colSpan={7}></td>
+                <td className="font-weight-bold white-text " style={{ backgroundColor: global.theme.primary }}>
+                  {separate(listEncaissement
+                    .filter(encaissement => value.trim() === "" || RegExp(value, 'i').test(encaissement.numeroencaissement))
+                    .map(encaissement => encaissement.montantencaissement).reduce((acc, curv) => acc + curv))}</td>
+              </tr>
             </tbody>
           </table>
         )}
@@ -269,9 +283,17 @@ const Encaissement = ({
           <Button
             variant="contained"
             className="mb-2"
-            // onClick={createEncaissement}
+            onClick={() => {
+              thunkAddEncaissement(inputs)
+              closeEncaissement()
+            }}
             startIcon={<CheckCircleOutlineIcon />}
-            // disabled={!ipp}
+            disabled={
+              inputs.assurance.trim() === "" ||
+              inputs.mode.trim() == "" ||
+              inputs.montant.trim() === "" ||
+              (["Chèque", "Électronique", "Mobile money"].includes(inputs.mode) && inputs.numeroTransaction.trim() === "")
+            }
             style={{
               textTransform: "none",
               backgroundColor: global.theme.primary,

@@ -246,7 +246,7 @@ const FacturesRecues = ({
                             <tr
                                 title={commentairefacture}
                                 key={i}
-                                className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : ""}
+                                className={erreurfacture === "warning" ? "bg-warning" : erreurfacture === "refuse" ? "bg-danger text-white" : statutfacture !== 'recu' ? "grey-text" : ""}
                                 style={{ cursor: statutfacture === 'recu' ? "pointer" : "default" }}
                                 onClick={() => { statutfacture === 'recu' && thunkDetailsFacture(numerofacture) }}
                             >

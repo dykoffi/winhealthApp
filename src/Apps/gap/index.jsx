@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Provider } from "react-redux";
-import { Cookies } from "react-cookie";
 import { Route } from "react-router-dom";
 
 import navMenu from "./constants/liens";
@@ -8,9 +7,9 @@ import { Pages } from "./constants/pages";
 import Navbar from "../../containers/Sidebar/";
 
 import Topbar from "../../components/Topbar";
+import { Info } from "../global/context";
 
 const Gap = () => {
-  const cookies = new Cookies();
   const [title, setTitle] = useState("Accueil");
   const [fullscreen, setfullscreen] = useState(false);
 
@@ -33,7 +32,7 @@ const Gap = () => {
           style={{ flex: "none", }}
         >
           <Navbar
-            user={cookies.get("user", { path: "/" })}
+            user={Info.user}
             fonctions={navMenu}
           />
         </section>
@@ -45,7 +44,7 @@ const Gap = () => {
           <section className="col-12 bg-light" id="Topbar">
             <Topbar
               title={title}
-              user={`${cookies.get("user", { path: "/" }).nomuser} ${cookies.get("user", { path: "/" }).prenomsuser} - ${cookies.get("user", { path: "/" }).labelprofil
+              user={`${Info.user.nomuser} ${Info.user.prenomsuser} - ${Info.user.labelprofil
                 }`}
               toggleFullscreen={toggleFullscreen}
               fullscreen={fullscreen}

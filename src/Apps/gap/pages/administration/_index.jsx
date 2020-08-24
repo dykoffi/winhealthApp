@@ -9,7 +9,7 @@ import Notif from "../../../../components/Notification";
 import { setCurrentPage, setNotification } from "../../api/caisse/pages";
 import { Snackbar } from "@material-ui/core";
 
-const Statistiques = ({
+const Administration = ({
   sendTitle,
   currentPage,
   setCurrentPage,
@@ -17,11 +17,11 @@ const Statistiques = ({
   notification,
 }) => {
   useEffect(() => {
-    sendTitle("Statistiques");
+    sendTitle("Administration");
   });
 
   return (
-    <div className="Statistiques row">
+    <div className="Administration row">
       <section className="col-12">
         <Onglet
           links={Listonglets}
@@ -65,8 +65,8 @@ const mapStatToProp = (state) => {
   return { currentPage, notification };
 };
 
-const StatistiquesConnected = connect(mapStatToProp, {
+const AdministrationConnected = connect(mapStatToProp, {
   setCurrentPage,
   setNotification,
-})(Statistiques);
-export default StatistiquesConnected;
+})(Administration);
+export default AdministrationConnected;

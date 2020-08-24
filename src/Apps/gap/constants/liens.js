@@ -43,16 +43,16 @@ const navMenu = [
         icon: 'hardware-security',
         path: "/gap/administration"
     },
-    // {
-    //     title: 'Parametres',
-    //     icon: 'action-settings',
-    //     path: "/gap/settings"
-    // },
-    // {
-    //     title: 'Info',
-    //     icon: 'action-info-outline',
-    //     path: "/gap/settings"
-    // }
+    {
+        title: 'Parametres',
+        icon: 'action-settings',
+        path: "/gap/settings"
+    },
+    {
+        title: 'Info',
+        icon: 'action-info-outline',
+        path: "/gap/info"
+    }
 ]
 const functions = permissions.functions.map(f => f.name)
 export const navMenuUser = navMenu.filter(menu => functions.includes(menu.title))

@@ -267,11 +267,12 @@ export function thunkModifyFacture(numeroSejour, data) {
         Axios({
             method: "POST",
             url: `${header.url}/gap/update/sejour/${numeroSejour}/${getState().bordereauReducer.currentFacture.numerofacture}`,
-            data: data,
+            data: { ...data, numeroBordereau: getState().bordereauReducer.currentBordereau[0].numerobordereau },
             headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(() => {
             switch (getState().pageReducer.currentPage) {
                 case "bordereaux":
+                    dispatch(thunkListBorderaux())
                     dispatch(thunkDetailsBorderau(getState().bordereauReducer.currentBordereau[0].numerobordereau))
                     break;
                 case "facturesValides":
@@ -297,24 +298,30 @@ export function thunkReportFacture(numeroFacture, data) {
         Axios({
             method: "POST",
             url: `${header.url}/gap/report/facture/${numeroFacture}`,
-            data: data,
+            data: { ...data, numeroBordereau: getState().bordereauReducer.currentBordereau[0].numerobordereau },
             headers: { "content-type": "application/x-www-form-urlencoded", },
         }).then(() => {
-            switch (getState().pageReducer.currentPage) {
-                case "bordereaux":
-                    dispatch(thunkListBorderaux())
-                    dispatch(thunkDetailsBorderau(getState().bordereauReducer.currentBordereau[0].numerobordereau));
-                    dispatch(setShowCommentFacture(false));
-                    dispatch(setShowDetailsFacture(false))
-                    break;
-                case "facturesValides":
-                    dispatch(thunkListFactures())
-                    break;
-                case "facturesRecues":
-                    dispatch(thunkListFactures())
-                    break;
-                default:
-                    break;
+            if (data.erreur === 'refuse' && getState().bordereauReducer.currentBordereau.length === 1) {
+                dispatch(setShowCommentFacture(false));
+                dispatch(setShowDetailsFacture(false))
+                dispatch(thunkDelBordereau({ numerobordereau: getState().bordereauReducer.currentBordereau[0].numerobordereau, factures: [null] }))
+            } else {
+                switch (getState().pageReducer.currentPage) {
+                    case "bordereaux":
+                        dispatch(thunkListBorderaux())
+                        dispatch(thunkDetailsBorderau(getState().bordereauReducer.currentBordereau[0].numerobordereau));
+                        dispatch(setShowCommentFacture(false));
+                        dispatch(setShowDetailsFacture(false))
+                        break;
+                    case "facturesValides":
+                        dispatch(thunkListFactures())
+                        break;
+                    case "facturesRecues":
+                        dispatch(thunkListFactures())
+                        break;
+                    default:
+                        break;
+                }
             }
         })
     }
