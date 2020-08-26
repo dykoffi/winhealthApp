@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import GlobalContext from "../../../global/context";
 import { separate } from "../../../global/functions";
 
-import { TextField, Chip, Avatar, Dialog, DialogTitle, DialogContent, FormControl, InputLabel, Select, MenuItem, Button, DialogActions } from "@material-ui/core";
+import { TextField, Dialog, DialogTitle, DialogContent, FormControl, InputLabel, Select, MenuItem, Button, DialogActions } from "@material-ui/core";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
@@ -13,7 +13,6 @@ import FeaturedPlayListIcon from '@material-ui/icons/FeaturedPlayList';
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 
-import QrReader from 'react-qr-scanner'
 
 import {
   thunkListFacturesPayeesPatient,
@@ -23,7 +22,6 @@ import {
   thunkDetailsFacture,
   thunkEncaisserAllFactures,
   setShowModal,
-  setCurrentPatient
 } from "../../api/caisse/factures";
 
 
@@ -184,132 +182,120 @@ const FacturePatient = ({
           />
         </div>
       </div>
-      {currentPatient.ipppatient && (
-        <>
-          <div className="col-2 pr-3 p-0">
-            <div className="row">
-              <div className="col-12">
-                <ul className="list-group rounded-0" id="list-tab" role="tablist">
-                  <li style={{ cursor: stats.nbTotal === 0 ? "default" : "pointer" }} className={`list-group-item d-flex justify-content-between align-items-center 
-                ${categorieFactures === "tous" ? "bgcolor-primary text-white" : "text-secondary"} `}
-                    onClick={() => { stats.nbTotal !== 0 && thunkListFacturesPatient(currentPatient) }}
-                  >
-                    <small>Toutes les factures</small>
-                    <span className={`badge ${categorieFactures === "tous" ? "textcolor-primary white" : stats.nbTotal !== 0 ? "bgcolor-primary text-white" : "badge-light"}  badge-pill`}>{stats.nbTotal}</span>
-                  </li>
-                  <li style={{ cursor: stats.nbpaye === 0 ? "default" : "pointer" }} href="#FacturesPayées" className={`list-group-item d-flex justify-content-between align-items-center 
-                ${categorieFactures === "payé" ? "bgcolor-primary text-white" : "text-secondary"} `}
-                    onClick={() => { stats.nbpaye !== 0 && thunkListFacturesPayeesPatient(currentPatient) }}>
-                    <small>Factures payées</small>
-                    <span className={`badge ${categorieFactures === "payé" ? "textcolor-primary white" : stats.nbpaye !== 0 ? "bgcolor-primary text-white" : "badge-light"}  badge-pill`}>{stats.nbpaye}</span>
-                  </li>
-                  <li style={{ cursor: stats.nbimppaye === 0 ? "default" : "pointer" }} href="#FacturesImpayées" className={`list-group-item d-flex justify-content-between align-items-center 
-                ${categorieFactures === "impayé" ? "bgcolor-primary text-white" : "text-secondary"} `}
-                    onClick={() => { stats.nbimppaye !== 0 && thunkListFacturesImpayeesPatient(currentPatient) }}
-                  >
-                    <small>Factures impayées</small>
-                    <span className={`badge ${categorieFactures === "impayé" ? "textcolor-primary white" : stats.nbimppaye !== 0 ? "bgcolor-primary text-white" : "badge-light"}  badge-pill`}>{stats.nbimppaye}</span>
-                  </li>
-                  <li style={{ cursor: "default" }} href="#FacturesAnnulées" className={`list-group-item d-flex justify-content-between align-items-center 
-                ${categorieFactures === "annulé" ? "bgcolor-primary text-white" : "text-secondary"} `}>
-                    <small>Factures Annulées</small>
-                    <span className={`badge ${categorieFactures === "annulé" ? "textcolor-primary white" : "badge-light"}  badge-pill`}>0</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-12 mt-2">
-                <ul className="list-group rounded-0" id="list-tab" role="tablist">
-                  <li className="list-group-item d-flex justify-content-between align-items-center">
-                    <small className="font-weight-bold">Montant total</small>
-                    <span className="badge badge-pill badge-success">{separate(stats.montantTotal)} FCFA</span>
-                  </li>
-                  <li className="list-group-item d-flex justify-content-between align-items-center">
-                    <small className="font-weight-bold">Reste à payer</small>
-                    <span className="badge badge-danger badge-pill">{separate(stats.reste)} FCFA</span>
-                  </li>
-                </ul>
-                {
-                  stats.reste !== 0 && (
-                    <Button
-                      variant="contained"
-                      className="mt-2 col"
-                      disabled={stats.reste === 0}
-                      startIcon={<FeaturedPlayListIcon />}
-                      onClick={() => {
-                        setModalAllfacture(true);
-                      }}
-                      style={{
-                        textTransform: "none",
-                        backgroundColor: global.theme.secondaryDark,
-                        color: "white",
-                        fontSize: "11px",
-                      }}
-                    >
-                      Régler toutes les factures
-                    </Button>
-                  )
-                }
 
-                {/* <QrReader
+      <div className="col-2 pr-3 p-0">
+        <div className="row">
+          <div className="col-12">
+            <ul className="list-group rounded-0" id="list-tab" role="tablist">
+              <li style={{ cursor: stats.nbTotal === 0 ? "default" : "pointer" }} className={`list-group-item d-flex justify-content-between align-items-center 
+                ${categorieFactures === "tous" ? "bgcolor-primary text-white" : "text-secondary"} `}
+                onClick={() => { stats.nbTotal !== 0 && thunkListFacturesPatient(currentPatient) }}
+              >
+                <small>Toutes les factures</small>
+                <span className={`badge ${categorieFactures === "tous" ? "textcolor-primary white" : stats.nbTotal !== 0 ? "bgcolor-primary text-white" : "badge-light"}  badge-pill`}>{stats.nbTotal}</span>
+              </li>
+              <li style={{ cursor: stats.nbpaye === 0 ? "default" : "pointer" }} href="#FacturesPayées" className={`list-group-item d-flex justify-content-between align-items-center 
+                ${categorieFactures === "payé" ? "bgcolor-primary text-white" : "text-secondary"} `}
+                onClick={() => { stats.nbpaye !== 0 && thunkListFacturesPayeesPatient(currentPatient) }}>
+                <small>Factures payées</small>
+                <span className={`badge ${categorieFactures === "payé" ? "textcolor-primary white" : stats.nbpaye !== 0 ? "bgcolor-primary text-white" : "badge-light"}  badge-pill`}>{stats.nbpaye}</span>
+              </li>
+              <li style={{ cursor: stats.nbimppaye === 0 ? "default" : "pointer" }} href="#FacturesImpayées" className={`list-group-item d-flex justify-content-between align-items-center 
+                ${categorieFactures === "impayé" ? "bgcolor-primary text-white" : "text-secondary"} `}
+                onClick={() => { stats.nbimppaye !== 0 && thunkListFacturesImpayeesPatient(currentPatient) }}
+              >
+                <small>Factures impayées</small>
+                <span className={`badge ${categorieFactures === "impayé" ? "textcolor-primary white" : stats.nbimppaye !== 0 ? "bgcolor-primary text-white" : "badge-light"}  badge-pill`}>{stats.nbimppaye}</span>
+              </li>
+              <li style={{ cursor: "default" }} href="#FacturesAnnulées" className={`list-group-item d-flex justify-content-between align-items-center 
+                ${categorieFactures === "annulé" ? "bgcolor-primary text-white" : "text-secondary"} `}>
+                <small>Factures Annulées</small>
+                <span className={`badge ${categorieFactures === "annulé" ? "textcolor-primary white" : "badge-light"}  badge-pill`}>0</span>
+              </li>
+            </ul>
+          </div>
+          <div className="col-12 mt-2">
+            <ul className="list-group rounded-0" id="list-tab" role="tablist">
+              <li className="list-group-item d-flex justify-content-between align-items-center">
+                <small className="font-weight-bold">Montant total</small>
+                <span className="badge badge-pill badge-success">{separate(stats.montantTotal)} FCFA</span>
+              </li>
+              <li className="list-group-item d-flex justify-content-between align-items-center">
+                <small className="font-weight-bold">Reste à payer</small>
+                <span className="badge badge-danger badge-pill">{separate(stats.reste)} FCFA</span>
+              </li>
+            </ul>
+            {
+              stats.reste !== 0 && (
+                <Button
+                  variant="contained"
+                  className="mt-2 col"
+                  disabled={stats.reste === 0}
+                  startIcon={<FeaturedPlayListIcon />}
+                  onClick={() => {
+                    setModalAllfacture(true);
+                  }}
+                  style={{
+                    textTransform: "none",
+                    backgroundColor: global.theme.secondaryDark,
+                    color: "white",
+                    fontSize: "11px",
+                  }}
+                >
+                  Régler toutes les factures
+                </Button>
+              )
+            }
+
+            {/* <QrReader
                   delay={500}
                   style={{ height: 400, width: 400 }}
                   onError={(err) => { console.log(err) }}
                   onScan={(result) => { console.log("result :" + result) }}
                 /> */}
-              </div>
-            </div>
           </div>
-        </>)
-      }
-      {listFacturesPatient
-        .length === 0 ? (
-          <div className="col-12 text-secondary text-center">
-            <h6 className="text-center lead">Aucune patient sélectionné</h6>
-            <small>Veuillez en sélectionner un dans la liste déroulante</small>
-          </div>
-        ) : (
-          <>
-            <table className="col-10 table-sm table-sm table-hover table-striped">
-              <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-                <tr>
-                  {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
-                  {["Montant Total",
-                    "Part ASSU",
-                    "Reste ASSU",
-                    "Part Patient",
-                    "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+        </div>
+      </div>
+
+
+      <table className="col-10 table-sm table-sm table-hover table-striped">
+        <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+          <tr>
+            {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+            {["Montant Total",
+              "Part ASSU",
+              "Reste ASSU",
+              "Part Patient",
+              "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+          </tr>
+        </thead>
+        <tbody>
+          {listFacturesPatient
+            .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture))
+            .map(
+              ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
+                <tr key={i} style={{ cursor: "pointer" }}
+                  onClick={() => handleClickOpen(numerofacture)}
+                >
+                  <td className="font-weight-bold">{i + 1}</td>
+                  <td className="font-weight-bold">{numerofacture}</td>
+                  <td>{datefacture}</td>
+                  <td>{heurefacture}</td>
+                  <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                  <td>{typesejour}</td>
+                  <td>{auteurfacture}</td>
+                  <td className="text-right">{separate(montanttotalfacture)}</td>
+                  <td className="text-right">{separate(partassurancefacture)}</td>
+                  <td className="text-right">{separate(resteassurancefacture)}</td>
+                  <td className="text-right">{separate(partpatientfacture)}</td>
+                  <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
+                    {separate(restepatientfacture)}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {listFacturesPatient
-                  .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture))
-                  .map(
-                    ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
-                      <tr key={i} style={{ cursor: "pointer" }}
-                        onClick={() => handleClickOpen(numerofacture)}
-                      >
-                        <td className="font-weight-bold">{i + 1}</td>
-                        <td className="font-weight-bold">{numerofacture}</td>
-                        <td>{datefacture}</td>
-                        <td>{heurefacture}</td>
-                        <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                        <td>{typesejour}</td>
-                        <td>{auteurfacture}</td>
-                        <td className="text-right">{separate(montanttotalfacture)}</td>
-                        <td className="text-right">{separate(partassurancefacture)}</td>
-                        <td className="text-right">{separate(resteassurancefacture)}</td>
-                        <td className="text-right">{separate(partpatientfacture)}</td>
-                        <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
-                          {separate(restepatientfacture)}
-                        </td>
-                      </tr>
-                    )
-                  )}
-              </tbody>
-            </table>
-          </>
-        )
-      }
+              )
+            )}
+        </tbody>
+      </table>
       <Dialog
         disableBackdropClick
         transitionDuration={0}
@@ -347,7 +333,7 @@ const FacturePatient = ({
                       <small className='blue-text'>
                         <b>Facture d'avoir</b> :{" "}
                         <span>
-                          {currentFacture.parentfacture} {' '}({separate(currentFacture.prixavoirfacture)} FCFA)
+                          {currentFacture.parentfacture} {' '}({separate(currentFacture.montantavoir)} FCFA)
                         </span>
                       </small><br />
                     </>

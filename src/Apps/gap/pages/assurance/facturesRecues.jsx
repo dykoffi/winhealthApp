@@ -547,9 +547,10 @@ const FacturesRecues = ({
                                     )}
                                 </div>
                             </div>
-                            {currentFacture.commentairefacture && currentFacture.commentairefacture.trim() !== "" && <div className="row mx-1 my-3 bg-danger p-2">
-                                <pre className="text-white">{currentFacture.commentairefacture}</pre>
-                            </div>}
+                            {currentFacture.commentairefacture && currentFacture.commentairefacture.trim() !== "" &&
+                                <div className={`row mx-1 my-3 ${currentFacture.erreurfacture === "refuse" ? "bg-danger text-white" : "bg-warning"} p-2`}>
+                                    <pre className={currentFacture.erreurfacture === "refuse" ? "text-white" : ""}>{currentFacture.commentairefacture}</pre>
+                                </div>}
                             <div className="row mx-1 my-3">
                                 <Autocomplete
                                     size="small"
@@ -615,7 +616,6 @@ const FacturesRecues = ({
                                     className="col-7 ml-2"
                                     variant="filled"
                                     size="small"
-                                    defaultValue=" "
                                     label="Identité de l'Assuré"
                                     defaultValue={currentFacture.assureprinc}
                                     onChange={setassurePrinc}
@@ -704,7 +704,6 @@ const FacturesRecues = ({
                     <Button
                         variant="contained"
                         className="mb-2"
-                        onClick={() => { }}
                         startIcon={<EditIcon />}
                         onClick={() => {
                             thunkModifyFacture(currentFacture.numerosejour, inputModifs)

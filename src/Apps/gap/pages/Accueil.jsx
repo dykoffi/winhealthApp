@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import logo from "../../../static/images/logo3.png";
-import { header } from "../../global/apiQuery";
-
 const Accueil = ({ sendTitle }) => {
   useEffect(() => {
     sendTitle("GAP Accueil");

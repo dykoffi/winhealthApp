@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { header, socket } from "../../../global/apiQuery"
+import { header } from "../../../global/apiQuery"
 import { Info } from "../../../global/context"
 
 const initState = {

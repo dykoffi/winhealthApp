@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
-import moment from 'moment'
 import GlobalContext from "../../../global/context";
 import { separate } from "../../../global/functions";
 import {
@@ -11,16 +10,12 @@ import {
   thunkDetailsFacture,
   setShowModal,
 } from "../../api/caisse/factures";
-import frLocale from "date-fns/locale/fr";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
-import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
-import { socket, header } from "../../../global/apiQuery";
+import { socket } from "../../../global/apiQuery";
 import {
   TextField,
-  Avatar,
-  Chip,
   DialogContent,
   DialogTitle,
   DialogActions,
@@ -31,8 +26,6 @@ import {
   Button,
   MenuItem,
 } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
 
 const AttenteFacture = ({
   listFacturesAttentes,
@@ -41,18 +34,10 @@ const AttenteFacture = ({
   thunkListFacturesAttentes,
   thunkDetailsFacture,
   thunkEncaisserFactures,
-  thunkAnnulerFactures,
   thunkSearchFacture,
   setShowModal,
 }) => {
-  const [projection, setprojection] = useState(false)
   const [value, setvalue] = useState("")
-  const [searchinfos, setsearchinfos] = useState({
-    numeroFacture: "",
-    statutFacture: "attente",
-    debutFacture: new Date(),
-    finFacture: new Date()
-  });
   const [inputs, setinput] = useState({
     modepaiement: "",
     montantrecu: "",
@@ -61,7 +46,6 @@ const AttenteFacture = ({
 
   const handleClickOpen = (numeroFacture) => { thunkDetailsFacture(numeroFacture); };
   const handleClose = () => {
-    setprojection(false)
     setShowModal(false)
     setinput({
       modepaiement: "",
@@ -72,10 +56,6 @@ const AttenteFacture = ({
   function setmode({ target: { value } }) { setinput({ ...inputs, modepaiement: value }); }
   function setmontant({ target: { value } }) { setinput({ ...inputs, montantrecu: value }); }
   function setnumeroTransaction({ target: { value } }) { setinput({ ...inputs, numeroTransaction: value }); }
-  function project() {
-    socket.emit("project_facture", currentFacture)
-    projection ? setprojection(false) : setprojection(true);
-  }
   function sendData(numeroFacture, patient) {
     thunkEncaisserFactures(numeroFacture, {
       ...inputs,

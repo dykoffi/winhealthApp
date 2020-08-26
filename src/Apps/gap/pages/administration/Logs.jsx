@@ -1,59 +1,28 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
-import Chart from 'chart.js'
-import GlobalContext, { Info } from "../../../global/context";
+import GlobalContext from "../../../global/context";
 import moment from 'moment'
-import LogDoc from '../../documents/bordereau'
 import DateFnsUtils from "@date-io/date-fns";
 import frLocale from "date-fns/locale/fr";
 import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
 import {
     thunkListLogs
 } from "../../api/administration/logs";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import CancelIcon from "@material-ui/icons/CancelOutlined";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import PrintIcon from '@material-ui/icons/Print';
-import AddIcon from '@material-ui/icons/Add'
-import EditIcon from '@material-ui/icons/Edit';
-import ListAltIcon from '@material-ui/icons/ListAlt';
+
 import {
     TextField,
-    Avatar,
-    Chip,
-    DialogContent,
-    DialogTitle,
-    DialogActions,
-    Dialog,
     FormControl,
     InputLabel,
     Select,
-    Button,
     MenuItem,
-    Slide,
     Snackbar,
-    withStyles,
 } from "@material-ui/core";
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import { separate } from "../../../global/functions";
-import { useSpeechSynthesis } from 'react-speech-kit';
-import useSpeechRecognition from "react-speech-kit/dist/useSpeechRecognition";
 
-const Transition = React.forwardRef(function Transition(props, ref) { return <Slide direction="up" ref={ref} {...props} />; });
-function PaperComponent(props) { return (<div className="row" {...props} ></div>); }
 function Alert(props) { return <MuiAlert elevation={6} variant="filled" {...props} />; }
-const Input = withStyles({
-    root: {
-        "& label.Mui-focused": { color: Info.theme.primary, },
-        "& .MuiInput-underline:after": { borderBottomColor: Info.theme.primary, },
-        "& .MuiOutlinedInput-root": { "&.Mui-focused fieldset": { borderColor: Info.theme.primary, }, },
-    },
-})(TextField);
 const Log = ({
     listLogs,
     loading,
@@ -62,27 +31,61 @@ const Log = ({
 }) => {
 
     const global = useContext(GlobalContext);
+    const [listusers, setlistusers] = useState()
     const [inputs, setinputs] = useState({
-
+        user: "",
+        typelog: "",
+        objetlog: ""
     })
     const columnsLog = [
-
+        "N°",
+        "Date",
+        "Heure",
+        "Auteur",
+        "type",
+        "Opération",
+        "Objet",
     ]
+
+    function setuser(value) { setinputs({ ...inputs, user: value }) }
+    function settypelog(value) { setinputs({ ...inputs, typelog: value }) }
+    function setobjetlog(value) { setinputs({ ...inputs, objetlog: value }) }
+
+    useEffect(() => {
+        thunkListLogs()
+        Axios({ url: `${header.url}/gap/list/logs_users` })
+            .then(({ data: { rows } }) => { setlistusers(rows) })
+    }, [])
 
     return (
         <div className="Facturesvalides row p-2">
             <div className="col-12 mb-2">
                 <div className="row mb-2 d-flex justify-content-center">
-                    <FormControl variant="filled" size="small" className="col">
-                        <InputLabel id="typesejour-label">Type de sejour </InputLabel>
+                    <Autocomplete
+                        size="small"
+                        className="col p-0"
+                        id="listusers"
+                        options={listusers}
+                        onChange={(event, newValue) => { newValue ? setuser(newValue.ipppatient) : setuser(null) }}
+                        getOptionLabel={(option) => option.auteurlog}
+                        filterSelectedOptions
+                        renderOption={(option) => (<><small>{option.auteurlog}</small></>)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Utilisateur"
+                                variant="filled"
+                                placeholder="Rechercher un utilisateur ..."
+                            />
+                        )}
+                    />
+                    <FormControl variant="filled" size="small" className="col ml-2">
+                        <InputLabel id="typelog-label">Type de Log </InputLabel>
                         <Select
-                            labelId="typesejour-label"
+                            labelId="typelog-label"
                             defaultValue={"Tous"}
-                            id="typesejour"
-                            onChange={({ target: { value } }) => {
-
-
-                            }}
+                            id="typelog"
+                            onChange={({ target: { value } }) => { settypelog(value) }}
                             label="Type de sejour "
                             style={{ fontSize: "12px" }}
                         >
@@ -99,9 +102,7 @@ const Log = ({
                             labelId="objetlog-label"
                             id="objetlog"
                             defaultValue={inputs.objetlog}
-                            onChange={({ target: { value } }) => {
-
-                            }}
+                            onChange={({ target: { value } }) => { setobjetlog(value) }}
                             label="Type de sejour "
                             style={{ fontSize: "12px" }}
                         >
@@ -125,16 +126,6 @@ const Log = ({
 
                             }} />
                     </MuiPickersUtilsProvider>
-                    <Chip
-                        className="col"
-                        label="Log(s)"
-                        avatar={
-                            <Avatar
-                                className="white-text"
-                                style={{ backgroundColor: global.theme.primary }}
-                            >{listLogs.length}</Avatar>
-                        }
-                    />
                 </div>
             </div>
             <table className="table-sm col-12 table-hover table-striped">
@@ -144,14 +135,15 @@ const Log = ({
                 <tbody>
                     {listLogs
                         .map(
-                            ({ datelog, heurelog, typelog, actionlog, operationlog, auteurlog }, i) => (
+                            ({ datelog, heurelog, typelog, actionlog, operationlog, objetlog, auteurlog }, i) => (
                                 <tr key={i}>
                                     <td>{i + 1}</td>
-                                    <td className="font-weight-bold">{datelog}</td>
+                                    <td className="font-weight-bold">{moment(datelog).format('DD/MM/YYYY')}</td>
                                     <td className="font-weight-bold">{heurelog}</td>
-                                    <td className="font-weight-bold">{typelog}</td>
-                                    <td className="font-weight-bold">{actionlog}</td>
                                     <td>{auteurlog}</td>
+                                    <td className="font-weight-bold">{typelog}</td>
+                                    <td className="font-weight-bold">{operationlog}</td>
+                                    <td className="font-weight-bold">{objetlog}</td>
                                 </tr>
                             )
                         )}

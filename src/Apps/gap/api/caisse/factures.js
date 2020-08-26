@@ -1,6 +1,5 @@
 import Axios from "axios"
-import { header, socket } from "../../../global/apiQuery"
-import { setShowModalDetails } from "../assurance/assurances"
+import { header } from "../../../global/apiQuery"
 
 const initState = {
     listFactures: [],
@@ -136,8 +135,7 @@ export function thunkSearchFacture(numeroFacture) {
 
 //LISTER LES FACTURES PAR PATIENT
 export function thunkListFacturesPatient(patient) {
-    return async (dispatch, getState) => {
-        const { factureReducer } = getState()
+    return async (dispatch) => {
         Axios({ url: `${header.url}/gap/list/factures_patient/${patient.ipppatient}` }).then(({ data: { rows } }) => {
             rows ? dispatch(setListFacturesPatient(rows)) : dispatch(setListFacturesPatient([]))
             dispatch(setCurrentPatient(patient))
@@ -168,8 +166,7 @@ export function thunkListFacturesImpayeesPatient(patient) {
 
 
 export function thunkAddAvoirFacture(numeroFacture, data) {
-    return async (dispatch, getState) => {
-        const { factureReducer } = getState()
+    return async (dispatch) => {
         Axios({
             method: "POST",
             url: `${header.url}/gap/add/facture_avoir/${numeroFacture}`,

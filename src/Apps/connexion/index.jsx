@@ -3,9 +3,7 @@ import React, { useState, useContext } from "react";
 import { Cookies } from "react-cookie";
 import logo from "../../static/images/logo4.png";
 import { header } from "../global/apiQuery";
-// import { TextField, TextFieldLine } from "../../components/InputCustom";
 import { TextField } from '@material-ui/core'
-import LockOpenIcon from '@material-ui/icons/LockOpen'
 //components
 import GlobalContext, { Info } from "../global/context";
 import { withStyles } from "@material-ui/core/styles";

@@ -7,7 +7,6 @@ import Notif from "../../../../components/Notification";
 
 //import des action creators
 import { setCurrentPage, setNotification } from "../../api/encaissement/pages";
-import { socket, header } from "../../../global/apiQuery";
 import { Snackbar } from "@material-ui/core";
 
 const Encaissement = ({

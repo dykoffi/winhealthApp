@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, TextField } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, TextField } from "@material-ui/core";
 import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/core/styles";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import frLocale from "date-fns/locale/fr";
 import InputMask from "react-input-mask";

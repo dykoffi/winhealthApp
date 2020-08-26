@@ -1,6 +1,6 @@
 
 import Axios from "axios"
-import { header, socket } from "../../../global/apiQuery"
+import { header } from "../../../global/apiQuery"
 
 const initState = {
     listLogs: [],
@@ -9,7 +9,6 @@ const initState = {
 
 //les actions 
 const SET_LIST_LOGS = "SET_LIST_LOGS"
-
 const SET_LOADING = "SET_LOADING"
 
 const setListLogs = (data) => ({ type: SET_LIST_LOGS, listLogs: data })
@@ -27,7 +26,7 @@ const borderauReducer = (state = initState, action) => {
 export function thunkListLogs() {
     return async (dispatch) => {
         dispatch(setLoading(true))
-        Axios({ url: `${header.url}/gap/list/bordereaux` })
+        Axios({ url: `${header.url}/gap/list/logs` })
             .then(({ data: { rows } }) => { dispatch(setListLogs(rows)) })
     }
 }

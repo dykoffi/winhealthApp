@@ -28,7 +28,6 @@ import {
   Select,
   Button,
   MenuItem,
-  Input,
 } from "@material-ui/core";
 import InputMask from "react-input-mask";
 
@@ -82,7 +81,6 @@ const Assurance = ({
     site_web: "",
   });
 
-  const handleClickOpen = (idAssurance) => { thunkDetailsAssurance(idAssurance); };
   const handleClose = () => {
     setShowModal(false); setinput({
       nom: "",

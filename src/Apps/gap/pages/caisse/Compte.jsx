@@ -16,19 +16,11 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import { socket } from "../../../global/apiQuery";
 
 import {
   TextField,
   Avatar,
   Chip,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   DialogContent,
   DialogTitle,
   DialogActions,

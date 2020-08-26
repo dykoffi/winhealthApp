@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { deconnexionUser } from "../Apps/connexion/functions";
-import { Menu, MenuItem, IconButton, Avatar } from "@material-ui/core";
+import { Menu, MenuItem, IconButton } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import FullscreenExitIcon from "@material-ui/icons/FullscreenExit";

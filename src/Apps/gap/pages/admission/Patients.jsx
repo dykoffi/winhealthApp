@@ -2,7 +2,6 @@ import React from "react";
 import TablePatients from "../../containers/admission/TableListPatients";
 import { connect } from "react-redux";
 import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import Alert from "@material-ui/lab/Alert";
 import { setLoading } from '../../api/admission/patients'
 const Patients = ({ loading, setLoading }) => {

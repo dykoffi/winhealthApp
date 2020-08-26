@@ -49,7 +49,6 @@ const AvoirFacture = ({
     commentaire: "",
   });
 
-  const handleClickOpen = (numeroFacture) => { thunkDetailsFacture(numeroFacture); };
   const handleClose = () => {
     setShowModal(false)
     setinput({ commentaire: "", montant: "", facture: "" })

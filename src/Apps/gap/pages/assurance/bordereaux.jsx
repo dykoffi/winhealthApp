@@ -12,7 +12,6 @@ import {
     setListFacturesValides,
     setListFacturesByAssurance,
     thunkDeleteFacturesValides,
-    thunkListFactures,
     thunkModifyFacture,
     thunkDetailsFacture,
     thunkCommentFacture,
@@ -152,28 +151,7 @@ const Bordereau = ({
         setListFacturesByAssurance([])
         settousSelectionner(false)
     };
-    async function setAllMontant() {
-        let list = listFacturesByAssurance
-            .filter(facture => facture.statutfacture === 'valide')
-            .filter(facture => listFacturesValides.includes(facture.numerofacture))
-        if (list.length !== 0) {
-            console.log(list.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv),);
-            setinput({
-                ...inputs,
-                montanttotal: list.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv),
-                partAssurance: list.map(facture => facture.partassurancefacture).reduce((acc, curv) => acc + curv),
-                partPatient: list.map(facture => facture.partpatientfacture).reduce((acc, curv) => acc + curv),
-            })
-        } else {
-            console.log(list);
-            setinput({
-                ...inputs,
-                montanttotal: 0,
-                partAssurance: 0,
-                partPatient: 0
-            })
-        }
-    }
+ 
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
     function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
     function setlimiteDate(value) { setinput({ ...inputs, limiteDate: value, limiteDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
@@ -1096,7 +1074,6 @@ const Bordereau = ({
                                     className="col-7 ml-2"
                                     variant="outlined"
                                     size="small"
-                                    defaultValue=" "
                                     label="Identité de l'Assuré"
                                     defaultValue={currentFacture.assureprinc}
                                     onChange={setassurePrinc}
@@ -1186,7 +1163,6 @@ const Bordereau = ({
                     <Button
                         variant="contained"
                         className="mb-2"
-                        onClick={() => { }}
                         startIcon={<EditIcon />}
                         onClick={() => {
                             thunkModifyFacture(currentFacture.numerosejour, inputModifs)
@@ -1316,7 +1292,6 @@ const mapStatToProps = state => {
 const BordereauConnected = connect(mapStatToProps, {
     thunkAddBordereau,
     thunkListBorderaux,
-    thunkAddBordereau,
     thunkModifyFacture,
     thunkListFacturesByAssurances,
     thunkDeleteFacturesValides,

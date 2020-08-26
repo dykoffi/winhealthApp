@@ -55,7 +55,6 @@ const DossiersPatient = ({
   const [openControle, setOpenControle] = useState(false);
   const [listActes, setListActe] = useState([]);
   const [value, setValue] = useState("");
-  const [actes, setActes] = useState([]);
   const [listAssurances, setListAssurances] = useState([]);
   const [listActesDef, setListActesDef] = useState([
     [
@@ -186,7 +185,7 @@ const DossiersPatient = ({
   }, []);
   useEffect(() => {
     thunkListSejour(currentPatient.iddossier);
-  },[currentPatient.iddossier]);
+  }, [currentPatient.iddossier]);
   return (
     <div className="DossiersPatient row px-3">
       {currentSejour !== null && (
@@ -395,7 +394,7 @@ const DossiersPatient = ({
                     locale={frLocale}
                   >
                     <KeyboardDatePicker
-                    
+
                       label="Date de début"
                       id="datedebut"
                       format="dd/MM/yyyy"
@@ -663,9 +662,7 @@ const DossiersPatient = ({
                     )
                   }}
                   style={{
-                    textTransform: "none", fontSize: "11px", backgroundColor: global.theme.primary,
-                    fontSize: "11px",
-                    color: "white",
+                    textTransform: "none", fontSize: "11px", backgroundColor: global.theme.primary, color: "white",
                   }}
                 >Ajouter</Button></div>
             </div>

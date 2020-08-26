@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../../static/images/logoms2.jpg";
-import { Info } from "../../global/context";
-import moment from 'moment'
 import QR from "qrcode.react";
 import {
   Page,

@@ -1,17 +1,14 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { connect } from "react-redux";
 import Chart from 'chart.js'
-import { schemeSet3, schemeCategory10 } from 'd3'
-import GlobalContext, { Info } from "../../../global/context";
+import { schemeSet3 } from 'd3'
+import GlobalContext from "../../../global/context";
 import moment from 'moment'
-import BordereauDoc from '../../documents/bordereau'
 import DateFnsUtils from "@date-io/date-fns";
 import frLocale from "date-fns/locale/fr";
 import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
 import {
     thunkListFacturesByAssurances,
-    thunkListFactures,
     thunkDetailsFacture,
     setShowModal,
     thunkDetailsBorderau,
@@ -22,13 +19,7 @@ import {
 } from "../../api/statistiques/bordereaux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import PrintIcon from '@material-ui/icons/Print';
-import AddIcon from '@material-ui/icons/Add'
-import EditIcon from '@material-ui/icons/Edit';
-import ListAltIcon from '@material-ui/icons/ListAlt';
+
 import {
     TextField,
     Avatar,
@@ -44,31 +35,21 @@ import {
     MenuItem,
     Slide,
     Snackbar,
-    withStyles,
 } from "@material-ui/core";
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { separate } from "../../../global/functions";
-import { useSpeechSynthesis } from 'react-speech-kit';
-import useSpeechRecognition from "react-speech-kit/dist/useSpeechRecognition";
+//import { useSpeechSynthesis } from 'react-speech-kit';
+// import useSpeechRecognition from "react-speech-kit/dist/useSpeechRecognition";
 
 const Transition = React.forwardRef(function Transition(props, ref) { return <Slide direction="up" ref={ref} {...props} />; });
-function PaperComponent(props) { return (<div className="row" {...props} ></div>); }
 function Alert(props) { return <MuiAlert elevation={6} variant="filled" {...props} />; }
-const Input = withStyles({
-    root: {
-        "& label.Mui-focused": { color: Info.theme.primary, },
-        "& .MuiInput-underline:after": { borderBottomColor: Info.theme.primary, },
-        "& .MuiOutlinedInput-root": { "&.Mui-focused fieldset": { borderColor: Info.theme.primary, }, },
-    },
-})(TextField);
 const Bordereau = ({
     thunkListFacturesByAssurances,
     thunkListBorderaux,
     listBordereaux,
     listFacturesByAssurance,
-    listFacturesValides,
     setListFacturesValides,
     currentBordereau,
     showModal,
@@ -76,24 +57,14 @@ const Bordereau = ({
     setShowModal,
     loading,
     setLoading,
-    currentFacture,
-    showDetailsFacture,
-    setShowDetailsFacture,
     setListFacturesByAssurance,
-    setTypeBordereaux,
-    typeBordereaux
 }) => {
     const canvasbar = useRef(null)
     const canvasline = useRef(null)
     const canvaspie = useRef(null)
     const [value, setValue] = useState("");
     const [value2, setValue2] = useState("");
-    const [tousSelectionner, settousSelectionner] = useState("");
-    const [pdf, setpdf] = useState(false);
-    const [urlPDF, seturlPDF] = useState(false);
-    const [modal, setmodal] = useState(false);
     const [listAssurances, setListAssurance] = useState([]);
-    const [statutbordereau, setstatutbordereau] = useState(null)
 
     //charts
     const [pie, setpie] = useState(null)
@@ -101,17 +72,9 @@ const Bordereau = ({
     const [bar, setbar] = useState(null)
 
     //speech
-    const { speak } = useSpeechSynthesis();
+    //const { speak } = useSpeechSynthesis();
 
-    const [inputModifs, setinputModif] = useState({
-        gestionnaire: "",
-        organisme: "",
-        beneficiaire: "",
-        matriculeAssure: "",
-        assurePrinc: "",
-        numeroPEC: "",
-        taux: "",
-    })
+
     const [inputs, setinput] = useState({
         nomassurance: "Tous",
         nomgarant: "Tous",
@@ -122,22 +85,6 @@ const Bordereau = ({
         debutDate: new Date("01/01/2020"),
         finDate: new Date("12/31/2020"),
     });
-    const handleClose = () => {
-        setmodal(false);
-        setinput({
-            nomassurance: "Tous",
-            nomgarant: "Tous",
-            typeSejour: "Tous",
-            statutBordereau: "tous",
-            debutDateString: moment("01/01/2020").format('DD-MM-YYYY'),
-            finDateString: moment("12/31/2020").format('DD-MM-YYYY'),
-            debutDate: new Date("01/01/2020"),
-            finDate: new Date("12/31/2020"),
-        });
-        setListFacturesValides([])
-        setListFacturesByAssurance([])
-        settousSelectionner(false)
-    };
 
 
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
@@ -146,15 +93,6 @@ const Bordereau = ({
     function setstatut(value) { setinput({ ...inputs, statutBordereau: value }) }
     function setassurance(value) { setinput({ ...inputs, nomassurance: value }) }
     function setgarant(value) { setinput({ ...inputs, nomgarant: value }) }
-    function setgestionnaire(value) { setinputModif({ ...inputModifs, gestionnaire: value }); }
-    function setgestionnaire(value) { setinputModif({ ...inputModifs, gestionnaire: value }); }
-    function setorganisme(value) { setinputModif({ ...inputModifs, organisme: value }); }
-    function setbeneficiaire({ target: { value } }) { setinputModif({ ...inputModifs, beneficiaire: value }); }
-    function setassurePrinc({ target: { value } }) { setinputModif({ ...inputModifs, assurePrinc: value }); }
-    function setmatriculeAssure({ target: { value } }) { setinputModif({ ...inputModifs, matriculeAssure: value }); }
-    function setnumeroPEC({ target: { value } }) { setinputModif({ ...inputModifs, numeroPEC: value }); }
-    function settaux({ target: { value } }) { setinputModif({ ...inputModifs, taux: value }); }
-    function showPDF(url) { seturlPDF(url); setpdf(true) }
     function statutbordereauTab(statut) {
         switch (statut) {
             case "tous": return ['Création', 'Rejeté', 'Validé', 'Décharge', 'Envoie']
@@ -179,20 +117,7 @@ const Bordereau = ({
         "Part Assurance",
         "Part Patient",
     ]
-    const columns = [
-        "N°",
-        "N°facture",
-        "Date",
-        "Heure",
-        "Gestionnaire",
-        "Organisme",
-        "Type de sejour",
-        "N° PEC",
-        "Matricule Assuré",
-        "Taux",
-        "Patient",
-        "Assuré Princ"
-    ]
+
     const global = useContext(GlobalContext);
     useEffect(() => {
         thunkListFacturesByAssurances(inputs)
@@ -203,9 +128,7 @@ const Bordereau = ({
             setListAssurance(Assurances);
         });
     }, []);
-    useEffect(() => {
-        setLoading(false)
-    }, [inputs.nomassurance, inputs.typeSejour])
+
     useEffect(() => {
         const charLine = canvasline.current.getContext("2d");
         const charBar = canvasbar.current.getContext("2d");
@@ -570,7 +493,6 @@ const Bordereau = ({
                 aria-describedby="alert-dialog-description"
                 fullWidth={true}
                 maxWidth="lg"
-                onEntered={() => { setstatutbordereau(currentBordereau[0].statutbordereau) }}
             >
                 <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
                     <b>Bordereau N° {currentBordereau[0].numerobordereau}</b>
@@ -733,19 +655,6 @@ const Bordereau = ({
                     >Fermer</Button>
                     {/* <BordereauDoc showPDF={showPDF} code={``} bordereau={currentBordereau} cie={cie} /> */}
                 </DialogActions>
-            </Dialog>
-            <Dialog
-                open={pdf}
-                onClose={() => setpdf(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                fullWidth={true}
-                style={{ overflowX: 'hidden' }}
-                maxWidth="md"
-                scroll={'body'}
-                PaperComponent={PaperComponent}
-            >
-                <object data={urlPDF} className="col-12" height={700} type="application/pdf"></object>
             </Dialog>
             <Snackbar open={loading} onClose={() => setLoading(false)}>
                 <Alert variant='standard' severity="info" >
