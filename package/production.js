@@ -4,7 +4,6 @@ const http = require('http')
 const favicon = require('express-favicon');
 const cluster = require('cluster')
 const cpuM = require('os').cpus().length
-console.log(cpuM);
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;

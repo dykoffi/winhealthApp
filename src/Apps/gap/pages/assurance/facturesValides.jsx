@@ -363,21 +363,21 @@ const Facturesvalides = ({
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").map(
-                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture, statutfacture }, i) => (
+                                ({ nbfacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour, erreurfacture, statutfacture }, i) => (
                                     <tr
                                         key={i}
-                                        className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
+                                        className={listFacturesValides.includes(nbfacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
                                         style={{ cursor: "pointer" }}
                                         onClick={() => {
-                                            if (listFacturesValides.includes(numerofacture)) {
-                                                listFacturesValides.splice(listFacturesValides.indexOf(numerofacture), 1)
+                                            if (listFacturesValides.includes(nbfacture)) {
+                                                listFacturesValides.splice(listFacturesValides.indexOf(nbfacture), 1)
                                                 setListFacturesValides([...listFacturesValides])
                                             } else {
-                                                thunkCommentFacture(numerofacture)
+                                                thunkCommentFacture(nbfacture)
                                             }
                                         }} >
                                         <td>{i + 1}</td>
-                                        <td>{numerofacture}</td>
+                                        <td>{nbfacture}</td>
                                         <td>{datefacture}</td>
                                         <td>{heurefacture}</td>
                                         <td className="font-weight-bold">{gestionnaire}</td>

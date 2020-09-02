@@ -394,26 +394,26 @@ const FacturesRecues = ({
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').map(
-                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                                ({ nbfacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
                                         style={{ cursor: "pointer" }}
-                                        className={listFacturesRecues.includes(numerofacture) ? "bgcolor-primary white-text" : ""}
+                                        className={listFacturesRecues.includes(nbfacture) ? "bgcolor-primary white-text" : ""}
                                         onClick={() => {
-                                            if (listFacturesRecues.includes(numerofacture)) {
-                                                listFacturesRecues.splice(listFacturesRecues.indexOf(numerofacture), 1)
+                                            if (listFacturesRecues.includes(nbfacture)) {
+                                                listFacturesRecues.splice(listFacturesRecues.indexOf(nbfacture), 1)
                                                 setListFacturesRecues([...listFacturesRecues])
                                                 settousSelectionner(false)
                                             } else {
-                                                if ([...listFacturesRecues, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').length) {
+                                                if ([...listFacturesRecues, nbfacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').length) {
                                                     settousSelectionner(true)
                                                 }
-                                                setListFacturesRecues([...listFacturesRecues, numerofacture])
+                                                setListFacturesRecues([...listFacturesRecues, nbfacture])
                                             }
                                         }}
                                     >
                                         <td>{i + 1}</td>
-                                        <td>{numerofacture}</td>
+                                        <td>{nbfacture}</td>
                                         <td>{datefacture}</td>
                                         <td>{heurefacture}</td>
                                         <td className="font-weight-bold">{gestionnaire}</td>
@@ -443,7 +443,7 @@ const FacturesRecues = ({
                                     setListFacturesRecues(
                                         listFacturesByAssurance
                                             .filter(facture => facture.statutfacture === 'attente')
-                                            .map(facture => facture.numerofacture)
+                                            .map(facture => facture.nbfacture)
                                     )
                                     settousSelectionner(true)
                                 }
@@ -468,11 +468,11 @@ const FacturesRecues = ({
                     {
                         listFacturesByAssurance.filter(
                             facture => facture.statutfacture === 'attente' &&
-                                !listFacturesRecues.includes(facture.numerofacture)
+                                !listFacturesRecues.includes(facture.nbfacture)
                         ).length !== 0 &&
                         <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={
                             listFactures.filter(facture => facture.statutfacture === 'attente' &&
-                                !listFacturesRecues.includes(facture.numerofacture)
+                                !listFacturesRecues.includes(facture.nbfacture)
                             )} />
                     }
                     <Button

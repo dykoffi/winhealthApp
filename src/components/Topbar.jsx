@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { deconnexionUser } from "../Apps/connexion/functions";
-import { Menu, MenuItem, IconButton } from "@material-ui/core";
+import { Menu, MenuItem, IconButton, } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import FullscreenExitIcon from "@material-ui/icons/FullscreenExit";
@@ -13,7 +13,7 @@ const Topbar = ({ toggleFullscreen, title, fullscreen, user }) => {
     moment().format("ddd DD MMMM YYYY - HH : mm : ss")
   );
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,13 +35,13 @@ const Topbar = ({ toggleFullscreen, title, fullscreen, user }) => {
 
   return (
     <div className="row p-1">
-      <div className="col-3">
+      <div className="col-4">
         <small className="font-weight-bold">{title}</small>
       </div>
-      <div className="col-6 text-center">
+      <div className="col-4 text-center">
         <small>{time}</small>
       </div>
-      <div className="col-3 text-center">
+      <div className="col-4 text-right">
         <IconButton size="small" onClick={toggleFullscreen}>
           {!fullscreen ? <FullscreenIcon /> : <FullscreenExitIcon />}
         </IconButton>
@@ -53,7 +53,6 @@ const Topbar = ({ toggleFullscreen, title, fullscreen, user }) => {
         >
           <AccountCircleIcon />
         </IconButton>
-        {/* <Avatar size="small" className={{}}>YD</Avatar> */}
         <Menu
           elevation={1}
           id="simple-menu"

@@ -35,7 +35,9 @@ const Log = ({
     const [inputs, setinputs] = useState({
         user: "",
         typelog: "",
-        objetlog: ""
+        objetlog: "",
+        debutDate: new Date("2020-08-01"),
+        finDate: new Date("2020-08-31"),
     })
     const columnsLog = [
         "N°",
@@ -50,7 +52,8 @@ const Log = ({
     function setuser(value) { setinputs({ ...inputs, user: value }) }
     function settypelog(value) { setinputs({ ...inputs, typelog: value }) }
     function setobjetlog(value) { setinputs({ ...inputs, objetlog: value }) }
-
+    function setdebutDate(value) { setinputs({ ...inputs, debutDate: value }) }
+    function setfinDate(value) { setinputs({ ...inputs, finDate: value }) }
     useEffect(() => {
         thunkListLogs()
         Axios({ url: `${header.url}/gap/list/logs_users` })
@@ -114,16 +117,16 @@ const Log = ({
                         </Select>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
-                        <KeyboardDatePicker className='col mx-2' label='Du' id="datedebut" defaultValue={new Date("01/01/2020")} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
+                        <KeyboardDatePicker className='col mx-2' label='Du' id="datedebut" defaultValue={inputs.debutDate} value={inputs.debutDate} format="dd/MM/yyyy" onChange={
                             (date) => {
-
+                                setdebutDate(date)
                             }
                         } />
                     </MuiPickersUtilsProvider>
                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
                         <KeyboardDatePicker className='col' label='Au' id="datefin" defaultValue={new Date("12/31/2020")} value={inputs.finDate} format="dd/MM/yyyy" onChange={
                             (date) => {
-
+                                setfinDate(date)
                             }} />
                     </MuiPickersUtilsProvider>
                 </div>
@@ -134,6 +137,7 @@ const Log = ({
                 </thead>
                 <tbody>
                     {listLogs
+                        .filter(log => moment(log.datelog).isBetween(moment(inputs.debutDate).subtract(1, 'days'), moment(inputs.finDate).add(1, "days")))
                         .map(
                             ({ datelog, heurelog, typelog, actionlog, operationlog, objetlog, auteurlog }, i) => (
                                 <tr key={i}>

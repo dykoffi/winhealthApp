@@ -491,25 +491,25 @@ const Bordereau = ({
                         </thead>
                         <tbody>
                             {listFacturesByAssurance.filter(facture => facture.statutfacture === 'valide').map(
-                                ({ numerofacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
+                                ({ nbfacture, gestionnaire, organisme, matriculeassure, numeropec, assureprinc, taux, datefacture, heurefacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, typesejour }, i) => (
                                     <tr
                                         key={i}
-                                        className={listFacturesValides.includes(numerofacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
+                                        className={listFacturesValides.includes(nbfacture) ? "bgcolor-primary font-weight-bold white-text" : ""}
                                         style={{ cursor: "pointer" }}
                                         onClick={() => {
-                                            if (listFacturesValides.includes(numerofacture)) {
-                                                listFacturesValides.splice(listFacturesValides.indexOf(numerofacture), 1)
+                                            if (listFacturesValides.includes(nbfacture)) {
+                                                listFacturesValides.splice(listFacturesValides.indexOf(nbfacture), 1)
                                                 setListFacturesValides([...listFacturesValides])
                                                 settousSelectionner(false)
                                             } else {
-                                                if ([...listFacturesValides, numerofacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'valide').length) {
+                                                if ([...listFacturesValides, nbfacture].length === listFacturesByAssurance.filter(facture => facture.statutfacture === 'valide').length) {
                                                     settousSelectionner(true)
                                                 }
-                                                setListFacturesValides([...listFacturesValides, numerofacture])
+                                                setListFacturesValides([...listFacturesValides, nbfacture])
                                             }
                                         }} >
                                         <td>{i + 1}</td>
-                                        <td>{numerofacture}</td>
+                                        <td>{nbfacture}</td>
                                         <td>{datefacture}</td>
                                         <td>{heurefacture}</td>
                                         <td className="font-weight-bold">{gestionnaire}</td>
@@ -539,7 +539,7 @@ const Bordereau = ({
                                     setListFacturesValides(
                                         listFacturesByAssurance
                                             .filter(facture => facture.statutfacture === 'valide')
-                                            .map(facture => facture.numerofacture)
+                                            .map(facture => facture.nbfacture)
                                     )
                                     settousSelectionner(true)
                                 }
@@ -582,7 +582,7 @@ const Bordereau = ({
                         onClick={() => {
                             let list = listFacturesByAssurance
                                 .filter(facture => facture.statutfacture === 'valide')
-                                .filter(facture => listFacturesValides.includes(facture.numerofacture))
+                                .filter(facture => listFacturesValides.includes(facture.nbfacture))
                             if (list.length !== 0) {
                                 thunkAddBordereau(
                                     {

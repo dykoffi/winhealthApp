@@ -32,22 +32,14 @@ export const setCurrentFacture = (data) => ({ type: SET_CURRENT_FACTURE, current
 //le reducer
 const factureReducer = (state = initState, action) => {
     switch (action.type) {
-        case SET_LIST_FACTURES:
-            return { ...state, listFactures: action.listFactures };
-        case SET_CATEGORIE_FACTURES:
-            return { ...state, categorieFactures: action.categorieFactures };
-        case SET_LIST_FACTURES_PATIENT:
-            return { ...state, listFacturesPatient: action.listFacturesPatient };
-        case SET_LIST_FACTURES_ATTENTES:
-            return { ...state, listFacturesAttentes: action.listFacturesAttentes };
-        case SET_CURRENT_FACTURE:
-            return { ...state, currentFacture: action.currentFacture };
-        case SET_CURRENT_PATIENT:
-            return { ...state, currentPatient: action.currentPatient };
-        case SET_SHOW_MODAL:
-            return { ...state, showModal: action.showModal };
-        default:
-            return state;
+        case SET_LIST_FACTURES: return { ...state, listFactures: action.listFactures };
+        case SET_CATEGORIE_FACTURES: return { ...state, categorieFactures: action.categorieFactures };
+        case SET_LIST_FACTURES_PATIENT: return { ...state, listFacturesPatient: action.listFacturesPatient };
+        case SET_LIST_FACTURES_ATTENTES: return { ...state, listFacturesAttentes: action.listFacturesAttentes };
+        case SET_CURRENT_FACTURE: return { ...state, currentFacture: action.currentFacture };
+        case SET_CURRENT_PATIENT: return { ...state, currentPatient: action.currentPatient };
+        case SET_SHOW_MODAL: return { ...state, showModal: action.showModal };
+        default: return state;
     }
 }
 

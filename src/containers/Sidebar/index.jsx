@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
 import "./sidebar.css";
+import { Tooltip } from "@material-ui/core";
 
 const SideHead = ({ user }) => {
   const { nomuser, posteuser, prenomsuser, labelprofil } = user;
@@ -59,14 +60,16 @@ const Sidebar = ({ user, fonctions }) => {
             <>
               <ListItem>
                 {fonctions.map(({ title, icon, path }, i) => (
-                  <NavLink key={i} exact to={path}>
-                    <SideItem
-                      text={title}
-                      icon={icon}
-                      actif={actif === i}
-                      active={() => setactif(i)}
-                    />
-                  </NavLink>
+                  <Tooltip title={title} key={i}>
+                    <NavLink key={i} exact to={path}>
+                      <SideItem
+                        // text={title}
+                        icon={icon}
+                        actif={actif === i}
+                        active={() => setactif(i)}
+                      />
+                    </NavLink>
+                  </Tooltip>
                 ))}
               </ListItem>
             </>
