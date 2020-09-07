@@ -15,6 +15,7 @@ import GlobalContext, { Info } from "../../../global/context";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import DateFnsUtils from "@date-io/date-fns";
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { listpays } from "../../../global/functions";
 
@@ -154,6 +155,10 @@ const DetailsPatient = ({ currentPatient, thunkModifPatient, thunkDeletePatient,
         {/* <IconButton className="mx-2 bg-light" size="small" aria-label="delete" onClick={() => { }}>
           <DeleteOutlineIcon />
         </IconButton> */}
+
+      </div>
+      <div className="col-auto d-flex flex-column">
+        <AccountBoxIcon style={{ fontSize: 100 }} className="text-light" />
         <Button
           style={{ textTransform: 'none', fontSize: '12px' }}
           startIcon={<EditIcon />}

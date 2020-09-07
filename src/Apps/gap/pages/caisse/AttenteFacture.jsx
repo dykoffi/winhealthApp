@@ -13,6 +13,7 @@ import {
 import CancelIcon from "@material-ui/icons/CancelOutlined";
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutlined";
+import { ScannerOutlined } from "@material-ui/icons";
 import { socket } from "../../../global/apiQuery";
 import {
   TextField,
@@ -81,13 +82,13 @@ const AttenteFacture = ({
       thunkListFacturesAttentes();
     });
     socket.on("valid_paiement", (nof, montant) => {
-      thunkEncaisserFactures(nof,
-        {
-          modepaiement: "Compte",
-          montantrecu: montant,
-          compte: currentFacture.numerocompte,
-        });
-      handleClose();
+      // thunkEncaisserFactures(nof,
+      //   {
+      //     modepaiement: "Compte",
+      //     montantrecu: montant,
+      //     compte: currentFacture.numerocompte,
+      //   });
+      setinput({ ...inputs, modepaiement: 'Compte', montantrecu: montant.toString() })
     })
   }, []);
   return (
@@ -296,6 +297,18 @@ const AttenteFacture = ({
             }}
           >
             Annuler
+          </Button>
+          <Button
+            variant="contained"
+            className="mb-2"
+            startIcon={<ScannerOutlined />}
+            onClick={() => { socket.emit('project_facture', currentFacture) }}
+            style={{
+              textTransform: "none",
+              fontSize: "13px",
+            }}
+          >
+            Projeter
           </Button>
           {currentFacture.restepatientfacture !== 0 && <Button
             variant="contained"

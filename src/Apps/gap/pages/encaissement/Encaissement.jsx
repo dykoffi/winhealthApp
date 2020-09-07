@@ -101,6 +101,10 @@ const Encaissement = ({
       ...inputFacture,
       encaissement: currentEncaissement.numeroencaissement
     });
+    setinputFacture({
+      modepaiement: "",
+      montantrecu: "",
+    })
   }
   const handleClose = () => {
     setModal(false);
@@ -120,7 +124,7 @@ const Encaissement = ({
   function setdebutDate(value) { setinputsearch({ ...inputsearch, debutDate: value, debutDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
   function setfinDate(value) { setinputsearch({ ...inputsearch, finDate: value, finDateString: moment(value.toString()).format('DD-MM-YYYY') }) }
   function settype(value) { setinputsearch({ ...inputsearch, typeSejour: value }) }
-  function setassurance(value) { setinputsearch({ ...inputsearch, nomassurance: value }) }
+  function setassuranceSearch(value) { setinputsearch({ ...inputsearch, nomassurance: value }) }
   function setgarant(value) { setinputsearch({ ...inputsearch, nomgarant: value }) }
 
 
@@ -436,6 +440,7 @@ const Encaissement = ({
         style={{ minHeight: "60vh" }}
         maxWidth="lg"
         onEnter={() => {
+          setassuranceSearch(currentEncaissement.assuranceencaissement)
           thunkListFacturesByAssurances({ ...inputsearch, nomassurance: currentEncaissement.assuranceencaissement })
         }}
       >
@@ -485,7 +490,7 @@ const Encaissement = ({
                 defaultValue={{ value: currentEncaissement.assuranceencaissement, label: currentEncaissement.assuranceencaissement }}
                 options={[{ value: "Tous", label: "Tous" }, ...listAssurances]}
                 onChange={(event, newValue) => {
-                  newValue && setassurance(newValue.label)
+                  newValue && setassuranceSearch(newValue.label)
                   newValue && inputsearch.typeSejour.trim() !== "" &&
                     inputsearch.nomgarant.trim() !== "" &&
                     thunkListFacturesByAssurances({ ...inputsearch, nomassurance: newValue.label })
@@ -618,9 +623,7 @@ const Encaissement = ({
                       </IconButton>
                     </td>
                     <td className="bg-warning">
-                      <IconButton size="small" onClick={() => {
-                        thunkDetailsFacture(numerofacture)
-                      }}>
+                      <IconButton size="small" onClick={() => { thunkDetailsFacture(numerofacture) }}>
                         <AssignmentLateTwo />
                       </IconButton>
                     </td>
@@ -639,6 +642,8 @@ const Encaissement = ({
                   setListFacturesVentiles(
                     listFacturesByAssurance
                       .filter(facture => facture.statutfacture === 'bordereau')
+                      .filter(facture => facture.resteassurancefacture > 0)
+                      .filter(facture => valueFacture.trim() === "" || RegExp(valueFacture, 'i').test(facture.numerobordereau))
                       .map(facture => facture.numerofacture)
                   )
                   settousSelectionner(true)
@@ -659,12 +664,12 @@ const Encaissement = ({
                     .filter(facture => valueFacture.trim() === "" || RegExp(valueFacture, 'i').test(facture.numerobordereau)).length} Sélectionnée(s)`}
               />
               <Chip
-                label={`${listFacturesVentiles.length !== 0 ?
+                label={`${listFacturesVentiles.length !== 0 && listFacturesByAssurance.length !== 0 ?
                   listFacturesByAssurance
                     .filter(facture => facture.resteassurancefacture > 0)
                     .filter(facture => facture.statutfacture === 'bordereau')
                     .filter(facture => listFacturesVentiles.includes(facture.numerofacture))
-                    .map(facture => facture.partassurancefacture)
+                    .map(facture => facture.resteassurancefacture)
                     .reduce((prev, cur) => prev + cur) : 0
                   } FCFA`}
               />
@@ -689,7 +694,14 @@ const Encaissement = ({
               //thunkSendFacturesRecues(listFacturesVentiles)
               handleClose()
             }}
-            disabled={listFacturesVentiles.length === 0}
+            disabled={listFacturesVentiles.length === 0 ||
+              listFacturesByAssurance
+                .filter(facture => facture.resteassurancefacture > 0)
+                .filter(facture => facture.statutfacture === 'bordereau')
+                .filter(facture => listFacturesVentiles.includes(facture.numerofacture))
+                .map(facture => facture.resteassurancefacture)
+                .reduce((prev, cur) => prev + cur) > currentEncaissement.resteencaissement
+            }
             startIcon={<AssignmentTurnedInIcon />}
             style={{
               textTransform: "none",
@@ -719,7 +731,7 @@ const Encaissement = ({
         maxWidth="xs"
       >
         <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
-          <b>Facture N° {currentFacture.numerofacture}</b>
+          <b>Règlement partielle de la facture {currentFacture.numerofacture}</b>
           {currentFacture.resteassurancefacture === 0 && <><br /><small className="green-text font-weight-bold">(déjà payée)</small></>}
         </DialogTitle>
         <DialogContent>
@@ -741,7 +753,7 @@ const Encaissement = ({
                     </span>
                   </small><br />
                   <hr />
-                  <small><b>Montant Encaissement : </b> {separate(currentEncaissement.montantencaissement)} FCFA</small><br />
+                  <small><b>Reste Encaissement : </b> {separate(currentEncaissement.resteencaissement)} FCFA</small><br />
                 </div>
               </div>
               {currentFacture.resteassurancefacture !== 0 && (
@@ -807,10 +819,11 @@ const Encaissement = ({
               inputFacture.modepaiement.trim() === "" ||
               inputFacture.montantrecu.trim() === "" ||
               parseInt(inputFacture.montantrecu.trim()) > parseInt(currentFacture.resteassurancefacture) ||
-              (inputFacture.modepaiement === 'Compte' && parseInt(inputFacture.montantrecu.trim()) > parseInt(currentFacture.montantcompte)) ||
-              (["Chèque", "Électronique", "Mobile money"].includes(inputFacture.modepaiement) && inputFacture.numeroTransaction.trim() === '')
+              parseInt(inputFacture.montantrecu.trim()) > currentEncaissement.resteencaissement
             }
-            onClick={() => sendData(currentFacture.numerofacture)}
+            onClick={() => {
+              sendData(currentFacture.numerofacture)
+            }}
             startIcon={<CheckCircleOutlineIcon />}
             style={{
               textTransform: "none",

@@ -107,9 +107,10 @@ const FacturePatient = ({
   }, []);
 
   useEffect(() => {
-    Axios({ url: `${header.url}/gap/verify/compte/${currentPatient.ipppatient}`, }).then(({ data: { rows } }) => {
-      rows[0] && setcompte({ numerocompte: rows[0].numerocompte, solde: rows[0].montantcompte });
-    });
+    currentPatient.ipppatient &&
+      Axios({ url: `${header.url}/gap/verify/compte/${currentPatient.ipppatient}`, }).then(({ data: { rows } }) => {
+        rows[0] && setcompte({ numerocompte: rows[0].numerocompte, solde: rows[0].montantcompte });
+      });
   }, [currentPatient, listFacturesPatient]);
 
   useEffect(() => {
@@ -117,17 +118,18 @@ const FacturePatient = ({
   }, [])
 
   useEffect(() => {
-    Axios({ url: `${header.url}/gap/list/factures_patient/${currentPatient.ipppatient}`, }).then(({ data: { rows } }) => {
-      setstats({
-        nbTotal: rows.length,
-        nbpaye: rows.filter(elt => elt.restepatientfacture === 0).length,
-        nbimppaye: rows.filter(elt => elt.restepatientfacture > 0).length,
-        reste: rows.length !== 0 ? rows.map(elt => elt.restepatientfacture).reduce((acc, curval) => acc + curval) : 0,
-        montantTotal: rows.length !== 0 ? rows.map(elt => elt.montanttotalfacture).reduce((acc, curval) => acc + curval) : 0,
-        factureImpaye: rows.filter(elt => elt.restepatientfacture > 0)
-      })
-      setfg(rows.length !== 0 ? rows.filter(elt => elt.restepatientfacture > 0).map(elt => [inputs.modepaiement, 'Patient', elt.restepatientfacture, elt.numerofacture]) : [])
-    });
+    currentPatient.ipppatient &&
+      Axios({ url: `${header.url}/gap/list/factures_patient/${currentPatient.ipppatient}`, }).then(({ data: { rows } }) => {
+        setstats({
+          nbTotal: rows.length,
+          nbpaye: rows.filter(elt => elt.restepatientfacture === 0).length,
+          nbimppaye: rows.filter(elt => elt.restepatientfacture > 0).length,
+          reste: rows.length !== 0 ? rows.map(elt => elt.restepatientfacture).reduce((acc, curval) => acc + curval) : 0,
+          montantTotal: rows.length !== 0 ? rows.map(elt => elt.montanttotalfacture).reduce((acc, curval) => acc + curval) : 0,
+          factureImpaye: rows.filter(elt => elt.restepatientfacture > 0)
+        })
+        setfg(rows.length !== 0 ? rows.filter(elt => elt.restepatientfacture > 0).map(elt => [inputs.modepaiement, 'Patient', elt.restepatientfacture, elt.numerofacture]) : [])
+      });
   }, [currentPatient, categorieFactures, listFacturesPatient, inputs.modepaiement])
   return (
     <div className="Dossiers row p-2">

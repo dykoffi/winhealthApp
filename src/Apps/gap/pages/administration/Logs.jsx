@@ -34,8 +34,8 @@ const Log = ({
     const [listusers, setlistusers] = useState()
     const [inputs, setinputs] = useState({
         user: "",
-        typelog: "",
-        objetlog: "",
+        typelog: "tous",
+        objetlog: "tous",
         debutDate: new Date("2020-08-01"),
         finDate: new Date("2020-08-31"),
     })
@@ -58,7 +58,26 @@ const Log = ({
         thunkListLogs()
         Axios({ url: `${header.url}/gap/list/logs_users` })
             .then(({ data: { rows } }) => { setlistusers(rows) })
-    }, [])
+    }, [inputs])
+
+    const typeLog = {
+        tous: ["CREATION", "SUPPRESSION", "MODIFICATION", "VALIDATION", "CONNEXION"],
+        creation: ["CREATION"],
+        modification: ["MODIFICATION"],
+        suppression: ["SUPPRESSION"],
+        validation: ["VALIDATION"],
+        connexion: ["CONNEXION"]
+    }
+
+    const objetLog = {
+        tous: ["Bordereau", "Facture", "Patient", "Encaissement", "Utilisateur", "Sejour"],
+        bordereau: ["Bordereau"],
+        facture: ["Facture"],
+        patient: ["Patient"],
+        encaissement: ["Encaissement"],
+        utilisateur: ["Utilisateur"],
+        sejour: ["Sejour"]
+    }
 
     return (
         <div className="Facturesvalides row p-2">
@@ -69,7 +88,7 @@ const Log = ({
                         className="col p-0"
                         id="listusers"
                         options={listusers}
-                        onChange={(event, newValue) => { newValue ? setuser(newValue.ipppatient) : setuser(null) }}
+                        onChange={(event, newValue) => { newValue ? setuser(newValue.auteurlog) : setuser("") }}
                         getOptionLabel={(option) => option.auteurlog}
                         filterSelectedOptions
                         renderOption={(option) => (<><small>{option.auteurlog}</small></>)}
@@ -86,17 +105,17 @@ const Log = ({
                         <InputLabel id="typelog-label">Type de Log </InputLabel>
                         <Select
                             labelId="typelog-label"
-                            defaultValue={"Tous"}
+                            defaultValue={"tous"}
                             id="typelog"
                             onChange={({ target: { value } }) => { settypelog(value) }}
                             label="Type de sejour "
                             style={{ fontSize: "12px" }}
                         >
-                            <MenuItem style={{ fontSize: "12px" }} value={"Tous"}>Tous</MenuItem>
-                            <MenuItem style={{ fontSize: "12px" }} value={"Création"}>Création</MenuItem>
-                            <MenuItem style={{ fontSize: "12px" }} value={"Suppression"}>Suppression</MenuItem>
-                            <MenuItem style={{ fontSize: "12px" }} value={"Modification"}>Modification</MenuItem>
-                            <MenuItem style={{ fontSize: "12px" }} value={"Validation"}>Validation</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"tous"}>Tous</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"creation"}>Création</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"suppression"}>Suppression</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"modification"}>Modification</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"validation"}>Validation</MenuItem>
                         </Select>
                     </FormControl>
                     <FormControl variant="filled" size="small" className="col ml-2">
@@ -104,16 +123,18 @@ const Log = ({
                         <Select
                             labelId="objetlog-label"
                             id="objetlog"
-                            defaultValue={inputs.objetlog}
+                            defaultValue={"tous"}
                             onChange={({ target: { value } }) => { setobjetlog(value) }}
                             label="Type de sejour "
                             style={{ fontSize: "12px" }}
                         >
                             <MenuItem style={{ fontSize: "12px" }} value={"tous"}>Tous</MenuItem>
                             <MenuItem style={{ fontSize: "12px" }} value={"patient"}>Patients</MenuItem>
-                            <MenuItem style={{ fontSize: "12px" }} value={"séjour"}>Séjours</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"sejour"}>Séjours</MenuItem>
                             <MenuItem style={{ fontSize: "12px" }} value={"facture"}>Factures</MenuItem>
                             <MenuItem style={{ fontSize: "12px" }} value={"bordereau"}>Bordereaux</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"encaissement"}>Encaissement</MenuItem>
+                            <MenuItem style={{ fontSize: "12px" }} value={"utilisateur"}>Utilisateur</MenuItem>
                         </Select>
                     </FormControl>
                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale} >
@@ -137,7 +158,10 @@ const Log = ({
                 </thead>
                 <tbody>
                     {listLogs
+                        .filter(log => typeLog[inputs.typelog].includes(log.typelog))
+                        .filter(log => objetLog[inputs.objetlog].includes(log.objetlog))
                         .filter(log => moment(log.datelog).isBetween(moment(inputs.debutDate).subtract(1, 'days'), moment(inputs.finDate).add(1, "days")))
+                        .filter(log => inputs.user.trim() === "" || RegExp(inputs.user, 'i').test(log.auteurlog))
                         .map(
                             ({ datelog, heurelog, typelog, actionlog, operationlog, objetlog, auteurlog }, i) => (
                                 <tr key={i}>

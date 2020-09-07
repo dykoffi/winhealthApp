@@ -76,10 +76,11 @@ export function thunkDetailsEncaissement(numeroEncaissement) {
 
 export function thunkAddEncaissement(data) {
     return async (dispatch) => {
+        const user = Info.user
         Axios({
             method: "POST",
             url: `${header.url}/gap/add/encaissement`,
-            data: { ...data, recepteur: Info.user.nomuser + " " + Info.user.prenomsuser },
+            data: { ...data, user: user, recepteur: Info.user.nomuser + " " + Info.user.prenomsuser },
             headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(({ data: { rows } }) => {
             dispatch(thunkListEncaissement())
@@ -112,11 +113,12 @@ export function thunkDetailsFacture(numeroFacture) {
 //ENCAISSER UNE FACTURE
 //socket.emit("facture_encaisser", { sejour: idsejour, patient: patient })
 export function thunkEncaisserFactures(numeroFacture, data) {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
+        const user = Info.user
         Axios({
             method: "POST",
             url: `${header.url}/gap/encaisser_assurance/facture/${numeroFacture}`,
-            data: data,
+            data: { ...data, user: user },
             headers: { "content-type": "application/x-www-form-urlencoded", }
         }).then(({ data: { rows } }) => {
             dispatch(thunkDetailsEncaissement(data.encaissement))
