@@ -1,9 +1,10 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { Avatar, Button, Chip, FormControl, InputLabel, MenuItem, Select, TextField, IconButton } from "@material-ui/core";
+import { Avatar, Button, Chip, FormControl, InputLabel, MenuItem, Select, TextField, IconButton, Tooltip } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -617,12 +618,19 @@ const DossiersPatient = ({
                           )}
                         />
                       </td>
-                      <td className="col-2"> <Input type="number" value={listActesDef[i][1]} disabled size="small" /></td>
-                      <td className="col-2"> <Input type="number" value={listActesDef[i][2]} onChange={({ target: { value } }) => {
+                      <td className="col-2 d-flex"> <Input type="number" value={listActesDef[i][1]} disabled size="small" />
+                        {listActesDef[i][1] - listActesDef[i][2] > 0 &&
+                          <Tooltip title={`Plafond dépassé de ${listActesDef[i][1] - listActesDef[i][2]}`} >
+                            <ErrorOutlineIcon className="text-warning" />
+                          </Tooltip>
+                        }
+                      </td>
+                      <td className="col-2 d-flex"> <Input type="number" value={listActesDef[i][2]} onChange={({ target: { value } }) => {
                         let listTemp = [...listActesDef]
                         listTemp[i][2] = value
                         setListActesDef(listTemp)
-                      }} size="small" /></td>
+                      }} size="small" />
+                      </td>
                       <td className="col-1"> <Input type="number" value={listActesDef[i][3]} onChange={({ target: { value } }) => {
                         let listTemp = [...listActesDef]
                         listTemp[i][3] = value
@@ -696,7 +704,6 @@ const DossiersPatient = ({
                 inputs.assurePrinc.trim() === "" ||
                 inputs.numeroPEC.trim() === ""
               ))
-
             }
             startIcon={<ChromeReaderModeIcon />}
             style={{
