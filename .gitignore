@@ -8,8 +8,8 @@
 # testing
 /coverage
 
-#push
-push.sh
+#package
+package/build
 # misc
 .DS_Store
 .env.local
