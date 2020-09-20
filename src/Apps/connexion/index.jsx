@@ -2,8 +2,12 @@ import Axios from "axios";
 import React, { useState, useContext } from "react";
 import { Cookies } from "react-cookie";
 import logo from "../../static/images/logo4.png";
+import intersatLogo from "../../static/images/intersat.jpg";
+import { LockOpenOutlined, SupervisedUserCircle } from "@material-ui/icons";
+import winhealthLogo from "../../static/images/winhealth.png";
+import alteaLogo from "../../static/images/0.png";
 import { header } from "../global/apiQuery";
-import { TextField } from '@material-ui/core'
+import { Button, TextField } from '@material-ui/core'
 //components
 import GlobalContext, { Info } from "../global/context";
 import { withStyles } from "@material-ui/core/styles";
@@ -66,12 +70,19 @@ const Connexion = () => {
   return (
     <div className="col-12" id="Connexion">
       <div className="row page">
-        <section id="form_connexion" className="form col-12 px-5 d-flex justify-content-center align-items-center" >
-          <div className="col-2 white px-3 py-3 rounded shadow-lg" style={{ opacity: 0.82 }}>
+        <section id="form_connexion" className="form col-12 px-5 d-flex justify-content-end align-items-center" >
+          {/* <div className="col-6 ml-4">
+            <h1 className="display-1 font-weight-bold textcolor-secondaryDark">Bienvenue</h1>
+            <h1 className="font-weight-bold grey-text darken-1 bg-white mb-1">sur l'une des meilleures plateformes </h1>
+            <h1 className="font-weight-bold grey-text darken-1 bg-white mb-1">de gestion adminitratives du monde et</h1>
+            <h1 className="font-weight-bold grey-text darken-1 bg-white">sur la planète</h1>
+          </div> */}
+          <div className="col-3 white px-3 py-3 rounded shadow-lg" style={{ opacity: 0.82 }}>
             <div className="row">
               <div className="text-dark text-center col-12 mb-2">
-                <img src={logo} alt="" className="col-7" /><br />
-                <small>WinHealth Connexion</small>
+                <SupervisedUserCircle style={{ fontSize: 150 }} className="blue-grey-text" />
+                {/* <img src={logo} alt="" className="col-5" /><br /> */}
+                <h4 className="font-weight-bold blue-grey-text">Connexion</h4>
               </div>
               <div className="col-12">
                 <div className="row mx-1">
@@ -100,23 +111,30 @@ const Connexion = () => {
                 </div>
               </div>
               <br />
-              <div className="col-12 mt-3">
+              <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
+                <img src={alteaLogo} />
+                <img src={intersatLogo} />
+                <img src={winhealthLogo} />
+              </div>
+              <div className="col-12 mt-3 d-flex justify-content-center flex-column align-items-center">
                 <div className="text-center">
                   {loading ? (<small className="grey-text text-center small">Verification ...</small>) :
                     error ? (<small className="red-text text-center small">Données incorrectes, veuillez reessayer</small>) :
                       (<small className="grey-text text-center small">Veuillez remplir tous les champs</small>)
                   }
                 </div>
-                <button
-                  className="btn btn-sm white-text col-6 mt-2 offset-3"
+                <Button
+                  variant="contained"
+                  endIcon={<LockOpenOutlined />}
+                  className="white-text col-6 mt-2"
                   disabled={login.trim().length === 0 || pass.trim().length === 0}
                   onClick={() => { connexionUser(login, pass) }}
                   style={{ backgroundColor: global.theme.primary }}
-                >Connexion</button>
+                >Connexion</Button>
               </div>
-
             </div>
           </div>
+          <div className="col-1"></div>
         </section>
       </div>
     </div>

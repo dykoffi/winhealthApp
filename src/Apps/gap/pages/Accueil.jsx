@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import logo from "../../../static/images/logo3.png";
+import logo from "../../../static/images/winhealth.png";
 const Accueil = ({ sendTitle }) => {
   useEffect(() => {
     sendTitle("GAP Accueil");

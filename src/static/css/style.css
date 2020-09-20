@@ -38,3 +38,7 @@ button {
 a:active, a:hover, a:visited, a{
     text-decoration: none;
 }
+
+.text-apple {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}

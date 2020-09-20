@@ -619,17 +619,17 @@ const DossiersPatient = ({
                         />
                       </td>
                       <td className="col-2 d-flex"> <Input type="number" value={listActesDef[i][1]} disabled size="small" />
-                        {listActesDef[i][1] - listActesDef[i][2] > 0 &&
-                          <Tooltip title={`Plafond dépassé de ${listActesDef[i][1] - listActesDef[i][2]}`} >
-                            <ErrorOutlineIcon className="text-warning" />
-                          </Tooltip>
-                        }
                       </td>
                       <td className="col-2 d-flex"> <Input type="number" value={listActesDef[i][2]} onChange={({ target: { value } }) => {
                         let listTemp = [...listActesDef]
                         listTemp[i][2] = value
                         setListActesDef(listTemp)
                       }} size="small" />
+                        {listActesDef[i][1] - listActesDef[i][2] > 0 &&
+                          <Tooltip title={`Plafond dépassé de ${listActesDef[i][1] - listActesDef[i][2]}`} >
+                            <ErrorOutlineIcon className="text-warning" />
+                          </Tooltip>
+                        }
                       </td>
                       <td className="col-1"> <Input type="number" value={listActesDef[i][3]} onChange={({ target: { value } }) => {
                         let listTemp = [...listActesDef]
