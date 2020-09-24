@@ -9,16 +9,10 @@ import {
   BlobProvider,
   Image,
   StyleSheet,
-  Font,
 } from "@react-pdf/renderer";
 import PrintIcon from "@material-ui/icons/Print";
-import { header } from "../../global/apiQuery";
 import { Button } from "@material-ui/core";
 import { NumberToLetter, separate } from "../../global/functions";
-
-Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
-Font.register({ family: "Roboto-Bold", src: `${header.local}/fonts/Roboto-Bold.ttf`, });
-Font.register({ family: "Roboto-Light", src: `${header.local}/fonts/Roboto-Light.ttf`, });
 
 const DocHead = ({ etablissement }) => (
   <View
@@ -27,14 +21,13 @@ const DocHead = ({ etablissement }) => (
       display: "flex",
       paddingBottom: 8,
       flexDirection: "row",
-      fontFamily: "Regular",
     }}
   >
     <View style={{ flex: 2 }}>
       <Image src={logo} style={{ height: "3cm", width: "3cm" }} />
     </View>
     <View style={{ flex: 10, textAlign: "right" }}>
-      <Text style={{ fontSize: 15, fontFamily: "Roboto-Bold", }}>POLYCLINIQUE ALTEA</Text>
+      <Text style={{ fontSize: 15, }}>POLYCLINIQUE ALTEA</Text>
       <View style={{ fontSize: 8, color: "grey", lineHeight: 1.5 }}>
         <Text>Tel : 21 58 96 35 / 58 96 32 15</Text>
         <Text>Cocody Angre 7ème tranche</Text>
@@ -89,51 +82,51 @@ const Facture = ({
                   <View style={{ ...styles.l, justifyContent: 'space-between', }}>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Designation</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.libelleacte}</Text>)}
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.libelleacte}</Text>)}
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Coef</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.cotationacte}</Text>)}
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.cotationacte}</Text>)}
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Med / Spec</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.medecinsejour} / {facture.specialitesejour}</Text>)}
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.medecinsejour} / {facture.specialitesejour}</Text>)}
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Date</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.datedebutsejour}</Text>)}
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.datedebutsejour}</Text>)}
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Qte</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.quantite}</Text>)}
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.quantite}</Text>)}
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Prix U</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.prixacte}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5, }}>TOTAL G</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold' }}>Encaissé</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold' }}>Reste</Text>
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.prixacte}</Text>)}
+                      <Text style={{ ...styles.line, marginTop: 5, }}>TOTAL G</Text>
+                      <Text style={{ ...styles.line }}>Encaissé</Text>
+                      <Text style={{ ...styles.line }}>Reste</Text>
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Prix T</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.prixacte * facture.quantite}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{facture[0].montanttotalfacture}</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', }}>{facture[0].montanttotalfacture - facture[0].restepatientfacture - facture[0].resteassurancefacture}</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', }}>{facture[0].restepatientfacture + facture[0].resteassurancefacture}</Text>
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.prixacte * facture.quantite}</Text>)}
+                      <Text style={{ ...styles.line, marginTop: 5 }}>{facture[0].montanttotalfacture}</Text>
+                      <Text style={{ ...styles.line, }}>{facture[0].montanttotalfacture - facture[0].restepatientfacture - facture[0].resteassurancefacture}</Text>
+                      <Text style={{ ...styles.line, }}>{facture[0].restepatientfacture + facture[0].resteassurancefacture}</Text>
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Part Assu</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.plafondassurance * facture.quantite * facture.taux / 100}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{facture[0].partassurancefacture}</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold' }}>{facture[0].partassurancefacture - facture[0].resteassurancefacture}</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold' }}>{facture[0].resteassurancefacture}</Text>
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.plafondassurance * facture.quantite * facture.taux / 100}</Text>)}
+                      <Text style={{ ...styles.line, marginTop: 5 }}>{facture[0].partassurancefacture}</Text>
+                      <Text style={{ ...styles.line }}>{facture[0].partassurancefacture - facture[0].resteassurancefacture}</Text>
+                      <Text style={{ ...styles.line }}>{facture[0].resteassurancefacture}</Text>
                     </View>
                     <View style={styles.column}>
                       <Text style={styles.tr}>Part Patient</Text>
-                      {facture.map(facture => <Text style={{ ...styles.line }}>{facture.prixacte * facture.quantite - (facture.plafondassurance * facture.quantite * facture.taux / 100)}</Text>)}
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{facture[0].partpatientfacture}</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold' }}>{facture[0].partpatientfacture - facture[0].restepatientfacture}</Text>
-                      <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold' }}>{facture[0].restepatientfacture}</Text>
+                      {facture.map((facture,i) => <Text key={i} style={{ ...styles.line }}>{facture.prixacte * facture.quantite - (facture.plafondassurance * facture.quantite * facture.taux / 100)}</Text>)}
+                      <Text style={{ ...styles.line, marginTop: 5 }}>{facture[0].partpatientfacture}</Text>
+                      <Text style={{ ...styles.line }}>{facture[0].partpatientfacture - facture[0].restepatientfacture}</Text>
+                      <Text style={{ ...styles.line }}>{facture[0].restepatientfacture}</Text>
                     </View>
                   </View>
                 </View>
@@ -180,7 +173,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 12,
     fontWeight: "bold",
-    fontFamily: 'Roboto-Light'
   },
   l: {
     display: "flex",
@@ -203,7 +195,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    fontFamily: 'Roboto-Bold',
     fontSize: 8,
     paddingHorizontal: 5,
     borderColor: 'grey',

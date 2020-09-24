@@ -223,10 +223,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
             }}
           />
           <div className="col">
-            <Chip
-              label="patient(s)"
-              avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} > {listPatients.length}</Avatar>}
-            />
+            <Chip label={`${listPatients.length} patient(s)`} />
           </div>
           <div className="col d-flex justify-content-end p-0">
             <Button
@@ -282,7 +279,7 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
                     >
                       <td>{i + 1}</td>
                       <td><b>{ipppatient}</b></td>
-                      <td><b>{civilitepatient} {nompatient} {prenomspatient}</b></td>
+                      <td><b>{nompatient} {prenomspatient}</b></td>
                       <td>{sexepatient}</td>
                       <td>{habitationpatient}</td>
                       <td>{datenaissancepatient}</td>
@@ -653,8 +650,6 @@ const TableListPatient = ({ thunkListPatient, thunkAddPatient, thunkSearchPatien
         { //Scanner un qr code pour avoir le dossier du patient
           scanQR && !modalModif && !modalAdd && <div style={{ position: "fixed", zIndex: "10001", right: "0.5cm", bottom: "0.5cm" }}
             className="bg-light col-2 d-flex p-0 flex-column border justify-content-center text-center align-items-center">
-            <img src={qr} height={125} width={125} alt="" className="animated infinite flash" />
-            <small style={{ fontSize: "10px" }} className="text-secondary">Scanner votre le Qr code pour identifier le patient</small>
             <QrReader
               delay={500}
               style={{ width: "100%" }}

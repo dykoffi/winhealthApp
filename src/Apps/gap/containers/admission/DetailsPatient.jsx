@@ -385,12 +385,7 @@ const DetailsPatient = ({ currentPatient, thunkModifPatient, thunkDeletePatient,
                 <MenuItem style={{ fontSize: "13px" }} value={"agriculteurs"}>Agriculteurs</MenuItem>
                 <MenuItem style={{ fontSize: "13px" }} value={"artisans"}>Artisants</MenuItem>
                 <MenuItem style={{ fontSize: "13px" }} value={"commerçant"}>Commerçants</MenuItem>
-                <MenuItem
-                  style={{ fontSize: "13px" }}
-                  value={"chef d'entreprise"}
-                >
-                  Chef d'entreprise
-              </MenuItem>
+                <MenuItem style={{ fontSize: "13px" }} value={"chef d'entreprise"} >Chef d'entreprise</MenuItem>
                 <MenuItem style={{ fontSize: "13px" }} value={"profession liberale"}>Professions liberales</MenuItem>
                 <MenuItem style={{ fontSize: "13px" }} value={"etudiant"}>Étudiant(e)</MenuItem>
                 <MenuItem style={{ fontSize: "13px" }} value={"retraité"}>Retraité(e)</MenuItem>

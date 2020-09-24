@@ -1,10 +1,13 @@
 import Axios from "axios";
+import Particles from 'react-particles-js'
 import React, { useState, useContext } from "react";
 import { Cookies } from "react-cookie";
-import logo from "../../static/images/logo4.png";
+import illus from "../../static/images/illus.jpg";
 import intersatLogo from "../../static/images/intersat.jpg";
 import { LockOpenOutlined, SupervisedUserCircle } from "@material-ui/icons";
 import winhealthLogo from "../../static/images/winhealth.png";
+import logo from "../../static/images/logo4.png";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import alteaLogo from "../../static/images/0.png";
 import { header } from "../global/apiQuery";
 import { Button, TextField } from '@material-ui/core'
@@ -70,26 +73,22 @@ const Connexion = () => {
   return (
     <div className="col-12" id="Connexion">
       <div className="row page">
-        <section id="form_connexion" className="form col-12 px-5 d-flex justify-content-end align-items-center" >
-          {/* <div className="col-6 ml-4">
-            <h1 className="display-1 font-weight-bold textcolor-secondaryDark">Bienvenue</h1>
-            <h1 className="font-weight-bold grey-text darken-1 bg-white mb-1">sur l'une des meilleures plateformes </h1>
-            <h1 className="font-weight-bold grey-text darken-1 bg-white mb-1">de gestion adminitratives du monde et</h1>
-            <h1 className="font-weight-bold grey-text darken-1 bg-white">sur la planète</h1>
-          </div> */}
-          <div className="col-3 white px-3 py-3 rounded shadow-lg" style={{ opacity: 0.82 }}>
+        <section id="form_connexion" className="form col-12 px-5 d-flex justify-content-center align-items-center" >
+          <div className="col-5 p-5 white-text">
+            <h1 className="font-weight-bold Oswald display-4">Bienvenue</h1>
+            <h4 className="font-weight-bold Oswald">Sur votre interface de connexion de la plateforme e-sante Winhealth.</h4>
+            <Particles width={500} height={500} />
+          </div>
+          <div className="col-2 white px-3 py-3 shadow-lg rounded" style={{ opacity: 0.92 }}>
             <div className="row">
               <div className="text-dark text-center col-12 mb-2">
-                <SupervisedUserCircle style={{ fontSize: 150 }} className="blue-grey-text" />
-                {/* <img src={logo} alt="" className="col-5" /><br /> */}
-                <h4 className="font-weight-bold blue-grey-text">Connexion</h4>
               </div>
               <div className="col-12">
                 <div className="row mx-1">
                   <Input
                     required
                     className="col"
-                    variant="outlined"
+                    variant="filled"
                     size="small"
                     label="Identifiant"
                     onChange={changeLogin}
@@ -100,7 +99,7 @@ const Connexion = () => {
                   <Input
                     required
                     className="col"
-                    variant="outlined"
+                    variant="filled"
                     type="password"
                     size="small"
                     label="Mot de passe"
@@ -111,33 +110,29 @@ const Connexion = () => {
                 </div>
               </div>
               <br />
-              <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
-                <img src={alteaLogo} />
-                <img src={intersatLogo} />
-                <img src={winhealthLogo} />
-              </div>
-              <div className="col-12 mt-3 d-flex justify-content-center flex-column align-items-center">
+              <div className="col-12 mt-2 d-flex justify-content-center flex-column align-items-center">
                 <div className="text-center">
                   {loading ? (<small className="grey-text text-center small">Verification ...</small>) :
                     error ? (<small className="red-text text-center small">Données incorrectes, veuillez reessayer</small>) :
                       (<small className="grey-text text-center small">Veuillez remplir tous les champs</small>)
                   }
                 </div>
-                <Button
-                  variant="contained"
-                  endIcon={<LockOpenOutlined />}
-                  className="white-text col-6 mt-2"
-                  disabled={login.trim().length === 0 || pass.trim().length === 0}
-                  onClick={() => { connexionUser(login, pass) }}
-                  style={{ backgroundColor: global.theme.primary }}
-                >Connexion</Button>
               </div>
+              <img style={{position:'fixed', bottom:'0.5cm', right:"0.5cm", height:"1.2cm"}} src={alteaLogo} />
             </div>
+            <Button
+              variant="contained"
+              endIcon={<LockOpenOutlined />}
+              className="white-text col mt-2 font-weight-bold"
+              disabled={login.trim().length === 0 || pass.trim().length === 0}
+              onClick={() => { connexionUser(login, pass) }}
+              style={{ backgroundColor: "#2E88A0", textTransform: "none" }}
+            >Connexion</Button>
           </div>
-          <div className="col-1"></div>
+          <img className="col-4 offset-1" src={illus} alt="" id="illus" />
         </section>
       </div>
-    </div>
+    </div >
   );
 };
 export default Connexion;

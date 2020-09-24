@@ -455,10 +455,7 @@ const FacturesRecues = ({
                                 />
                             </div>
                             <Chip
-                                label="Sélectionnée(s)"
-                                avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} >
-                                    {listFacturesRecues.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').length}
-                                </Avatar>}
+                                label={`${listFacturesRecues.length}/${listFacturesByAssurance.filter(facture => facture.statutfacture === 'attente').length} Sélectionnée(s)`}
                             />
                         </>
                     }

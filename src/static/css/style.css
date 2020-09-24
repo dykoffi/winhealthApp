@@ -42,3 +42,14 @@ a:active, a:hover, a:visited, a{
 .text-apple {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
+
+.Dancing {
+    font-family: 'Dancing Script', cursive;
+}
+.Ranchers {
+    font-family: 'Ranchers', cursive;
+}
+
+.Oswald {
+    font-family: 'Oswald', sans-serif;
+}

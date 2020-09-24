@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-const apihostprod = `mail.altea-ci.com:35000`
+const apihostprod = `${process.env.API_HOST}:8000`
 const pdfhostprod = `${process.env.API_HOST}:35000`
 //
 const apihosttest = `${process.env.API_HOST}:8000`

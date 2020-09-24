@@ -2,6 +2,7 @@ import Axios from "axios"
 import { header } from "../../../global/apiQuery"
 import { setCurrentPage } from './pages'
 import { Info } from "../../../global/context"
+import thunkListSejour from "./sejour"
 
 const initState = {
     listPatients: [],

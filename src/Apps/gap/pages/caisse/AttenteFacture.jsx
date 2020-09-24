@@ -26,6 +26,7 @@ import {
   Select,
   Button,
   MenuItem,
+  Chip
 } from "@material-ui/core";
 
 const AttenteFacture = ({
@@ -117,6 +118,11 @@ const AttenteFacture = ({
               thunkSearchFacture(v)
             }}
           />
+          <div className="col">
+            <Chip
+              label={`${listFacturesAttentes.length} Facture(s)`}
+            />
+          </div>
         </div>
       </div>
 
@@ -298,18 +304,19 @@ const AttenteFacture = ({
           >
             Annuler
           </Button>
-          <Button
-            variant="contained"
-            className="mb-2"
-            startIcon={<ScannerOutlined />}
-            onClick={() => { socket.emit('project_facture', currentFacture) }}
-            style={{
-              textTransform: "none",
-              fontSize: "13px",
-            }}
-          >
-            Projeter
-          </Button>
+          {currentFacture.montantcompte >= currentFacture.restepatientfacture &&
+            < Button
+              variant="contained"
+              className="mb-2"
+              startIcon={<ScannerOutlined />}
+              onClick={() => { socket.emit('project_facture', currentFacture) }}
+              style={{
+                textTransform: "none",
+                fontSize: "13px",
+              }}
+            >
+              Projeter
+          </Button>}
           {currentFacture.restepatientfacture !== 0 && <Button
             variant="contained"
             className="mb-2"
@@ -333,7 +340,7 @@ const AttenteFacture = ({
           </Button>}
         </DialogActions>
       </Dialog>
-    </div>
+    </div >
   );
 };
 

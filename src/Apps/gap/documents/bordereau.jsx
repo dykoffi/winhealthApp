@@ -8,17 +8,11 @@ import {
   BlobProvider,
   Image,
   StyleSheet,
-  Font,
 } from "@react-pdf/renderer";
 import PrintIcon from "@material-ui/icons/Print";
-import { header } from "../../global/apiQuery";
 import { Button } from "@material-ui/core";
 import { Info } from "../../global/context";
 import { NumberToLetter } from "../../global/functions";
-
-Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
-Font.register({ family: "Roboto-Bold", src: `${header.local}/fonts/Roboto-Bold.ttf`, });
-Font.register({ family: "Roboto-Light", src: `${header.local}/fonts/Roboto-Light.ttf`, });
 
 const DocHead = ({ etablissement }) => (
   <View
@@ -34,7 +28,7 @@ const DocHead = ({ etablissement }) => (
       <Image src={logo} style={{ height: "3cm", width: "3cm" }} />
     </View>
     <View style={{ flex: 10, textAlign: "right" }}>
-      <Text style={{ fontSize: 15, fontFamily: "Roboto-Bold", }}>POLYCLINIQUE ALTEA</Text>
+      <Text style={{ fontSize: 15 }}>POLYCLINIQUE ALTEA</Text>
       <View style={{ fontSize: 8, color: "grey", lineHeight: 1.5 }}>
         <Text>Cocody Angre 7ème tranche</Text>
         <Text>Abidjan BP 05 789</Text>
@@ -58,13 +52,13 @@ const Facture = ({ bordereau, cie }) => {
           </Text>
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ ...styles.content, justifyContent: 'flex-start' }}>
-              <View style={{ ...styles.l, fontSize: 9 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau[0].gestionnairebordereau}</Text><Text> / {bordereau[0].organismebordereau}</Text></View>
-              <View style={{ ...styles.l, fontSize: 8 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau.length} facture(s)</Text></View>
+              <View style={{ ...styles.l, fontSize: 9 }}><Text>{bordereau[0].gestionnairebordereau}</Text><Text> / {bordereau[0].organismebordereau}</Text></View>
+              <View style={{ ...styles.l, fontSize: 8 }}><Text>{bordereau.length} facture(s)</Text></View>
             </View>
             <View style={styles.content}>
               <View style={{ ...styles.l, fontSize: 9 }}><Text>Date : {bordereau[0].datecreationbordereau}</Text></View>
               <View style={{ ...styles.l, fontSize: 9 }}><Text>Heure : {bordereau[0].heurecreationbordereau}</Text></View>
-              <View style={{ ...styles.l, fontSize: 8 }}><Text style={{ fontFamily: 'Roboto-Bold' }}>{bordereau[0].typesejourbordereau}</Text></View>
+              <View style={{ ...styles.l, fontSize: 8 }}><Text>{bordereau[0].typesejourbordereau}</Text></View>
             </View>
           </View>
           <View style={{ ...styles.content, fontSize: 9 }}>
@@ -113,26 +107,26 @@ const Facture = ({ bordereau, cie }) => {
                 <View style={styles.column}>
                   <Text style={styles.tr}>Matricule</Text>
                   {bordereau.map(bordereau => <Text style={{ ...styles.line }}>{bordereau.matriculeassure}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>TOTAL</Text>
+                  <Text style={{ ...styles.line, marginTop: 5 }}>TOTAL</Text>
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.tr}>Montant facturé</Text>
                   {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.montanttotalfacture}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.montanttotalfacture).reduce((acc, curv) => acc + curv)}</Text>
+                  <Text style={{ ...styles.line, marginTop: 5 }}>{bordereau.map(bordereau => bordereau.montanttotalfacture).reduce((acc, curv) => acc + curv)}</Text>
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.tr}>Part Patient</Text>
                   {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.partpatientfacture}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partpatientfacture).reduce((acc, curv) => acc + curv)}</Text>
+                  <Text style={{ ...styles.line, marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partpatientfacture).reduce((acc, curv) => acc + curv)}</Text>
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.tr}>Net à payer</Text>
                   {bordereau.map(bordereau => <Text style={{ ...styles.line, }}>{bordereau.partassurancefacture}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partassurancefacture).reduce((acc, curv) => acc + curv)}</Text>
+                  <Text style={{ ...styles.line, marginTop: 5 }}>{bordereau.map(bordereau => bordereau.partassurancefacture).reduce((acc, curv) => acc + curv)}</Text>
                 </View>
               </View>
               <View>
-              <Text style={{ fontSize: 8 }}>Certifié exact, la présente facture s'élévant à la somme de {NumberToLetter(bordereau[0].montanttotalfacture)} francs CFA</Text>
+                <Text style={{ fontSize: 8 }}>Certifié exact, la présente facture s'élévant à la somme de {NumberToLetter(bordereau[0].montanttotalfacture)} francs CFA</Text>
               </View>
             </View>
           </View>
@@ -187,7 +181,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 12,
     fontWeight: "bold",
-    fontFamily: 'Roboto-Light'
   },
   l: {
     display: "flex",
@@ -210,7 +203,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    fontFamily: 'Roboto-Bold',
+
     fontSize: 8,
     paddingHorizontal: 5,
     borderColor: 'grey',

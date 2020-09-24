@@ -7,13 +7,14 @@ section .iconPrinc {
 }
 
 #Connexion {
+  background-color: #2e87a0f5;
   background-image: url("../images/img3.jpg");
-  background-size: cover;
-  background-blend-mode: screen;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 #form_connexion {
-  background-color: rgba(212, 212, 212, 0.842);
+  background-image: linear-gradient(to left,#2F89A1 50%,#2f88a19c);
 }
 
 section.image > h1 {

@@ -136,7 +136,7 @@ const Bordereau = ({
 
         bar !== null && bar.destroy()
         setbar(new Chart(charBar, {
-            type: "bar",
+            type: "horizontalBar",
             data: {
                 //Bring in data
                 labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soins"],
@@ -161,6 +161,13 @@ const Bordereau = ({
                     )
             },
             options: {
+                scales : {
+                    xAxes : [
+                        {
+                            
+                        }
+                    ]
+                }
                 //Customize chart options
             }
         }))

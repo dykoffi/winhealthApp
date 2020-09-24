@@ -106,15 +106,8 @@ const AvoirFacture = ({
           />
           <div className="col">
             <Chip
-              label="Facture(s)"
-              avatar={
-                <Avatar
-                  className="white-text"
-                  style={{ backgroundColor: global.theme.primary }}
-                >
-                  {listFactures.length}
-                </Avatar>
-              }
+              label={`${listFactures.length} Facture(s)`}
+            
             />
           </div>
           <div className="col d-flex justify-content-end p-0">

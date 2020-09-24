@@ -208,8 +208,7 @@ const DossiersPatient = ({
                   <small><b>Part Assu :</b> {currentSejour.partassurancefacture}{" "}FCFA, <b>Reste</b> : {currentSejour.resteassurancefacture} FCFA</small><br />
                   <small><b>Part Patient :</b> {currentSejour.partpatientfacture}{" "}FCFA, <b>Reste</b> : {currentSejour.restepatientfacture} FCFA</small><br />
                 </div>
-                {
-                  currentSejour.gestionnaire.trim() !== "" && <div className="col">
+                {currentSejour.gestionnaire.trim() !== "" && <div className="col">
                     <h6>Assurance ({currentSejour.gestionnaire})</h6>
                     <small><b>Béneficiaire :</b> {currentSejour.beneficiaire}</small><br />
                     <small><b>Assuré Principal :</b> {currentSejour.assureprinc}</small><br />

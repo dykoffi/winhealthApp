@@ -88,7 +88,7 @@ const AttenteFacture = ({
       setListPatients(rows);
     });
     thunkListComptes();
-  }, [listComptes]);
+  }, [listComptes.length]);
   return (
     <div className="AttenteFacture row p-2">
       <div className="col-12">
@@ -115,15 +115,7 @@ const AttenteFacture = ({
           />
           <div className="col-2">
             <Chip
-              label="Comptes(s)"
-              avatar={
-                <Avatar
-                  className="white-text"
-                  style={{ backgroundColor: global.theme.primary }}
-                >
-                  {listComptes.length}
-                </Avatar>
-              }
+              label={`${listComptes.length} Comptes(s)`}
             />
           </div>
           <div className="col d-flex justify-content-end p-0">
@@ -166,9 +158,9 @@ const AttenteFacture = ({
                     <tr key={i} style={{ cursor: "pointer" }} onClick={() => thunkSetCurrentCompte(numerocompte)} >
                       <td>{i + 1}</td>
                       <td className="font-weight-bold">{numerocompte}</td>
+                      <td className="font-weight-bold">{nompatient} {prenomspatient}</td>
                       <td>{datecompte}</td>
                       <td>{heurecompte}</td>
-                      <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
                       <td className="font-weight-bold">{separate(montantcompte)} FCFA</td>
                     </tr>
                   )

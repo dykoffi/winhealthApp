@@ -151,7 +151,7 @@ const Bordereau = ({
         setListFacturesByAssurance([])
         settousSelectionner(false)
     };
- 
+
     function setdebutDate(value) { setinput({ ...inputs, debutDate: value, debutDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
     function setfinDate(value) { setinput({ ...inputs, finDate: value, finDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
     function setlimiteDate(value) { setinput({ ...inputs, limiteDate: value, limiteDateString: moment(value.toString()).format('YYYY-MM-DD') }) }
@@ -228,7 +228,7 @@ const Bordereau = ({
                         className="col-2"
                         variant="outlined"
                         size="small"
-                        label="Rechercher un borderau"
+                        label="Rechercher un bordereau"
                         value={value}
                         onChange={({ target: { value } }) => {
                             let v = value
@@ -246,15 +246,7 @@ const Bordereau = ({
                     />
                     <div className="col-2">
                         <Chip
-                            label="Bordereau(x)"
-                            avatar={
-                                <Avatar
-                                    className="white-text"
-                                    style={{ backgroundColor: global.theme.primary }}
-                                >
-                                    {listBordereaux.filter(bordereau => value.trim() === "" || RegExp(value, 'i').test(bordereau.numerobordereau)).length}
-                                </Avatar>
-                            }
+                            label={`${listBordereaux.filter(bordereau => value.trim() === "" || RegExp(value, 'i').test(bordereau.numerobordereau)).length} Bordereau(x)`}
                         />
                     </div>
                     <div className="col d-flex justify-content-end p-0">
@@ -269,7 +261,7 @@ const Bordereau = ({
                                 fontSize: "12px",
                             }}
                         >
-                            Ajouter un borderau
+                            Ajouter un bordereau
                         </Button>
                     </div>
                 </div>
@@ -293,17 +285,6 @@ const Bordereau = ({
                             </li>
                             <li
                                 onClick={() => {
-                                    listBordereaux.filter(b => statutbordereauTab("creation").includes(b.statutbordereau)).length !== 0 &&
-                                        setTypeBordereaux("creation")
-                                }}
-                                style={{ cursor: listBordereaux.filter(b => statutbordereauTab("creation").includes(b.statutbordereau)).length === 0 ? "default" : "pointer" }}
-                                className={`
-                                        list-group-item d-flex justify-content-between align-items-center
-                                        ${typeBordereaux === "creation" ? "bgcolor-primary text-white" : "text-secondary"}
-                                `}
-                            ><small>Bordereaus en Création</small><span className="badge badge-light badge-pill">{listBordereaux.filter(b => b.statutbordereau === "Création").length}</span></li>
-                            <li
-                                onClick={() => {
                                     listBordereaux.filter(b => statutbordereauTab("envoie").includes(b.statutbordereau)).length !== 0 &&
                                         setTypeBordereaux("envoie")
                                 }}
@@ -312,7 +293,7 @@ const Bordereau = ({
                                         list-group-item d-flex justify-content-between align-items-center
                                         ${typeBordereaux === "envoie" ? "bgcolor-primary text-white" : "text-secondary"}
                                 `}
-                            ><small>Bordereaus envoyés</small><span className="badge badge-light badge-pill">{listBordereaux.filter(b => b.statutbordereau === "Envoie").length}</span></li>
+                            ><small>Bordereaux envoyés</small><span className="badge badge-light badge-pill">{listBordereaux.filter(b => b.statutbordereau === "Envoie").length}</span></li>
                             <li
                                 onClick={() => {
                                     listBordereaux.filter(b => statutbordereauTab("decharge").includes(b.statutbordereau)).length !== 0 &&
@@ -365,8 +346,7 @@ const Bordereau = ({
                                             <td title={`reste ${moment(datelimitebordereau).diff(moment(), 'days')} jours`}
                                                 className={moment(datelimitebordereau).subtract(10, 'days') <= moment() && statutbordereau === 'Rejeté' ?
                                                     'bg-warning' : ''}>{moment(datelimitebordereau).format('DD/MM/YYYY')}</td>
-                                            <td className={`font-weight-bold ${
-                                                statutbordereau === 'Rejeté' ? "red-text animated infinite flash" :
+                                            <td className={`font-weight-bold ${statutbordereau === 'Rejeté' ? "red-text animated infinite flash" :
                                                     statutbordereau === "Décharge" ? "blue-text" :
                                                         statutbordereau === "Envoie" ? "green-text" : ""}`}>{statutbordereau}</td>
                                             <td>{nbfacture}</td>

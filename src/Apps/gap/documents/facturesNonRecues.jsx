@@ -8,14 +8,9 @@ import {
   BlobProvider,
   Image,
   StyleSheet,
-  Font,
 } from "@react-pdf/renderer";
 import PrintIcon from "@material-ui/icons/Print";
-import { header } from "../../global/apiQuery";
 import { Button } from "@material-ui/core";
-Font.register({ family: "Regular", src: `${header.local}/font.ttf` });
-Font.register({ family: "Roboto-Bold", src: `${header.local}/fonts/Roboto-Bold.ttf`, });
-Font.register({ family: "Roboto-Light", src: `${header.local}/fonts/Roboto-Light.ttf`, });
 
 const DocHead = ({ etablissement }) => (
   <View
@@ -31,7 +26,7 @@ const DocHead = ({ etablissement }) => (
       <Image src={logo} style={{ height: "2cm", width: "3cm" }} />
     </View>
     <View style={{ flex: 10, textAlign: "right" }}>
-      <Text style={{ fontSize: 15, fontFamily: "Roboto-Bold", }}>POLYCLINIQUE ALTEA</Text>
+      <Text style={{ fontSize: 15}}>POLYCLINIQUE ALTEA</Text>
       <View style={{ fontSize: 8, color: "grey", lineHeight: 1.5 }}>
         <Text>Cocody Angre 7ème tranche</Text>
         <Text>Abidjan BP 05 789</Text>
@@ -126,22 +121,22 @@ const Facture = ({ facture }) => {
                 <View style={styles.column}>
                   <Text style={styles.tr}>Assuré Princ</Text>
                   {facture.map((facture, i) => <Text key={i} style={{ ...styles.line }}>{facture.assureprinc}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', borderRight: 'none' }}>TOTAL</Text>
+                  <Text style={{ ...styles.line, borderRight: 'none' }}>TOTAL</Text>
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.tr}>Montant Total</Text>
                   {facture.map((facture, i) => <Text key={i} style={{ ...styles.line, }}>{facture.montanttotalfacture}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', }}>{facture.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv)}</Text>
+                  <Text style={{ ...styles.line, }}>{facture.map(facture => facture.montanttotalfacture).reduce((acc, curv) => acc + curv)}</Text>
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.tr}>Net à payer</Text>
                   {facture.map((facture, i) => <Text key={i} style={{ ...styles.line, }}>{facture.partassurancefacture}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', }}>{facture.map(facture => facture.partassurancefacture).reduce((acc, curv) => acc + curv)}</Text>
+                  <Text style={{ ...styles.line, }}>{facture.map(facture => facture.partassurancefacture).reduce((acc, curv) => acc + curv)}</Text>
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.tr}>Part Patient</Text>
                   {facture.map((facture, i) => <Text key={i} style={{ ...styles.line, }}>{facture.partpatientfacture}</Text>)}
-                  <Text style={{ ...styles.line, fontFamily: 'Roboto-Bold', }}>{facture.map(facture => facture.partpatientfacture).reduce((acc, curv) => acc + curv)}</Text>
+                  <Text style={{ ...styles.line, }}>{facture.map(facture => facture.partpatientfacture).reduce((acc, curv) => acc + curv)}</Text>
                 </View>
               </View>
             </View>
@@ -157,7 +152,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 12,
     fontWeight: "bold",
-    fontFamily: 'Roboto-Light'
   },
   l: {
     display: "flex",
@@ -179,7 +173,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    fontFamily: 'Roboto-Bold',
+  
     fontSize: 8,
     paddingHorizontal: 5,
     borderColor: 'grey',

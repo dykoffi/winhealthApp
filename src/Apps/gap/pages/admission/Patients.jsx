@@ -6,7 +6,7 @@ import Alert from "@material-ui/lab/Alert";
 import { setLoading } from '../../api/admission/patients'
 const Patients = ({ loading, setLoading }) => {
   return (
-    <div className="row p-2 Patients mt-2">
+    <div className="row p-2 Patients">
       <div className="col-12">
         <TablePatients />
       </div>

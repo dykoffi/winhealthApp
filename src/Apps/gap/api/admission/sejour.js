@@ -35,7 +35,7 @@ export function thunkListSejour(patient) {
         Axios({ url: `${header.url}/gap/list/sejours/${patient}`, })
             .then(({ data: { rows } }) => {
                 dispatch(setListSejour(rows))
-                rows[0] ? dispatch(thunkDetailsSejour(rows[0].numerosejour)) : setCurrentSejour(null)
+                rows[0] ? dispatch(thunkDetailsSejour(rows[0].numerosejour)) : dispatch(setCurrentSejour(null))
             })
     }
 }
