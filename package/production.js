@@ -1,6 +1,7 @@
 const express = require('express');
 // const fs = require('fs')
-const http = require('http')
+const https = require('https')
+const fs = require('fs')
 const favicon = require('express-favicon');
 const cluster = require('cluster')
 const cpuM = require('os').cpus().length
@@ -23,7 +24,12 @@ if (cluster.isMaster) {
         console.log(`Worker ${worker.process.pid} is died`);
     })
 } else {
-    http.createServer(app).listen(port);
+    https.createServer(
+        {
+            key: fs.readFileSync('/home/dy/Documents/projets/winhealth/app/package/server.key'),
+            cert: fs.readFileSync('/home/dy/Documents/projets/winhealth/app/package/server.cer')
+        }
+        ,app).listen(port);
     console.log(`Worker ${process.pid} is running`);
 }
 

@@ -87,7 +87,6 @@ const FacturesRecues = ({
     loading,
     setListFacturesByAssurance
 }) => {
-
     const global = useContext(GlobalContext);
     const [value, setValue] = useState("");
     const [tousSelectionner, settousSelectionner] = useState("");
@@ -113,7 +112,6 @@ const FacturesRecues = ({
         debutDate: new Date("2020-01-01"),
         finDate: new Date("2020-12-31"),
     });
-
     const handleClose = () => {
         setmodal(false);
         setinput({
@@ -203,15 +201,7 @@ const FacturesRecues = ({
                     />
                     <div className="col-2">
                         <Chip
-                            label="Facture(s) recue(s)"
-                            avatar={
-                                <Avatar
-                                    className="white-text"
-                                    style={{ backgroundColor: global.theme.primary }}
-                                >
-                                    {listFactures.filter(facture => facture.statutfacture === 'recu' || facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
-                                </Avatar>
-                            }
+                            label={`${listFactures.filter(facture => facture.statutfacture === 'recu' || facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length} Facture(s) recue(s)`}
                         />
                     </div>
                     <div className="col d-flex justify-content-end p-0">
@@ -468,8 +458,7 @@ const FacturesRecues = ({
                                 !listFacturesRecues.includes(facture.nbfacture)
                         ).length !== 0 &&
                         <FactureNonRecuesDoc showPDF={showPDF} code='edy koffi' facture={
-                            listFactures.filter(facture => facture.statutfacture === 'attente' &&
-                                !listFacturesRecues.includes(facture.nbfacture)
+                            listFactures.filter(facture => facture.statutfacture === 'attente' && !listFacturesRecues.includes(facture.nbfacture)
                             )} />
                     }
                     <Button

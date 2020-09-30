@@ -1,36 +1,32 @@
-// const number = {
+var  nodemailer = require('nodemailer')
+const sendMail = (rec) => {
+    var status = rec.sexe == "Feminin" ? "Madame" : "Monsieur"
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        secure: true,
+        auth: {
+            user: 'nodyTic@gmail.com',
+            pass: '@Aristide55'
+        }
+    });
 
-// }
+    var mailOptions = {
+        from: 'nodyTic@gmail.com',
+        to: rec.mail,
+        subject: 'FACTURE - WINHEALTH',
+        html: `
+        <h1>References facture</h1>
+        <p>${status} <b>${rec.nom} ${rec.prenoms}</b> votre inscription a été prise en compte.Nous vous communiquerons la date et le lieu de la conférence ultérieurement.</p><p>Cordialement.</p><br><p>M. Altea, Ingénieur Télécom</p>
+        `
+    };
 
-// const unite = ["zero", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf"]
-// const fisrtDizaine = ["dix", "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"]
-// const dizaine = ["vingt", "trente", "quarante", "cinquante", "soixante", "soixante-dix", "quatre-vingt", "quatre-vingt-dix"]
-
-// function ctol(c) {
-//     try { n = c.toString() } catch (error) { n = c }
-//     switch (n.length) {
-//         case 1: return unite[c]
-//         case 2: return n[0] === "1" ?
-//             fisrtDizaine[parseInt(n[1])] : n[1] === "1" ? dizaine[parseInt(n[0] - 2)] + "-et-" + unite[n[1]] : dizaine[parseInt(n[0] - 2)] + "-" + unite[n[1]]
-
-
-//         default: return false
-//     }
-// }
-
-// for (let index = 0; index <= 99; index++) {
-//     console.log(index + ': ' + ctol(index));
-// }
-const { execSync } = require('child_process')
-const table = { ["edykoffi"]: "creation" }
-var ok;
-function getIP() {
-    try {
-        let stdout = execSync(`hostname -I`, { stdio: ['pipe', 'pipe', 'ignore'], }).toString(); return stdout.trim();
-    } catch (e) { return ''; }
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
 }
-ok=getIP()
 
-console.log(ok);
-// console.log(process.env.nom);
-// console.log(process.env);
+sendMail({sexe:"masculin",nom:"edy",prenoms:"kouassi edy", mail:"koffiedy@gmail.com"})

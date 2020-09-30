@@ -173,15 +173,7 @@ const Facturesvalides = ({
                     />
                     <div className="col-2">
                         <Chip
-                            label="Facture(s) valide(s)"
-                            avatar={
-                                <Avatar
-                                    className="white-text"
-                                    style={{ backgroundColor: global.theme.primary }}
-                                >
-                                    {listFactures.filter(facture => facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length}
-                                </Avatar>
-                            }
+                            label={`${listFactures.filter(facture => facture.statutfacture === 'valide' || facture.statutfacture === 'bordereau').filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture)).length} Facture(s) valide(s)`}
                         />
                     </div>
                     <div className="col d-flex justify-content-end p-0">
@@ -399,9 +391,7 @@ const Facturesvalides = ({
                     </table>
                     {listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length !== 0 &&
                         <Chip
-                            label="Sélectionnée(s)"
-                            avatar={<Avatar className="white-text" style={{ backgroundColor: global.theme.primary }} >
-                                {listFacturesValides.length}/{listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length} </Avatar>}
+                            label={`${listFacturesValides.length}/${listFacturesByAssurance.filter(facture => facture.statutfacture === 'recu' && facture.erreurfacture === "").length} Sélectionnée(s)`}
                         />
                     }
                 </DialogContent>

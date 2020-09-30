@@ -157,15 +157,7 @@ const Assurance = ({
           />
           <div className="col">
             <Chip
-              label="Assurance(s)"
-              avatar={
-                <Avatar
-                  className="white-text"
-                  style={{ backgroundColor: global.theme.primary }}
-                >
-                  {listAssurances.length}
-                </Avatar>
-              }
+              label={`${listAssurances.length} Assurance(s)`}
             />
           </div>
           <div className="col d-flex justify-content-end p-0">

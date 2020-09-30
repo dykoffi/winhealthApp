@@ -5,7 +5,7 @@ const initState = {
     listFactures: [],
     listFacturesPatient: [],
     listFacturesAttentes: [],
-    currentFacture: {},
+    currentFacture: [{}],
     currentPatient: {},
     categorieFactures: "tous",
     showModal: false
@@ -54,10 +54,10 @@ export function thunkListFactures() {
 }
 
 //AVOIR DES DETAILS SUR FACTURE
-export function thunkDetailsFacture(numeroFacture) {
+export function thunkDetailsFacture(numeroFacture, numeroSejour) {
     return async (dispatch) => {
-        Axios({ url: `${header.url}/gap/details/facture/${numeroFacture}` }).then(({ data: { rows } }) => {
-            rows ? dispatch(setCurrentFacture(rows[0])) : dispatch(setCurrentFacture({}));
+        Axios({ url: `${header.url}/gap/details/sejour/${numeroSejour}` }).then(({ data: { rows } }) => {
+            rows ? dispatch(setCurrentFacture(rows)) : dispatch(setCurrentFacture([{}]));
             dispatch(setShowModal(true))
         })
     }

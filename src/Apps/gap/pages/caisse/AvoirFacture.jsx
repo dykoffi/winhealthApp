@@ -71,7 +71,7 @@ const AvoirFacture = ({
   const global = useContext(GlobalContext);
   useEffect(() => {
     thunkListAvoirFactures();
-    setCurrentFacture({})
+    setCurrentFacture([{}])
     Axios({ url: `${header.url}/gap/list/factures`, }).then(({ data: { rows } }) => {
       const Factures = [];
       rows
@@ -107,7 +107,7 @@ const AvoirFacture = ({
           <div className="col">
             <Chip
               label={`${listFactures.length} Facture(s)`}
-            
+
             />
           </div>
           <div className="col d-flex justify-content-end p-0">
@@ -194,23 +194,23 @@ const AvoirFacture = ({
             <div className="col-12">
               <div className="row mx-1">
                 <div className="col p-0">
-                  <small><b>Patient : </b>{currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                  <small><b>Patient : </b>{currentFacture[0].nompatient}{" "} {currentFacture[0].prenomspatient}</small><br />
                   <small>
-                    <b>Montant Total</b> :{" "} {separate(currentFacture.montanttotalfacture)} FCFA
+                    <b>Montant Total</b> :{" "} {separate(currentFacture[0].montanttotalfacture)} FCFA
                   </small><br />
                   <small>
-                    <b>Part du patient</b> :{" "} {separate(currentFacture.partpatientfacture)} FCFA
+                    <b>Part du patient</b> :{" "} {separate(currentFacture[0].partpatientfacture)} FCFA
                   </small><br />
                   <small>
                     <b>Reste à payer</b> :{" "}
-                    <span className={currentFacture.restefacture < 0 && "flash animated infinite red-text font-weight-bold"}>
-                      {separate(currentFacture.restepatientfacture)} FCFA
+                    <span className={currentFacture[0].restefacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                      {separate(currentFacture[0].restepatientfacture)} FCFA
                     </span>
                   </small><br />
 
                 </div>
               </div>
-              {currentFacture.restepatientfacture !== 0 && (
+              {currentFacture[0].restepatientfacture !== 0 && (
                 <>
                   <div className="row my-3 mx-1">
                     <Autocomplete
@@ -242,7 +242,7 @@ const AvoirFacture = ({
                       size="small"
                       type="number"
                       label="Montant"
-                      defaultValue={currentFacture.restepatientfacture}
+                      defaultValue={currentFacture[0].restepatientfacture}
                       value={inputs.montant}
                       onChange={({ target: { value } }) => {
                         let v = value
@@ -268,7 +268,7 @@ const AvoirFacture = ({
                       multiline
                       rows={4}
                       label="Commentaire"
-                      // defaultValue={currentFacture.commentairefacture}
+                      // defaultValue={currentFacture[0].commentairefacture}
                       onChange={setcommentaire}
                     />
                   </div>
@@ -299,10 +299,10 @@ const AvoirFacture = ({
             className="mb-2"
             disabled={
               inputs.montant.trim() === "" ||
-              parseInt(inputs.montant.trim()) > parseInt(currentFacture.restepatientfacture) ||
+              parseInt(inputs.montant.trim()) > parseInt(currentFacture[0].restepatientfacture) ||
               inputs.facture.trim() === ""
             }
-            onClick={() => thunkAddAvoirFacture(currentFacture.numerofacture, inputs)}
+            onClick={() => thunkAddAvoirFacture(currentFacture[0].numerofacture, inputs)}
             startIcon={<CheckCircleOutlineIcon />}
             style={{
               textTransform: "none",

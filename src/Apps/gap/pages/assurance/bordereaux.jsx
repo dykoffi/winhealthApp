@@ -118,9 +118,9 @@ const Bordereau = ({
     })
     const [inputComment, setinputComment] = useState({ erreur: "", comment: "" })
     const [inputs, setinput] = useState({
-        nomassurance: "",
-        nomgarant: "",
-        typeSejour: "",
+        nomassurance: "Tous",
+        nomgarant: "Tous",
+        typeSejour: "Tous",
         montanttotal: 0,
         partAssurance: 0,
         partPatient: 0,
@@ -347,8 +347,8 @@ const Bordereau = ({
                                                 className={moment(datelimitebordereau).subtract(10, 'days') <= moment() && statutbordereau === 'Rejeté' ?
                                                     'bg-warning' : ''}>{moment(datelimitebordereau).format('DD/MM/YYYY')}</td>
                                             <td className={`font-weight-bold ${statutbordereau === 'Rejeté' ? "red-text animated infinite flash" :
-                                                    statutbordereau === "Décharge" ? "blue-text" :
-                                                        statutbordereau === "Envoie" ? "green-text" : ""}`}>{statutbordereau}</td>
+                                                statutbordereau === "Décharge" ? "blue-text" :
+                                                    statutbordereau === "Envoie" ? "green-text" : ""}`}>{statutbordereau}</td>
                                             <td>{nbfacture}</td>
                                             <td>{separate(montanttotal)}</td>
                                             <td>{separate(partassurance)}</td>
@@ -370,6 +370,9 @@ const Bordereau = ({
                 fullWidth={true}
                 style={{ minHeight: "60vh" }}
                 maxWidth="lg"
+                onEnter={() => {
+                    thunkListFacturesByAssurances(inputs)
+                }}
             >
                 <DialogTitle
                     className="text-center text-secondary"
@@ -382,6 +385,7 @@ const Bordereau = ({
                                 size="small"
                                 className="col p-0"
                                 id="AssuranceList"
+                                defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setassurance(newValue.label)
@@ -397,6 +401,7 @@ const Bordereau = ({
                             <Autocomplete
                                 size="small"
                                 className="col p-0 mx-2"
+                                defaultValue={{ value: "Tous", label: "Tous" }}
                                 options={listAssurances}
                                 onChange={(event, newValue) => {
                                     newValue && setgarant(newValue.label)
@@ -412,6 +417,7 @@ const Bordereau = ({
                             <FormControl variant="filled" size="small" className="col">
                                 <InputLabel id="typesejour-label">Type de sejour </InputLabel>
                                 <Select
+                                    defaultValue="Tous"
                                     labelId="typesejour-label"
                                     id="typesejour"
                                     onChange={({ target: { value } }) => {

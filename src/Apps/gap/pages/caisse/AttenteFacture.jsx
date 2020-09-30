@@ -45,8 +45,9 @@ const AttenteFacture = ({
     montantrecu: "",
     numeroTransaction: ""
   });
+  const [valideFacture, setvalideFacture] = useState(null)
 
-  const handleClickOpen = (numeroFacture) => { thunkDetailsFacture(numeroFacture); };
+  const handleClickOpen = (numeroFacture,numeroSejour) => { thunkDetailsFacture(numeroFacture,numeroSejour); };
   const handleClose = () => {
     setShowModal(false)
     setinput({
@@ -61,7 +62,7 @@ const AttenteFacture = ({
   function sendData(numeroFacture, patient) {
     thunkEncaisserFactures(numeroFacture, {
       ...inputs,
-      compte: currentFacture.numerocompte,
+      compte: currentFacture[0].numerocompte,
       patient: patient
     });
     handleClose();
@@ -87,8 +88,9 @@ const AttenteFacture = ({
       //   {
       //     modepaiement: "Compte",
       //     montantrecu: montant,
-      //     compte: currentFacture.numerocompte,
+      //     compte: currentFacture[0].numerocompte,
       //   });
+      setvalideFacture(true)
       setinput({ ...inputs, modepaiement: 'Compte', montantrecu: montant.toString() })
     })
   }, []);
@@ -140,8 +142,8 @@ const AttenteFacture = ({
         <tbody>
           {listFacturesAttentes
             .map(
-              ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, statutfacture }, i) => (
-                <tr key={i} style={{ cursor: "pointer" }} onClick={() => handleClickOpen(numerofacture)}>
+              ({ civilitepatient,numerosejour, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, statutfacture }, i) => (
+                <tr key={i} style={{ cursor: "pointer" }} onClick={() => handleClickOpen(numerofacture,numerosejour)}>
                   <td className="font-weight-bold">{i + 1}</td>
                   <td className="font-weight-bold">{numerofacture}</td>
                   <td>{datefacture}</td>
@@ -172,44 +174,44 @@ const AttenteFacture = ({
         maxWidth="xs"
       >
         <DialogTitle className="text-center text-secondary" id="alert-dialog-title">
-          <b>Facture N° {currentFacture.numerofacture}</b>
-          {currentFacture.restepatientfacture === 0 && <><br /><small className="green-text font-weight-bold">(déjà payée)</small></>}
+          <b>Facture N° {currentFacture[0].numerofacture}</b>
+          {currentFacture[0].restepatientfacture === 0 && <><br /><small className="green-text font-weight-bold">(déjà payée)</small></>}
         </DialogTitle>
         <DialogContent>
           <div className="row">
             <div className="col-12">
               <div className="row mx-1">
                 <div className="col p-0">
-                  <small><b>Patient : </b>{currentFacture.civilitepatient}{" "} {currentFacture.nompatient}{" "} {currentFacture.prenomspatient}</small><br />
+                  <small><b>Patient : </b>{currentFacture[0].civilitepatient}{" "} {currentFacture[0].nompatient}{" "} {currentFacture[0].prenomspatient}</small><br />
                   <small>
-                    <b>Montant Total</b> :{" "} {separate(currentFacture.montanttotalfacture)} FCFA
+                    <b>Montant Total</b> :{" "} {separate(currentFacture[0].montanttotalfacture)} FCFA
                   </small><br />
                   <small>
-                    <b>Part du patient</b> :{" "} {separate(currentFacture.partpatientfacture)} FCFA
+                    <b>Part du patient</b> :{" "} {separate(currentFacture[0].partpatientfacture)} FCFA
                   </small><br />
                   <small>
                     <b>Reste à payer</b> :{" "}
-                    <span className={currentFacture.restefacture < 0 && "flash animated infinite red-text font-weight-bold"}>
-                      {separate(currentFacture.restepatientfacture)} FCFA
+                    <span className={currentFacture[0].restefacture < 0 && "flash animated infinite red-text font-weight-bold"}>
+                      {separate(currentFacture[0].restepatientfacture)} FCFA
                     </span>
                   </small><br />
-                  {currentFacture.numerocompte !== null && (
+                  {currentFacture[0].numerocompte !== null && (
                     <>
                       <hr className="bg-light" />
-                      <small><b>N° compte : </b> {currentFacture.numerocompte}</small><br />
-                      <small><b>Solde : </b> {separate(currentFacture.montantcompte)} FCFA</small>
+                      <small><b>N° compte : </b> {currentFacture[0].numerocompte}</small><br />
+                      <small><b>Solde : </b> {separate(currentFacture[0].montantcompte)} FCFA</small>
                     </>
                   )}
                 </div>
               </div>
-              {currentFacture.restepatientfacture !== 0 && (
+              {currentFacture[0].restepatientfacture !== 0 && (
                 <>
                   <div className="row my-3 mx-1">
                     <FormControl variant="filled" size="small" className="col">
                       <InputLabel id="typesejour-label">
                         Mode de paiement
                     </InputLabel>
-                      {currentFacture.montantcompte > 0 ? (
+                      {currentFacture[0].montantcompte > 0 ? (
                         <Select
                           labelId="typesejour-label"
                           id="typesejour"
@@ -304,7 +306,7 @@ const AttenteFacture = ({
           >
             Annuler
           </Button>
-          {currentFacture.montantcompte >= currentFacture.restepatientfacture &&
+          {currentFacture[0].montantcompte >= currentFacture[0].restepatientfacture &&
             < Button
               variant="contained"
               className="mb-2"
@@ -317,17 +319,18 @@ const AttenteFacture = ({
             >
               Projeter
           </Button>}
-          {currentFacture.restepatientfacture !== 0 && <Button
+          {currentFacture[0].restepatientfacture !== 0 && <Button
             variant="contained"
             className="mb-2"
             disabled={
               inputs.modepaiement.trim() === "" ||
               inputs.montantrecu.trim() === "" ||
-              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.restepatientfacture) ||
-              (inputs.modepaiement === 'Compte' && parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture.montantcompte)) ||
-              (["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement) && inputs.numeroTransaction.trim() === '')
+              parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture[0].restepatientfacture) ||
+              (inputs.modepaiement === 'Compte' && parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture[0].montantcompte)) ||
+              (["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement) && inputs.numeroTransaction.trim() === '') ||
+              (["Compte"].includes(inputs.modepaiement) && valideFacture === null)
             }
-            onClick={() => sendData(currentFacture.numerofacture, currentFacture.nompatient + " " + currentFacture.prenomspatient)}
+            onClick={() => sendData(currentFacture[0].numerofacture, currentFacture[0].nompatient + " " + currentFacture[0].prenomspatient)}
             startIcon={<CheckCircleOutlineIcon />}
             style={{
               textTransform: "none",

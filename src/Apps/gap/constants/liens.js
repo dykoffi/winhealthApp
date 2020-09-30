@@ -39,7 +39,7 @@ const navMenu = [
         path: "/gap/administration"
     },
     // {
-    //     title: 'Parametres',
+    //     title: 'Paramètres',
     //     icon: 'action-settings',
     //     path: "/gap/settings"
     // },
@@ -51,5 +51,5 @@ const navMenu = [
 ]
 const functions = permissions.functions.map(f => f.name)
 export const navMenuUser = navMenu.filter(menu => functions.includes(menu.title))
-// export default navMenuUser
 export default navMenu
+//export default navMenu
