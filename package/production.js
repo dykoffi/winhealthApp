@@ -7,7 +7,7 @@ const cluster = require('cluster')
 const cpuM = require('os').cpus().length
 const path = require('path');
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.use(favicon(__dirname + '/build/favicon.ico'));
 app.use(express.static(__dirname));
