@@ -134,9 +134,9 @@ const Bordereau = ({
     const handleClose = () => {
         setmodal(false);
         setinput({
-            nomassurance: "",
-            nomgarant: "",
-            typeSejour: "",
+            nomassurance: "Tous",
+            nomgarant: "Tous",
+            typeSejour: "Tous",
             montanttotal: 0,
             partAssurance: 0,
             partPatient: 0,

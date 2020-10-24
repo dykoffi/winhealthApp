@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { header } from "../../../global/apiQuery"
+import { header, socket } from "../../../global/apiQuery"
 
 const initState = {
     listFactures: [],
@@ -77,6 +77,7 @@ export function thunkEncaisserFactures(numeroFacture, data) {
             dispatch(thunkListFacturesAttentes())
             dispatch(thunkListFacturesPatient(factureReducer.currentPatient));
             dispatch(setShowModal(false))
+            socket.emit('attente')
         })
     }
 }

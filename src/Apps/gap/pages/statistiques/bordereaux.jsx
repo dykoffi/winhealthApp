@@ -136,7 +136,7 @@ const Bordereau = ({
 
         bar !== null && bar.destroy()
         setbar(new Chart(charBar, {
-            type: "horizontalBar",
+            type: "bar",
             data: {
                 //Bring in data
                 labels: ["Consultation", "Hospitalisation", "Urgence", "Biologie", "Imagerie", "Soins"],
@@ -418,7 +418,7 @@ const Bordereau = ({
                 </tbody>
             </table>
 
-            <div className="col-12 mb-2">
+            {/* <div className="col-12 mb-2">
                 <div className="row">
                     <TextField
                         className="col-2"
@@ -490,6 +490,7 @@ const Bordereau = ({
                         )}
                 </tbody>
             </table>
+             */}
             <Dialog
                 TransitionComponent={Transition}
                 open={showModal}

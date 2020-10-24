@@ -306,7 +306,7 @@ const AttenteFacture = ({
           >
             Annuler
           </Button>
-          {currentFacture[0].montantcompte >= currentFacture[0].restepatientfacture &&
+          {/* {currentFacture[0].montantcompte >= currentFacture[0].restepatientfacture &&
             < Button
               variant="contained"
               className="mb-2"
@@ -318,7 +318,7 @@ const AttenteFacture = ({
               }}
             >
               Projeter
-          </Button>}
+          </Button>} */}
           {currentFacture[0].restepatientfacture !== 0 && <Button
             variant="contained"
             className="mb-2"
@@ -327,8 +327,8 @@ const AttenteFacture = ({
               inputs.montantrecu.trim() === "" ||
               parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture[0].restepatientfacture) ||
               (inputs.modepaiement === 'Compte' && parseInt(inputs.montantrecu.trim()) > parseInt(currentFacture[0].montantcompte)) ||
-              (["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement) && inputs.numeroTransaction.trim() === '') ||
-              (["Compte"].includes(inputs.modepaiement) && valideFacture === null)
+              (["Chèque", "Électronique", "Mobile money"].includes(inputs.modepaiement) && inputs.numeroTransaction.trim() === '') 
+              // ||(["Compte"].includes(inputs.modepaiement) && valideFacture === null)
             }
             onClick={() => sendData(currentFacture[0].numerofacture, currentFacture[0].nompatient + " " + currentFacture[0].prenomspatient)}
             startIcon={<CheckCircleOutlineIcon />}

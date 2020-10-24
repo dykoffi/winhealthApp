@@ -61,9 +61,9 @@ const AttenteFacture = ({
   const [columns] = useState([
     "N°",
     "Numero de compte",
+    "Patient",
     "Date",
     "Heure",
-    "Patient",
     "Montant",
   ]);
 

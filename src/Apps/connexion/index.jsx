@@ -37,12 +37,11 @@ const Input = withStyles({
 })(TextField);
 
 const Connexion = () => {
-  const cookies = new Cookies();
+  const cookies = new Cookies(); //instantier le module des cookies
   const [loading, setloading] = useState(false);
-  const [error, seterror] = useState(false);
-  const [login, setlogin] = useState("");
-  const [pass, setpass] = useState("");
-  const global = useContext(GlobalContext);
+  const [error, seterror] = useState(false); // s'il ya une erreur elle s'affiche là
+  const [login, setlogin] = useState(""); //For input login
+  const [pass, setpass] = useState(""); //For input pass
 
   function changeLogin({ target: { value } }) { setlogin(value); }
   function changePass({ target: { value } }) { setpass(value); }
@@ -69,7 +68,6 @@ const Connexion = () => {
       })
       .catch((error) => console.log(error));
   }
-
   return (
     <div className="col-12" id="Connexion">
       <div className="row page">
@@ -118,7 +116,9 @@ const Connexion = () => {
                   }
                 </div>
               </div>
-              <img style={{position:'fixed', bottom:'0.5cm', right:"0.5cm", height:"1.2cm"}} src={alteaLogo} />
+              <div className="row white" style={{ position: 'fixed', bottom: '0.5cm', right: "0.7cm", zIndex:1001}}>
+                <img style={{ height: "2cm" }} src={alteaLogo} />
+              </div>
             </div>
             <Button
               variant="contained"

@@ -12,8 +12,8 @@ const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
   });
 
   return (
-    <div className="Admission row">
-      <section className="col-12">
+    <div className="Admission row d-flex flex-column">
+      <section className="col-12" style={{ flex: 1 }}>
         <Onglet
           links={Listonglets}
           currentPage={currentPage}
@@ -23,7 +23,8 @@ const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
       <section
         className="col-12 px-3"
         style={{
-          height: "90vh",
+          flex: 1,
+          // height: "90vh",
           overflowY: "scroll",
           overflowX: "hidden",
         }}
