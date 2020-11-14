@@ -8,6 +8,7 @@ import ThemeContext, { Info } from "./global/context";
 //importation des differentes applications
 const Connexion = React.lazy(() => import("./connexion"));
 const Gap = React.lazy(() => import("./gap"));
+const Admin = React.lazy(() => import("./admin"));
 const Qr = React.lazy(() => import("./qr"));
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
         {/* ces routes representent les differentes application */}
         <Route path="/connexion" component={Connexion} />
         <Route path="/gap" component={Gap} />
+        <Route path="/admin" component={Admin} />
         <Route path="/qr" component={Qr} />
       </ThemeContext.Provider>
     </div>

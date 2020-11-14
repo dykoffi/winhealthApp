@@ -5,14 +5,14 @@ import Onglet from "../../../../containers/onglets/index";
 import { connect } from "react-redux";
 
 //import des action creators
-import { setCurrentPage } from "../../api/admission/pages";
-const Admission = ({ sendTitle, currentPage, setCurrentPage }) => {
+import { setCurrentPage } from "../../api/utilisateur/pages";
+const Utilisateur = ({ sendTitle, currentPage, setCurrentPage }) => {
   useEffect(() => {
-    sendTitle("Admission");
+    sendTitle("Utilisateurs");
   });
 
   return (
-    <div className="Admission row">
+    <div className="Utilisateur row">
       <section className="col-12">
         <Onglet
           links={Listonglets}
@@ -44,7 +44,7 @@ const mapStatToProp = (state) => {
   return { currentPage };
 };
 
-const AdmissionConnected = connect(mapStatToProp, { setCurrentPage })(
-  Admission
+const UtilisateurConnected = connect(mapStatToProp, { setCurrentPage })(
+  Utilisateur
 );
-export default AdmissionConnected;
+export default UtilisateurConnected;
