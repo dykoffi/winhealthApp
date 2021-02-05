@@ -107,7 +107,6 @@ const AvoirFacture = ({
           <div className="col">
             <Chip
               label={`${listFactures.length} Facture(s)`}
-
             />
           </div>
           <div className="col d-flex justify-content-end p-0">

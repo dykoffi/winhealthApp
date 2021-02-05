@@ -2,6 +2,7 @@
 import Axios from "axios"
 import { header } from "../../../global/apiQuery"
 
+//ETAT INITIAL DE ML'APPLICATION
 const initState = {
     listFactures: [],
     listFacturesByAssurance: [],
@@ -16,7 +17,7 @@ const initState = {
     typeBordereaux: "tous"
 }
 
-//les actions 
+//LES ACTIONS
 const SET_LIST_FACTURES = "SET_LIST_FACTURES"
 const SET_SHOW_DETAILS_FACTURE = "SET_SHOW_DETAILS_FACTURE"
 const SET_TYPE_BORDEREAUX = "SET_TYPE_BORDEREAU"
@@ -29,6 +30,7 @@ const SET_CURRENT_BORDEREAU = "SET_CURRENT_BORDEREAU"
 const SET_SHOW_MODAL = "SET_SHOW_MODAL"
 const SET_LOADING = "SET_LOADING"
 
+//LES ACTIONS CREATORS
 const setCurrentFacture = (data) => ({ type: SET_CURRENT_FACTURE, currentFacture: data })
 const setListFactures = (data) => ({ type: SET_LIST_FACTURES, listFactures: data })
 
@@ -43,7 +45,8 @@ export const setShowModal = (bool) => ({ type: SET_SHOW_MODAL, showModal: bool }
 export const setShowDetailsFacture = (bool) => ({ type: SET_SHOW_DETAILS_FACTURE, showDetailsFacture: bool })
 export const setLoading = (bool) => ({ type: SET_LOADING, loading: bool })
 
-//le reducer
+//LE REDUCER
+
 const borderauReducer = (state = initState, action) => {
     switch (action.type) {
         case SET_LIST_FACTURES: return { ...state, listFactures: action.listFactures };

@@ -27,14 +27,8 @@ const Admin = () => {
   return (
     <div className="col-12 page" id="admin">
       <div className="row">
-        <section
-          id="navbar"
-          style={{ flex: "none", }}
-        >
-          <Navbar
-            user={Info.user}
-            fonctions={navMenu}
-          />
+        <section id="navbar" style={{ flex: "none", }} >
+          <Navbar user={Info.user} fonctions={navMenu} />
         </section>
         <section
           className="white"

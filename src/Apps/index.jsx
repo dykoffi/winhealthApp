@@ -16,7 +16,7 @@ const App = () => {
     <div id="App" className="row">
       <ThemeContext.Provider value={Info}>
         <Route
-          render={(match) => {
+          render={ match => {
             const cookies = new Cookies();
             return (match.location.pathname === "/qr") ? (<Redirect to="/qr" />) : Info.user ?
               (<Redirect to={`/${cookies.get("currentPage", { path: "/" })}/`} />) :
