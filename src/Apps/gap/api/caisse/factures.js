@@ -157,7 +157,6 @@ export function thunkListFacturesImpayeesPatient(patient) {
     }
 }
 
-
 export function thunkAddAvoirFacture(numeroFacture, data) {
     return async (dispatch) => {
         Axios({
@@ -171,7 +170,6 @@ export function thunkAddAvoirFacture(numeroFacture, data) {
         })
     }
 }
-
 export function thunkListAvoirFactures() {
     return async (dispatch) => {
         Axios({ url: `${header.url}/gap/list/factures_avoir` }).then(({ data: { rows } }) => {
@@ -179,5 +177,4 @@ export function thunkListAvoirFactures() {
         })
     }
 }
-
 export default factureReducer

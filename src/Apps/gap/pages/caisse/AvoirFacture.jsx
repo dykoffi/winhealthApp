@@ -52,7 +52,7 @@ const AvoirFacture = ({
   const handleClose = () => {
     setShowModal(false)
     setinput({ commentaire: "", montant: "", facture: "" })
-    setCurrentFacture({})
+    setCurrentFacture([{}])
   };
   function setmontant(value) { setinput({ ...inputs, montant: value }); }
   function setfacture(value) { setinput({ ...inputs, facture: value }); }
@@ -75,8 +75,11 @@ const AvoirFacture = ({
     Axios({ url: `${header.url}/gap/list/factures`, }).then(({ data: { rows } }) => {
       const Factures = [];
       rows
-        .filter(facture => facture.restepatientfacture !== 0 && facture.parentfacture.trim() === "" && facture.typefacture === "original")
-        .forEach(({ numerofacture }) => { Factures.push({ numero: numerofacture }); });
+        .filter(facture =>
+          facture.restepatientfacture !== 0 &&
+          facture.parentfacture.trim() === "" &&
+          facture.typefacture === "original")
+        .forEach(({ numerofacture, numerosejour }) => { Factures.push({ numero: numerofacture, sejour : numerosejour }); });
       setListImpFactures(Factures);
     });
   }, []);
@@ -131,49 +134,49 @@ const AvoirFacture = ({
       {listFactures
         .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture))
         .length === 0 ? (
-          <div className="col-12 text-secondary text-center">
-            <h6 className="text-center lead">Aucune facture d'avoir</h6>
-          </div>
-        ) : (
-          <table className="col-12 table-sm table-sm table-hover table-striped">
-            <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-              <tr>
-                {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
-                {["Montant Total",
-                  "Part ASSU",
-                  "Reste ASSU",
-                  "Part Patient",
-                  "Reste Patient",
-                  "Facture parent"].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
-              </tr>
-            </thead>
-            <tbody>
-              {listFactures
-                .filter(facture => facture.typefacture === "avoir")
-                .map(
-                  ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, parentfacture, commentairefacture }, i) => (
-                    <tr key={i} style={{ cursor: "default" }} title={commentairefacture}>
-                      <td className="font-weight-bold">{i + 1}</td>
-                      <td className="font-weight-bold">{numerofacture}</td>
-                      <td>{datefacture}</td>
-                      <td>{heurefacture}</td>
-                      <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                      <td>{typesejour}</td>
-                      <td>{auteurfacture}</td>
-                      <td className="text-right">{separate(montanttotalfacture)}</td>
-                      <td className="text-right">{separate(partassurancefacture)}</td>
-                      <td className="text-right">{separate(resteassurancefacture)}</td>
-                      <td className="text-right">{separate(partpatientfacture)}</td>
-                      <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
-                        {separate(restepatientfacture)}
-                      </td>
-                      <td className="font-weight-bold text-info text-right">{parentfacture}</td>
-                    </tr>
-                  )
-                )}
-            </tbody>
-          </table>
-        )}
+        <div className="col-12 text-secondary text-center">
+          <h6 className="text-center lead">Aucune facture d'avoir</h6>
+        </div>
+      ) : (
+        <table className="col-12 table-sm table-sm table-hover table-striped">
+          <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+            <tr>
+              {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+              {["Montant Total",
+                "Part ASSU",
+                "Reste ASSU",
+                "Part Patient",
+                "Reste Patient",
+                "Facture parent"].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+            </tr>
+          </thead>
+          <tbody>
+            {listFactures
+              .filter(facture => facture.typefacture === "avoir")
+              .map(
+                ({ civilitepatient, typesejour, numerofacture, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, parentfacture, commentairefacture }, i) => (
+                  <tr key={i} style={{ cursor: "default" }} title={commentairefacture}>
+                    <td className="font-weight-bold">{i + 1}</td>
+                    <td className="font-weight-bold">{numerofacture}</td>
+                    <td>{datefacture}</td>
+                    <td>{heurefacture}</td>
+                    <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                    <td>{typesejour}</td>
+                    <td>{auteurfacture}</td>
+                    <td className="text-right">{separate(montanttotalfacture)}</td>
+                    <td className="text-right">{separate(partassurancefacture)}</td>
+                    <td className="text-right">{separate(resteassurancefacture)}</td>
+                    <td className="text-right">{separate(partpatientfacture)}</td>
+                    <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
+                      {separate(restepatientfacture)}
+                    </td>
+                    <td className="font-weight-bold text-info text-right">{parentfacture}</td>
+                  </tr>
+                )
+              )}
+          </tbody>
+        </table>
+      )}
       <Dialog
         open={showModal}
         onClose={handleClose}
@@ -220,15 +223,12 @@ const AvoirFacture = ({
                       onChange={(event, newValue) => {
                         if (newValue) {
                           setfacture(newValue.numero)
-                          thunkDetailsFacture(newValue.numero)
+                          thunkDetailsFacture(newValue.numero, newValue.sejour)
                         }
                         else {
-                          setCurrentFacture({})
+                          setCurrentFacture([{}])
                           setinput({ montant: "", facture: "", commentairefacture: "" })
                         }
-
-
-
                       }}
                       getOptionLabel={(option) => option.numero}
                       filterSelectedOptions

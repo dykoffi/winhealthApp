@@ -209,12 +209,12 @@ const DossiersPatient = ({
                   <small><b>Part Patient :</b> {currentSejour.partpatientfacture}{" "}FCFA, <b>Reste</b> : {currentSejour.restepatientfacture} FCFA</small><br />
                 </div>
                 {currentSejour.gestionnaire.trim() !== "" && <div className="col">
-                    <h6>Assurance ({currentSejour.gestionnaire})</h6>
-                    <small><b>Béneficiaire :</b> {currentSejour.beneficiaire}</small><br />
-                    <small><b>Assuré Principal :</b> {currentSejour.assureprinc}</small><br />
-                    <small><b>N° Mat.:</b> {currentSejour.matriculeassure}</small>, <small><b>N° PEC :</b> {currentSejour.numeropec}</small><br />
-                    <small><b>Taux :</b> {currentSejour.taux}%</small><br />
-                  </div>
+                  <h6>Assurance ({currentSejour.gestionnaire})</h6>
+                  <small><b>Béneficiaire :</b> {currentSejour.beneficiaire}</small><br />
+                  <small><b>Assuré Principal :</b> {currentSejour.assureprinc}</small><br />
+                  <small><b>N° Mat.:</b> {currentSejour.matriculeassure}</small>, <small><b>N° PEC :</b> {currentSejour.numeropec}</small><br />
+                  <small><b>Taux :</b> {currentSejour.taux}%</small><br />
+                </div>
                 }
                 <div className="col d-flex align-items-end justify-content-end">
                   <div className="row">
@@ -380,10 +380,45 @@ const DossiersPatient = ({
                       label="Type de séjour"
                       style={{ fontSize: "12px" }}
                     >
-                      <MenuItem style={{ fontSize: "12px" }} value={"KOFFI Edy"}>KOFFI Edy</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"N'DONGO Abdoulaye"}>N'DONGO Abdoulaye</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"GBADJE Wilfried"}>GBADJE Wilfried</MenuItem>
-                      <MenuItem style={{ fontSize: "12px" }} value={"ZAKI Audrey"}>ZAKI Audrey</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"PR TEA ZOKOU BASILIDE"}>PR TEA ZOKOU BASILIDE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"PR N'GOUAN JEAN MICHEL"}>PR N'GOUAN JEAN MICHEL</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"PR N'GATTIA VALERY"}>PR N'GATTIA VALERY</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"PR MOBIO N'KAN MAX ANGE"}>PR MOBIO N'KAN MAX ANGE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KOUASSI ADJOBI"}>DR KOUASSI ADJOBI</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR YONAN COLOMBE EPSE YAO"}>DR YONAN COLOMBE EPSE YAO</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR ETTIEN DOMIQUE"}>DR ETTIEN DOMIQUE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR SEIBA KOSSA"}>DR SEIBA KOSSA</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR VANGAH HERMANCE"}>DR VANGAH HERMANCE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR YAVO-DOSSO NADINE"}>DR YAVO-DOSSO NADINE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR BAPOU D. CYRILLE"}>DR BAPOU D. CYRILLE</MenuItem>
+
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR GBARY-LAGAUD"}>DR GBARY-LAGAUD</MenuItem>
+
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR BOUA-KAMON EPSE NASSER"}>DR BOUA-KAMON EPSE NASSER</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR ACHI FLAVIE EPSE KOFFI"}>DR ACHI FLAVIE EPSE KOFFI</MenuItem>
+
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR ADCKOUNDZE SIMPLISTE"}>DR ADCKOUNDZE SIMPLISTE</MenuItem>
+
+                      <MenuItem style={{ fontSize: "12px" }} value={"PR KASSI KAMENAN"}>PR KASSI KAMENAN</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR ALLOU ANGE-SYL"}>DR ALLOU ANGE-SYL</MenuItem>
+
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR ASSI RODRIGUE FRANCK"}>ASSI RODRIGUE FRANCK</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"PR ASSOUAN"}>PR ASSOUAN</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KOHOU LANDRY"}>DR KOHOU LANDRY</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR SOUEIDAM HASSEM"}>DR SOUEIDAM HASSEM</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KAIDRY LOUIS-CHARLES"}>DR KAIDRY LOUIS-CHARLES</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KASSI ASSAMOI BROU F."}>DR KASSI ASSAMOI BROU F.</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR DERBE KODOU AUGUSTIN"}>DR DERBE KODOU AUGUSTIN</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KOUAKOU BOIDY"}>DR KOUAKOU BOIDY</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KOUAME BENJAMIN"}>DR KOUAME BENJAMIN</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR GBEZO DAVY CLAUDE"}>DR GBEZO DAVY CLAUDE</MenuItem>
+
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR TEA DIOP YACINE"}>DR TEA DIOP YACINE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR COULIBALY SORO FATI"}>DR COULIBALY SORO FATI</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR MEL BRAFFOU PIERRE"}>DR MEL BRAFFOU PIERRE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR FOUA BI ARMEL"}>DR FOUA BI ARMEL</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KOFFI CHERLES YVE"}>DR KOFFI CHERLES YVE</MenuItem>
+                      <MenuItem style={{ fontSize: "12px" }} value={"DR KOUADIO A. MOUGO"}>DR KOUADIO A. MOUGO</MenuItem>
                     </Select>
                   </FormControl>
                 </div>
