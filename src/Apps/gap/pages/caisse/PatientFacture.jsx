@@ -13,7 +13,6 @@ import FeaturedPlayListIcon from '@material-ui/icons/FeaturedPlayList';
 import Axios from "axios";
 import { header } from "../../../global/apiQuery";
 
-
 import {
   thunkListFacturesPayeesPatient,
   thunkListFacturesImpayeesPatient,
@@ -23,7 +22,6 @@ import {
   thunkEncaisserAllFactures,
   setShowModal,
 } from "../../api/caisse/factures";
-
 
 const FacturePatient = ({
   currentPatient,
@@ -68,7 +66,7 @@ const FacturePatient = ({
   ]
 
   const global = useContext(GlobalContext);
-  const handleClickOpen = (numeroFacture,numeroSejour) => { thunkDetailsFacture(numeroFacture,numeroSejour); };
+  const handleClickOpen = (numeroFacture, numeroSejour) => { thunkDetailsFacture(numeroFacture, numeroSejour); };
   const handleClose = () => {
     setShowModal(false);
     setinput({
@@ -184,8 +182,7 @@ const FacturePatient = ({
           />
         </div>
       </div>
-
-      <div className="col-2 pr-3 p-0">
+      <div className="col-2 p-0">
         <div className="row">
           <div className="col-12">
             <ul className="list-group rounded-0" id="list-tab" role="tablist">
@@ -258,46 +255,48 @@ const FacturePatient = ({
           </div>
         </div>
       </div>
-
-
-      <table className="col-10 table-sm table-sm table-hover table-striped">
-        <thead style={{ backgroundColor: global.theme.secondaryDark }}>
-          <tr>
-            {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
-            {["Montant Total",
-              "Part ASSU",
-              "Reste ASSU",
-              "Part Patient",
-              "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
-          </tr>
-        </thead>
-        <tbody>
-          {listFacturesPatient
-            .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture))
-            .map(
-              ({ civilitepatient, typesejour, numerofacture,numerosejour, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
-                <tr key={i} style={{ cursor: "pointer" }}
-                  onClick={() => handleClickOpen(numerofacture,numerosejour)}
-                >
-                  <td className="font-weight-bold">{i + 1}</td>
-                  <td className="font-weight-bold">{numerofacture}</td>
-                  <td>{datefacture}</td>
-                  <td>{heurefacture}</td>
-                  <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
-                  <td>{typesejour}</td>
-                  <td>{auteurfacture}</td>
-                  <td className="text-right">{separate(montanttotalfacture)}</td>
-                  <td className="text-right">{separate(partassurancefacture)}</td>
-                  <td className="text-right">{separate(resteassurancefacture)}</td>
-                  <td className="text-right">{separate(partpatientfacture)}</td>
-                  <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
-                    {separate(restepatientfacture)}
-                  </td>
-                </tr>
-              )
-            )}
-        </tbody>
-      </table>
+      <div className="col-10 pl-4 my-2">
+        <div className="row">
+          <table className="col-12 table-sm table-hover table-striped">
+            <thead style={{ backgroundColor: global.theme.secondaryDark }}>
+              <tr>
+                {columns.map((col, i) => (<th className="white-text" key={i}>{col}</th>))}
+                {["Montant Total",
+                  "Part ASSU",
+                  "Reste ASSU",
+                  "Part Patient",
+                  "Reste Patient",].map((col, i) => (<th className="white-text text-right" key={i}>{col}</th>))}
+              </tr>
+            </thead>
+            <tbody>
+              {listFacturesPatient
+                .filter(facture => value.trim() === "" || RegExp(value, 'i').test(facture.numerofacture))
+                .map(
+                  ({ civilitepatient, typesejour, numerofacture, numerosejour, datefacture, heurefacture, auteurfacture, nompatient, prenomspatient, montanttotalfacture, partassurancefacture, resteassurancefacture, partpatientfacture, restepatientfacture, }, i) => (
+                    <tr key={i} style={{ cursor: "pointer" }}
+                      onClick={() => handleClickOpen(numerofacture, numerosejour)}
+                    >
+                      <td className="font-weight-bold">{i + 1}</td>
+                      <td className="font-weight-bold">{numerofacture}</td>
+                      <td>{datefacture}</td>
+                      <td>{heurefacture}</td>
+                      <td className="font-weight-bold">{civilitepatient} {nompatient} {prenomspatient}</td>
+                      <td>{typesejour}</td>
+                      <td>{auteurfacture}</td>
+                      <td className="text-right">{separate(montanttotalfacture)}</td>
+                      <td className="text-right">{separate(partassurancefacture)}</td>
+                      <td className="text-right">{separate(resteassurancefacture)}</td>
+                      <td className="text-right">{separate(partpatientfacture)}</td>
+                      <td className={`font-weight-bold text-right ${restepatientfacture < 0 && "flash animated infinite red-text font-weight-bold"}`}>
+                        {separate(restepatientfacture)}
+                      </td>
+                    </tr>
+                  )
+                )}
+            </tbody>
+          </table>
+        </div>
+      </div>
       <Dialog
         disableBackdropClick
         transitionDuration={0}
@@ -355,7 +354,7 @@ const FacturePatient = ({
                     <FormControl variant="filled" size="small" className="col">
                       <InputLabel id="typesejour-label">
                         Mode de paiement
-                    </InputLabel>
+                      </InputLabel>
                       {currentFacture[0].montantcompte > 0 ? (
                         <Select
                           labelId="typesejour-label"
@@ -372,20 +371,20 @@ const FacturePatient = ({
                           <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
                         </Select>
                       ) : (
-                          <Select
-                            labelId="typesejour-label"
-                            id="typesejour"
-                            value={inputs.modepaiment}
-                            onChange={setmode}
-                            label="Mode de paiement"
-                            style={{ fontSize: "13px" }}
-                          >
-                            <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
-                          </Select>
-                        )}
+                        <Select
+                          labelId="typesejour-label"
+                          id="typesejour"
+                          value={inputs.modepaiment}
+                          onChange={setmode}
+                          label="Mode de paiement"
+                          style={{ fontSize: "13px" }}
+                        >
+                          <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
+                        </Select>
+                      )}
                     </FormControl>
                     <TextField
                       className="col-5 ml-2"
@@ -539,7 +538,7 @@ const FacturePatient = ({
                     <FormControl variant="filled" size="small" className="col">
                       <InputLabel id="typesejour-label">
                         Mode de paiement
-                    </InputLabel>
+                      </InputLabel>
                       {compte.solde > 0 && compte.solde > stats.reste ? (
                         <Select
                           labelId="typesejour-label"
@@ -556,20 +555,20 @@ const FacturePatient = ({
                           <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
                         </Select>
                       ) : (
-                          <Select
-                            labelId="typesejour-label"
-                            id="typesejour"
-                            value={inputs.modepaiment}
-                            onChange={setmode}
-                            label="Mode de paiement"
-                            style={{ fontSize: "13px" }}
-                          >
-                            <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
-                            <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
-                          </Select>
-                        )}
+                        <Select
+                          labelId="typesejour-label"
+                          id="typesejour"
+                          value={inputs.modepaiment}
+                          onChange={setmode}
+                          label="Mode de paiement"
+                          style={{ fontSize: "13px" }}
+                        >
+                          <MenuItem style={{ fontSize: "13px" }} value={"Chèque"}>Chèque</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Espèces"}>Espèces</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Électronique"}>Électronique</MenuItem>
+                          <MenuItem style={{ fontSize: "13px" }} value={"Mobile money"}>Mobile money</MenuItem>
+                        </Select>
+                      )}
                     </FormControl>
                     <TextField
                       className="col-5 ml-2"
